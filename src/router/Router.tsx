@@ -15,13 +15,13 @@ const Router = () => {
       <GlobalStyles />
       <Routes>
         <Route path="/" element={<MainPage />} />
-        <Route path="Channelsearchpage" element={<ChannelSearchPage />} />
-        <Route path="Findaccountpage" element={<FindAccountPage />} />
-        <Route path="Findpasswordpage" element={<FindPasswordPage />} />
-        <Route path="Mypage" element={<MyPage />} />
+        <Route path="channelsearchpage" element={<ChannelSearchPage />} />
+        <Route path="findaccountpage" element={<FindAccountPage />} />
+        <Route path="findpasswordpage" element={<FindPasswordPage />} />
+        <Route path="mypage" element={<MyPage />} />
         <Route path="login" element={<Login />} />
-        <Route path="Signup" element={<SignUp />} />
-        <Route path="Teamchat" element={<TeamChat />} />
+        <Route path="signup" element={<SignUp />} />
+        <Route path="teamchat" element={<TeamChat />} />
       </Routes>
     </BrowserRouter>
   );
