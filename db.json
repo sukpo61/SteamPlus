@@ -1,0 +1,39 @@
+{
+  "auth": [
+    {
+      "id": 1,
+      "uid": 1,
+      "nickname": "고양이"
+    },
+    {
+      "id": 2,
+      "uid": 2,
+      "nickname": "강아지"
+    },
+    {
+      "id": 3,
+      "uid": 3,
+      "nickname": "호랑이"
+    }
+  ],
+  "friend": [
+    {
+      "myId": 1,
+      "friendId": 2,
+      "myNickName": "고양이",
+      "friendNickName": "강아지"
+    },
+    {
+      "myId": 1,
+      "friendId": 3,
+      "myNickName": "고양이",
+      "friendNickName": "호랑이"
+    },
+    {
+      "myId": 2,
+      "friendId": 3,
+      "myNickName": "고양이",
+      "friendNickName": "강아지"
+    }
+  ]
+}
