@@ -8,9 +8,12 @@ import FindPasswordPage from "../pages/FindPasswordPage";
 import Login from "../pages/LoginPage";
 import MyPage from "../pages/MyPage";
 import TeamChat from "../pages/TeamChat";
+import GlobalStyles from "../GlobalStyles";
+
 const Router = () => {
   return (
     <BrowserRouter>
+      <GlobalStyles />
       <Routes>
         <Route path="/" element={<MainPage />} />
         <Route path="Channelsearchpage" element={<ChannelSearchPage />} />
