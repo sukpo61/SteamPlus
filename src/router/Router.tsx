@@ -8,6 +8,7 @@ import FindPasswordPage from "../pages/FindPasswordPage";
 import Login from "../pages/LoginPage";
 import MyPage from "../pages/MyPage";
 import TeamChat from "../pages/TeamChat";
+
 const Router = () => {
   return (
     <BrowserRouter>
