@@ -7,7 +7,7 @@ interface Game {
   name: string;
 }
 
-const ChannelSearchPage = () => {
+const ChannelSearchPage: any = () => {
   const SteamSearch = () => {
     const [searchGames, setSearchGames] = useState<Game[]>([]);
     // const [loading, setLoading] = useState(false);
