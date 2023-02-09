@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import { log } from "console";
 
 interface Game {
   [key: string]: string | number | boolean | any;
@@ -8,65 +9,60 @@ interface Game {
 }
 
 const ChannelSearchPage: any = () => {
-  const SteamSearch = () => {
-    const [searchGames, setSearchGames] = useState<Game[]>([]);
-    // const [loading, setLoading] = useState(false);
-    const [error, setError] = useState<any>(null);
-    const API_KEY = "366F82432C264B4FB1CE15534A050D09";
-    const [searchInput, setSearchInput] = useState("");
+  const [searchGames, setSearchGames] = useState<Game[]>([]);
+  // const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<any>(null);
+  const [searchInput, setSearchInput] = useState("dead");
 
-    const searchSteamGames = async () => {
-      // setLoading(true);
-      setError(null);
-      try {
-        const response = await axios.get<{ applist: { apps: Game[] } }>(
-          `http://api.steampowered.com/ISteamApps/Search/v1/?key=${API_KEY}&query=${searchInput}`
-        );
-        setSearchGames(response.data.applist.apps);
-      } catch (error) {
-        setError(error);
-      }
-      // setLoading(false);
-    };
+  useEffect(() => {
+    // axios
+    //   .get(
+    //     "https://cors-anywhere.herokuapp.com/https://store.steampowered.com/api/storesearch",
+    //     {
+    //       params: {
+    //         cc: "us",
+    //         l: "en",
+    //         term: "dead",
+    //       },
+    //     }
+    //   )
+    //   .then((response) => {
+    //     console.log(response);
+    //   })
+    //   .catch((error) => {
+    //     console.error(error);
+    //   });
 
-    useEffect(() => {
-      searchSteamGames();
-    }, [searchInput]);
+    axios
+      .get(
+        "https://cors-anywhere.herokuapp.com/https://api.steampowered.com/ISteamUser/GetPlayerSummaries/v2/",
+        {
+          params: {
+            key: "234E0113F33D5C7C4D4D5292C6774550",
+            steamids: "76561198374391933",
+          },
+        }
+      )
+      .then((response) => {
+        console.log(response);
+      })
+      .catch((error) => setError(error));
+  }, []);
 
-    // const [inputText, setInputText] = useState("");
-    // const BASE_SEARCH_URL = "";
-    // const API_KEY = "366F82432C264B4FB1CE15534A050D09";
-
-    // const getSearchGames = async () => {};
-
-    return (
-      <div>
-        <input
-          type="text"
-          value={searchInput}
-          onChange={(e) => setSearchInput(e.target.value)}
-        />
-        <button onClick={searchSteamGames}>Search</button>
-
-        {searchGames.map((game: Game) => (
-          <div key={`${game.appid}`}>
-            <div>{`${game.name}`}</div>
-          </div>
-        ))}
-        {/* {loading ? (
-        <p>Loading...</p>
-      ) : error ? (
-        <p>Error: {error.message}</p>
-      ) : (
-        <ul>
-          {games.map((game) => (
-            <li key={game.appid}>{game.name}</li>
-          ))}
-        </ul>
-      )} */}
-      </div>
-    );
-  };
+  return (
+    <div>
+      <input
+        type="text"
+        value={searchInput}
+        onChange={(e) => setSearchInput(e.target.value)}
+      />
+      {searchGames.map((game: Game) => (
+        <div key={`${game.appid}`}>
+          <div>{`${game.name}`}</div>
+        </div>
+      ))}
+    </div>
+  );
 };
 
 export default ChannelSearchPage;
