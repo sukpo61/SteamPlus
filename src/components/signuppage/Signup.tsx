@@ -1,10 +1,12 @@
 import React, { useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
+import { authService } from "../../Firebase";
+import { log } from "console";
+// import { authser } from "../../../Firebase";
 
 function Signup() {
   const navigate = useNavigate();
-
   //닉네임인풋
   const [nicName, setNicName] = useState("");
   const nicNameRef = useRef<HTMLInputElement>(null);
@@ -12,7 +14,6 @@ function Signup() {
     setNicName(event.target.value);
   };
   //아이디 인풋
-
   const [userId, setUserId] = useState("");
   const userIdRef = useRef<HTMLInputElement>(null);
   const userIdOnChange = (event: any) => {
@@ -32,7 +33,7 @@ function Signup() {
   const gotoLogin = () => {
     navigate("/Login");
   };
-  const addUser = async (event: any) => {
+  const addUser = (event: any) => {
     event.preventDefault();
     if (!nicName) {
       alert("닉네임 입력해주세요");
@@ -44,14 +45,13 @@ function Signup() {
       alert("패스워드를 입력해주세요");
       userFwRef.current!.focus();
     }
-    const auth = getAuth();
-    createUserWithEmailAndPassword(auth, userId, userFw)
+    createUserWithEmailAndPassword(authService, userId, userFw)
       .then((userCredential) => {
-        const user = userCredential.user;
+        // const user = userCredential.user;
       })
       .catch((error) => {
-        const errorCode = error.code;
-        const errorMessage = error.message;
+        // const errorCode = error.code;
+        // const errorMessage = error.message;
       });
     alert("회원가입 되었습니다");
     gotoLogin();
