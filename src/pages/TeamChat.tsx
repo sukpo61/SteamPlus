@@ -1,7 +1,7 @@
 import React from "react";
 
 const TeamChat = () => {
-  return <div>TeamChat</div>;
+  return <div>test</div>;
 };
 
 export default TeamChat;
