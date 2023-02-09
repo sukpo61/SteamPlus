@@ -12,19 +12,11 @@ import GlobalStyles from "../GlobalStyles";
 import Layout from "../layout/Layout";
 import styled from "styled-components";
 import { useRecoilValue } from "recoil";
-import { profilebutton } from "../recoil/atom";
-import { gamesearchbutton } from "../recoil/atom";
-import { friendbutton } from "../recoil/atom";
-import { friendsearchbutton } from "../recoil/atom";
-import { voicetalkbutton } from "../recoil/atom";
+import { LayoutButton } from "../recoil/atom";
 
 const Router = () => {
   // 메뉴 상태 recoil
-  const profileBoolean = useRecoilValue(profilebutton);
-  const gamesearchBoolean = useRecoilValue(gamesearchbutton);
-  const friendBoolean = useRecoilValue(friendbutton);
-  const friendsearchBoolean = useRecoilValue(friendsearchbutton);
-  const voicetalkBoolean = useRecoilValue(voicetalkbutton);
+  const layoutMenu = useRecoilValue(LayoutButton);
 
   return (
     <BrowserRouter>
@@ -33,11 +25,7 @@ const Router = () => {
       {/* 메뉴 열리고 닫힐때 페이지 크기 */}
       <RouteFloat
         //메뉴 상태 props
-        profileBoolean={profileBoolean}
-        gamesearchBoolean={gamesearchBoolean}
-        friendBoolean={friendBoolean}
-        friendsearchBoolean={friendsearchBoolean}
-        voicetalkBoolean={voicetalkBoolean}
+        layoutMenu={layoutMenu}
       >
         <Routes>
           <Route path="/" element={<MainPage />} />
@@ -56,21 +44,8 @@ const Router = () => {
 
 export default Router;
 // 메뉴 열리고 닫힐때 페이지 크기
-const RouteFloat = styled.div<{
-  profileBoolean: Boolean;
-  gamesearchBoolean: Boolean;
-  friendBoolean: Boolean;
-  friendsearchBoolean: Boolean;
-  voicetalkBoolean: Boolean;
-}>`
-  margin-left: ${(props) =>
-    props.profileBoolean ||
-    props.gamesearchBoolean ||
-    props.friendBoolean ||
-    props.friendsearchBoolean ||
-    props.voicetalkBoolean
-      ? "500px"
-      : "100px"};
+const RouteFloat = styled.div<{ layoutMenu: String }>`
+  margin-left: ${(props) => (props.layoutMenu === "close" ? "100px" : "500px")};
   transition: 0.5s ease-in-out;
   background-color: #192030;
 `;

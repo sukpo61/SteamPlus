@@ -1,5 +1,5 @@
 import React from "react";
-import { friendbutton } from "../../recoil/atom";
+import { LayoutButton } from "../../recoil/atom";
 import styled from "styled-components";
 import { useRecoilValue } from "recoil";
 import { useQuery } from "react-query";
@@ -13,7 +13,7 @@ interface FriendProps {
 }
 
 function Friend() {
-  const friendBoolean = useRecoilValue(friendbutton);
+  const layoutMenu = useRecoilValue(LayoutButton);
   const myId = 1;
 
   const getFriend = async () => {
@@ -35,7 +35,7 @@ function Friend() {
   // console.log(friend);
 
   return (
-    <FriendDiv friendBoolean={friendBoolean}>
+    <FriendDiv layoutMenu={layoutMenu}>
       {/* 친구 목록 박스 */}
       {friend.map((i: FriendProps) => {
         return (
@@ -73,16 +73,8 @@ function Friend() {
 }
 
 export default Friend;
-const FriendDiv = styled.div<{ friendBoolean: Boolean }>`
-  width: 400px;
-  height: 100%;
-  background: blue;
-  position: fixed;
-  left: ${(props) => (props.friendBoolean ? "100px" : "-500px")};
-  top: 0;
-  bottom: 0;
-  transition: 0.5s ease-in-out;
-  border-top-right-radius: 30px;
+const FriendDiv = styled.div<{ layoutMenu: String }>`
+  display: ${(props) => (props.layoutMenu === "friend" ? "block" : "none")};
 `;
 const FriendBoxDiv = styled.div`
   margin: 30px auto 0;
