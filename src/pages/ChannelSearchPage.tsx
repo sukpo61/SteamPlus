@@ -29,6 +29,8 @@ const ChannelSearchPage: any = () => {
       // setLoading(false);
     };
 
+    console.log();
+
     useEffect(() => {
       searchSteamGames();
     }, [searchInput]);
