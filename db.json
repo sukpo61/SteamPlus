@@ -14,6 +14,26 @@
       "id": 3,
       "uid": 3,
       "nickname": "호랑이"
+    },
+    {
+      "id": 4,
+      "uid": 4,
+      "nickname": "호랑이인간"
+    },
+    {
+      "id": 5,
+      "uid": 5,
+      "nickname": "강아지고양이"
+    },
+    {
+      "id": 6,
+      "uid": 6,
+      "nickname": "dog"
+    },
+    {
+      "id": 7,
+      "uid": 7,
+      "nickname": "cat"
     }
   ],
   "friend": [
@@ -31,9 +51,9 @@
     },
     {
       "myId": 2,
-      "friendId": 3,
-      "myNickName": "고양이",
-      "friendNickName": "강아지"
+      "friendId": 1,
+      "myNickName": "강아지",
+      "friendNickName": "고양이"
     }
   ]
 }

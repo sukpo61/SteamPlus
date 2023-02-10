@@ -23,25 +23,45 @@ function Layout() {
   return (
     <>
       <SideBarDiv>
+        {/* 프로필 */}
         <Profilebutton onClick={() => LayoutButtonOnClick("profile")}>
           Profile
         </Profilebutton>
+        {/* 홈 */}
         <Homebutton>Home</Homebutton>
+        {/* 게임검색 */}
         <GameSearchbutton onClick={() => LayoutButtonOnClick("gamesearch")}>
           gamesearch
         </GameSearchbutton>
+        {/* 친구 */}
         <Friendbutton onClick={() => LayoutButtonOnClick("friend")}>
           friend
         </Friendbutton>
+        {/* 친구검색
         <FriendSearchbutton onClick={() => LayoutButtonOnClick("friendsearch")}>
           friendsearch
-        </FriendSearchbutton>
+        </FriendSearchbutton> */}
+        {/* 음성채팅 */}
         <VoiceTalkbutton onClick={() => LayoutButtonOnClick("voicetalk")}>
           voicetalk
         </VoiceTalkbutton>
       </SideBarDiv>
       {/* 메뉴 컴포넌트 */}
       <MenuOpenDiv layoutMenu={layoutMenu}>
+        {/* 위 제목과 input layoutstring이 바뀔때마다 바뀌게
+        <MenuTitleDiv>
+          <MenuTitleFlex>
+            <MenuTitleH2>Dave Diver</MenuTitleH2>
+            <MenuTitleLink></MenuTitleLink>
+            <MenuTitleAdd>+</MenuTitleAdd>
+          </MenuTitleFlex>
+
+          <MenuTitleIform>
+            <MenuTitleInput></MenuTitleInput>
+            <MenuTitleButton>확인</MenuTitleButton>
+          </MenuTitleIform>
+        </MenuTitleDiv> */}
+
         <Profile />
         <GameSearch />
         <Friend />
@@ -54,7 +74,7 @@ function Layout() {
 
 export default Layout;
 const SideBarDiv = styled.div`
-  width: 100px;
+  width: 80px;
   height: 100%;
   position: fixed;
   background: #080c16;
@@ -64,13 +84,17 @@ const SideBarDiv = styled.div`
 const MenuOpenDiv = styled.div<{ layoutMenu: String }>`
   width: 400px;
   height: 100%;
-  background: #ccc;
+  background: #404b5e;
   position: fixed;
-  left: ${(props) => (props.layoutMenu === "close" ? "-500px" : "100px")};
+  left: ${(props) => (props.layoutMenu === "close" ? "-480px" : "80px")};
   top: 0;
   bottom: 0;
   transition: 0.5s ease-in-out;
   border-top-right-radius: 30px;
+  overflow: scroll;
+  &::-webkit-scrollbar {
+    display: none;
+  }
 `;
 
 const Profilebutton = styled.div`
@@ -144,7 +168,6 @@ const VoiceTalkbutton = styled.div`
   background: #ccc;
   cursor: pointer;
 `;
-
 // json에 친구서버에 id, nickname, 프로필이미지
 // 내 id 상대방 id
 // ( 친구 추가기능 )
