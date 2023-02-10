@@ -45,7 +45,6 @@ const Router = () => {
 export default Router;
 // 메뉴 열리고 닫힐때 페이지 크기
 const RouteFloat = styled.div<{ layoutMenu: String }>`
-  margin-left: ${(props) => (props.layoutMenu === "close" ? "100px" : "500px")};
+  margin-left: ${(props) => (props.layoutMenu === "close" ? "80px" : "480px")};
   transition: 0.5s ease-in-out;
-  background-color: #192030;
 `;
