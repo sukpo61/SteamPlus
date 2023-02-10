@@ -17,8 +17,11 @@ const ChannelSearchPage: any = () => {
   const STEAM_ACCOUNT_NAME = "sukpo61@naver.com";
   const client_id = "ucj588lq839jowdgqawe2651hbna80";
   const client_secret = "ie8i79maa233egjs88c90el20svaav";
-  const token = "1cly6ag9tr1y0q3mvvck9jw1j123sc";
-  const gameId = "87173";
+  const token = "typug2dtxgkjkn2gxnexvivhe4fi4t";
+  // const gameId = "187740";
+  // const gameId = "8339";
+  const gameId = "250900";
+  // https://cors-anywhere.herokuapp.com/
 
   useEffect(() => {
     // axios
@@ -39,20 +42,20 @@ const ChannelSearchPage: any = () => {
     //     console.error(error);
     //   });
 
-    // axios
-    //   .get(
-    //     "https://cors-anywhere.herokuapp.com/https://api.steampowered.com/ISteamUser/GetPlayerSummaries/v2/",
-    //     {
-    //       params: {
-    //         key: APIKEY,
-    //         steamids: "76561198374391933",
-    //       },
-    //     }
-    //   )
-    //   .then((response) => {
-    //     console.log("userstate", response);
-    //   })
-    //   .catch((error) => setError(error));
+    axios
+      .get(
+        "https://cors-anywhere.herokuapp.com/https://api.steampowered.com/ISteamUser/GetPlayerSummaries/v2/",
+        {
+          params: {
+            key: APIKEY,
+            steamids: "76561198374391933",
+          },
+        }
+      )
+      .then((response) => {
+        console.log("userstate", response);
+      })
+      .catch((error) => setError(error));
 
     // axios
     //   .get(
@@ -69,21 +72,21 @@ const ChannelSearchPage: any = () => {
     //   })
     //   .catch((error) => setError(error));
 
-    // axios
-    //   .get(
-    //     `https://cors-anywhere.herokuapp.com/http://store.steampowered.com/api/appdetails/`,
-    //     {
-    //       params: {
-    //         appids: "250900",
-    //       },
-    //     }
-    //   )
-    //   .then((response) => {
-    //     console.log("gamedetail", response);
-    //   })
-    //   .catch((error) => {
-    //     setError("Could not retrieve header image");
-    //   });
+    axios
+      .get(
+        `https://cors-anywhere.herokuapp.com/http://store.steampowered.com/api/appdetails/`,
+        {
+          params: {
+            appids: "250900",
+          },
+        }
+      )
+      .then((response) => {
+        console.log("gamedetail", response);
+      })
+      .catch((error) => {
+        setError("Could not retrieve header image");
+      });
 
     axios
       .post(
@@ -97,33 +100,22 @@ const ChannelSearchPage: any = () => {
       });
 
     axios({
-      url: "https://cors-anywhere.herokuapp.com/https://api.igdb.com/v4/screenshots",
+      url: `https://cors-anywhere.herokuapp.com/https://api.igdb.com/v4/screenshots`,
       method: "post",
       headers: {
         Accept: "application/json",
         "Client-ID": "ucj588lq839jowdgqawe2651hbna80",
-        Authorization: `Bearer eca8nhousl74mt7g1gndeek0dd6b9e`,
+        Authorization: `Bearer typug2dtxgkjkn2gxnexvivhe4fi4t`,
       },
       // params: {
       //   fields: "url",
       //   filter: `[games][eq]=${gameId}&[resolution][eq]=720p`,
       // },
-
-      // data: "fields alpha_channel,animated,checksum,game,height,image_id,url,width;",
-      data: {
-        fields: {
-          url: {},
-          game: {},
-        },
-        filter: {
-          game: {
-            eq: gameId,
-          },
-          resolution: {
-            eq: "720p",
-          },
-        },
-      },
+      // params: {
+      //   fields: "url",
+      //   id: gameId,
+      // },
+      data: "fields alpha_channel,animated,checksum,game,height,image_id,url,width;",
     })
       .then((response) => {
         console.log("image", response);
