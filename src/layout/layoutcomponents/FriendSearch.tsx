@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { LayoutButton } from "../../recoil/atom";
 import styled from "styled-components";
 import { useRecoilState } from "recoil";
@@ -21,6 +21,7 @@ interface FriendSearchProps {
 function FriendSearch() {
   const myId = 1;
 
+  const [alreadyFriendList, setAlreadyFriendList] = useState<any>("");
   const [layoutMenu, setLayoutMenu] = useRecoilState<String>(LayoutButton);
   const LayoutButtonOnClick = (i: string) => {
     if (layoutMenu === i) {
@@ -63,67 +64,68 @@ function FriendSearch() {
     return <p>오류</p>;
   }
 
-  //auth 가져온후 검색한것만 map
-  const friendSearch = data?.data.filter((i: FriendSearchProps) => {
-    //특정문자열이 포함되면 true반환
-    if (frendSearchInput === "") {
-      return;
-    } else {
-      //자신은 안뜨고 검색한것만
-      return i.id !== myId && i.nickname.includes(frendSearchInput);
-    }
-  });
+  //form 새로고침 방지
+  // const formOnSubmithandler = (e: React.FormEvent) => {
+  //   e.preventDefault();
+  // };
 
   //이미 친구인 목록
   // 계정목록과 친구목록을 불러온 후 친구목록중 내 친구목록인 것 구한다.
   //그친구목록의 친구 id가 일치하는 계정 목록을 불러옴
   const alreadyFriend = data?.data.filter((i: FriendSearchProps) => {
     for (let t = 0; t < friendList?.data.length; t++) {
-      if (
+      if (frendSearchInput === "") {
+        return;
+      } else if (
         friendList?.data[t].friendId === i.id &&
         friendList?.data[t].myId === myId
       ) {
-        return;
-      } else {
-        return i;
+        const lowercaseNickname = i.nickname.toLowerCase();
+        const lowercaseSearchInput = frendSearchInput.toLowerCase();
+        return lowercaseNickname.includes(lowercaseSearchInput);
       }
     }
   });
   console.log(alreadyFriend);
 
-  // const aaa =  alreadyFriend.filter((item: FriendSearchProps) => {
-  //   if (item.id === i.id) {
+  // //auth 가져온후 검색한것만 map
+  // const friendSearch = data?.data.filter((i: FriendSearchProps) => {
+  //   if (frendSearchInput === "") {
   //     return;
   //   } else {
-  //     return <FriendBoxNameP>+</FriendBoxNameP>;
+  //     // 현재 친구상태면 안보이게
+  //     for (let t = 0; t < alreadyFriend.length; t++) {
+  //       if (alreadyFriend[t].id === i.id) {
+  //         return;
+  //       }
+  //     }
+  //     return i.nickname.includes(frendSearchInput) && i.id !== myId;
+  //     //특정문자열이 포함되면 true반환
+  //     //자신은 안뜨고 검색한것만
+  //     // for문 밖으로 return값을 빼내니까 영어검색 작동
   //   }
-  // })
+  // });
 
-  // 현재유저의 아이디
-  // 상대유저의 아이디
-  // 프렌드 콜렉션을 현재 유저 아이디로 필터링걸고.
-  // 위의 배열을 "friendId"키의 밸류를 인덱스로 가지는 배열을 만듬.friends [2, 3]
-  // 어스을 검색값 기준으로 필터링.
-  // [ {
-  //   "id": 2,
-  //   "uid": 2,
-  //   "nickname": "강아지"
-  // },
-  // {
-  //   "id": 5,
-  //   "uid": 5,
-  //   "nickname": "강아지고양이"
-  // }]
-
-  // 검색 배열을 맵핑을 돌리고
-  //
-
-  // const friendstate = (e:any) =>{
-  //   const friends : any = [2, 3]
-  //   return friends.includes(e.id)
-
-  //   //검색배열의 "id" 키 값이  "friendId"키의 밸류를 인덱스로 가지는 배열에 포함이 되면 true, false
-  // }
+  //auth 가져온후 검색한것만 map
+  const friendSearch = data?.data.filter((i: FriendSearchProps) => {
+    if (frendSearchInput === "") {
+      return;
+    } else {
+      // 현재 친구상태면 안보이게
+      for (let t = 0; t < alreadyFriend.length; t++) {
+        if (alreadyFriend[t].id === i.id) {
+          return;
+        }
+      }
+      //대문자 검색
+      const lowercaseNickname = i.nickname.toLowerCase();
+      const lowercaseSearchInput = frendSearchInput.toLowerCase();
+      return i.id !== myId && lowercaseNickname.includes(lowercaseSearchInput);
+      //특정문자열이 포함되면 true반환
+      //자신은 안뜨고 검색한것만
+      // for문 밖으로 return값을 빼내니까 영어검색 작동
+    }
+  });
 
   return (
     <FriendSearchDiv layoutMenu={layoutMenu}>
@@ -136,54 +138,36 @@ function FriendSearch() {
           <FriendSearchMenuDiv>Friend Search</FriendSearchMenuDiv>
         </MenuTitleFlex>
 
-        <MenuTitleIform>
-          <MenuTitleInput onChange={frendSearchOnChange}></MenuTitleInput>
-          {/* <MenuTitleButton>확인</MenuTitleButton> */}
-        </MenuTitleIform>
+        {/* <MenuTitleIform onSubmit={formOnSubmithandler}> */}
+        <MenuTitleInput onChange={frendSearchOnChange}></MenuTitleInput>
+        {/* <MenuTitleButton>확인</MenuTitleButton> */}
+        {/* </MenuTitleIform> */}
       </MenuTitleDiv>
 
       {/* 친구 목록 박스 */}
+      {alreadyFriend.map((i: FriendSearchProps) => {
+        return (
+          <FriendBoxDiv>
+            <FriendBoxNameImg></FriendBoxNameImg>
+            <FriendBoxNameH2>{i.nickname}</FriendBoxNameH2>
+
+            <FriendBoxNameP></FriendBoxNameP>
+          </FriendBoxDiv>
+        );
+      })}
       {friendSearch.map((i: FriendSearchProps) => {
         return (
           <FriendBoxDiv>
             <FriendBoxNameImg></FriendBoxNameImg>
             <FriendBoxNameH2>{i.nickname}</FriendBoxNameH2>
-            {/* { friendstate(i) ? "표시안함"  : "표시함" } */}
 
-            {alreadyFriend}
+            <FriendBoxNameP>+</FriendBoxNameP>
           </FriendBoxDiv>
         );
       })}
     </FriendSearchDiv>
 
     //나중에 자기자신이 검색 되지않게 예외처리 필요
-
-    // <FriendSearchDiv layoutMenu={layoutMenu}>
-    //   {/* 검색창쪽 */}
-    //   <MenuTitleDiv>
-    //     <MenuTitleFlex>
-    //       <MenuTitleH2>Dave Diver</MenuTitleH2>
-    //       <MenuTitleLink></MenuTitleLink>
-    //       <MenuTitleAdd>+</MenuTitleAdd>
-    //     </MenuTitleFlex>
-    //     {/* input과 확인 */}
-    //     {/* <MenuTitleIform> */}
-    //     <MenuTitleInput onChange={frendSearchOnChange}></MenuTitleInput>
-    //     {/* <MenuTitleButton>확인</MenuTitleButton>
-    //     </MenuTitleIform> */}
-    //   </MenuTitleDiv>
-    //   {/* 친구 목록 박스 */}
-    //   {friendSearch.map((i: FriendSearchProps) => {
-    //     return (
-    //       <FriendBoxDiv>
-    //         <FriendBoxNameImg></FriendBoxNameImg>
-    //         <FriendBoxNameH2>{i.nickname}</FriendBoxNameH2>
-
-    //         <FriendBoxNameP>+</FriendBoxNameP>
-    //       </FriendBoxDiv>
-    //     );
-    //   })}
-    // </FriendSearchDiv>
   );
 }
 

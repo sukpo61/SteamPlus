@@ -49,7 +49,11 @@ function Friend() {
     if (frendSearchInput === "") {
       return i.myId === myId;
     } else {
-      return i.myId === myId && i.friendNickName.includes(frendSearchInput);
+      const lowercaseNickname = i.friendNickName.toLowerCase();
+      const lowercaseSearchInput = frendSearchInput.toLowerCase();
+      return (
+        i.myId === myId && lowercaseNickname.includes(lowercaseSearchInput)
+      );
     }
   });
   // console.log(friend);
