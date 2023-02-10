@@ -33,7 +33,12 @@
     {
       "id": 7,
       "uid": 7,
-      "nickname": "cat"
+      "nickname": "Cat"
+    },
+    {
+      "id": 8,
+      "uid": 8,
+      "nickname": "제로"
     }
   ],
   "friend": [
@@ -48,6 +53,24 @@
       "friendId": 3,
       "myNickName": "고양이",
       "friendNickName": "호랑이"
+    },
+    {
+      "myId": 1,
+      "friendId": 8,
+      "myNickName": "고양이",
+      "friendNickName": "제로"
+    },
+    {
+      "myId": 1,
+      "friendId": 4,
+      "myNickName": "고양이",
+      "friendNickName": "호랑이인간"
+    },
+    {
+      "myId": 1,
+      "friendId": 7,
+      "myNickName": "고양이",
+      "friendNickName": "Cat"
     },
     {
       "myId": 2,
