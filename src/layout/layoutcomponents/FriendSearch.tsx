@@ -99,6 +99,32 @@ function FriendSearch() {
   //   }
   // })
 
+  // 현재유저의 아이디
+  // 상대유저의 아이디
+  // 프렌드 콜렉션을 현재 유저 아이디로 필터링걸고.
+  // 위의 배열을 "friendId"키의 밸류를 인덱스로 가지는 배열을 만듬.friends [2, 3]
+  // 어스을 검색값 기준으로 필터링.
+  // [ {
+  //   "id": 2,
+  //   "uid": 2,
+  //   "nickname": "강아지"
+  // },
+  // {
+  //   "id": 5,
+  //   "uid": 5,
+  //   "nickname": "강아지고양이"
+  // }]
+
+  // 검색 배열을 맵핑을 돌리고
+  //
+
+  // const friendstate = (e:any) =>{
+  //   const friends : any = [2, 3]
+  //   return friends.includes(e.id)
+
+  //   //검색배열의 "id" 키 값이  "friendId"키의 밸류를 인덱스로 가지는 배열에 포함이 되면 true, false
+  // }
+
   return (
     <FriendSearchDiv layoutMenu={layoutMenu}>
       {/* 위 제목과 input layoutstring이 바뀔때마다 바뀌게 */}
@@ -122,6 +148,7 @@ function FriendSearch() {
           <FriendBoxDiv>
             <FriendBoxNameImg></FriendBoxNameImg>
             <FriendBoxNameH2>{i.nickname}</FriendBoxNameH2>
+            {/* { friendstate(i) ? "표시안함"  : "표시함" } */}
 
             {alreadyFriend}
           </FriendBoxDiv>
