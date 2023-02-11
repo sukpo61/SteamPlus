@@ -1,17 +1,19 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { LayoutButton } from "../../recoil/atom";
 import styled from "styled-components";
 import { useRecoilState } from "recoil";
 import { useState } from "react";
-import { useQuery } from "react-query";
+import { useQuery, useQueryClient } from "react-query";
 import axios from "axios";
+import { useMutation } from "react-query";
+import { v4 as uuidv4 } from "uuid";
 
-interface FriendProps {
-  myId: Number;
-  friendId: Number;
-  myNickName: String;
-  friendNickName: String;
-}
+// interface FriendProps {
+//   myId: Number;
+//   friendId: Number;
+//   myNickName: String;
+//   friendNickName: String;
+// }
 interface FriendSearchProps {
   id: Number;
   uid: Number;
@@ -19,9 +21,10 @@ interface FriendSearchProps {
 }
 
 function FriendSearch() {
+  const queryClient = useQueryClient();
   const myId = 1;
+  const myNickName = "고양이";
 
-  const [alreadyFriendList, setAlreadyFriendList] = useState<any>("");
   const [layoutMenu, setLayoutMenu] = useRecoilState<String>(LayoutButton);
   const LayoutButtonOnClick = (i: string) => {
     if (layoutMenu === i) {
@@ -30,6 +33,19 @@ function FriendSearch() {
       setLayoutMenu(i);
     }
   };
+
+  //친구 추가
+  const postMutation = useMutation(
+    (friendAdd: object) =>
+      axios.post("http://localhost:3001/friend", friendAdd),
+    {
+      onSuccess: () => {
+        // 쿼리 무효화
+        queryClient.invalidateQueries("friend");
+        queryClient.invalidateQueries("friendsearch");
+      },
+    }
+  );
 
   //friend 가져오기
   const getFriend = async () => {
@@ -64,10 +80,17 @@ function FriendSearch() {
     return <p>오류</p>;
   }
 
-  //form 새로고침 방지
-  // const formOnSubmithandler = (e: React.FormEvent) => {
-  //   e.preventDefault();
-  // };
+  const friendAddOnClick = (i: FriendSearchProps) => {
+    let friendAdd = {
+      id: uuidv4(),
+      myId,
+      friendId: i.id,
+      myNickName,
+      friendNickName: i.nickname,
+    };
+
+    postMutation.mutate(friendAdd);
+  };
 
   //이미 친구인 목록
   // 계정목록과 친구목록을 불러온 후 친구목록중 내 친구목록인 것 구한다.
@@ -87,24 +110,6 @@ function FriendSearch() {
     }
   });
   console.log(alreadyFriend);
-
-  // //auth 가져온후 검색한것만 map
-  // const friendSearch = data?.data.filter((i: FriendSearchProps) => {
-  //   if (frendSearchInput === "") {
-  //     return;
-  //   } else {
-  //     // 현재 친구상태면 안보이게
-  //     for (let t = 0; t < alreadyFriend.length; t++) {
-  //       if (alreadyFriend[t].id === i.id) {
-  //         return;
-  //       }
-  //     }
-  //     return i.nickname.includes(frendSearchInput) && i.id !== myId;
-  //     //특정문자열이 포함되면 true반환
-  //     //자신은 안뜨고 검색한것만
-  //     // for문 밖으로 return값을 빼내니까 영어검색 작동
-  //   }
-  // });
 
   //auth 가져온후 검색한것만 map
   const friendSearch = data?.data.filter((i: FriendSearchProps) => {
@@ -138,10 +143,7 @@ function FriendSearch() {
           <FriendSearchMenuDiv>Friend Search</FriendSearchMenuDiv>
         </MenuTitleFlex>
 
-        {/* <MenuTitleIform onSubmit={formOnSubmithandler}> */}
         <MenuTitleInput onChange={frendSearchOnChange}></MenuTitleInput>
-        {/* <MenuTitleButton>확인</MenuTitleButton> */}
-        {/* </MenuTitleIform> */}
       </MenuTitleDiv>
 
       {/* 친구 목록 박스 */}
@@ -161,13 +163,13 @@ function FriendSearch() {
             <FriendBoxNameImg></FriendBoxNameImg>
             <FriendBoxNameH2>{i.nickname}</FriendBoxNameH2>
 
-            <FriendBoxNameP>+</FriendBoxNameP>
+            <FriendBoxNameP onClick={() => friendAddOnClick(i)}>
+              +
+            </FriendBoxNameP>
           </FriendBoxDiv>
         );
       })}
     </FriendSearchDiv>
-
-    //나중에 자기자신이 검색 되지않게 예외처리 필요
   );
 }
 
@@ -205,10 +207,7 @@ const FriendSearchMenuDiv = styled.h2`
   cursor: pointer;
   background-color: yellow;
 `;
-const MenuTitleIform = styled.form`
-  position: relative;
-  margin: 0 auto;
-`;
+
 const MenuTitleInput = styled.input`
   width: 350px;
   height: 40px;
@@ -218,18 +217,6 @@ const MenuTitleInput = styled.input`
   color: #fff;
   border: 0;
   box-shadow: 2px 4px 10px 0 #000 inset;
-`;
-const MenuTitleButton = styled.button`
-  position: absolute;
-  right: 10px;
-  width: 40px;
-  height: 20px;
-  line-height: 20px;
-  font-size: 14px;
-  font-weight: 400;
-  color: #fff;
-  top: 50%;
-  transform: translate(0, -13%);
 `;
 
 const FriendBoxDiv = styled.div`
