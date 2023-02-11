@@ -3,10 +3,13 @@ import { LayoutButton } from "../../recoil/atom";
 import styled from "styled-components";
 import { useRecoilState } from "recoil";
 import { useState } from "react";
-import { useQuery } from "react-query";
+import { useQuery, useQueryClient } from "react-query";
 import axios from "axios";
+import { useMutation } from "react-query";
 
+//void ?? string ??
 interface FriendProps {
+  id: void;
   myId: Number;
   friendId: Number;
   myNickName: String;
@@ -14,7 +17,10 @@ interface FriendProps {
 }
 
 function Friend() {
+  const queryClient = useQueryClient();
+
   const myId = 1;
+  const myNickName = "고양이";
 
   const [layoutMenu, setLayoutMenu] = useRecoilState<String>(LayoutButton);
   //친구검색 input
@@ -30,6 +36,23 @@ function Friend() {
     } else {
       setLayoutMenu(i);
     }
+  };
+
+  // like delete (likes에 데이터 삭제)
+  const DeleteMutation = useMutation(
+    //넘겨받은 id를 삭제
+    (id) => axios.delete(`http://localhost:3001/friend/${id}`),
+    {
+      onSuccess: () => {
+        // 쿼리 무효화
+        queryClient.invalidateQueries("friend");
+        queryClient.invalidateQueries("friendsearch");
+      },
+    }
+  );
+
+  const friendDeleteOnClick = (id: void) => {
+    DeleteMutation.mutate(id);
   };
 
   const getFriend = async () => {
@@ -85,7 +108,13 @@ function Friend() {
               <FriendBoxNameImg></FriendBoxNameImg>
               <FriendBoxNameH2>{i.friendNickName}</FriendBoxNameH2>
 
-              <FriendBoxNameP>온라인</FriendBoxNameP>
+              <FriendBoxNameP
+                onClick={() => {
+                  friendDeleteOnClick(i.id);
+                }}
+              >
+                삭제
+              </FriendBoxNameP>
             </FriendBoxNameDiv>
 
             <FriendGamingDiv>
@@ -174,6 +203,7 @@ const FriendBoxNameP = styled.p`
   color: #fff;
   margin-left: auto;
   margin-right: 30px;
+  cursor: pointer;
 `;
 const FriendGamingDiv = styled.div`
   display: flex;

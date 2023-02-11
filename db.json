@@ -43,40 +43,11 @@
   ],
   "friend": [
     {
+      "id": "0398c3ef-f0dd-424c-9f41-42c12f27a7f4",
       "myId": 1,
       "friendId": 2,
       "myNickName": "고양이",
       "friendNickName": "강아지"
-    },
-    {
-      "myId": 1,
-      "friendId": 3,
-      "myNickName": "고양이",
-      "friendNickName": "호랑이"
-    },
-    {
-      "myId": 1,
-      "friendId": 8,
-      "myNickName": "고양이",
-      "friendNickName": "제로"
-    },
-    {
-      "myId": 1,
-      "friendId": 4,
-      "myNickName": "고양이",
-      "friendNickName": "호랑이인간"
-    },
-    {
-      "myId": 1,
-      "friendId": 7,
-      "myNickName": "고양이",
-      "friendNickName": "Cat"
-    },
-    {
-      "myId": 2,
-      "friendId": 1,
-      "myNickName": "강아지",
-      "friendNickName": "고양이"
     }
   ]
 }
