@@ -9,7 +9,7 @@ import { useMutation } from "react-query";
 
 //void ?? string ??
 interface FriendProps {
-  id: void;
+  id: String;
   myId: Number;
   friendId: Number;
   myNickName: String;
@@ -19,8 +19,17 @@ interface FriendProps {
 function Friend() {
   const queryClient = useQueryClient();
 
-  const myId = 1;
-  const myNickName = "고양이";
+  // const myId = 1;
+  // const myNickName = "고양이";
+
+  const myId = 2;
+  const myNickName = "강아지";
+
+  // const myId = 3;
+  // const myNickName = "호랑이";
+
+  // const myId = 7;
+  // const myNickName = "Cat";
 
   const [layoutMenu, setLayoutMenu] = useRecoilState<String>(LayoutButton);
   //친구검색 input
@@ -38,7 +47,20 @@ function Friend() {
     }
   };
 
-  // like delete (likes에 데이터 삭제)
+  //친구 수락
+  const postMutation = useMutation(
+    (friendAdd: object) =>
+      axios.post("http://localhost:3001/friend", friendAdd),
+    {
+      onSuccess: () => {
+        // 쿼리 무효화
+        queryClient.invalidateQueries("friend");
+        queryClient.invalidateQueries("friendsearch");
+      },
+    }
+  );
+
+  // 친구 삭제
   const DeleteMutation = useMutation(
     //넘겨받은 id를 삭제
     (id) => axios.delete(`http://localhost:3001/friend/${id}`),
@@ -50,9 +72,27 @@ function Friend() {
       },
     }
   );
+  //친구 수락
+  const friendAddOnClick = (i: FriendProps) => {
+    console.log(i);
 
-  const friendDeleteOnClick = (id: void) => {
+    let friendAdd = {
+      id: i.id + "1",
+      myId: i.friendId,
+      friendId: i.myId,
+      myNickName: i.friendNickName,
+      friendNickName: i.myNickName,
+    };
+
+    postMutation.mutate(friendAdd);
+  };
+  //친구 삭제 인데 +1 된것 까지 삭제 혹은 그 반대로 +1이 없는 것 까지 삭제
+  const friendDeleteOnClick = (id: any) => {
+    const deleteAll: any = id + "1";
+    const deleteAll2: any = id.slice(0, -1);
     DeleteMutation.mutate(id);
+    DeleteMutation.mutate(deleteAll);
+    DeleteMutation.mutate(deleteAll2);
   };
 
   const getFriend = async () => {
@@ -162,7 +202,7 @@ function Friend() {
                   friendDeleteOnClick(i.id);
                 }}
               >
-                삭제
+                취소
               </FriendBoxNameP>
             </FriendBoxNameDiv>
 
@@ -181,6 +221,13 @@ function Friend() {
               <FriendBoxNameImg></FriendBoxNameImg>
               <FriendBoxNameH2>{i.myNickName}</FriendBoxNameH2>
 
+              <FriendBoxNameP
+                onClick={() => {
+                  friendAddOnClick(i);
+                }}
+              >
+                수락
+              </FriendBoxNameP>
               <FriendBoxNameP
                 onClick={() => {
                   friendDeleteOnClick(i.id);

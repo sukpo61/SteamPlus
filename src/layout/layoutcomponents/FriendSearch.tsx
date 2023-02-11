@@ -25,6 +25,15 @@ function FriendSearch() {
   const myId = 1;
   const myNickName = "고양이";
 
+  // const myId = 2;
+  // const myNickName = "강아지";
+
+  // const myId = 3;
+  // const myNickName = "호랑이";
+
+  // const myId = 7;
+  // const myNickName = "Cat";
+
   const [layoutMenu, setLayoutMenu] = useRecoilState<String>(LayoutButton);
   const LayoutButtonOnClick = (i: string) => {
     if (layoutMenu === i) {

@@ -43,39 +43,32 @@
   ],
   "friend": [
     {
-      "id": "0398c3ef-f0dd-424c-9f41-42c12f27a7f4",
+      "id": "2b8849d3-516d-4689-a16a-7c6bae2811cb",
+      "myId": 1,
+      "friendId": 6,
+      "myNickName": "고양이",
+      "friendNickName": "dog"
+    },
+    {
+      "id": "e579a3db-ab5c-4658-8844-4a16f48cdfcc",
       "myId": 1,
       "friendId": 2,
       "myNickName": "고양이",
       "friendNickName": "강아지"
     },
     {
-      "id": "4f5e1247-4944-4093-bc1b-a534230b9ae7",
+      "id": "e579a3db-ab5c-4658-8844-4a16f48cdfcc1",
       "myId": 2,
       "friendId": 1,
       "myNickName": "강아지",
       "friendNickName": "고양이"
     },
     {
-      "id": "5f71d405-0956-45c1-b008-21520e9f4cd2",
-      "myId": 3,
+      "id": "c3d5f1f3-a072-4165-9784-d5d5e9296c1d",
+      "myId": 7,
       "friendId": 1,
-      "myNickName": "호랑이",
+      "myNickName": "Cat",
       "friendNickName": "고양이"
-    },
-    {
-      "id": "c2936cba-9d63-4675-a523-738004ef938f",
-      "myId": 1,
-      "friendId": 7,
-      "myNickName": "고양이",
-      "friendNickName": "Cat"
-    },
-    {
-      "id": "2b8849d3-516d-4689-a16a-7c6bae2811cb",
-      "myId": 1,
-      "friendId": 6,
-      "myNickName": "고양이",
-      "friendNickName": "dog"
     }
   ]
 }
