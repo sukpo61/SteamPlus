@@ -48,6 +48,34 @@
       "friendId": 2,
       "myNickName": "고양이",
       "friendNickName": "강아지"
+    },
+    {
+      "id": "4f5e1247-4944-4093-bc1b-a534230b9ae7",
+      "myId": 2,
+      "friendId": 1,
+      "myNickName": "강아지",
+      "friendNickName": "고양이"
+    },
+    {
+      "id": "5f71d405-0956-45c1-b008-21520e9f4cd2",
+      "myId": 3,
+      "friendId": 1,
+      "myNickName": "호랑이",
+      "friendNickName": "고양이"
+    },
+    {
+      "id": "c2936cba-9d63-4675-a523-738004ef938f",
+      "myId": 1,
+      "friendId": 7,
+      "myNickName": "고양이",
+      "friendNickName": "Cat"
+    },
+    {
+      "id": "2b8849d3-516d-4689-a16a-7c6bae2811cb",
+      "myId": 1,
+      "friendId": 6,
+      "myNickName": "고양이",
+      "friendNickName": "dog"
     }
   ]
 }

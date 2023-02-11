@@ -67,19 +67,67 @@ function Friend() {
     console.log("오류내용", error);
     return <p>오류</p>;
   }
-  // console.log(data?.data);
-  const friend = data?.data.filter((i: FriendProps) => {
-    if (frendSearchInput === "") {
-      return i.myId === myId;
-    } else {
-      const lowercaseNickname = i.friendNickName.toLowerCase();
-      const lowercaseSearchInput = frendSearchInput.toLowerCase();
-      return (
-        i.myId === myId && lowercaseNickname.includes(lowercaseSearchInput)
-      );
-    }
+  //친구 요청 온 내역 전체
+  const friendAdd = data?.data.filter((i: FriendProps) => {
+    return i.friendId === myId;
   });
-  // console.log(friend);
+
+  //양쪽 다 친구 내역
+  const friend = data?.data.filter((i: FriendProps) => {
+    for (let t = 0; t < friendAdd.length; t++) {
+      if (
+        friendAdd[t].friendId === i.myId &&
+        friendAdd[t].myId === i.friendId &&
+        frendSearchInput === ""
+      ) {
+        return i.myId === myId;
+      } else if (
+        friendAdd[t].friendId === i.myId &&
+        friendAdd[t].myId === i.friendId
+      ) {
+        const lowercaseNickname = i.friendNickName.toLowerCase();
+        const lowercaseSearchInput = frendSearchInput.toLowerCase();
+        return (
+          i.myId === myId && lowercaseNickname.includes(lowercaseSearchInput)
+        );
+      }
+    }
+
+    //친구 전체 검색 로직
+    // if (frendSearchInput === "") {
+    //   return i.myId === myId;
+    // } else {
+    //   const lowercaseNickname = i.friendNickName.toLowerCase();
+    //   const lowercaseSearchInput = frendSearchInput.toLowerCase();
+    //   return (
+    //     i.myId === myId && lowercaseNickname.includes(lowercaseSearchInput)
+    //   );
+    // }
+  });
+
+  //내가 친구 요청 보낸 내역 (내 친구내역만 있고 상대 친구내역엔 없는 상태)
+  const friendAddSend = data?.data.filter((i: FriendProps) => {
+    //만약 친구 요청온 것의 myid와 frendid / frendid와 myid가 같다면 제외
+    for (let t = 0; t < friendAdd.length; t++) {
+      if (
+        friendAdd[t].friendId === i.myId &&
+        friendAdd[t].myId === i.friendId
+      ) {
+        return;
+      }
+    }
+    return i.myId === myId;
+  });
+
+  //친구 요청 온 내역만 (내 친구내역엔 없고 상대 친구내역엔 있는 상태)
+  const friendAddCome = data?.data.filter((i: FriendProps) => {
+    for (let t = 0; t < friend.length; t++) {
+      if (friend[t].friendId === i.myId && friend[t].myId === i.friendId) {
+        return;
+      }
+    }
+    return i.friendId === myId;
+  });
 
   return (
     <FriendDiv layoutMenu={layoutMenu}>
@@ -101,6 +149,56 @@ function Friend() {
       </MenuTitleDiv>
 
       {/* 친구 목록 박스 */}
+      <h2 style={{ fontSize: 24, color: "#fff" }}>친구요청보냄</h2>
+      {friendAddSend.map((i: FriendProps) => {
+        return (
+          <FriendBoxDiv>
+            <FriendBoxNameDiv>
+              <FriendBoxNameImg></FriendBoxNameImg>
+              <FriendBoxNameH2>{i.friendNickName}</FriendBoxNameH2>
+
+              <FriendBoxNameP
+                onClick={() => {
+                  friendDeleteOnClick(i.id);
+                }}
+              >
+                삭제
+              </FriendBoxNameP>
+            </FriendBoxNameDiv>
+
+            <FriendGamingDiv>
+              <h2>dave diver방 참가중</h2>
+              <h2>참가하기</h2>
+            </FriendGamingDiv>
+          </FriendBoxDiv>
+        );
+      })}
+      <h2 style={{ fontSize: 24, color: "#fff" }}>친구요청받기</h2>
+      {friendAddCome.map((i: FriendProps) => {
+        return (
+          <FriendBoxDiv>
+            <FriendBoxNameDiv>
+              <FriendBoxNameImg></FriendBoxNameImg>
+              <FriendBoxNameH2>{i.myNickName}</FriendBoxNameH2>
+
+              <FriendBoxNameP
+                onClick={() => {
+                  friendDeleteOnClick(i.id);
+                }}
+              >
+                삭제
+              </FriendBoxNameP>
+            </FriendBoxNameDiv>
+
+            <FriendGamingDiv>
+              <h2>dave diver방 참가중</h2>
+              <h2>참가하기</h2>
+            </FriendGamingDiv>
+          </FriendBoxDiv>
+        );
+      })}
+      <h2 style={{ fontSize: 24, color: "#fff" }}>친구내역</h2>
+
       {friend.map((i: FriendProps) => {
         return (
           <FriendBoxDiv>
