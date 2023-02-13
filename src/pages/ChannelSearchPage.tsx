@@ -2,9 +2,11 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { log } from "console";
 import styled from "styled-components";
+
 import { useNavigate } from "react-router-dom";
 import { BiSearchAlt2 } from "react-icons/bi";
 import GameChannelBlock from "../components/common/GameChannelBlock";
+import { useRecoilState, atom } from "recoil";
 
 interface Game {
   [key: string]: string | number | boolean | any;
@@ -12,16 +14,37 @@ interface Game {
   name: string;
 }
 
-const ChannelSearchPage: any = () => {
-  const navigate = useNavigate();
+// const searchResultsState = atom({
+//   key: "searchResultsState",
+//   default: [],
+// });
 
+const ChannelSearchPage: any = () => {
   const [searchGames, setSearchGames] = useState<Game[]>([]);
   // const [loading, setLoading] = useState(false);
   const [error, setError] = useState<any>(null);
   const [searchInput, setSearchInput] = useState("dead");
+  const APIKEY = "234E0113F33D5C7C4D4D5292C6774550";
+  const STEAM_ACCOUNT_NAME = "sukpo61@naver.com";
+  const client_id = "ucj588lq839jowdgqawe2651hbna80";
+  const client_secret = "ie8i79maa233egjs88c90el20svaav";
+  const token = "typug2dtxgkjkn2gxnexvivhe4fi4t";
+  // const gameId = "187740";
+  // const gameId = "8339";
+  const gameId = "250900";
+  const searchKeyword = "sim";
+  // "The Binding of Isaac: Rebirth";
 
-  //검색
+  const [searchGame, setSearchGame] = useState("");
+  const [searchResult, setSearchResult] = useState([]);
+
+  // https://cors-anywhere.herokuapp.com/
+
   useEffect(() => {
+    // const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    //   e.preventDefault();
+
+    //검색
     axios
       .get(
         "https://cors-anywhere.herokuapp.com/https://store.steampowered.com/api/storesearch",
@@ -29,34 +52,59 @@ const ChannelSearchPage: any = () => {
           params: {
             cc: "us",
             l: "en",
-            term: "dead",
+            // term: "dead",
+            //limit : 20
+            term: searchKeyword,
           },
         }
       )
       .then((response) => {
-        console.log(response);
+        console.log("searchresult", response.data.items);
+        setSearchResult(response.data.items);
       })
       .catch((error) => {
         console.error(error);
       });
-  });
+    // }
+    // //유저정보
+    // axios
+    //   .get(
+    //     "https://cors-anywhere.herokuapp.com/https://api.steampowered.com/ISteamUser/GetPlayerSummaries/v2/",
+    //     {
+    //       params: {
+    //         key: APIKEY,
+    //         steamids: "76561198374391933",
+    //       },
+    //     }
+    //   )
+    //   .then((response) => {
+    //     console.log("userstate", response);
+    //   })
+    //   .catch((error) => setError(error));
 
-  // 유저 정보 api
-  //   axios
-  //     .get(
-  //       "https://cors-anywhere.herokuapp.com/https://api.steampowered.com/ISteamUser/GetPlayerSummaries/v2/",
-  //       {
-  //         params: {
-  //           key: "234E0113F33D5C7C4D4D5292C6774550",
-  //           steamids: "76561198374391933",
-  //         },
-  //       }
-  //     )
-  //     .then((response) => {
-  //       console.log(response);
-  //     })
-  //     .catch((error) => setError(error));
-  // }, []);
+    // 게임정보
+    // axios
+    //   .get(
+    //     `https://cors-anywhere.herokuapp.com/http://store.steampowered.com/api/appdetails/`,
+    //     {
+    //       params: {
+    //         appids: "250900",
+    //       },
+    //     }
+    //   )
+    //   .then((response) => {
+    //     console.log("gamedetail", response);
+    //   })
+    //   .catch((error) => {
+    //     setError("Could not retrieve header image");
+    //   });
+  }, []);
+
+  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchGame(e.target.value);
+  };
+
+  // const searchGame = {};
 
   return (
     // <div>
@@ -85,18 +133,21 @@ const ChannelSearchPage: any = () => {
       <SearchPageHeader>
         <SteamPlusLogo />
         <GameSearchInputArea>
-          <GameSearchInput />
-          <BiSearchAlt2 className="searchIcon" />
+          <GameSearchInput
+            type="text"
+            value={searchGame}
+            onChange={(e) => handleSearch(e)}
+          />
+          <BiSearchAlt2
+            className="searchIcon"
+            // onClick={(e) => handleSubmit(e)}
+          />
         </GameSearchInputArea>
       </SearchPageHeader>
       <SearchCount>
         '{}블라블라' 검색 결과 {}n 개
       </SearchCount>
-      <GameSearchList>
-        <GameChannelBlock />
-        <GameChannelBlock />
-        <GameChannelBlock />
-      </GameSearchList>
+      <GameSearchList>{/* <GameChannelBlock /> */}</GameSearchList>
     </div>
   );
 };
@@ -164,7 +215,7 @@ const SearchCount = styled.div`
   margin-left: 114px;
 `;
 const GameSearchList = styled.div`
-  width: 890px; // 홈에서 사이즈 조절 필요
+  width: 890px; // MianPage SearchPage에서 사이즈 조절 필요
   display: flex;
   flex-direction: column;
   gap: 20px;

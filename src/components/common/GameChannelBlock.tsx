@@ -1,13 +1,23 @@
 import React from "react";
 import styled from "styled-components";
+import { useNavigate } from "react-router-dom";
 
+interface Props {
+  // response: Item;
+}
+// {response}:Props
 function GameChannelBlock() {
+  const navigate = useNavigate();
   return (
-    <GameListBlock>
+    <GameListBlock
+    // onClick={() => navigate(`/${}`, {})} key={}
+    // key={result.id}
+    >
       <GameChannelImgPart></GameChannelImgPart>
       <GameChannelDetailPart>
         <div>
-          <GameChannelTitle>Dave The Diver</GameChannelTitle>
+          <GameChannelTitle></GameChannelTitle>
+          {/* {response.data.items} */}
           <GameChannelInfo>
             <GameChannelCategory>어드벤쳐, RPG, 앞서해보기</GameChannelCategory>
             <NumberOfPlayer>
@@ -32,7 +42,7 @@ function GameChannelBlock() {
 const GameListBlock = styled.div`
   display: flex;
   flex-direction: row;
-  /* width: 890px; // 홈에서 width 길이 조절 필요*/
+  width: 890px; // 홈에서 width 길이 조절 필요
   height: 108px;
   border-radius: 10px;
   overflow: hidden;
