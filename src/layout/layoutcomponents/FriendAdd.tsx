@@ -1,9 +1,5 @@
 import React from "react";
-import {
-  LayoutButton,
-  friendAddState,
-  friendAllState,
-} from "../../recoil/atom";
+import { LayoutButton } from "../../recoil/atom";
 import styled from "styled-components";
 import { useRecoilState } from "recoil";
 import { useState } from "react";
@@ -11,10 +7,9 @@ import { useQuery, useQueryClient } from "react-query";
 import axios from "axios";
 import { useMutation } from "react-query";
 import FriendTab from "./FriendTab";
-import { useEffect } from "react";
 
 //void ?? string ??
-export interface FriendProps {
+interface FriendProps {
   id: String;
   myId: Number;
   friendId: Number;
@@ -38,19 +33,25 @@ function Friend() {
   // const myNickName = "Cat";
 
   const [layoutMenu, setLayoutMenu] = useRecoilState<String>(LayoutButton);
-
-  const [friendAddRecoil, setFriendAddRecoil] = useRecoilState(friendAddState);
-  console.log(friendAddRecoil);
-
-  const [friendAllRecoil, setFriendAllRecoil] = useRecoilState(friendAllState);
-  console.log(friendAllRecoil);
-
   //친구검색 input
   const [frendSearchInput, setfrendSearchInput] = useState("");
   //친구검색 input
   const frendSearchOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setfrendSearchInput(e.target.value);
   };
+
+  //친구 수락
+  const postMutation = useMutation(
+    (friendAdd: object) =>
+      axios.post("http://localhost:3001/friend", friendAdd),
+    {
+      onSuccess: () => {
+        // 쿼리 무효화
+        queryClient.invalidateQueries("friend");
+        queryClient.invalidateQueries("friendsearch");
+      },
+    }
+  );
 
   // 친구 삭제
   const DeleteMutation = useMutation(
@@ -64,7 +65,20 @@ function Friend() {
       },
     }
   );
+  //친구 수락
+  const friendAddOnClick = (i: FriendProps) => {
+    console.log(i);
 
+    let friendAdd = {
+      id: i.id + "1",
+      myId: i.friendId,
+      friendId: i.myId,
+      myNickName: i.friendNickName,
+      friendNickName: i.myNickName,
+    };
+
+    postMutation.mutate(friendAdd);
+  };
   //친구 삭제 인데 +1 된것 까지 삭제 혹은 그 반대로 +1이 없는 것 까지 삭제
   const friendDeleteOnClick = (id: any) => {
     const deleteAll: any = id + "1";
@@ -78,12 +92,7 @@ function Friend() {
     const response = await axios.get("http://localhost:3001/friend");
     return response;
   };
-  const { isLoading, isError, data, error } = useQuery("friend", getFriend, {
-    onSuccess: () => {
-      setFriendAddRecoil(friendAdd);
-      setFriendAllRecoil(friend);
-    },
-  });
+  const { isLoading, isError, data, error } = useQuery("friend", getFriend);
   if (isLoading) {
     return <p>로딩중임</p>;
   }
@@ -91,7 +100,6 @@ function Friend() {
     console.log("오류내용", error);
     return <p>오류</p>;
   }
-
   //친구 요청 온 내역 전체
   const friendAdd = data?.data.filter((i: FriendProps) => {
     return i.friendId === myId;
@@ -119,34 +127,29 @@ function Friend() {
     }
   });
 
-  // //내가 친구 요청 보낸 내역 (내 친구내역만 있고 상대 친구내역엔 없는 상태)
-  // const friendAddSend = data?.data.filter((i: FriendProps) => {
-  //   //만약 친구 요청온 것의 myid와 frendid / frendid와 myid가 같다면 제외
-  //   for (let t = 0; t < friendAdd.length; t++) {
-  //     if (
-  //       friendAdd[t].friendId === i.myId &&
-  //       friendAdd[t].myId === i.friendId
-  //     ) {
-  //       return;
-  //     }
-  //   }
-  //   return i.myId === myId && frendSearchInput === "";
-  // });
+  //내가 친구 요청 보낸 내역 (내 친구내역만 있고 상대 친구내역엔 없는 상태)
+  const friendAddSend = data?.data.filter((i: FriendProps) => {
+    //만약 친구 요청온 것의 myid와 frendid / frendid와 myid가 같다면 제외
+    for (let t = 0; t < friendAdd.length; t++) {
+      if (
+        friendAdd[t].friendId === i.myId &&
+        friendAdd[t].myId === i.friendId
+      ) {
+        return;
+      }
+    }
+    return i.myId === myId && frendSearchInput === "";
+  });
 
-  // //친구 요청 온 내역만 (내 친구내역엔 없고 상대 친구내역엔 있는 상태)
-  // const friendAddCome = data?.data.filter((i: FriendProps) => {
-  //   for (let t = 0; t < friend.length; t++) {
-  //     if (friend[t].friendId === i.myId && friend[t].myId === i.friendId) {
-  //       return;
-  //     }
-  //   }
-  //   return i.friendId === myId && frendSearchInput === "";
-  // });
-
-  // useEffect(() => {
-  //   setFriendAddRecoil(friendAdd);
-  //   setFriendAllRecoil(friend);
-  // }, []);
+  //친구 요청 온 내역만 (내 친구내역엔 없고 상대 친구내역엔 있는 상태)
+  const friendAddCome = data?.data.filter((i: FriendProps) => {
+    for (let t = 0; t < friend.length; t++) {
+      if (friend[t].friendId === i.myId && friend[t].myId === i.friendId) {
+        return;
+      }
+    }
+    return i.friendId === myId && frendSearchInput === "";
+  });
 
   return (
     <FriendDiv layoutMenu={layoutMenu}>
@@ -162,13 +165,45 @@ function Friend() {
       </MenuTitleDiv>
 
       {/* 친구 목록 박스 */}
-      {friend.map((i: FriendProps) => {
+      <h2 style={{ fontSize: 24, color: "#fff" }}>친구요청보냄</h2>
+      {friendAddSend.map((i: FriendProps) => {
         return (
           <FriendBoxDiv>
             <FriendBoxNameDiv>
               <FriendBoxNameImg></FriendBoxNameImg>
               <FriendBoxNameH2>{i.friendNickName}</FriendBoxNameH2>
 
+              <FriendBoxNameP
+                onClick={() => {
+                  friendDeleteOnClick(i.id);
+                }}
+              >
+                취소
+              </FriendBoxNameP>
+            </FriendBoxNameDiv>
+
+            <FriendGamingDiv>
+              <h2>dave diver방 참가중</h2>
+              <h2>참가하기</h2>
+            </FriendGamingDiv>
+          </FriendBoxDiv>
+        );
+      })}
+      <h2 style={{ fontSize: 24, color: "#fff" }}>친구요청받기</h2>
+      {friendAddCome.map((i: FriendProps) => {
+        return (
+          <FriendBoxDiv>
+            <FriendBoxNameDiv>
+              <FriendBoxNameImg></FriendBoxNameImg>
+              <FriendBoxNameH2>{i.myNickName}</FriendBoxNameH2>
+
+              <FriendBoxNameP
+                onClick={() => {
+                  friendAddOnClick(i);
+                }}
+              >
+                수락
+              </FriendBoxNameP>
               <FriendBoxNameP
                 onClick={() => {
                   friendDeleteOnClick(i.id);
@@ -191,7 +226,7 @@ function Friend() {
 
 export default Friend;
 const FriendDiv = styled.div<{ layoutMenu: String }>`
-  display: ${(props) => (props.layoutMenu === "friend" ? "block" : "none")};
+  display: ${(props) => (props.layoutMenu === "friendadd" ? "block" : "none")};
   margin-top: 150px;
   margin-bottom: 30px;
 `;
