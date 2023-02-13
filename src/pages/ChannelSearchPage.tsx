@@ -21,27 +21,31 @@ const ChannelSearchPage: any = () => {
   // const gameId = "187740";
   // const gameId = "8339";
   const gameId = "250900";
+  const searchTerm = "The Binding of Isaac: Rebirth";
+
   // https://cors-anywhere.herokuapp.com/
 
   useEffect(() => {
-    // axios
-    //   .get(
-    //     "https://cors-anywhere.herokuapp.com/https://store.steampowered.com/api/storesearch",
-    //     {
-    //       params: {
-    //         cc: "us",
-    //         l: "en",
-    //         term: "dead",
-    //       },
-    //     }
-    //   )
-    //   .then((response) => {
-    //     console.log("searchresult", response);
-    //   })
-    //   .catch((error) => {
-    //     console.error(error);
-    //   });
-
+    //검색
+    axios
+      .get(
+        "https://cors-anywhere.herokuapp.com/https://store.steampowered.com/api/storesearch",
+        {
+          params: {
+            cc: "us",
+            l: "en",
+            term: "dead",
+            //limit : 20
+          },
+        }
+      )
+      .then((response) => {
+        console.log("searchresult", response);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+    //유저정보
     axios
       .get(
         "https://cors-anywhere.herokuapp.com/https://api.steampowered.com/ISteamUser/GetPlayerSummaries/v2/",
@@ -57,21 +61,7 @@ const ChannelSearchPage: any = () => {
       })
       .catch((error) => setError(error));
 
-    // axios
-    //   .get(
-    //     `https://cors-anywhere.herokuapp.com/https://api.steampowered.com/ISteamUser/ResolveVanityURL/v1/`,
-    //     {
-    //       params: {
-    //         key: APIKEY,
-    //         vanityurl: "SUKPO61",
-    //       },
-    //     }
-    //   )
-    //   .then((response) => {
-    //     console.log("steamid", response);
-    //   })
-    //   .catch((error) => setError(error));
-
+    // 게임정보
     axios
       .get(
         `https://cors-anywhere.herokuapp.com/http://store.steampowered.com/api/appdetails/`,
@@ -86,44 +76,6 @@ const ChannelSearchPage: any = () => {
       })
       .catch((error) => {
         setError("Could not retrieve header image");
-      });
-
-    axios
-      .post(
-        `https://id.twitch.tv/oauth2/token?client_id=${client_id}&client_secret=${client_secret}&grant_type=client_credentials`
-      )
-      .then((response) => {
-        console.log("token", response);
-      })
-      .catch((error) => {
-        setError("Could not retrieve header image");
-      });
-
-    axios({
-      url: `https://cors-anywhere.herokuapp.com/https://api.igdb.com/v4/screenshots`,
-      method: "post",
-      headers: {
-        Accept: "application/json",
-        "Client-ID": "ucj588lq839jowdgqawe2651hbna80",
-        Authorization: `Bearer typug2dtxgkjkn2gxnexvivhe4fi4t`,
-      },
-      // params: {
-      //   fields: "url",
-      //   filter: `[games][eq]=${gameId}&[resolution][eq]=720p`,
-      // },
-      // params: {
-      //   fields: "url",
-      //   id: gameId,
-      // },
-      data: "fields alpha_channel,animated,checksum,game,height,image_id,url,width;",
-    })
-      .then((response) => {
-        console.log("image", response);
-      })
-      .catch((error) => {
-        console.log("error", error);
-
-        // setError("Could not retrieve header image");
       });
   }, []);
 
