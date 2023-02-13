@@ -64,7 +64,21 @@
       "friendNickName": "고양이"
     },
     {
-      "id": "eade4d58-9e55-456b-ae32-dc3286836af1",
+      "id": "a2b6a4a6-fb37-4d72-9360-8a240e532d47",
+      "myId": 1,
+      "friendId": 3,
+      "myNickName": "고양이",
+      "friendNickName": "호랑이"
+    },
+    {
+      "id": "7dd11d52-d28b-4668-8a16-82e4373a872b",
+      "myId": 1,
+      "friendId": 3,
+      "myNickName": "고양이",
+      "friendNickName": "호랑이"
+    },
+    {
+      "id": "937c38e7-e637-4027-aeb6-83e4be7cec88",
       "myId": 1,
       "friendId": 4,
       "myNickName": "고양이",

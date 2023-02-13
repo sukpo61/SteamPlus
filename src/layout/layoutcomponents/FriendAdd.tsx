@@ -1,21 +1,13 @@
 import React from "react";
-import { LayoutButton } from "../../recoil/atom";
+import { LayoutButton, getFriend, friendAllState } from "../../recoil/atom";
 import styled from "styled-components";
 import { useRecoilState } from "recoil";
 import { useState } from "react";
-import { useQuery, useQueryClient } from "react-query";
+import { useQueryClient } from "react-query";
 import axios from "axios";
 import { useMutation } from "react-query";
 import FriendTab from "./FriendTab";
-
-//void ?? string ??
-interface FriendProps {
-  id: String;
-  myId: Number;
-  friendId: Number;
-  myNickName: String;
-  friendNickName: String;
-}
+import { FriendProps } from "./Friend";
 
 function Friend() {
   const queryClient = useQueryClient();
@@ -39,6 +31,9 @@ function Friend() {
   const frendSearchOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setfrendSearchInput(e.target.value);
   };
+  //친구 내역 전체 불러오기
+  const [getFriendAuth, setGetFriendAuth] =
+    useRecoilState<FriendProps[]>(getFriend);
 
   //친구 수락
   const postMutation = useMutation(
@@ -65,6 +60,7 @@ function Friend() {
       },
     }
   );
+
   //친구 수락
   const friendAddOnClick = (i: FriendProps) => {
     console.log(i);
@@ -88,25 +84,13 @@ function Friend() {
     DeleteMutation.mutate(deleteAll2);
   };
 
-  const getFriend = async () => {
-    const response = await axios.get("http://localhost:3001/friend");
-    return response;
-  };
-  const { isLoading, isError, data, error } = useQuery("friend", getFriend);
-  if (isLoading) {
-    return <p>로딩중임</p>;
-  }
-  if (isError) {
-    console.log("오류내용", error);
-    return <p>오류</p>;
-  }
   //친구 요청 온 내역 전체
-  const friendAdd = data?.data.filter((i: FriendProps) => {
+  const friendAdd = getFriendAuth?.filter((i: FriendProps) => {
     return i.friendId === myId;
   });
 
   //양쪽 다 친구 내역
-  const friend = data?.data.filter((i: FriendProps) => {
+  const friend = getFriendAuth?.filter((i: FriendProps) => {
     for (let t = 0; t < friendAdd.length; t++) {
       if (
         friendAdd[t].friendId === i.myId &&
@@ -128,7 +112,7 @@ function Friend() {
   });
 
   //내가 친구 요청 보낸 내역 (내 친구내역만 있고 상대 친구내역엔 없는 상태)
-  const friendAddSend = data?.data.filter((i: FriendProps) => {
+  const friendAddSend = getFriendAuth?.filter((i: FriendProps) => {
     //만약 친구 요청온 것의 myid와 frendid / frendid와 myid가 같다면 제외
     for (let t = 0; t < friendAdd.length; t++) {
       if (
@@ -142,7 +126,7 @@ function Friend() {
   });
 
   //친구 요청 온 내역만 (내 친구내역엔 없고 상대 친구내역엔 있는 상태)
-  const friendAddCome = data?.data.filter((i: FriendProps) => {
+  const friendAddCome = getFriendAuth?.filter((i: FriendProps) => {
     for (let t = 0; t < friend.length; t++) {
       if (friend[t].friendId === i.myId && friend[t].myId === i.friendId) {
         return;
@@ -166,7 +150,7 @@ function Friend() {
 
       {/* 친구 목록 박스 */}
       <h2 style={{ fontSize: 24, color: "#fff" }}>친구요청보냄</h2>
-      {friendAddSend.map((i: FriendProps) => {
+      {friendAddSend?.map((i: FriendProps) => {
         return (
           <FriendBoxDiv>
             <FriendBoxNameDiv>
@@ -190,7 +174,7 @@ function Friend() {
         );
       })}
       <h2 style={{ fontSize: 24, color: "#fff" }}>친구요청받기</h2>
-      {friendAddCome.map((i: FriendProps) => {
+      {friendAddCome?.map((i: FriendProps) => {
         return (
           <FriendBoxDiv>
             <FriendBoxNameDiv>
