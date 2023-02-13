@@ -1,9 +1,9 @@
 import React from "react";
-import { LayoutButton } from "../../recoil/atom";
+import { LayoutButton, getFriend, friendAllState } from "../../recoil/atom";
 import styled from "styled-components";
 import { useRecoilState } from "recoil";
 import { useState } from "react";
-import { useQuery, useQueryClient } from "react-query";
+import { useQueryClient } from "react-query";
 import axios from "axios";
 import { useMutation } from "react-query";
 import { v4 as uuidv4 } from "uuid";
@@ -30,6 +30,13 @@ function FriendSearch() {
   // const myNickName = "Cat";
 
   const [layoutMenu, setLayoutMenu] = useRecoilState<String>(LayoutButton);
+  //친구 내역 전체
+  const [getFriendAuth, setGetFriendAuth] =
+    useRecoilState<FriendProps[]>(getFriend);
+  console.log(getFriend);
+  //계정 내역 전체 불러오기
+  const [friendAllRecoil, setFriendAllRecoil] = useRecoilState(friendAllState);
+  console.log(friendAllRecoil);
 
   //친구 추가
   const postMutation = useMutation(
@@ -38,20 +45,11 @@ function FriendSearch() {
     {
       onSuccess: () => {
         // 쿼리 무효화
-        queryClient.invalidateQueries("friend");
-        queryClient.invalidateQueries("friendsearch");
+        queryClient.invalidateQueries(["friend"]);
+        queryClient.invalidateQueries(["friendsearch"]);
       },
     }
   );
-
-  //friend 가져오기
-  const getFriend = async () => {
-    const response = await axios.get("http://localhost:3001/friend");
-    return response;
-  };
-  const { data: friendList } = useQuery("friend", getFriend);
-  // console.log(friendList?.data);
-  // //이미 있는친구면 false
 
   //친구검색 input
   const [frendSearchInput, setfrendSearchInput] = useState("");
@@ -59,23 +57,6 @@ function FriendSearch() {
   const frendSearchOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setfrendSearchInput(e.target.value);
   };
-
-  //auth 가져오기
-  const getFriendSearch = async () => {
-    const response = await axios.get("http://localhost:3001/auth");
-    return response;
-  };
-  const { isLoading, isError, data, error } = useQuery(
-    "friendsearch",
-    getFriendSearch
-  );
-  if (isLoading) {
-    return <p>로딩중임</p>;
-  }
-  if (isError) {
-    console.log("오류내용", error);
-    return <p>오류</p>;
-  }
 
   const friendAddOnClick = (i: FriendSearchProps) => {
     let friendAdd = {
@@ -90,7 +71,7 @@ function FriendSearch() {
   };
 
   //친구 요청 온 내역 전체
-  const friendAdd = friendList?.data.filter((i: FriendProps) => {
+  const friendAdd = getFriendAuth?.filter((i: FriendProps) => {
     // for (let t = 0; t < data?.data.length; t++){
     //   if(data?.data[t].friendId)
     // }
@@ -101,13 +82,13 @@ function FriendSearch() {
   //이미 친구인 목록
   // 계정목록과 친구목록을 불러온 후 친구목록중 내 친구목록인 것 구한다.
   //그친구목록의 친구 id가 일치하는 계정 목록을 불러옴
-  const alreadyFriend = data?.data.filter((i: FriendSearchProps) => {
-    for (let t = 0; t < friendList?.data.length; t++) {
+  const alreadyFriend = friendAllRecoil?.filter((i: FriendSearchProps) => {
+    for (let t = 0; t < getFriendAuth.length; t++) {
       if (frendSearchInput === "") {
         return;
       } else if (
-        friendList?.data[t].friendId === i.id &&
-        friendList?.data[t].myId === myId
+        getFriendAuth[t].friendId === i.id &&
+        getFriendAuth[t].myId === myId
       ) {
         const lowercaseNickname = i.nickname.toLowerCase();
         const lowercaseSearchInput = frendSearchInput.toLowerCase();
@@ -117,7 +98,7 @@ function FriendSearch() {
   });
 
   //auth 가져온후 검색한것만 map
-  const friendSearch = data?.data.filter((i: FriendSearchProps) => {
+  const friendSearch = friendAllRecoil?.filter((i: FriendSearchProps) => {
     for (let t = 0; t < friendAdd.length; t++) {
       console.log(i.id === friendAdd[t].myId);
 
@@ -159,7 +140,7 @@ function FriendSearch() {
       </MenuTitleDiv>
 
       {/* 친구 목록 박스 */}
-      {alreadyFriend.map((i: FriendSearchProps) => {
+      {alreadyFriend?.map((i: FriendSearchProps) => {
         return (
           <FriendBoxDiv>
             <FriendBoxNameImg></FriendBoxNameImg>
@@ -169,7 +150,7 @@ function FriendSearch() {
           </FriendBoxDiv>
         );
       })}
-      {friendSearch.map((i: FriendSearchProps) => {
+      {friendSearch?.map((i: FriendSearchProps) => {
         return (
           <FriendBoxDiv>
             <FriendBoxNameImg></FriendBoxNameImg>

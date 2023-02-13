@@ -1,17 +1,30 @@
 import React from "react";
 import styled from "styled-components";
 import { useRecoilState } from "recoil";
-import { LayoutButton } from "../recoil/atom";
+import { LayoutButton, getFriend, friendAllState } from "../recoil/atom";
 import Profile from "./layoutcomponents/Profile";
 import GameSearch from "./layoutcomponents/GameSearch";
 import Friend from "./layoutcomponents/Friend";
 import FriendSearch from "./layoutcomponents/FriendSearch";
 import VoiceTalk from "./layoutcomponents/VoiceTalk";
 import FriendAdd from "./layoutcomponents/FriendAdd";
+import { useQuery } from "react-query";
+import axios from "axios";
+import { FriendProps } from "../layout/layoutcomponents/Friend";
+import { FriendSearchProps } from "../layout/layoutcomponents/FriendSearch";
+import { useEffect } from "react";
+import { useMutation } from "react-query";
+import { useQueryClient } from "react-query";
 
 function Layout() {
+  const queryClient = useQueryClient();
   //레이아웃 종류
   const [layoutMenu, setLayoutMenu] = useRecoilState<String>(LayoutButton);
+  //친구 내역 전체
+  const [getFriendAuth, setGetFriendAuth] =
+    useRecoilState<FriendProps[]>(getFriend);
+  //계정 내역 전체 불러오기
+  const [friendAllRecoil, setFriendAllRecoil] = useRecoilState(friendAllState);
 
   const LayoutButtonOnClick = (i: string) => {
     if (layoutMenu === i) {
@@ -21,6 +34,31 @@ function Layout() {
     }
   };
 
+  const getFriendSearch = async () => {
+    console.log("실행됨");
+    const response = await axios.get("http://localhost:3001/auth");
+    setFriendAllRecoil(response?.data);
+
+    return response;
+  };
+  const { data: friendSearch } = useQuery("friendsearch", getFriendSearch);
+
+  const getAllFriend = async () => {
+    console.log("실행됨");
+    //비동기함수는 최대한 동기적으로 활용가능하게
+    const response = await axios.get("http://localhost:3001/friend");
+    setGetFriendAuth(response?.data);
+    return response;
+  };
+  const { isLoading, isError, data, error } = useQuery("friend", getAllFriend);
+
+  if (isLoading) {
+    return <p>로딩중</p>;
+  }
+  if (isError) {
+    console.log("오류내용", error);
+    return <p>오류</p>;
+  }
   return (
     <>
       <SideBarDiv>
