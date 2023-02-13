@@ -78,19 +78,13 @@ function Friend() {
     const response = await axios.get("http://localhost:3001/friend");
     return response;
   };
+
   const { isLoading, isError, data, error } = useQuery("friend", getFriend, {
     onSuccess: () => {
-      setFriendAddRecoil(friendAdd);
-      setFriendAllRecoil(friend);
+      // setFriendAddRecoil(friendAdd);
+      // setFriendAllRecoil(friend);
     },
   });
-  if (isLoading) {
-    return <p>로딩중임</p>;
-  }
-  if (isError) {
-    console.log("오류내용", error);
-    return <p>오류</p>;
-  }
 
   //친구 요청 온 내역 전체
   const friendAdd = data?.data.filter((i: FriendProps) => {
@@ -143,10 +137,19 @@ function Friend() {
   //   return i.friendId === myId && frendSearchInput === "";
   // });
 
-  // useEffect(() => {
-  //   setFriendAddRecoil(friendAdd);
-  //   setFriendAllRecoil(friend);
-  // }, []);
+  useEffect(() => {
+    setFriendAddRecoil(friendAdd);
+    setFriendAllRecoil(friend);
+  }, [isLoading]);
+
+  if (isLoading) {
+    return <p>로딩중임</p>;
+  }
+
+  if (isError) {
+    console.log("오류내용", error);
+    return <p>오류</p>;
+  }
 
   return (
     <FriendDiv layoutMenu={layoutMenu}>
@@ -162,7 +165,7 @@ function Friend() {
       </MenuTitleDiv>
 
       {/* 친구 목록 박스 */}
-      {friend.map((i: FriendProps) => {
+      {friend?.map((i: FriendProps) => {
         return (
           <FriendBoxDiv>
             <FriendBoxNameDiv>
