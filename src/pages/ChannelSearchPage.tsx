@@ -26,16 +26,11 @@ const ChannelSearchPage: any = () => {
   const [searchInput, setSearchInput] = useState("dead");
   const APIKEY = "234E0113F33D5C7C4D4D5292C6774550";
   const STEAM_ACCOUNT_NAME = "sukpo61@naver.com";
-  const client_id = "ucj588lq839jowdgqawe2651hbna80";
-  const client_secret = "ie8i79maa233egjs88c90el20svaav";
-  const token = "typug2dtxgkjkn2gxnexvivhe4fi4t";
-  // const gameId = "187740";
-  // const gameId = "8339";
+
   const gameId = "250900";
   const searchKeyword = "sim";
-  // "The Binding of Isaac: Rebirth";
 
-  const [searchGame, setSearchGame] = useState("");
+  const [searchvalue, setSearchValue] = useState("");
   const [searchResult, setSearchResult] = useState([]);
 
   // https://cors-anywhere.herokuapp.com/
@@ -43,28 +38,27 @@ const ChannelSearchPage: any = () => {
   useEffect(() => {
     // const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     //   e.preventDefault();
-
     //검색
-    axios
-      .get(
-        "https://cors-anywhere.herokuapp.com/https://store.steampowered.com/api/storesearch",
-        {
-          params: {
-            cc: "us",
-            l: "en",
-            // term: "dead",
-            //limit : 20
-            term: searchKeyword,
-          },
-        }
-      )
-      .then((response) => {
-        console.log("searchresult", response.data.items);
-        setSearchResult(response.data.items);
-      })
-      .catch((error) => {
-        console.error(error);
-      });
+    // axios
+    //   .get(
+    //     "https://cors-anywhere.herokuapp.com/https://store.steampowered.com/api/storesearch",
+    //     {
+    //       params: {
+    //         cc: "us",
+    //         l: "en",
+    //         // term: "dead",
+    //         //limit : 20
+    //         term: searchKeyword,
+    //       },
+    //     }
+    //   )
+    //   .then((response) => {
+    //     console.log("searchresult", response.data.items);
+    //     setSearchResult(response.data.items);
+    //   })
+    //   .catch((error) => {
+    //     console.error(error);
+    //   });
     // }
     // //유저정보
     // axios
@@ -81,7 +75,6 @@ const ChannelSearchPage: any = () => {
     //     console.log("userstate", response);
     //   })
     //   .catch((error) => setError(error));
-
     // 게임정보
     // axios
     //   .get(
@@ -101,7 +94,30 @@ const ChannelSearchPage: any = () => {
   }, []);
 
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchGame(e.target.value);
+    setSearchValue(e.target.value);
+  };
+
+  const SubmitSearch = () => {
+    axios
+      .get(
+        "https://cors-anywhere.herokuapp.com/https://store.steampowered.com/api/storesearch",
+        {
+          params: {
+            cc: "us",
+            l: "en",
+            // term: "dead",
+            //limit : 20
+            term: searchvalue,
+          },
+        }
+      )
+      .then((response) => {
+        console.log("searchresult", response.data.items);
+        setSearchResult(response.data.items);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
   };
 
   // const searchGame = {};
@@ -135,13 +151,10 @@ const ChannelSearchPage: any = () => {
         <GameSearchInputArea>
           <GameSearchInput
             type="text"
-            value={searchGame}
-            onChange={(e) => handleSearch(e)}
+            value={searchvalue}
+            onChange={handleSearch}
           />
-          <BiSearchAlt2
-            className="searchIcon"
-            // onClick={(e) => handleSubmit(e)}
-          />
+          <BiSearchAlt2 className="searchIcon" onClick={SubmitSearch} />
         </GameSearchInputArea>
       </SearchPageHeader>
       <SearchCount>
