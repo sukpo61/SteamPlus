@@ -7,14 +7,9 @@ import { useQuery, useQueryClient } from "react-query";
 import axios from "axios";
 import { useMutation } from "react-query";
 import { v4 as uuidv4 } from "uuid";
-
-// interface FriendProps {
-//   myId: Number;
-//   friendId: Number;
-//   myNickName: String;
-//   friendNickName: String;
-// }
-interface FriendSearchProps {
+import FriendTab from "./FriendTab";
+import { FriendProps } from "./Friend";
+export interface FriendSearchProps {
   id: Number;
   uid: Number;
   nickname: String;
@@ -35,13 +30,6 @@ function FriendSearch() {
   // const myNickName = "Cat";
 
   const [layoutMenu, setLayoutMenu] = useRecoilState<String>(LayoutButton);
-  const LayoutButtonOnClick = (i: string) => {
-    if (layoutMenu === i) {
-      setLayoutMenu("close");
-    } else {
-      setLayoutMenu(i);
-    }
-  };
 
   //친구 추가
   const postMutation = useMutation(
@@ -101,6 +89,15 @@ function FriendSearch() {
     postMutation.mutate(friendAdd);
   };
 
+  //친구 요청 온 내역 전체
+  const friendAdd = friendList?.data.filter((i: FriendProps) => {
+    // for (let t = 0; t < data?.data.length; t++){
+    //   if(data?.data[t].friendId)
+    // }
+    return myId === i.friendId;
+  });
+  console.log(friendAdd);
+
   //이미 친구인 목록
   // 계정목록과 친구목록을 불러온 후 친구목록중 내 친구목록인 것 구한다.
   //그친구목록의 친구 id가 일치하는 계정 목록을 불러옴
@@ -118,26 +115,36 @@ function FriendSearch() {
       }
     }
   });
-  console.log(alreadyFriend);
 
   //auth 가져온후 검색한것만 map
   const friendSearch = data?.data.filter((i: FriendSearchProps) => {
-    if (frendSearchInput === "") {
-      return;
-    } else {
-      // 현재 친구상태면 안보이게
-      for (let t = 0; t < alreadyFriend.length; t++) {
-        if (alreadyFriend[t].id === i.id) {
-          return;
+    for (let t = 0; t < friendAdd.length; t++) {
+      console.log(i.id === friendAdd[t].myId);
+
+      if (frendSearchInput === "") {
+        return;
+      } else if (
+        //
+        i.id === friendAdd[t].myId
+      ) {
+        return;
+      } else {
+        // 현재 친구상태면 안보이게
+        for (let t = 0; t < alreadyFriend.length; t++) {
+          if (alreadyFriend[t].id === i.id) {
+            return;
+          }
         }
+        //대문자 검색
+        const lowercaseNickname = i.nickname.toLowerCase();
+        const lowercaseSearchInput = frendSearchInput.toLowerCase();
+        return (
+          i.id !== myId && lowercaseNickname.includes(lowercaseSearchInput)
+        );
+        //특정문자열이 포함되면 true반환
+        //자신은 안뜨고 검색한것만
+        // for문 밖으로 return값을 빼내니까 영어검색 작동
       }
-      //대문자 검색
-      const lowercaseNickname = i.nickname.toLowerCase();
-      const lowercaseSearchInput = frendSearchInput.toLowerCase();
-      return i.id !== myId && lowercaseNickname.includes(lowercaseSearchInput);
-      //특정문자열이 포함되면 true반환
-      //자신은 안뜨고 검색한것만
-      // for문 밖으로 return값을 빼내니까 영어검색 작동
     }
   });
 
@@ -145,12 +152,8 @@ function FriendSearch() {
     <FriendSearchDiv layoutMenu={layoutMenu}>
       {/* 위 제목과 input layoutstring이 바뀔때마다 바뀌게 */}
       <MenuTitleDiv>
-        <MenuTitleFlex>
-          <FriendMenuDiv onClick={() => LayoutButtonOnClick("friend")}>
-            Friend
-          </FriendMenuDiv>
-          <FriendSearchMenuDiv>Friend Search</FriendSearchMenuDiv>
-        </MenuTitleFlex>
+        {/* 세개의 탭 */}
+        <FriendTab />
 
         <MenuTitleInput onChange={frendSearchOnChange}></MenuTitleInput>
       </MenuTitleDiv>
@@ -209,14 +212,6 @@ const MenuTitleFlex = styled.div`
   justify-content: space-around;
   margin-top: 30px;
 `;
-const FriendMenuDiv = styled.h2`
-  cursor: pointer;
-`;
-const FriendSearchMenuDiv = styled.h2`
-  cursor: pointer;
-  background-color: yellow;
-`;
-
 const MenuTitleInput = styled.input`
   width: 350px;
   height: 40px;

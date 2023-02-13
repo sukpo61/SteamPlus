@@ -7,6 +7,7 @@ import GameSearch from "./layoutcomponents/GameSearch";
 import Friend from "./layoutcomponents/Friend";
 import FriendSearch from "./layoutcomponents/FriendSearch";
 import VoiceTalk from "./layoutcomponents/VoiceTalk";
+import FriendAdd from "./layoutcomponents/FriendAdd";
 
 function Layout() {
   //레이아웃 종류
@@ -48,25 +49,12 @@ function Layout() {
       </SideBarDiv>
       {/* 메뉴 컴포넌트 */}
       <MenuOpenDiv layoutMenu={layoutMenu}>
-        {/* 위 제목과 input layoutstring이 바뀔때마다 바뀌게
-        <MenuTitleDiv>
-          <MenuTitleFlex>
-            <MenuTitleH2>Dave Diver</MenuTitleH2>
-            <MenuTitleLink></MenuTitleLink>
-            <MenuTitleAdd>+</MenuTitleAdd>
-          </MenuTitleFlex>
-
-          <MenuTitleIform>
-            <MenuTitleInput></MenuTitleInput>
-            <MenuTitleButton>확인</MenuTitleButton>
-          </MenuTitleIform>
-        </MenuTitleDiv> */}
-
         <Profile />
         <GameSearch />
         <Friend />
         <FriendSearch />
         <VoiceTalk />
+        <FriendAdd />
       </MenuOpenDiv>
     </>
   );
