@@ -1,7 +1,12 @@
 import React from "react";
-import { LayoutButton, getFriend, friendAllState } from "../../recoil/atom";
+import {
+  LayoutButton,
+  getFriend,
+  friendAllState,
+  newFriendAdd,
+} from "../../recoil/atom";
 import styled from "styled-components";
-import { useRecoilState } from "recoil";
+import { useRecoilState, useRecoilValue } from "recoil";
 import { useState } from "react";
 import { useQueryClient } from "react-query";
 import axios from "axios";
@@ -33,10 +38,10 @@ function FriendSearch() {
   //친구 내역 전체
   const [getFriendAuth, setGetFriendAuth] =
     useRecoilState<FriendProps[]>(getFriend);
-  console.log(getFriend);
   //계정 내역 전체 불러오기
   const [friendAllRecoil, setFriendAllRecoil] = useRecoilState(friendAllState);
-  console.log(friendAllRecoil);
+  //친구 요청 온 내역 전체
+  const [friendAdd] = useRecoilValue(newFriendAdd);
 
   //친구 추가
   const postMutation = useMutation(
@@ -70,14 +75,14 @@ function FriendSearch() {
     postMutation.mutate(friendAdd);
   };
 
-  //친구 요청 온 내역 전체
-  const friendAdd = getFriendAuth?.filter((i: FriendProps) => {
-    // for (let t = 0; t < data?.data.length; t++){
-    //   if(data?.data[t].friendId)
-    // }
-    return myId === i.friendId;
-  });
-  console.log(friendAdd);
+  // //친구 요청 온 내역 전체
+  // const friendAdd = getFriendAuth?.filter((i: FriendProps) => {
+  //   // for (let t = 0; t < data?.data.length; t++){
+  //   //   if(data?.data[t].friendId)
+  //   // }
+  //   return myId === i.friendId;
+  // });
+  // console.log(friendAdd);
 
   //이미 친구인 목록
   // 계정목록과 친구목록을 불러온 후 친구목록중 내 친구목록인 것 구한다.

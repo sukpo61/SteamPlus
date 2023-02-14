@@ -1,7 +1,12 @@
 import React from "react";
-import { LayoutButton, getFriend, friendAllState } from "../../recoil/atom";
+import {
+  LayoutButton,
+  getFriend,
+  friendAllState,
+  newFriendAdd,
+} from "../../recoil/atom";
 import styled from "styled-components";
-import { useRecoilState } from "recoil";
+import { useRecoilState, useRecoilValue } from "recoil";
 import { useState } from "react";
 import { useQueryClient } from "react-query";
 import axios from "axios";
@@ -34,6 +39,8 @@ function Friend() {
   //친구 내역 전체 불러오기
   const [getFriendAuth, setGetFriendAuth] =
     useRecoilState<FriendProps[]>(getFriend);
+  //친구 요청 온 내역 전체
+  const [friendAdd] = useRecoilValue(newFriendAdd);
 
   //친구 수락
   const postMutation = useMutation(
@@ -83,11 +90,6 @@ function Friend() {
     DeleteMutation.mutate(deleteAll);
     DeleteMutation.mutate(deleteAll2);
   };
-
-  //친구 요청 온 내역 전체
-  const friendAdd = getFriendAuth?.filter((i: FriendProps) => {
-    return i.friendId === myId;
-  });
 
   //양쪽 다 친구 내역
   const friend = getFriendAuth?.filter((i: FriendProps) => {
