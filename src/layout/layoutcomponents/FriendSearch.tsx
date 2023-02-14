@@ -46,7 +46,7 @@ function FriendSearch() {
   //친구 추가
   const postMutation = useMutation(
     (friendAdd: object) =>
-      axios.post("http://localhost:3001/friend", friendAdd),
+      axios.post("https://flat-mangrove-forgery.glitch.me/friend", friendAdd),
     {
       onSuccess: () => {
         // 쿼리 무효화
@@ -63,7 +63,19 @@ function FriendSearch() {
     setfrendSearchInput(e.target.value);
   };
 
-  const friendAddOnClick = (i: FriendSearchProps) => {
+  // const friendAddOnClick = (i: FriendSearchProps) => {
+  //   let friendAdd = {
+  //     id: uuidv4(),
+  //     myId,
+  //     friendId: i.id,
+  //     myNickName,
+  //     friendNickName: i.nickname,
+  //   };
+
+  //   postMutation.mutate(friendAdd);
+  // };
+
+  const friendAddOnClick = async (i: FriendSearchProps) => {
     let friendAdd = {
       id: uuidv4(),
       myId,
@@ -71,18 +83,26 @@ function FriendSearch() {
       myNickName,
       friendNickName: i.nickname,
     };
+    try {
+      // const response = getFriendAuth.filter(
+      //   (item) => item.myId === myId && item.friendId === i.id
+      // );
+      const response = await axios.get(
+        `https://flat-mangrove-forgery.glitch.me/friend?myId=${myId}&friendId=${i.id}`
+      );
 
-    postMutation.mutate(friendAdd);
+      const existingFriend = response.data[0];
+      console.log(existingFriend);
+
+      if (existingFriend) {
+        console.log("이미 친구");
+        return;
+      }
+      postMutation.mutate(friendAdd);
+    } catch (error) {
+      console.error(error);
+    }
   };
-
-  // //친구 요청 온 내역 전체
-  // const friendAdd = getFriendAuth?.filter((i: FriendProps) => {
-  //   // for (let t = 0; t < data?.data.length; t++){
-  //   //   if(data?.data[t].friendId)
-  //   // }
-  //   return myId === i.friendId;
-  // });
-  // console.log(friendAdd);
 
   //이미 친구인 목록
   // 계정목록과 친구목록을 불러온 후 친구목록중 내 친구목록인 것 구한다.
@@ -104,16 +124,16 @@ function FriendSearch() {
 
   //auth 가져온후 검색한것만 map
   const friendSearch = friendAllRecoil?.filter((i: FriendSearchProps) => {
-    for (let t = 0; t < friendAdd.length; t++) {
-      console.log(i.id === friendAdd[t].myId);
+    for (let item = 0; item < friendAdd.length; item++) {
+      // console.log(i.id === friendAdd[item].myId);
 
       if (frendSearchInput === "") {
         return;
       } else if (
         //
-        i.id === friendAdd[t].myId
+        i.id === friendAdd[item].myId
       ) {
-        return;
+        // return console.log(111111);
       } else {
         // 현재 친구상태면 안보이게
         for (let t = 0; t < alreadyFriend.length; t++) {

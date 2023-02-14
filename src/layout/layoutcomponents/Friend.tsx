@@ -72,13 +72,6 @@ function Friend() {
     DeleteMutation.mutate(deleteAll2);
   };
 
-  //atom selector로 사용 권장
-  //친구 요청 온 내역 전체
-  // const friendAdd = getFriendAuth?.filter((i: FriendProps) => {
-  //   return i.friendId === myId;
-  // });
-  console.log(friendAdd);
-
   //양쪽 다 친구 내역
   const friend = getFriendAuth?.filter((i: FriendProps) => {
     for (let t = 0; t < friendAdd.length; t++) {
