@@ -12,19 +12,16 @@ import { useQuery } from "react-query";
 import axios from "axios";
 import { FriendProps } from "../layout/layoutcomponents/Friend";
 import { FriendSearchProps } from "../layout/layoutcomponents/FriendSearch";
-import { useEffect } from "react";
-import { useMutation } from "react-query";
-import { useQueryClient } from "react-query";
 
 function Layout() {
-  const queryClient = useQueryClient();
   //레이아웃 종류
   const [layoutMenu, setLayoutMenu] = useRecoilState<String>(LayoutButton);
   //친구 내역 전체
   const [getFriendAuth, setGetFriendAuth] =
     useRecoilState<FriendProps[]>(getFriend);
   //계정 내역 전체 불러오기
-  const [friendAllRecoil, setFriendAllRecoil] = useRecoilState(friendAllState);
+  const [friendAllRecoil, setFriendAllRecoil] =
+    useRecoilState<FriendSearchProps[]>(friendAllState);
 
   const LayoutButtonOnClick = (i: string) => {
     if (layoutMenu === i) {
@@ -38,7 +35,6 @@ function Layout() {
     console.log("실행됨");
     const response = await axios.get("http://localhost:3001/auth");
     setFriendAllRecoil(response?.data);
-
     return response;
   };
   const { data: friendSearch } = useQuery("friendsearch", getFriendSearch);
