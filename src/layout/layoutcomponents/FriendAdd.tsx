@@ -79,8 +79,9 @@ function Friend() {
     };
 
     try {
+      //상대와 친구가 돼있는지 검사후 이중 저장 방지
       const response = await axios.get(
-        `http://localhost:3001/friend?myId=${i.id}&friendId=${myId}`
+        `http://localhost:3001/friend?myId=${i.friendId}&friendId=${myId}`
       );
 
       const existingFriend = response.data[0];
@@ -110,7 +111,6 @@ function Friend() {
       if (
         friendAdd[t].friendId === i.myId &&
         friendAdd[t].myId === i.friendId
-        // frendSearchInput === ""
       ) {
         return i.myId === myId;
       } else if (
