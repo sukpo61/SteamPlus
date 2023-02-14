@@ -27,14 +27,9 @@ const ChannelSearchPage: any = () => {
   const [searchInput, setSearchInput] = useState("dead");
   const APIKEY = "234E0113F33D5C7C4D4D5292C6774550";
   const STEAM_ACCOUNT_NAME = "sukpo61@naver.com";
-  const client_id = "ucj588lq839jowdgqawe2651hbna80";
-  const client_secret = "ie8i79maa233egjs88c90el20svaav";
-  const token = "typug2dtxgkjkn2gxnexvivhe4fi4t";
-  // const gameId = "187740";
-  // const gameId = "8339";
+
   const gameId = "250900";
   const searchKeyword = "sim";
-  // "The Binding of Isaac: Rebirth";
 
   const [searchValue, setSearchValue] = useState("");
   const [searchResult, setSearchResult] = useState([]);
