@@ -4,6 +4,8 @@ import {
   getFriend,
   friendAllState,
   newFriendAdd,
+  myIds,
+  myNickNames,
 } from "../../recoil/atom";
 import styled from "styled-components";
 import { useRecoilState, useRecoilValue } from "recoil";
@@ -42,11 +44,16 @@ function FriendSearch() {
   const [friendAllRecoil, setFriendAllRecoil] = useRecoilState(friendAllState);
   //친구 요청 온 내역 전체
   const [friendAdd] = useRecoilValue(newFriendAdd);
+  // //아이디
+  // const [myId] = useRecoilValue(myIds);
+  // const [myNickName] = useRecoilValue(myNickNames);
+
+  // console.log(myId);
 
   //친구 추가
   const postMutation = useMutation(
     (friendAdd: object) =>
-      axios.post("https://flat-mangrove-forgery.glitch.me/friend", friendAdd),
+      axios.post("http://localhost:3001/friend", friendAdd),
     {
       onSuccess: () => {
         // 쿼리 무효화
@@ -88,7 +95,7 @@ function FriendSearch() {
       //   (item) => item.myId === myId && item.friendId === i.id
       // );
       const response = await axios.get(
-        `https://flat-mangrove-forgery.glitch.me/friend?myId=${myId}&friendId=${i.id}`
+        `http://localhost:3001/friend?myId=${myId}&friendId=${i.id}`
       );
 
       const existingFriend = response.data[0];
@@ -110,7 +117,7 @@ function FriendSearch() {
   const alreadyFriend = friendAllRecoil?.filter((i: FriendSearchProps) => {
     for (let t = 0; t < getFriendAuth.length; t++) {
       if (frendSearchInput === "") {
-        return;
+        return false;
       } else if (
         getFriendAuth[t].friendId === i.id &&
         getFriendAuth[t].myId === myId
@@ -125,33 +132,29 @@ function FriendSearch() {
   //auth 가져온후 검색한것만 map
   const friendSearch = friendAllRecoil?.filter((i: FriendSearchProps) => {
     for (let item = 0; item < friendAdd.length; item++) {
-      // console.log(i.id === friendAdd[item].myId);
-
-      if (frendSearchInput === "") {
-        return;
-      } else if (
-        //
-        i.id === friendAdd[item].myId
-      ) {
-        // return console.log(111111);
-      } else {
-        // 현재 친구상태면 안보이게
-        for (let t = 0; t < alreadyFriend.length; t++) {
-          if (alreadyFriend[t].id === i.id) {
-            return;
-          }
-        }
-        //대문자 검색
-        const lowercaseNickname = i.nickname.toLowerCase();
-        const lowercaseSearchInput = frendSearchInput.toLowerCase();
-        return (
-          i.id !== myId && lowercaseNickname.includes(lowercaseSearchInput)
-        );
-        //특정문자열이 포함되면 true반환
-        //자신은 안뜨고 검색한것만
-        // for문 밖으로 return값을 빼내니까 영어검색 작동
+      if (i.id === friendAdd[item].myId) {
+        return false;
       }
     }
+    // 현재 친구상태면 안보이게
+    for (let t = 0; t < alreadyFriend.length; t++) {
+      if (alreadyFriend[t].id === i.id) {
+        return false;
+      }
+    }
+    //대문자 검색
+    const lowercaseNickname = i.nickname.toLowerCase();
+    const lowercaseSearchInput = frendSearchInput.toLowerCase();
+    if (i.id === myId) {
+      return false;
+    } else if (frendSearchInput === "") {
+      return false;
+    } else if (lowercaseNickname.includes(lowercaseSearchInput)) {
+      return true;
+    }
+    //특정문자열이 포함되면 true반환
+    //자신은 안뜨고 검색한것만
+    // for문 밖으로 return값을 빼내니까 영어검색 작동
   });
 
   return (

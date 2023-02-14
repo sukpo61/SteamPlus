@@ -45,7 +45,7 @@ function Friend() {
   //친구 수락
   const postMutation = useMutation(
     (friendAdd: object) =>
-      axios.post("https://flat-mangrove-forgery.glitch.me/friend", friendAdd),
+      axios.post("http://localhost:3001/friend", friendAdd),
     {
       onSuccess: () => {
         // 쿼리 무효화
@@ -58,8 +58,7 @@ function Friend() {
   // 친구 삭제
   const DeleteMutation = useMutation(
     //넘겨받은 id를 삭제
-    (id) =>
-      axios.delete(`https://flat-mangrove-forgery.glitch.me/friend/${id}`),
+    (id) => axios.delete(`http://localhost:3001/friend/${id}`),
     {
       onSuccess: () => {
         // 쿼리 무효화
@@ -70,9 +69,7 @@ function Friend() {
   );
 
   //친구 수락
-  const friendAddOnClick = (i: FriendProps) => {
-    console.log(i);
-
+  const friendAddOnClick = async (i: FriendProps) => {
     let friendAdd = {
       id: i.id + "1",
       myId: i.friendId,
@@ -81,7 +78,22 @@ function Friend() {
       friendNickName: i.myNickName,
     };
 
-    postMutation.mutate(friendAdd);
+    try {
+      const response = await axios.get(
+        `http://localhost:3001/friend?myId=${i.id}&friendId=${myId}`
+      );
+
+      const existingFriend = response.data[0];
+      console.log(existingFriend);
+
+      if (existingFriend) {
+        console.log("이미 친구");
+        return;
+      }
+      postMutation.mutate(friendAdd);
+    } catch (error) {
+      console.error(error);
+    }
   };
   //친구 삭제 인데 +1 된것 까지 삭제 혹은 그 반대로 +1이 없는 것 까지 삭제
   const friendDeleteOnClick = (id: any) => {
