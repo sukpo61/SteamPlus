@@ -94,6 +94,7 @@ function FriendSearch() {
       // const response = getFriendAuth.filter(
       //   (item) => item.myId === myId && item.friendId === i.id
       // );
+      //상대와 친구가 돼있는지 검사후 이중 저장 방지
       const response = await axios.get(
         `http://localhost:3001/friend?myId=${myId}&friendId=${i.id}`
       );
