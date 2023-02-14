@@ -6,31 +6,27 @@ import { useRecoilState } from "recoil";
 function FriendTab() {
   const [layoutMenu, setLayoutMenu] = useRecoilState<String>(LayoutButton);
 
-  const LayoutButtonOnClick = (i: string) => {
-    if (layoutMenu === i) {
-      setLayoutMenu("close");
-    } else {
-      setLayoutMenu(i);
-    }
+  const FriendButtonOnClick = (i: string) => {
+    setLayoutMenu(i);
   };
 
   return (
     <MenuTitleFlex>
       <FriendMenuDiv
         layoutMenu={layoutMenu}
-        onClick={() => LayoutButtonOnClick("friend")}
+        onClick={() => FriendButtonOnClick("friend")}
       >
         Friend
       </FriendMenuDiv>
       <FriendSearchMenuDiv
         layoutMenu={layoutMenu}
-        onClick={() => LayoutButtonOnClick("friendsearch")}
+        onClick={() => FriendButtonOnClick("friendsearch")}
       >
         Friend Search
       </FriendSearchMenuDiv>
       <FriendAddDiv
         layoutMenu={layoutMenu}
-        onClick={() => LayoutButtonOnClick("friendadd")}
+        onClick={() => FriendButtonOnClick("friendadd")}
       >
         Friend Add
       </FriendAddDiv>

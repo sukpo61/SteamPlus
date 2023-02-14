@@ -23,8 +23,21 @@ function Layout() {
   const [friendAllRecoil, setFriendAllRecoil] =
     useRecoilState<FriendSearchProps[]>(friendAllState);
 
+  //메뉴 탭눌렀을때 (친구제외)
   const LayoutButtonOnClick = (i: string) => {
     if (layoutMenu === i) {
+      setLayoutMenu("close");
+    } else {
+      setLayoutMenu(i);
+    }
+  };
+  //친구 탭눌렀을때
+  const FriendButtonOnClick = (i: string) => {
+    if (
+      layoutMenu === "friend" ||
+      layoutMenu === "friendsearch" ||
+      layoutMenu === "friendadd"
+    ) {
       setLayoutMenu("close");
     } else {
       setLayoutMenu(i);
@@ -69,13 +82,9 @@ function Layout() {
           gamesearch
         </GameSearchbutton>
         {/* 친구 */}
-        <Friendbutton onClick={() => LayoutButtonOnClick("friend")}>
+        <Friendbutton onClick={() => FriendButtonOnClick("friend")}>
           friend
         </Friendbutton>
-        {/* 친구검색
-        <FriendSearchbutton onClick={() => LayoutButtonOnClick("friendsearch")}>
-          friendsearch
-        </FriendSearchbutton> */}
         {/* 음성채팅 */}
         <VoiceTalkbutton onClick={() => LayoutButtonOnClick("voicetalk")}>
           voicetalk
