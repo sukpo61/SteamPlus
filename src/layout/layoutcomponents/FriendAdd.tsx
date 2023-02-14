@@ -109,19 +109,15 @@ function Friend() {
     for (let t = 0; t < friendAdd.length; t++) {
       if (
         friendAdd[t].friendId === i.myId &&
-        friendAdd[t].myId === i.friendId &&
-        frendSearchInput === ""
+        friendAdd[t].myId === i.friendId
+        // frendSearchInput === ""
       ) {
         return i.myId === myId;
       } else if (
         friendAdd[t].friendId === i.myId &&
         friendAdd[t].myId === i.friendId
       ) {
-        const lowercaseNickname = i.friendNickName.toLowerCase();
-        const lowercaseSearchInput = frendSearchInput.toLowerCase();
-        return (
-          i.myId === myId && lowercaseNickname.includes(lowercaseSearchInput)
-        );
+        return i.myId === myId;
       }
     }
   });
@@ -156,15 +152,19 @@ function Friend() {
       <MenuTitleDiv>
         {/* 세개의 탭 */}
         <FriendTab />
-
-        <MenuTitleIform>
-          <MenuTitleInput onChange={frendSearchOnChange}></MenuTitleInput>
-          {/* <MenuTitleButton>확인</MenuTitleButton> */}
-        </MenuTitleIform>
       </MenuTitleDiv>
 
       {/* 친구 목록 박스 */}
-      <h2 style={{ fontSize: 24, color: "#fff" }}>친구요청보냄</h2>
+      <h2
+        style={{
+          fontSize: 18,
+          color: "#fff",
+          marginLeft: "20px",
+          marginTop: "20px",
+        }}
+      >
+        친구요청보냄
+      </h2>
       {friendAddSend?.map((i: FriendProps) => {
         return (
           <FriendBoxDiv>
@@ -188,7 +188,16 @@ function Friend() {
           </FriendBoxDiv>
         );
       })}
-      <h2 style={{ fontSize: 24, color: "#fff" }}>친구요청받기</h2>
+      <h2
+        style={{
+          fontSize: 18,
+          color: "#fff",
+          marginLeft: "20px",
+          marginTop: "20px",
+        }}
+      >
+        친구요청받기
+      </h2>
       {friendAddCome?.map((i: FriendProps) => {
         return (
           <FriendBoxDiv>
@@ -226,13 +235,13 @@ function Friend() {
 export default Friend;
 const FriendDiv = styled.div<{ layoutMenu: String }>`
   display: ${(props) => (props.layoutMenu === "friendadd" ? "block" : "none")};
-  margin-top: 150px;
+  margin-top: 100px;
   margin-bottom: 30px;
 `;
 
 const MenuTitleDiv = styled.div`
   width: 400px;
-  height: 130px;
+  height: 80px;
   background-color: #404b5e;
   position: fixed;
   top: 0;
@@ -241,20 +250,6 @@ const MenuTitleDiv = styled.div`
   flex-direction: column;
   justify-content: space-between;
   border-top-right-radius: 30px;
-`;
-const MenuTitleIform = styled.form`
-  position: relative;
-  margin: 0 auto;
-`;
-const MenuTitleInput = styled.input`
-  width: 350px;
-  height: 40px;
-  border-radius: 10px;
-  background-color: #192030;
-  margin: 0 auto 10px auto;
-  border: 0;
-  box-shadow: 2px 4px 10px 0 #000 inset;
-  color: #fff;
 `;
 
 const FriendBoxDiv = styled.div`
