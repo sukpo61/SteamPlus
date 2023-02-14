@@ -33,7 +33,9 @@ function Layout() {
 
   const getFriendSearch = async () => {
     console.log("실행됨");
-    const response = await axios.get("http://localhost:3001/auth");
+    const response = await axios.get(
+      "https://flat-mangrove-forgery.glitch.me/auth"
+    );
     setFriendAllRecoil(response?.data);
     return response;
   };
@@ -42,7 +44,9 @@ function Layout() {
   const getAllFriend = async () => {
     console.log("실행됨");
     //비동기함수는 최대한 동기적으로 활용가능하게
-    const response = await axios.get("http://localhost:3001/friend");
+    const response = await axios.get(
+      "https://flat-mangrove-forgery.glitch.me/friend"
+    );
     setGetFriendAuth(response?.data);
     return response;
   };

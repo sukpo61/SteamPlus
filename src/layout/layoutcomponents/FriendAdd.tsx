@@ -45,7 +45,7 @@ function Friend() {
   //친구 수락
   const postMutation = useMutation(
     (friendAdd: object) =>
-      axios.post("http://localhost:3001/friend", friendAdd),
+      axios.post("https://flat-mangrove-forgery.glitch.me/friend", friendAdd),
     {
       onSuccess: () => {
         // 쿼리 무효화
@@ -58,7 +58,8 @@ function Friend() {
   // 친구 삭제
   const DeleteMutation = useMutation(
     //넘겨받은 id를 삭제
-    (id) => axios.delete(`http://localhost:3001/friend/${id}`),
+    (id) =>
+      axios.delete(`https://flat-mangrove-forgery.glitch.me/friend/${id}`),
     {
       onSuccess: () => {
         // 쿼리 무효화

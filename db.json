@@ -62,13 +62,6 @@
       "friendId": 1,
       "myNickName": "Cat",
       "friendNickName": "고양이"
-    },
-    {
-      "id": "4e0a79e3-fb34-4301-8405-ac126b4423fe",
-      "myId": 1,
-      "friendId": 3,
-      "myNickName": "고양이",
-      "friendNickName": "호랑이"
     }
   ]
 }
