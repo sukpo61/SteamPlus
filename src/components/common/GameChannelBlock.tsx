@@ -2,21 +2,28 @@ import React from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 
-interface Props {
-  // response: Item;
+interface Game {
+  id: any;
+  tiny_image: string;
+  response: any;
+  data: any;
 }
-// {response}:Props
-function GameChannelBlock() {
+
+interface Props {
+  game: any;
+}
+
+function GameChannelBlock({ game }: Props) {
   const navigate = useNavigate();
+
   return (
     <GameListBlock
-    // onClick={() => navigate(`/${}`, {})} key={}
-    // key={result.id}
+    // onClick={() => navigate(`/teamchat/${}`, {})} key={}
     >
-      <GameChannelImgPart></GameChannelImgPart>
+      <GameChannelImgPart src={`${game.tiny_image}`} />
       <GameChannelDetailPart>
         <div>
-          <GameChannelTitle></GameChannelTitle>
+          <GameChannelTitle>{`${game.name}`}</GameChannelTitle>
           {/* {response.data.items} */}
           <GameChannelInfo>
             <GameChannelCategory>어드벤쳐, RPG, 앞서해보기</GameChannelCategory>
@@ -29,7 +36,7 @@ function GameChannelBlock() {
                   background: "#23DE79",
                 }}
               ></div>
-              10명
+              {/* {`${}`} */}명
             </NumberOfPlayer>
           </GameChannelInfo>
         </div>
@@ -48,9 +55,9 @@ const GameListBlock = styled.div`
   overflow: hidden;
 `;
 
-const GameChannelImgPart = styled.div`
-  // 썸네일 불러오려면 나중에 img로 바꿔야함
-  background-color: lightgrey;
+const GameChannelImgPart = styled.img`
+  // 썸네일
+  /* background-color: lightgrey; */
   width: 205px;
   height: 108px;
 `;

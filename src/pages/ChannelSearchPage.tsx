@@ -12,6 +12,7 @@ interface Game {
   [key: string]: string | number | boolean | any;
   appid: number;
   name: string;
+  id: string;
 }
 
 // const searchResultsState = atom({
@@ -35,16 +36,53 @@ const ChannelSearchPage: any = () => {
   const searchKeyword = "sim";
   // "The Binding of Isaac: Rebirth";
 
-  const [searchGame, setSearchGame] = useState("");
+  const [searchValue, setSearchValue] = useState("");
   const [searchResult, setSearchResult] = useState([]);
 
   // https://cors-anywhere.herokuapp.com/
 
-  useEffect(() => {
-    // const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    //   e.preventDefault();
+  // useEffect(() => {
+  //   //유저정보
+  //   axios
+  //     .get(
+  //       "https://cors-anywhere.herokuapp.com/https://api.steampowered.com/ISteamUser/GetPlayerSummaries/v2/",
+  //       {
+  //         params: {
+  //           key: APIKEY,
+  //           steamids: "76561198374391933",
+  //         },
+  //       }
+  //     )
+  //     .then((response) => {
+  //       console.log("userstate", response);
+  //     })
+  //     .catch((error) => setError(error));
 
-    //검색
+  //   // 게임정보
+  //   axios
+  //     .get(
+  //       `https://cors-anywhere.herokuapp.com/http://store.steampowered.com/api/appdetails/`,
+  //       {
+  //         params: {
+  //           appids: "250900",
+  //         },
+  //       }
+  //     )
+  //     .then((response) => {
+  //       console.log("gamedetail", response);
+  //     })
+  //     .catch((error) => {
+  //       setError("Could not retrieve header image");
+  //     });
+  // }, []);
+
+  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchValue(e.target.value);
+  };
+
+  // const searchGame = {};
+
+  const SubmitSearch = () => {
     axios
       .get(
         "https://cors-anywhere.herokuapp.com/https://store.steampowered.com/api/storesearch",
@@ -54,7 +92,7 @@ const ChannelSearchPage: any = () => {
             l: "en",
             // term: "dead",
             //limit : 20
-            term: searchKeyword,
+            term: searchValue,
           },
         }
       )
@@ -65,92 +103,47 @@ const ChannelSearchPage: any = () => {
       .catch((error) => {
         console.error(error);
       });
-    // }
-    // //유저정보
-    // axios
-    //   .get(
-    //     "https://cors-anywhere.herokuapp.com/https://api.steampowered.com/ISteamUser/GetPlayerSummaries/v2/",
-    //     {
-    //       params: {
-    //         key: APIKEY,
-    //         steamids: "76561198374391933",
-    //       },
-    //     }
-    //   )
-    //   .then((response) => {
-    //     console.log("userstate", response);
-    //   })
-    //   .catch((error) => setError(error));
-
-    // 게임정보
-    // axios
-    //   .get(
-    //     `https://cors-anywhere.herokuapp.com/http://store.steampowered.com/api/appdetails/`,
-    //     {
-    //       params: {
-    //         appids: "250900",
-    //       },
-    //     }
-    //   )
-    //   .then((response) => {
-    //     console.log("gamedetail", response);
-    //   })
-    //   .catch((error) => {
-    //     setError("Could not retrieve header image");
-    //   });
-  }, []);
-
-  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchGame(e.target.value);
   };
 
-  // const searchGame = {};
+  // style={{
+  //   marginLeft: 100,
+  //   backgroundColor: "#192030",
+  //   display: "flex",
+  //   flexDirection: "column",
+  //   width: "100%",
+  //   height: "100%",
+  //   minHeight: 1080,
+  // }}
 
   return (
-    // <div>
-    //   <input
-    //     type="text"
-    //     value={searchInput}
-    //     onChange={(e) => setSearchInput(e.target.value)}
-    //   />
-    //   {searchGames.map((game: Game) => (
-    //     <div key={`${game.appid}`}>
-    //       <div>{`${game.name}`}</div>
-    //     </div>
-    //   ))}
-    // </div>
-    <div
-      style={{
-        marginLeft: 100,
-        backgroundColor: "#192030",
-        display: "flex",
-        flexDirection: "column",
-        width: "100%",
-        height: "100%",
-        minHeight: 1080,
-      }}
-    >
-      <SearchPageHeader>
-        <SteamPlusLogo />
-        <GameSearchInputArea>
-          <GameSearchInput
-            type="text"
-            value={searchGame}
-            onChange={(e) => handleSearch(e)}
-          />
-          <BiSearchAlt2
-            className="searchIcon"
-            // onClick={(e) => handleSubmit(e)}
-          />
-        </GameSearchInputArea>
-      </SearchPageHeader>
-      <SearchCount>
-        '{}블라블라' 검색 결과 {}n 개
-      </SearchCount>
-      <GameSearchList>{/* <GameChannelBlock /> */}</GameSearchList>
-    </div>
+    <>
+      <MainBody>
+        <SearchPageHeader>
+          <SteamPlusLogo />
+          <GameSearchInputArea>
+            <GameSearchInput
+              type="text"
+              value={searchValue}
+              onChange={handleSearch}
+            />
+            <BiSearchAlt2 className="searchIcon" onClick={SubmitSearch} />
+          </GameSearchInputArea>
+        </SearchPageHeader>
+        <SearchCount>
+          '{}블라블라' 검색 결과 {}n 개
+        </SearchCount>
+        {searchResult.map((game: Game) => {
+          <GameChannelBlockView key={game.id}>
+            <GameChannelBlock game={game} />
+          </GameChannelBlockView>;
+        })}
+        <GameSearchList></GameSearchList>
+      </MainBody>
+    </>
   );
 };
+
+const MainBody = styled.div``;
 
 const SearchPageHeader = styled.div`
   background-color: #404b5e;
@@ -221,5 +214,7 @@ const GameSearchList = styled.div`
   gap: 20px;
   margin-left: 114px;
 `;
+
+const GameChannelBlockView = styled.div``;
 
 export default ChannelSearchPage;

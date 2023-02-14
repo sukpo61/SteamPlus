@@ -41,7 +41,6 @@ function MainPage() {
         <GameChannelBlock />
         <GameChannelBlock />
         <GameChannelBlock />
-        <GameChannelBlock />
       </GameChannelList>
     </div>
   );
