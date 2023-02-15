@@ -37,11 +37,7 @@ function MainPage() {
           <PopularChannelList></PopularChannelList>
         </PopularChannel2ndTo5th>
       </PopularChannel>
-      <GameChannelList>
-        <GameChannelBlock />
-        <GameChannelBlock />
-        <GameChannelBlock />
-      </GameChannelList>
+      <GameChannelList>{/* <GameChannelBlock /> */}</GameChannelList>
     </div>
   );
 }
@@ -56,36 +52,36 @@ const CurrentGameImg = styled.div`
 
 const CurrentGameTitle = styled.div`
   position: absolute;
-  width: 654px;
-  left: 82px;
-  top: 468px;
+  width: 490px;
+  left: 80px;
+  top: 36px;
 
   font-family: "Montserrat";
   font-weight: 700;
-  font-size: 96px;
-  line-height: 117px;
+  font-size: 72px;
+  line-height: 88px;
   letter-spacing: -0.02em;
-
+  text-shadow: 0px 4px 15px rgba(0, 0, 0, 0.25);
   color: #ffffff;
 `;
 
 const CurrentChannelJoinBtn = styled.button`
   padding: 20px 24px;
-  gap: 10px;
 
   position: absolute;
-  width: 240px;
-  height: 73px;
-  left: 82px;
-  top: 601px;
+  width: 176px;
+  height: 52px;
+  left: 1584px;
+  top: 54px;
 
   background: #00b8c8;
-  border-radius: 20px;
+  box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.25);
+  border-radius: 10px;
 
   font-family: "Noto Sans";
   font-weight: 600;
-  font-size: 24px;
-  line-height: 33px;
+  font-size: 16px;
+  line-height: 22px;
   letter-spacing: -0.03em;
 
   color: #ffffff;

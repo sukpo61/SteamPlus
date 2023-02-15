@@ -53,7 +53,7 @@ const ChannelSearchPage: any = () => {
   //     })
   //     .catch((error) => setError(error));
 
-  //   // 게임정보
+  // 게임정보
   //   axios
   //     .get(
   //       `https://cors-anywhere.herokuapp.com/http://store.steampowered.com/api/appdetails/`,
@@ -77,7 +77,9 @@ const ChannelSearchPage: any = () => {
 
   // const searchGame = {};
 
+  // ?appids=APPID&filters=categories
   const SubmitSearch = () => {
+    var appId = "";
     axios
       .get(
         "https://cors-anywhere.herokuapp.com/https://store.steampowered.com/api/storesearch",
@@ -85,60 +87,79 @@ const ChannelSearchPage: any = () => {
           params: {
             cc: "us",
             l: "en",
-            // term: "dead",
-            //limit : 20
             term: searchValue,
+            //limit : 20
           },
         }
       )
       .then((response) => {
         console.log("searchresult", response.data.items);
         setSearchResult(response.data.items);
+        appId = response.data.items.id;
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+
+    axios
+      .get(
+        "https://cors-anywhere.herokuapp.com/https://store.steampowered.com/api/appdetails",
+        { params: { appids: appId, filters: "categories" } }
+      )
+      .then((res) => {
+        console.log("appid", res);
+        // setSearchResult(response);
       })
       .catch((error) => {
         console.error(error);
       });
   };
 
-  // style={{
-  //   marginLeft: 100,
-  //   backgroundColor: "#192030",
-  //   display: "flex",
-  //   flexDirection: "column",
-  //   width: "100%",
-  //   height: "100%",
-  //   minHeight: 1080,
-  // }}
+  // const handleOnKeyPress = (e) => {
+  //   if (e.key === "Enter") {
+  //     handleOnClick(); // Enter 입력이 되면 클릭 이벤트 실행
+  //   }
+  // };
 
   return (
-    <>
-      <MainBody>
-        <SearchPageHeader>
-          <SteamPlusLogo />
-          <GameSearchInputArea>
-            <GameSearchInput
-              type="text"
-              value={searchValue}
-              onChange={handleSearch}
-            />
-            <BiSearchAlt2 className="searchIcon" onClick={SubmitSearch} />
-          </GameSearchInputArea>
-        </SearchPageHeader>
-        <SearchCount>
-          '{}블라블라' 검색 결과 {}n 개
-        </SearchCount>
+    <div
+      style={{
+        marginLeft: 100,
+        backgroundColor: "#192030",
+        display: "flex",
+        flexDirection: "column",
+        width: "100%",
+        height: "100%",
+        minHeight: 1080,
+      }}
+    >
+      <SearchPageHeader>
+        <SteamPlusLogo />
+        <GameSearchInputArea>
+          <GameSearchInput
+            type="text"
+            value={searchValue}
+            onChange={handleSearch}
+            // handleSearch
+          />
+          <BiSearchAlt2 className="searchIcon" onClick={SubmitSearch} />
+        </GameSearchInputArea>
+      </SearchPageHeader>
+      <SearchCount>
+        '{`${searchValue}`}' 검색 결과 {}n 개
+      </SearchCount>
+      <GameSearchList>
         {searchResult.map((game: Game) => {
-          <GameChannelBlockView key={game.id}>
-            <GameChannelBlock game={game} />
-          </GameChannelBlockView>;
+          return (
+            <GameChannelBlockView key={game.id}>
+              <GameChannelBlock game={game} />
+            </GameChannelBlockView>
+          );
         })}
-        <GameSearchList></GameSearchList>
-      </MainBody>
-    </>
+      </GameSearchList>
+    </div>
   );
 };
-
-const MainBody = styled.div``;
 
 const SearchPageHeader = styled.div`
   background-color: #404b5e;
@@ -174,6 +195,7 @@ const GameSearchInputArea = styled.div`
     left: 568px;
     top: 12px;
     color: #777d87;
+    cursor: pointer;
   }
 `;
 

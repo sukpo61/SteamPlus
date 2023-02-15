@@ -17,14 +17,15 @@ function GameChannelBlock({ game }: Props) {
   const navigate = useNavigate();
 
   return (
-    <GameListBlock
-    // onClick={() => navigate(`/teamchat/${}`, {})} key={}
-    >
-      <GameChannelImgPart src={`${game.tiny_image}`} />
+    <GameListBlock>
+      <GameChannelImgArea>
+        <GameChannelImg src={`${game.tiny_image}`} />
+      </GameChannelImgArea>
       <GameChannelDetailPart>
         <div>
-          <GameChannelTitle>{`${game.name}`}</GameChannelTitle>
-          {/* {response.data.items} */}
+          <TitleLinear>
+            <GameChannelTitle>{`${game.name}`}</GameChannelTitle>
+          </TitleLinear>
           <GameChannelInfo>
             <GameChannelCategory>어드벤쳐, RPG, 앞서해보기</GameChannelCategory>
             <NumberOfPlayer>
@@ -40,7 +41,12 @@ function GameChannelBlock({ game }: Props) {
             </NumberOfPlayer>
           </GameChannelInfo>
         </div>
-        <AdmitButton>입장하기</AdmitButton>
+        <AdmitButton
+          onClick={() => navigate(`/teamchat/:${game.name}`, {})}
+          key={game.id}
+        >
+          입장하기
+        </AdmitButton>
       </GameChannelDetailPart>
     </GameListBlock>
   );
@@ -53,24 +59,46 @@ const GameListBlock = styled.div`
   height: 108px;
   border-radius: 10px;
   overflow: hidden;
+  margin-bottom: 10px;
 `;
 
-const GameChannelImgPart = styled.img`
+const GameChannelImgArea = styled.div`
   // 썸네일
   /* background-color: lightgrey; */
-  width: 205px;
+  width: 270px;
   height: 108px;
+  overflow: hidden;
+  position: relative;
+`;
+
+const GameChannelImg = styled.img`
+  position: absolute;
+  top: 0;
+  left: 0;
+  transform: translate(50, 50);
+  width: auto;
+  height: 108px;
+  object-fit: cover;
 `;
 const GameChannelDetailPart = styled.div`
   display: flex;
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
-  width: 685px; // 홈에서 사이즈 조절 필요
+  width: 620px; // 홈에서 사이즈 조절 필요
   height: 108px;
 
   background-color: #263245;
   padding: 24px 24px 24px 20px;
+`;
+
+const TitleLinear = styled.div`
+  background: linear-gradient(
+    90deg,
+    rgba(38, 50, 69, 0) 47.28%,
+    rgba(38, 50, 69, 0.703125) 77.75%,
+    #263245 100%
+  );
 `;
 
 const GameChannelTitle = styled.div`
@@ -82,6 +110,9 @@ const GameChannelTitle = styled.div`
   font-size: 24px;
 
   margin-bottom: 12px;
+  width: 450px;
+  height: 29px;
+  overflow: hidden; // 제목이 길면 잘리게 해놓음!! 마우스 호버시 가로로 스크롤 되게 해야함
 `;
 
 const GameChannelInfo = styled.div`
