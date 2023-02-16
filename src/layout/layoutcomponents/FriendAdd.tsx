@@ -155,76 +155,56 @@ function Friend() {
       </MenuTitleDiv>
 
       {/* 친구 목록 박스 */}
-      <h2
-        style={{
-          fontSize: 18,
-          color: "#fff",
-          marginLeft: "20px",
-          marginTop: "20px",
-        }}
-      >
-        친구요청보냄
-      </h2>
-      {friendAddSend?.map((i: FriendProps) => {
-        return (
-          <FriendBoxDiv>
-            <FriendBoxNameDiv>
-              <FriendBoxNameImg></FriendBoxNameImg>
-              <FriendBoxNameH2>{i.friendNickName}</FriendBoxNameH2>
-
-              <FriendBoxNameP
-                onClick={() => {
-                  friendDeleteOnClick(i.id);
-                }}
-              >
-                취소
-              </FriendBoxNameP>
-            </FriendBoxNameDiv>
-
-            <FriendGamingDiv>
-              <h2>dave diver방 참가중</h2>
-              <h2>참가하기</h2>
-            </FriendGamingDiv>
-          </FriendBoxDiv>
-        );
-      })}
-      <h2
-        style={{
-          fontSize: 18,
-          color: "#fff",
-          marginLeft: "20px",
-          marginTop: "20px",
-        }}
-      >
-        친구요청받기
-      </h2>
+      {friendAddCome.length === 0 ? (
+        ""
+      ) : (
+        <FriendAddH2>수락 대기 중</FriendAddH2>
+      )}
       {friendAddCome?.map((i: FriendProps) => {
         return (
           <FriendBoxDiv>
             <FriendBoxNameDiv>
-              <FriendBoxNameImg></FriendBoxNameImg>
+              <FriendBoxNameImg src={i.myProfileimg} />
               <FriendBoxNameH2>{i.myNickName}</FriendBoxNameH2>
 
-              <FriendBoxNameP
+              <FriendBoxNameH3
                 onClick={() => {
                   friendAddOnClick(i);
                 }}
               >
                 수락
-              </FriendBoxNameP>
+              </FriendBoxNameH3>
               <FriendBoxNameP
                 onClick={() => {
                   friendDeleteOnClick(i.id);
                 }}
               >
-                삭제
+                거절
               </FriendBoxNameP>
             </FriendBoxNameDiv>
+          </FriendBoxDiv>
+        );
+      })}
+      {friendAddSend.length === 0 ? (
+        ""
+      ) : (
+        <FriendAddH2>전송된 친구 요청</FriendAddH2>
+      )}
+      {friendAddSend?.map((i: FriendProps) => {
+        return (
+          <FriendBoxDiv>
+            <FriendBoxNameDiv>
+              <FriendBoxNameImg src={i.friendProfileimg} />
+              <FriendBoxNameH2>{i.friendNickName}</FriendBoxNameH2>
 
-            <FriendGamingDiv>
-              <h2>dave diver방 참가중</h2>
-              <h2>참가하기</h2>
-            </FriendGamingDiv>
+              <FriendBoxCancelP
+                onClick={() => {
+                  friendDeleteOnClick(i.id);
+                }}
+              >
+                취소
+              </FriendBoxCancelP>
+            </FriendBoxNameDiv>
           </FriendBoxDiv>
         );
       })}
@@ -235,56 +215,91 @@ function Friend() {
 export default Friend;
 const FriendDiv = styled.div<{ layoutMenu: String }>`
   display: ${(props) => (props.layoutMenu === "friendadd" ? "block" : "none")};
-  margin-top: 100px;
+  margin-top: 80px;
   margin-bottom: 30px;
 `;
 
 const MenuTitleDiv = styled.div`
   width: 400px;
-  height: 80px;
+  height: 70px;
   background-color: #263245;
   position: fixed;
   top: 0;
   font-size: 24px;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
   border-top-right-radius: 30px;
 `;
 
-const FriendBoxDiv = styled.div`
-  margin: 10px auto 0;
-  width: 350px;
-  height: 140px;
-  background-color: #263245;
-  border-radius: 10px;
+const FriendAddH2 = styled.h2`
+  font-size: 13px;
+  color: #d4d4d4;
+  margin: 16px 0 16px 25px;
 `;
-const FriendBoxNameDiv = styled.div`
-  padding-top: 15px;
+
+const FriendBoxDiv = styled.div`
+  margin: 0px auto;
+  width: 350px;
+  height: 60px;
+  background-color: #263245;
   display: flex;
   align-items: center;
 `;
-const FriendBoxNameImg = styled.div`
-  width: 50px;
-  height: 50px;
-  border-radius: 25px;
-  margin-left: 30px;
+const FriendBoxNameDiv = styled.div`
+  font-size: 14px;
+  width: 100%;
+  display: flex;
+  align-items: center;
+`;
+const FriendBoxNameImg = styled.img`
+  width: 40px;
+  height: 40px;
+  border-radius: 20px;
   margin-right: 10px;
-  background-color: #ccc;
 `;
 const FriendBoxNameH2 = styled.h2`
   color: #fff;
 `;
-const FriendBoxNameP = styled.p`
+const FriendBoxNameH3 = styled.h3`
   color: #fff;
   margin-left: auto;
-  margin-right: 30px;
+  margin-right: 8px;
+  width: 40px;
+  height: 24px;
+  line-height: 24px;
+  font-size: 12px;
+  border-radius: 8px;
+  background-color: #00b8c8;
+  font-weight: 500;
+  margin-left: auto;
+  text-align: center;
   cursor: pointer;
 `;
-const FriendGamingDiv = styled.div`
-  display: flex;
-  align-items: center;
-  margin-top: 40px;
+
+const FriendBoxNameP = styled.p`
   color: #fff;
-  justify-content: space-around;
+  width: 40px;
+  height: 24px;
+  line-height: 24px;
+  font-weight: 500;
+  font-size: 12px;
+  border-radius: 8px;
+  background-color: #404b5e;
+  text-align: center;
+  cursor: pointer;
+`;
+
+const FriendBoxCancelP = styled.p`
+  color: #fff;
+  width: 40px;
+  height: 24px;
+  line-height: 24px;
+  font-weight: 500;
+  font-size: 12px;
+  border-radius: 8px;
+  margin-left: auto;
+  background-color: #404b5e;
+  text-align: center;
+  margin-left: auto;
+  cursor: pointer;
 `;

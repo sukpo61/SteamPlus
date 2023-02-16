@@ -36,15 +36,15 @@ function FriendContextMenu({ xPos, yPos, id, onClose }: any) {
   return (
     <>
       <ContextMenuDiv yPos={yPos} xPos={xPos} onClick={handleClick}>
-        <p
-          style={{ padding: "0px 0 10px 0" }}
+        <ContextMenuP>참여하기</ContextMenuP>
+        <ContextMenuP>채팅삭제 </ContextMenuP>
+        <ContextMenuP
           onClick={() => {
             friendDeleteOnClick(id);
           }}
         >
-          친구 삭제{" "}
-        </p>
-        <p>채팅 삭제 </p>
+          친구삭제
+        </ContextMenuP>
       </ContextMenuDiv>
     </>
   );
@@ -56,8 +56,18 @@ const ContextMenuDiv = styled.div<{ yPos: string; xPos: string }>`
   position: fixed;
   top: ${(props) => props.yPos};
   left: ${(props) => props.xPos};
-  border: 1px solid #000;
-  background-color: white;
-  z-index: 1;
-  padding: 0.5rem;
+  background-color: #192030;
+  z-index: 99999999999;
+  padding: 5px 12px;
+  border-radius: 5px;
+  font-size: 14px;
+  width: 120px;
+  box-shadow: 0px 0px 15px 0px rgba(0, 0, 0, 0.25);
+`;
+const ContextMenuP = styled.p`
+  padding: 10px 0;
+  color: #a7a9ac;
+  &:hover {
+    color: #00b8c8;
+  }
 `;
