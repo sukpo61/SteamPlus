@@ -1,13 +1,48 @@
 import React from "react";
-import { LayoutButton } from "../../recoil/atom";
+import { LayoutButton, getFriend, newFriendAdd } from "../../recoil/atom";
 import styled from "styled-components";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
+import { FriendProps } from "./Friend";
 
 function FriendTab() {
+  const myId = 1;
   const [layoutMenu, setLayoutMenu] = useRecoilState<String>(LayoutButton);
+  //친구 내역 전체
+  const [getFriendAuth, setGetFriendAuth] =
+    useRecoilState<FriendProps[]>(getFriend);
+  //친구 요청 온 내역 전체
+  const [friendAdd] = useRecoilValue(newFriendAdd);
+
   // //친구 알림 내역
   // const [FriendNoticeLength] = useRecoilValue<any>(FriendNoticeAll);
   // // console.log(FriendNoticeLength);
+
+  //양쪽 다 친구 내역
+  const friend = getFriendAuth?.filter((i: FriendProps) => {
+    for (let t = 0; t < friendAdd.length; t++) {
+      if (
+        friendAdd[t].friendId === i.myId &&
+        friendAdd[t].myId === i.friendId
+      ) {
+        return i.myId === myId;
+      } else if (
+        friendAdd[t].friendId === i.myId &&
+        friendAdd[t].myId === i.friendId
+      ) {
+        return i.myId === myId;
+      }
+    }
+  });
+
+  //친구 요청 온 내역만 (내 친구내역엔 없고 상대 친구내역엔 있는 상태)
+  const friendAddCome = getFriendAuth?.filter((i: FriendProps) => {
+    for (let t = 0; t < friend.length; t++) {
+      if (friend[t].friendId === i.myId && friend[t].myId === i.friendId) {
+        return;
+      }
+    }
+    return i.friendId === myId;
+  });
 
   const FriendButtonOnClick = (i: string) => {
     setLayoutMenu(i);
@@ -32,6 +67,11 @@ function FriendTab() {
         onClick={() => FriendButtonOnClick("friendadd")}
       >
         친구 요청
+        {friendAddCome.length === 0 ? (
+          ""
+        ) : (
+          <FriendNotice>{friendAddCome.length}</FriendNotice>
+        )}
       </FriendAddDiv>
     </MenuTitleFlex>
   );
@@ -90,6 +130,7 @@ const FriendSearchMenuDiv = styled.h2<{ layoutMenu: String }>`
   cursor: pointer;
 `;
 const FriendAddDiv = styled.h2<{ layoutMenu: String }>`
+  position: relative;
   width: 117px;
   height: 100%;
   line-height: 40px;
@@ -106,4 +147,19 @@ const FriendAddDiv = styled.h2<{ layoutMenu: String }>`
   }
   transition: 0.5s ease;
   cursor: pointer;
+`;
+
+const FriendNotice = styled.div`
+  position: absolute;
+  top: 5px;
+  left: 15px;
+  width: 15px;
+  height: 15px;
+  line-height: 15px;
+  color: #fff;
+  font-size: 12px;
+  text-align: center;
+  border-radius: 50%;
+  background-color: red;
+  font-weight: 500;
 `;

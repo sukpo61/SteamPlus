@@ -26,6 +26,7 @@ const Router = () => {
       <RouteFloat
         //메뉴 상태 props
         layoutMenu={layoutMenu}
+        // onContextMenu={(e: any) => e.preventDefault()}
       >
         <Routes>
           <Route path="/" element={<MainPage />} />
