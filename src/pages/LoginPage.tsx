@@ -2,11 +2,8 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useMutation, useQuery } from "react-query";
 import { useNavigate } from "react-router-dom";
-import { useCookies } from "react-cookie";
 const STEAM_OPENID_ENDPOINT = `https://steamcommunity.com/openid/login?openid.ns=http://specs.openid.net/auth/2.0&openid.mode=checkid_setup&openid.return_to=http://localhost:3000/&openid.realm=http://localhost:3000&openid.identity=http://specs.openid.net/auth/2.0/identifier_select&openid.claimed_id=http://specs.openid.net/auth/2.0/identifier_select`;
 const LoginPage: any = () => {
-  const [cookies, setCookie, removeCookie] = useCookies(["userCooke"]);
-
   const navigate = useNavigate();
   const params: any = new URLSearchParams(window.location.search);
   const steamId = params.get("openid.claimed_id")?.split("/")[5];
@@ -28,6 +25,8 @@ const LoginPage: any = () => {
         },
       }
     );
+    console.log(result);
+
     const userinfo = {
       id: result.config.params.steamids,
       profileimg: result?.data.response.players[0].avatarfull,
@@ -36,13 +35,14 @@ const LoginPage: any = () => {
         " " +
         "#" +
         result.config.params.steamids.slice(13, 18),
+      gameid: result?.data.response.players[0].gameid,
       gameextrainfo: result?.data.response.players[0].gameextrainfo,
     };
     //steam에서 변경된사항이 있을때 put을 통해 dbjson을 업데이트해줌
     axios.put(`http://localhost:3001/auth/${steamId}`, userinfo);
     axios.post(serverUrl, userinfo);
     //로컬스토리지에 로그인정보 저장하기
-
+    localStorage.setItem("gameid", result?.data.response.players[0].gameid);
     localStorage.setItem("steamid", result.config.params.steamids);
     localStorage.setItem(
       "profileimg",
@@ -59,9 +59,8 @@ const LoginPage: any = () => {
       "gameextrainfo",
       result?.data.response.players[0].gameextrainfo
     );
-
     console.log(userinfo);
-
+    // navigate("/main");
     return result;
   };
   //steam userData
@@ -87,6 +86,8 @@ const LoginPage: any = () => {
   }, []);
   //로그아웃
   const logout = () => {
+    localStorage.getItem("gameid");
+    localStorage.removeItem("gameid");
     localStorage.getItem("profileimg");
     localStorage.removeItem("profileimg");
     localStorage.getItem("nickName");
