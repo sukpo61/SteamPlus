@@ -8,8 +8,9 @@ function MainPage() {
   return (
     <div style={{ display: "flex", flexDirection: "column" }}>
       <div style={{ position: "relative" }}>
-        <CurrentGameImg></CurrentGameImg>
-        <CurrentGameTitle>OVERWATCH</CurrentGameTitle>
+        <CurrentGameImg src={`${current.image}`} /> // 여기 실행중인 이미지 url
+        <CurrentGameTitle>{current.title}</CurrentGameTitle> // 여기는 실행중인
+        게임제목!!!!!!
         <CurrentChannelJoinBtn>게임채널 입장하기</CurrentChannelJoinBtn>
       </div>
       <PopularChannel>
@@ -42,12 +43,21 @@ function MainPage() {
   );
 }
 
-const CurrentGameImg = styled.div`
-  // img 태그로 교체해야함
-
+const CurrentGameArea = styled.img`
   width: 1820px;
   height: 694px;
-  background-color: grey;
+  overflow: hidden;
+  position: relative;
+`;
+const CurrentGameImg = styled.img`
+  // img 태그로 교체
+  position: absolute;
+  top: 0;
+  left: 0;
+  transform: translate(50, 50);
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 `;
 
 const CurrentGameTitle = styled.div`

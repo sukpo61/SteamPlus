@@ -8,53 +8,18 @@ import { BiSearchAlt2 } from "react-icons/bi";
 import GameChannelBlock from "../components/common/GameChannelBlock";
 import { useRecoilState, atom } from "recoil";
 
-interface Game {
-  [key: string]: string | number | boolean | any;
-  appid: number;
-  name: string;
-  id: string;
-}
-
-// const searchResultsState = atom({
-//   key: "searchResultsState",
-//   default: [],
-// });
-
 const ChannelSearchPage: any = () => {
-  const [searchGames, setSearchGames] = useState<Game[]>([]);
-  // const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<any>(null);
-
   const APIKEY = "234E0113F33D5C7C4D4D5292C6774550";
-
   const [searchValue, setSearchValue] = useState("");
   const [searchResult, setSearchResult] = useState<any>([]);
 
   // https://cors-anywhere.herokuapp.com/
 
-  // 게임정보
-  //   axios
-  //     .get(
-  //       `https://cors-anywhere.herokuapp.com/http://store.steampowered.com/api/appdetails/`,
-  //       {
-  //         params: {
-  //           appids: "250900",
-  //         },
-  //       }
-  //     )
-  //     .then((response) => {
-  //       console.log("gamedetail", response);
-  //     })
-  //     .catch((error) => {
-  //       setError("Could not retrieve header image");
-  //     });
-  // }, []);
-
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchValue(e.target.value);
   };
 
-  const SubmitSearch = (Value: any) => {
+  const getGameSummary = (Value: any) => {
     axios
       .get(
         "https://cors-anywhere.herokuapp.com/https://store.steampowered.com/api/storesearch",
@@ -68,6 +33,7 @@ const ChannelSearchPage: any = () => {
         }
       )
       .then((response) => {
+        console.log("result", response);
         response.data.items.map((game: any) => {
           getGameCategory(game);
         });
@@ -104,12 +70,6 @@ const ChannelSearchPage: any = () => {
       });
   };
 
-  // const handleOnKeyPress = (e) => {
-  //   if (e.key === "Enter") {
-  //     handleOnClick(); // Enter 입력이 되면 클릭 이벤트 실행
-  //   }
-  // };
-
   return (
     <div
       style={{
@@ -134,7 +94,7 @@ const ChannelSearchPage: any = () => {
           <BiSearchAlt2
             className="searchIcon"
             onClick={() => {
-              SubmitSearch(searchValue);
+              getGameSummary(searchValue);
             }}
           />
         </GameSearchInputArea>
@@ -222,7 +182,7 @@ const GameSearchList = styled.div`
   width: 890px; // MianPage SearchPage에서 사이즈 조절 필요
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 10px;
   margin-left: 114px;
 `;
 

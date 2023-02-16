@@ -19,7 +19,7 @@ function GameChannelBlock({ game }: Props) {
   return (
     <GameListBlock>
       <GameChannelImgArea>
-        <GameChannelImg src={`${game.tiny_image}`} />
+        <GameChannelImg src={`${game.image}`} />
       </GameChannelImgArea>
       <GameChannelDetailPart>
         <div>
@@ -27,7 +27,7 @@ function GameChannelBlock({ game }: Props) {
             <GameChannelTitle>{`${game.name}`}</GameChannelTitle>
           </TitleLinear>
           <GameChannelInfo>
-            <GameChannelCategory>어드벤쳐, RPG, 앞서해보기</GameChannelCategory>
+            <GameChannelCategory>{game.cate}</GameChannelCategory>
             <NumberOfPlayer>
               <div
                 style={{
@@ -59,7 +59,6 @@ const GameListBlock = styled.div`
   height: 108px;
   border-radius: 10px;
   overflow: hidden;
-  margin-bottom: 10px;
 `;
 
 const GameChannelImgArea = styled.div`
