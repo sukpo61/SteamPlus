@@ -71,20 +71,6 @@
       "friendNickName": "호랑이"
     },
     {
-      "id": "2494e693-5c87-40a2-9823-290d6cfd751c",
-      "myId": 1,
-      "friendId": 7,
-      "myNickName": "고양이",
-      "friendNickName": "Cat"
-    },
-    {
-      "id": "2494e693-5c87-40a2-9823-290d6cfd751c1",
-      "myId": 7,
-      "friendId": 1,
-      "myNickName": "Cat",
-      "friendNickName": "고양이"
-    },
-    {
       "id": "dea95e9c-c344-4cef-bbac-e77d577e3780",
       "myId": 1,
       "friendId": 4,
@@ -92,11 +78,11 @@
       "friendNickName": "호랑이인간"
     },
     {
-      "id": "ac5b83aa-fcba-4208-8eda-85a8eb5326f1",
-      "myId": 1,
-      "friendId": 5,
-      "myNickName": "고양이",
-      "friendNickName": "강아지고양이"
+      "id": "36b4959c-5246-4f64-8fa6-2f8779c087b0",
+      "myId": 5,
+      "friendId": 1,
+      "myNickName": "강아지고양이",
+      "friendNickName": "고양이"
     }
   ]
 }

@@ -118,7 +118,7 @@ function Layout() {
   // console.log(friendAddCome.length);
 
   return (
-    <>
+    <div onContextMenu={(e: any) => e.preventDefault()}>
       <SideBarDiv>
         {/* 프로필 */}
         <Profilebutton onClick={() => LayoutButtonOnClick("profile")}>
@@ -153,7 +153,7 @@ function Layout() {
         <VoiceTalk />
         <FriendAdd />
       </MenuOpenDiv>
-    </>
+    </div>
   );
 }
 

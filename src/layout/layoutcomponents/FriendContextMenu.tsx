@@ -2,6 +2,7 @@ import React from "react";
 import { useMutation } from "react-query";
 import axios from "axios";
 import { useQueryClient } from "react-query";
+import styled from "styled-components";
 
 function FriendContextMenu({ xPos, yPos, id, onClose }: any) {
   const queryClient = useQueryClient();
@@ -34,18 +35,7 @@ function FriendContextMenu({ xPos, yPos, id, onClose }: any) {
 
   return (
     <>
-      <div
-        style={{
-          position: "fixed",
-          top: yPos,
-          left: xPos,
-          border: "1px solid black",
-          backgroundColor: "white",
-          zIndex: 1,
-          padding: "0.5rem",
-        }}
-        onClick={handleClick}
-      >
+      <ContextMenuDiv yPos={yPos} xPos={xPos} onClick={handleClick}>
         <p
           style={{ padding: "0px 0 10px 0" }}
           onClick={() => {
@@ -55,9 +45,19 @@ function FriendContextMenu({ xPos, yPos, id, onClose }: any) {
           친구 삭제{" "}
         </p>
         <p>채팅 삭제 </p>
-      </div>
+      </ContextMenuDiv>
     </>
   );
 }
 
 export default FriendContextMenu;
+
+const ContextMenuDiv = styled.div<{ yPos: string; xPos: string }>`
+  position: fixed;
+  top: ${(props) => props.yPos};
+  left: ${(props) => props.xPos};
+  border: 1px solid #000;
+  background-color: white;
+  z-index: 1;
+  padding: 0.5rem;
+`;
