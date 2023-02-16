@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   LayoutButton,
   getFriend,
@@ -12,6 +12,8 @@ import { useQueryClient } from "react-query";
 import axios from "axios";
 import { useMutation } from "react-query";
 import FriendTab from "./FriendTab";
+import FriendContextMenu from "./FriendContextMenu";
+// import { ContextMenu, MenuItem, ContextMenuTrigger } from "react-contextmenu";
 
 export interface FriendProps {
   id: String;
@@ -28,6 +30,15 @@ function Friend() {
     useRecoilState<FriendProps[]>(getFriend);
   //친구 요청 온 내역 전체
   const [friendAdd] = useRecoilValue(newFriendAdd);
+
+  //친구 우클릭
+  const [menuPosition, setMenuPosition] = useState<{
+    xPos: string;
+    yPos: string;
+  }>({
+    xPos: "-1000px",
+    yPos: "-1000px",
+  });
 
   const myId = 1;
   const myNickName = "고양이";
@@ -53,27 +64,27 @@ function Friend() {
     setfrendSearchInput(e.target.value);
   };
 
-  // 친구 삭제
-  const DeleteMutation = useMutation(
-    //넘겨받은 id를 삭제
-    (id) => axios.delete(`http://localhost:3001/friend/${id}`),
-    {
-      onSuccess: () => {
-        // 쿼리 무효화
-        queryClient.invalidateQueries("friend");
-        queryClient.invalidateQueries("friendsearch");
-      },
-    }
-  );
+  // // 친구 삭제
+  // const DeleteMutation = useMutation(
+  //   //넘겨받은 id를 삭제
+  //   (id) => axios.delete(`http://localhost:3001/friend/${id}`),
+  //   {
+  //     onSuccess: () => {
+  //       // 쿼리 무효화
+  //       queryClient.invalidateQueries("friend");
+  //       queryClient.invalidateQueries("friendsearch");
+  //     },
+  //   }
+  // );
 
-  //친구 삭제 인데 +1 된것 까지 삭제 혹은 그 반대로 +1이 없는 것 까지 삭제
-  const friendDeleteOnClick = (id: any) => {
-    const deleteAll: any = id + "1";
-    const deleteAll2: any = id.slice(0, -1);
-    DeleteMutation.mutate(id);
-    DeleteMutation.mutate(deleteAll);
-    DeleteMutation.mutate(deleteAll2);
-  };
+  // //친구 삭제 인데 +1 된것 까지 삭제 혹은 그 반대로 +1이 없는 것 까지 삭제
+  // const friendDeleteOnClick = (id: any) => {
+  //   const deleteAll: any = id + "1";
+  //   const deleteAll2: any = id.slice(0, -1);
+  //   DeleteMutation.mutate(id);
+  //   DeleteMutation.mutate(deleteAll);
+  //   DeleteMutation.mutate(deleteAll2);
+  // };
 
   //양쪽 다 친구 내역
   const friend = getFriendAuth?.filter((i: FriendProps) => {
@@ -97,44 +108,33 @@ function Friend() {
     }
   });
 
-  // //내가 친구 요청 보낸 내역 (내 친구내역만 있고 상대 친구내역엔 없는 상태)
-  // const friendAddSend = data?.data.filter((i: FriendProps) => {
-  //   //만약 친구 요청온 것의 myid와 frendid / frendid와 myid가 같다면 제외
-  //   for (let t = 0; t < friendAdd.length; t++) {
-  //     if (
-  //       friendAdd[t].friendId === i.myId &&
-  //       friendAdd[t].myId === i.friendId
-  //     ) {
-  //       return;
-  //     }
-  //   }
-  //   return i.myId === myId && frendSearchInput === "";
-  // });
+  // //친구 우클릭
+  const handleContextMenu = (event: any) => {
+    event.preventDefault();
+    setMenuPosition({ xPos: `${event.pageX}px`, yPos: `${event.pageY}px` });
+  };
 
-  // //친구 요청 온 내역만 (내 친구내역엔 없고 상대 친구내역엔 있는 상태)
-  // const friendAddCome = data?.data.filter((i: FriendProps) => {
-  //   for (let t = 0; t < friend.length; t++) {
-  //     if (friend[t].friendId === i.myId && friend[t].myId === i.friendId) {
-  //       return;
-  //     }
-  //   }
-  //   return i.friendId === myId && frendSearchInput === "";
-  // });
+  const handleCloseContextMenu = () => {
+    setMenuPosition({ xPos: "-1000px", yPos: "-1000px" });
+  };
 
-  // useEffect(() => {
-  //   setFriendAddRecoil(friendAdd);
-  //   setFriendAllRecoil(friend);
-  // }, [isLoading]);
+  useEffect(() => {
+    const handleWindowClick = () => {
+      handleCloseContextMenu();
+    };
 
-  // if (isLoading) {
-  //   return <p>로딩중임</p>;
-  // }
+    if (menuPosition.xPos !== "-1000px" && menuPosition.yPos !== "-1000px") {
+      //클릭하면 추가
+      window.addEventListener("click", handleWindowClick);
+    } else {
+      //클릭하면 이벤트 삭제
+      window.removeEventListener("click", handleWindowClick);
+    }
 
-  // if (isError) {
-  //   console.log("오류내용", error);
-  //   return <p>오류</p>;
-  // }
-
+    return () => {
+      window.removeEventListener("click", handleWindowClick);
+    };
+  }, [menuPosition]);
   return (
     <FriendDiv layoutMenu={layoutMenu}>
       {/* 위 제목과 input layoutstring이 바뀔때마다 바뀌게 */}
@@ -154,7 +154,14 @@ function Friend() {
       {/* 친구 목록 박스 */}
       {friend?.map((i: FriendProps) => {
         return (
-          <FriendBoxDiv>
+          <FriendBoxDiv onContextMenu={handleContextMenu}>
+            <FriendContextMenu
+              xPos={menuPosition.xPos}
+              yPos={menuPosition.yPos}
+              onClose={handleCloseContextMenu}
+              id={i.id}
+            />
+
             <FriendBoxNameDiv>
               <FriendBoxNameImgDiv>
                 <FriendBoxNameImg></FriendBoxNameImg>
@@ -170,14 +177,6 @@ function Friend() {
               </FriendBoxNamePlayingP>
 
               <FriendBoxNotice>11</FriendBoxNotice>
-
-              {/* <FriendBoxNameP
-                onClick={() => {
-                  friendDeleteOnClick(i.id);
-                }}
-              >
-                삭제
-              </FriendBoxNameP> */}
             </FriendBoxNameDiv>
           </FriendBoxDiv>
         );
