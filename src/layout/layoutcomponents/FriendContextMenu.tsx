@@ -3,9 +3,15 @@ import { useMutation } from "react-query";
 import axios from "axios";
 import { useQueryClient } from "react-query";
 import styled from "styled-components";
+import { useRecoilState } from "recoil";
+import { getFriend } from "../../recoil/atom";
+import { FriendProps } from "./Friend";
 
 function FriendContextMenu({ xPos, yPos, id, onClose }: any) {
   const queryClient = useQueryClient();
+  //친구 내역 전체
+  const [getFriendAuth, setGetFriendAuth] =
+    useRecoilState<FriendProps[]>(getFriend);
 
   const handleClick = () => {
     onClose();
@@ -24,13 +30,14 @@ function FriendContextMenu({ xPos, yPos, id, onClose }: any) {
     }
   );
 
-  //친구 삭제 인데 +1 된것 까지 삭제 혹은 그 반대로 +1이 없는 것 까지 삭제
+  //찾아온 친구 id 를이용해 두개다 삭제
   const friendDeleteOnClick = (id: any) => {
-    const deleteAll: any = id + "1";
-    const deleteAll2: any = id.slice(0, -1);
-    DeleteMutation.mutate(id);
-    DeleteMutation.mutate(deleteAll);
-    DeleteMutation.mutate(deleteAll2);
+    const friendDelete = getFriendAuth.filter((i) => {
+      return id === i.friendId || id === i.myId;
+    });
+
+    DeleteMutation.mutate(friendDelete[0].id);
+    DeleteMutation.mutate(friendDelete[1].id);
   };
 
   return (
