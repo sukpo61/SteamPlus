@@ -17,15 +17,15 @@ import { v4 as uuidv4 } from "uuid";
 import FriendTab from "./FriendTab";
 import { FriendProps } from "./Friend";
 export interface FriendSearchProps {
-  id: Number;
-  uid: Number;
+  id: String;
+  profileimg: String;
   nickname: String;
 }
 
 function FriendSearch() {
   const queryClient = useQueryClient();
-  const myId = 1;
-  const myNickName = "고양이";
+  const myId = localStorage.getItem("steamid");
+  const myNickName = localStorage.getItem("nickName");
 
   // const myId = 2;
   // const myNickName = "강아지";

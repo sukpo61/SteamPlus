@@ -5,7 +5,9 @@ import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import { FriendProps } from "./Friend";
 
 function FriendTab() {
-  const myId = 1;
+  const myId = localStorage.getItem("steamid");
+  const myNickName = localStorage.getItem("nickName");
+
   const [layoutMenu, setLayoutMenu] = useRecoilState<String>(LayoutButton);
   //친구 내역 전체
   const [getFriendAuth, setGetFriendAuth] =

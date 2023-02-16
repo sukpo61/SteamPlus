@@ -17,8 +17,8 @@ import FriendContextMenu from "./FriendContextMenu";
 
 export interface FriendProps {
   id: String;
-  myId: Number;
-  friendId: Number;
+  myId: String;
+  friendId: String;
   myNickName: String;
   friendNickName: String;
 }
@@ -40,8 +40,8 @@ function Friend() {
     yPos: "-1000px",
   });
 
-  const myId = 1;
-  const myNickName = "고양이";
+  const myId = localStorage.getItem("steamid");
+  const myNickName = localStorage.getItem("nickName");
 
   // const myId = 2;
   // const myNickName = "강아지";
@@ -170,7 +170,7 @@ function Friend() {
                 <FriendBoxNameOnline />
               </FriendBoxNameImgDiv>
 
-              <FriendBoxNameH2>{i.friendNickName} #1234</FriendBoxNameH2>
+              <FriendBoxNameH2>{i.friendNickName}</FriendBoxNameH2>
 
               <FriendBoxNamePlayingP>
                 `Dave the Diver`방 참여중

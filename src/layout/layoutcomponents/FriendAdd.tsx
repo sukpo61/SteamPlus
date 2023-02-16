@@ -17,8 +17,8 @@ import { FriendProps } from "./Friend";
 function Friend() {
   const queryClient = useQueryClient();
 
-  const myId = 1;
-  const myNickName = "고양이";
+  const myId = localStorage.getItem("steamid");
+  const myNickName = localStorage.getItem("nickName");
 
   // const myId = 2;
   // const myNickName = "강아지";

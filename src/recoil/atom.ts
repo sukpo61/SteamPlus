@@ -2,7 +2,8 @@ import { atom, selector } from "recoil";
 import { FriendProps } from "../layout/layoutcomponents/Friend";
 import { FriendSearchProps } from "../layout/layoutcomponents/FriendSearch";
 
-const myId = 1;
+const myId = localStorage.getItem("steamid");
+const myNickName = localStorage.getItem("nickName");
 
 export const myIds = atom<any>({
   key: "myIds",
@@ -79,4 +80,9 @@ export const newFriendAdd = selector({
 export const BothFriend = atom<FriendProps[]>({
   key: "BothFriend",
   default: [],
+});
+
+export const Loginedrecoil = atom({
+  key: "logined",
+  default: false,
 });
