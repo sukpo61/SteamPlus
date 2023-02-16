@@ -242,7 +242,7 @@ const FriendDiv = styled.div<{ layoutMenu: String }>`
 const MenuTitleDiv = styled.div`
   width: 400px;
   height: 80px;
-  background-color: #404b5e;
+  background-color: #263245;
   position: fixed;
   top: 0;
   font-size: 24px;

@@ -38,6 +38,9 @@ function Friend() {
   // const myId = 3;
   // const myNickName = "호랑이";
 
+  //   const myId = 5;
+  // const myNickName = "강아지고양이";
+
   // const myId = 7;
   // const myNickName = "Cat";
 
@@ -140,9 +143,12 @@ function Friend() {
         <FriendTab />
 
         <MenuTitleIform>
-          <MenuTitleInput onChange={frendSearchOnChange}></MenuTitleInput>
-          {/* <MenuTitleButton>확인</MenuTitleButton> */}
+          <MenuTitleInput
+            onChange={frendSearchOnChange}
+            placeholder={"친구 검색"}
+          ></MenuTitleInput>
         </MenuTitleIform>
+        <MenuTitleh2>친구 {friend.length}명</MenuTitleh2>
       </MenuTitleDiv>
 
       {/* 친구 목록 박스 */}
@@ -150,22 +156,29 @@ function Friend() {
         return (
           <FriendBoxDiv>
             <FriendBoxNameDiv>
-              <FriendBoxNameImg></FriendBoxNameImg>
-              <FriendBoxNameH2>{i.friendNickName}</FriendBoxNameH2>
+              <FriendBoxNameImgDiv>
+                <FriendBoxNameImg></FriendBoxNameImg>
 
-              <FriendBoxNameP
+                {/* 온라인표시 */}
+                <FriendBoxNameOnline />
+              </FriendBoxNameImgDiv>
+
+              <FriendBoxNameH2>{i.friendNickName} #1234</FriendBoxNameH2>
+
+              <FriendBoxNamePlayingP>
+                `Dave the Diver`방 참여중
+              </FriendBoxNamePlayingP>
+
+              <FriendBoxNotice>11</FriendBoxNotice>
+
+              {/* <FriendBoxNameP
                 onClick={() => {
                   friendDeleteOnClick(i.id);
                 }}
               >
                 삭제
-              </FriendBoxNameP>
+              </FriendBoxNameP> */}
             </FriendBoxNameDiv>
-
-            <FriendGamingDiv>
-              <h2>dave diver방 참가중</h2>
-              <h2>참가하기</h2>
-            </FriendGamingDiv>
           </FriendBoxDiv>
         );
       })}
@@ -176,70 +189,101 @@ function Friend() {
 export default Friend;
 const FriendDiv = styled.div<{ layoutMenu: String }>`
   display: ${(props) => (props.layoutMenu === "friend" ? "block" : "none")};
-  margin-top: 150px;
+  margin-top: 160px;
   margin-bottom: 30px;
 `;
 
 const MenuTitleDiv = styled.div`
   width: 400px;
-  height: 130px;
-  background-color: #404b5e;
+  height: 160px;
+  background-color: #263245;
   position: fixed;
   top: 0;
   font-size: 24px;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
   border-top-right-radius: 30px;
 `;
 const MenuTitleIform = styled.form`
   position: relative;
   margin: 0 auto;
 `;
+
+const MenuTitleh2 = styled.h2`
+  font-size: 14px;
+  font-weight: 300;
+  color: #fff;
+  margin-left: 24px;
+  margin-top: 12px;
+`;
 const MenuTitleInput = styled.input`
   width: 350px;
   height: 40px;
   border-radius: 10px;
   background-color: #192030;
-  margin: 0 auto 10px auto;
+  margin: 20px auto 0px auto;
   border: 0;
   box-shadow: 2px 4px 10px 0 #000 inset;
   color: #fff;
+  text-indent: 10px;
 `;
 
 const FriendBoxDiv = styled.div`
-  margin: 10px auto 0;
+  margin: 0 auto 10px auto;
   width: 350px;
-  height: 140px;
+  height: 50px;
   background-color: #263245;
   border-radius: 10px;
+  cursor: pointer;
 `;
 const FriendBoxNameDiv = styled.div`
-  padding-top: 15px;
+  height: 50px;
+  padding-top: 0px;
   display: flex;
   align-items: center;
 `;
+const FriendBoxNameImgDiv = styled.div`
+  position: relative;
+`;
 const FriendBoxNameImg = styled.div`
-  width: 50px;
-  height: 50px;
-  border-radius: 25px;
-  margin-left: 30px;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  margin-left: 0px;
   margin-right: 10px;
   background-color: #ccc;
 `;
+const FriendBoxNameOnline = styled.div`
+  position: absolute;
+  bottom: 0;
+  width: 15px;
+  height: 15px;
+  background-color: #23de79;
+  border-radius: 50%;
+`;
 const FriendBoxNameH2 = styled.h2`
   color: #fff;
+  font-size: 16px;
+  margin-right: 10px;
+`;
+const FriendBoxNamePlayingP = styled.p`
+  font-size: 10px;
+  color: #d4d4d4;
+`;
+const FriendBoxNotice = styled.div`
+  width: 16px;
+  height: 16px;
+  line-height: 16px;
+  text-align: center;
+  font-size: 12px;
+  color: #fff;
+  background-color: #ff5b5b;
+  border-radius: 50%;
+  margin-left: auto;
 `;
 const FriendBoxNameP = styled.p`
   color: #fff;
   margin-left: auto;
   margin-right: 30px;
   cursor: pointer;
-`;
-const FriendGamingDiv = styled.div`
-  display: flex;
-  align-items: center;
-  margin-top: 40px;
-  color: #fff;
-  justify-content: space-around;
 `;
