@@ -24,34 +24,13 @@ const ChannelSearchPage: any = () => {
   const [searchGames, setSearchGames] = useState<Game[]>([]);
   // const [loading, setLoading] = useState(false);
   const [error, setError] = useState<any>(null);
-  const [searchInput, setSearchInput] = useState("dead");
-  const APIKEY = "234E0113F33D5C7C4D4D5292C6774550";
-  const STEAM_ACCOUNT_NAME = "sukpo61@naver.com";
 
-  const gameId = "250900";
-  const searchKeyword = "sim";
+  const APIKEY = "234E0113F33D5C7C4D4D5292C6774550";
 
   const [searchValue, setSearchValue] = useState("");
-  const [searchResult, setSearchResult] = useState([]);
+  const [searchResult, setSearchResult] = useState<any>([]);
 
   // https://cors-anywhere.herokuapp.com/
-
-  // useEffect(() => {
-  //   //유저정보
-  //   axios
-  //     .get(
-  //       "https://cors-anywhere.herokuapp.com/https://api.steampowered.com/ISteamUser/GetPlayerSummaries/v2/",
-  //       {
-  //         params: {
-  //           key: APIKEY,
-  //           steamids: "76561198374391933",
-  //         },
-  //       }
-  //     )
-  //     .then((response) => {
-  //       console.log("userstate", response);
-  //     })
-  //     .catch((error) => setError(error));
 
   // 게임정보
   //   axios
@@ -75,11 +54,7 @@ const ChannelSearchPage: any = () => {
     setSearchValue(e.target.value);
   };
 
-  // const searchGame = {};
-
-  // ?appids=APPID&filters=categories
-  const SubmitSearch = () => {
-    var appId = "";
+  const SubmitSearch = (Value: any) => {
     axios
       .get(
         "https://cors-anywhere.herokuapp.com/https://store.steampowered.com/api/storesearch",
@@ -87,29 +62,43 @@ const ChannelSearchPage: any = () => {
           params: {
             cc: "us",
             l: "en",
-            term: searchValue,
+            term: Value,
             //limit : 20
           },
         }
       )
       .then((response) => {
-        console.log("searchresult", response.data.items);
-        setSearchResult(response.data.items);
-        appId = response.data.items.id;
+        response.data.items.map((game: any) => {
+          getGameCategory(game);
+        });
       })
       .catch((error) => {
         console.error(error);
       });
+  };
 
+  const getGameCategory = (gameinfo: any) => {
     axios
       .get(
         "https://cors-anywhere.herokuapp.com/https://store.steampowered.com/api/appdetails",
-        { params: { appids: appId, filters: "categories" } }
+        { params: { appids: gameinfo.id, filters: "categories" } }
       )
       .then((res) => {
         console.log("appid", res);
-        // setSearchResult(response);
+
+        setSearchResult((e: any) => [
+          ...e,
+          {
+            image: gameinfo.tiny_image,
+            name: gameinfo.name,
+            cate: res.data[gameinfo.id].data.categories
+              .map((cate: any) => cate.description)
+              .slice(0, 2)
+              .toString(),
+          },
+        ]);
       })
+
       .catch((error) => {
         console.error(error);
       });
@@ -142,14 +131,19 @@ const ChannelSearchPage: any = () => {
             onChange={handleSearch}
             // handleSearch
           />
-          <BiSearchAlt2 className="searchIcon" onClick={SubmitSearch} />
+          <BiSearchAlt2
+            className="searchIcon"
+            onClick={() => {
+              SubmitSearch(searchValue);
+            }}
+          />
         </GameSearchInputArea>
       </SearchPageHeader>
       <SearchCount>
         '{`${searchValue}`}' 검색 결과 {}n 개
       </SearchCount>
       <GameSearchList>
-        {searchResult.map((game: Game) => {
+        {searchResult.map((game: any) => {
           return (
             <GameChannelBlockView key={game.id}>
               <GameChannelBlock game={game} />
