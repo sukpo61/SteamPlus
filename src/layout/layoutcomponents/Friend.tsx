@@ -16,15 +16,21 @@ import FriendContextMenu from "./FriendContextMenu";
 // import { ContextMenu, MenuItem, ContextMenuTrigger } from "react-contextmenu";
 
 export interface FriendProps {
-  id: String;
-  myId: String;
-  friendId: String;
-  myNickName: String;
-  friendNickName: String;
+  id: string;
+  myId: string;
+  friendId: string;
+  myNickName: string;
+  friendNickName: string;
+  myProfileimg: string;
+  friendProfileimg: string;
 }
 
 function Friend() {
   const queryClient = useQueryClient();
+  // //화면 기준 x,y좌표
+  // const element = document.getElementById("my-element");
+  // const rect = element?.getBoundingClientRect();
+
   //친구 내역 전체 불러오기
   const [getFriendAuth, setGetFriendAuth] =
     useRecoilState<FriendProps[]>(getFriend);
@@ -99,7 +105,10 @@ function Friend() {
   // //친구 우클릭
   const handleContextMenu = (event: any) => {
     event.preventDefault();
-    setMenuPosition({ xPos: `${event.pageX}px`, yPos: `${event.pageY}px` });
+    setMenuPosition({
+      xPos: `${event.screenX}px`,
+      yPos: `${event.screenY - 140}px`,
+    });
   };
 
   const handleCloseContextMenu = () => {
@@ -190,6 +199,7 @@ const MenuTitleDiv = styled.div`
   display: flex;
   flex-direction: column;
   border-top-right-radius: 30px;
+  z-index: 99999999999;
 `;
 const MenuTitleIform = styled.form`
   position: relative;
@@ -216,18 +226,21 @@ const MenuTitleInput = styled.input`
 `;
 
 const FriendBoxDiv = styled.div`
-  margin: 0 auto 10px auto;
-  width: 350px;
-  height: 50px;
+  margin: 0 auto;
+  width: 100%;
+  //수정
+  height: 60px;
   background-color: #263245;
-  border-radius: 10px;
   cursor: pointer;
 `;
 const FriendBoxNameDiv = styled.div`
-  height: 50px;
-  padding-top: 0px;
+  height: 60px;
+  padding: 0 25px;
   display: flex;
   align-items: center;
+  &:hover {
+    background-color: #192030;
+  }
 `;
 const FriendBoxNameImgDiv = styled.div`
   position: relative;
@@ -250,12 +263,12 @@ const FriendBoxNameOnline = styled.div`
 `;
 const FriendBoxNameH2 = styled.h2`
   color: #fff;
-  font-size: 16px;
+  font-size: 14px;
   margin-right: 10px;
 `;
 const FriendBoxNamePlayingP = styled.p`
   font-size: 10px;
-  color: #d4d4d4;
+  color: #a7a9ac;
 `;
 const FriendBoxNotice = styled.div`
   width: 16px;
@@ -267,10 +280,4 @@ const FriendBoxNotice = styled.div`
   background-color: #ff5b5b;
   border-radius: 50%;
   margin-left: auto;
-`;
-const FriendBoxNameP = styled.p`
-  color: #fff;
-  margin-left: auto;
-  margin-right: 30px;
-  cursor: pointer;
 `;

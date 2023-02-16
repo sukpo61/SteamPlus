@@ -20,11 +20,13 @@
   ],
   "friend": [
     {
-      "id": "20e34ddf-b356-4e18-9446-c1f66216eb1c",
+      "id": "19dff138-7a3c-4b84-aaff-c07653b028fb",
       "myId": "76561198064204836",
-      "friendId": "76561199476963056",
+      "friendId": "76561199478670991",
       "myNickName": "PRDG #4836",
-      "friendNickName": "hoitchac123 #3056"
+      "friendNickName": "1233 #0991",
+      "myProfileimg": "https://avatars.akamai.steamstatic.com/fef49e7fa7e1997310d705b2a6158ff8dc1cdfeb_full.jpg",
+      "friendProfileimg": "https://avatars.akamai.steamstatic.com/fef49e7fa7e1997310d705b2a6158ff8dc1cdfeb_full.jpg"
     }
   ]
 }
