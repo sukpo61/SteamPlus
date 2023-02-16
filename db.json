@@ -1,7 +1,9 @@
 {
   "auth": [
     {
-      "nickName": "userNicName"
+      "id": "76561198064204836",
+      "profileimg": "https://avatars.akamai.steamstatic.com/fef49e7fa7e1997310d705b2a6158ff8dc1cdfeb_full.jpg",
+      "nickname": "PRDG #4836"
     },
     {
       "id": "76561199476963056",
@@ -14,6 +16,22 @@
       "id": "76561199478670991",
       "profileimg": "https://avatars.akamai.steamstatic.com/fef49e7fa7e1997310d705b2a6158ff8dc1cdfeb_full.jpg",
       "nickname": "1233 #0991"
+    }
+  ],
+  "friend": [
+    {
+      "id": "20e34ddf-b356-4e18-9446-c1f66216eb1c",
+      "myId": "76561198064204836",
+      "friendId": "76561199476963056",
+      "myNickName": "PRDG #4836",
+      "friendNickName": "hoitchac123 #3056"
+    },
+    {
+      "id": "20e34ddf-b356-4e18-9446-c1f66216eb1c1",
+      "myId": "76561199476963056",
+      "friendId": "76561198064204836",
+      "myNickName": "PRDG #4836",
+      "friendNickName": "hoitchac123 #3056"
     }
   ]
 }
