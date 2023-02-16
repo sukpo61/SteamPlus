@@ -20,7 +20,9 @@ import { FriendProps } from "../layout/layoutcomponents/Friend";
 import { FriendSearchProps } from "../layout/layoutcomponents/FriendSearch";
 
 function Layout() {
-  const myId = 1;
+  // console.log(localStorage.getItem("steamid"));
+
+  const myId = localStorage.getItem("steamid");
   //레이아웃 종류
   const [layoutMenu, setLayoutMenu] = useRecoilState<String>(LayoutButton);
   // //친구 알림 내역
@@ -29,7 +31,7 @@ function Layout() {
   // // console.log(FriendNoticeLength);
 
   const [bothFriendAll, setBothFriendAll] = useRecoilState(BothFriend);
-  console.log(bothFriendAll);
+  // console.log(bothFriendAll);
 
   //친구 내역 전체
   const [getFriendAuth, setGetFriendAuth] =
