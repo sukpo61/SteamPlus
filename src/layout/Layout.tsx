@@ -1,7 +1,13 @@
-import React from "react";
+import React, { useEffect } from "react";
 import styled from "styled-components";
-import { useRecoilState } from "recoil";
-import { LayoutButton, getFriend, friendAllState } from "../recoil/atom";
+import { useRecoilState, useRecoilValue } from "recoil";
+import {
+  LayoutButton,
+  getFriend,
+  friendAllState,
+  newFriendAdd,
+  BothFriend,
+} from "../recoil/atom";
 import Profile from "./layoutcomponents/Profile";
 import GameSearch from "./layoutcomponents/GameSearch";
 import Friend from "./layoutcomponents/Friend";
@@ -14,14 +20,25 @@ import { FriendProps } from "../layout/layoutcomponents/Friend";
 import { FriendSearchProps } from "../layout/layoutcomponents/FriendSearch";
 
 function Layout() {
+  const myId = 1;
   //레이아웃 종류
   const [layoutMenu, setLayoutMenu] = useRecoilState<String>(LayoutButton);
+  // //친구 알림 내역
+  // const [FriendNoticeLength, setFriendNoticeLength] =
+  //   useRecoilState<any>(FriendNoticeAll);
+  // // console.log(FriendNoticeLength);
+
+  const [bothFriendAll, setBothFriendAll] = useRecoilState(BothFriend);
+  console.log(bothFriendAll);
+
   //친구 내역 전체
   const [getFriendAuth, setGetFriendAuth] =
     useRecoilState<FriendProps[]>(getFriend);
   //계정 내역 전체 불러오기
   const [friendAllRecoil, setFriendAllRecoil] =
     useRecoilState<FriendSearchProps[]>(friendAllState);
+  //친구 요청 온 내역 전체
+  const [friendAdd] = useRecoilValue(newFriendAdd);
 
   //메뉴 탭눌렀을때 (친구제외)
   const LayoutButtonOnClick = (i: string) => {
@@ -45,7 +62,6 @@ function Layout() {
   };
 
   const getFriendSearch = async () => {
-    console.log("실행됨");
     const response = await axios.get("http://localhost:3001/auth");
     setFriendAllRecoil(response?.data);
     return response;
@@ -53,21 +69,54 @@ function Layout() {
   const { data: friendSearch } = useQuery("friendsearch", getFriendSearch);
 
   const getAllFriend = async () => {
-    console.log("실행됨");
     //비동기함수는 최대한 동기적으로 활용가능하게
     const response = await axios.get("http://localhost:3001/friend");
     setGetFriendAuth(response?.data);
+
     return response;
   };
   const { isLoading, isError, data, error } = useQuery("friend", getAllFriend);
 
-  if (isLoading) {
-    return <p>로딩중</p>;
-  }
-  if (isError) {
-    console.log("오류내용", error);
-    return <p>오류</p>;
-  }
+  // if (isLoading) {
+  //   return <p>로딩중</p>;
+  // }
+  // if (isError) {
+  //   console.log("오류내용", error);
+  //   return <p>오류</p>;
+  // }
+
+  //양쪽 다 친구 내역
+  const friend = getFriendAuth?.filter((i: FriendProps) => {
+    for (let t = 0; t < friendAdd.length; t++) {
+      if (
+        friendAdd[t].friendId === i.myId &&
+        friendAdd[t].myId === i.friendId
+      ) {
+        return i.myId === myId;
+      } else if (
+        friendAdd[t].friendId === i.myId &&
+        friendAdd[t].myId === i.friendId
+      ) {
+        return i.myId === myId;
+      }
+    }
+  });
+
+  //친구 요청 온 내역만 (내 친구내역엔 없고 상대 친구내역엔 있는 상태)
+  const friendAddCome = getFriendAuth?.filter((i: FriendProps) => {
+    for (let t = 0; t < friend.length; t++) {
+      if (friend[t].friendId === i.myId && friend[t].myId === i.friendId) {
+        return;
+      }
+    }
+    return i.friendId === myId;
+  });
+
+  // useEffect(() => {
+  //   setBothFriendAll(friend);
+  // }, []);
+  // console.log(friendAddCome.length);
+
   return (
     <>
       <SideBarDiv>
@@ -84,6 +133,11 @@ function Layout() {
         {/* 친구 */}
         <Friendbutton onClick={() => FriendButtonOnClick("friend")}>
           friend
+          {friendAddCome.length === 0 ? (
+            ""
+          ) : (
+            <FriendNotice>{friendAddCome.length}</FriendNotice>
+          )}
         </Friendbutton>
         {/* 음성채팅 */}
         <VoiceTalkbutton onClick={() => LayoutButtonOnClick("voicetalk")}>
@@ -115,7 +169,7 @@ const SideBarDiv = styled.div`
 const MenuOpenDiv = styled.div<{ layoutMenu: String }>`
   width: 400px;
   height: 100%;
-  background: #404b5e;
+  background: #263245;
   position: fixed;
   left: ${(props) => (props.layoutMenu === "close" ? "-480px" : "80px")};
   top: 0;
@@ -174,18 +228,21 @@ const Friendbutton = styled.div`
   height: 50px;
   background: #ccc;
   cursor: pointer;
+  position: relative;
 `;
 
-const FriendSearchbutton = styled.div`
-  margin: 20px auto 0;
-  border-radius: 25px;
+const FriendNotice = styled.div`
+  position: absolute;
+  top: 0;
+  width: 20px;
+  height: 20px;
+  line-height: 15px;
+  color: #fff;
   font-size: 12px;
-  width: 50px;
-  line-height: 50px;
   text-align: center;
-  height: 50px;
-  background: #ccc;
-  cursor: pointer;
+  border-radius: 50%;
+  background-color: red;
+  font-weight: 500;
 `;
 
 const VoiceTalkbutton = styled.div`

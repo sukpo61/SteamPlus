@@ -33,6 +33,9 @@ function FriendSearch() {
   // const myId = 3;
   // const myNickName = "호랑이";
 
+  // const myId = 5;
+  // const myNickName = "강아지고양이";
+
   // const myId = 7;
   // const myNickName = "Cat";
 
@@ -206,7 +209,7 @@ const FriendSearchDiv = styled.div<{ layoutMenu: String }>`
 const MenuTitleDiv = styled.div`
   width: 400px;
   height: 130px;
-  background-color: #404b5e;
+  background-color: #263245;
   position: fixed;
   top: 0;
   font-size: 24px;
