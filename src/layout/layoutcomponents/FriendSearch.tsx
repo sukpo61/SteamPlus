@@ -4,8 +4,6 @@ import {
   getFriend,
   friendAllState,
   newFriendAdd,
-  myIds,
-  myNickNames,
 } from "../../recoil/atom";
 import styled from "styled-components";
 import { useRecoilState, useRecoilValue } from "recoil";
@@ -27,18 +25,6 @@ function FriendSearch() {
   const myId = localStorage.getItem("steamid");
   const myNickName = localStorage.getItem("nickName");
   const myProfileImg = localStorage.getItem("profileimg");
-
-  // const myId = 2;
-  // const myNickName = "강아지";
-
-  // const myId = 3;
-  // const myNickName = "호랑이";
-
-  // const myId = 5;
-  // const myNickName = "강아지고양이";
-
-  // const myId = 7;
-  // const myNickName = "Cat";
 
   const [layoutMenu, setLayoutMenu] = useRecoilState<String>(LayoutButton);
   //친구 내역 전체
@@ -93,8 +79,6 @@ function FriendSearch() {
       friendId: i.id,
       myNickName,
       friendNickName: i.nickname,
-      myProfileimg: myProfileImg,
-      friendProfileimg: i.profileimg,
     };
     try {
       // const response = getFriendAuth.filter(
@@ -237,13 +221,16 @@ const MenuTitleInput = styled.input`
 `;
 
 const FriendBoxDiv = styled.div`
-  margin: 0px auto 0;
-  width: 350px;
+  width: 100%;
+  padding: 0 25px;
   height: 60px;
   background-color: #263245;
   display: flex;
   align-items: center;
   justify-content: center;
+  &:hover {
+    background-color: #192030;
+  }
 `;
 const FriendBoxNameImg = styled.img`
   width: 40px;

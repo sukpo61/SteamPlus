@@ -13,10 +13,11 @@ import axios from "axios";
 import { useMutation } from "react-query";
 import FriendTab from "./FriendTab";
 import FriendContextMenu from "./FriendContextMenu";
+import { FriendSearchProps } from "./FriendSearch";
 // import { ContextMenu, MenuItem, ContextMenuTrigger } from "react-contextmenu";
 
 export interface FriendProps {
-  id: string;
+  id: any;
   myId: string;
   friendId: string;
   myNickName: string;
@@ -36,6 +37,8 @@ function Friend() {
     useRecoilState<FriendProps[]>(getFriend);
   //친구 요청 온 내역 전체
   const [friendAdd] = useRecoilValue(newFriendAdd);
+  //계정 내역 전체 불러오기
+  const [friendAllRecoil, setFriendAllRecoil] = useRecoilState(friendAllState);
 
   //친구 우클릭
   const [menuPosition, setMenuPosition] = useState<{
@@ -58,30 +61,8 @@ function Friend() {
     setfrendSearchInput(e.target.value);
   };
 
-  // // 친구 삭제
-  // const DeleteMutation = useMutation(
-  //   //넘겨받은 id를 삭제
-  //   (id) => axios.delete(`http://localhost:3001/friend/${id}`),
-  //   {
-  //     onSuccess: () => {
-  //       // 쿼리 무효화
-  //       queryClient.invalidateQueries("friend");
-  //       queryClient.invalidateQueries("friendsearch");
-  //     },
-  //   }
-  // );
-
-  // //친구 삭제 인데 +1 된것 까지 삭제 혹은 그 반대로 +1이 없는 것 까지 삭제
-  // const friendDeleteOnClick = (id: any) => {
-  //   const deleteAll: any = id + "1";
-  //   const deleteAll2: any = id.slice(0, -1);
-  //   DeleteMutation.mutate(id);
-  //   DeleteMutation.mutate(deleteAll);
-  //   DeleteMutation.mutate(deleteAll2);
-  // };
-
   //양쪽 다 친구 내역
-  const friend = getFriendAuth?.filter((i: FriendProps) => {
+  const allFriendList = getFriendAuth?.filter((i: FriendProps) => {
     for (let t = 0; t < friendAdd.length; t++) {
       if (
         friendAdd[t].friendId === i.myId &&
@@ -100,6 +81,16 @@ function Friend() {
         );
       }
     }
+  });
+
+  //자동업데이트 되는 친구 계정 바로 가져오기
+  const friend = friendAllRecoil.filter((i: FriendSearchProps) => {
+    for (let t = 0; t < allFriendList.length; t++) {
+      if (allFriendList[t].friendId === i.id) {
+        return true;
+      }
+    }
+    return false;
   });
 
   // //친구 우클릭
@@ -149,7 +140,7 @@ function Friend() {
       </MenuTitleDiv>
 
       {/* 친구 목록 박스 */}
-      {friend?.map((i: FriendProps) => {
+      {friend?.map((i: FriendSearchProps) => {
         return (
           <FriendBoxDiv onContextMenu={handleContextMenu}>
             <FriendContextMenu
@@ -161,19 +152,19 @@ function Friend() {
 
             <FriendBoxNameDiv>
               <FriendBoxNameImgDiv>
-                <FriendBoxNameImg></FriendBoxNameImg>
+                <FriendBoxNameImg src={i.profileimg} />
 
                 {/* 온라인표시 */}
                 <FriendBoxNameOnline />
               </FriendBoxNameImgDiv>
 
-              <FriendBoxNameH2>{i.friendNickName}</FriendBoxNameH2>
+              <FriendBoxNameH2>{i.nickname}</FriendBoxNameH2>
 
               <FriendBoxNamePlayingP>
                 `Dave the Diver`방 참여중
               </FriendBoxNamePlayingP>
 
-              <FriendBoxNotice>11</FriendBoxNotice>
+              <FriendBoxNotice>7</FriendBoxNotice>
             </FriendBoxNameDiv>
           </FriendBoxDiv>
         );
@@ -245,19 +236,17 @@ const FriendBoxNameDiv = styled.div`
 const FriendBoxNameImgDiv = styled.div`
   position: relative;
 `;
-const FriendBoxNameImg = styled.div`
+const FriendBoxNameImg = styled.img`
   width: 40px;
   height: 40px;
-  border-radius: 50%;
-  margin-left: 0px;
+  border-radius: 20px;
   margin-right: 10px;
-  background-color: #ccc;
 `;
 const FriendBoxNameOnline = styled.div`
   position: absolute;
   bottom: 0;
-  width: 15px;
-  height: 15px;
+  width: 12px;
+  height: 12px;
   background-color: #23de79;
   border-radius: 50%;
 `;

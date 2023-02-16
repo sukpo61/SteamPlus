@@ -13,21 +13,14 @@ import axios from "axios";
 import { useMutation } from "react-query";
 import FriendTab from "./FriendTab";
 import { FriendProps } from "./Friend";
+import { v4 as uuidv4 } from "uuid";
+import { FriendSearchProps } from "./FriendSearch";
 
 function Friend() {
   const queryClient = useQueryClient();
 
   const myId = localStorage.getItem("steamid");
   const myNickName = localStorage.getItem("nickName");
-
-  // const myId = 2;
-  // const myNickName = "강아지";
-
-  // const myId = 3;
-  // const myNickName = "호랑이";
-
-  // const myId = 7;
-  // const myNickName = "Cat";
 
   const [layoutMenu, setLayoutMenu] = useRecoilState<String>(LayoutButton);
   //친구검색 input
@@ -41,6 +34,8 @@ function Friend() {
     useRecoilState<FriendProps[]>(getFriend);
   //친구 요청 온 내역 전체
   const [friendAdd] = useRecoilValue(newFriendAdd);
+  //계정 내역 전체 불러오기
+  const [friendAllRecoil, setFriendAllRecoil] = useRecoilState(friendAllState);
 
   //친구 수락
   const postMutation = useMutation(
@@ -69,19 +64,19 @@ function Friend() {
   );
 
   //친구 수락
-  const friendAddOnClick = async (i: FriendProps) => {
+  const friendAddOnClick = async (i: FriendSearchProps) => {
     let friendAdd = {
-      id: i.id + "1",
-      myId: i.friendId,
-      friendId: i.myId,
-      myNickName: i.friendNickName,
-      friendNickName: i.myNickName,
+      id: uuidv4(),
+      myId: myId,
+      friendId: i.id,
+      myNickName: myNickName,
+      friendNickName: i.nickname,
     };
 
     try {
       //상대와 친구가 돼있는지 검사후 이중 저장 방지
       const response = await axios.get(
-        `http://localhost:3001/friend?myId=${i.friendId}&friendId=${myId}`
+        `http://localhost:3001/friend?myId=${myId}&friendId=${i.id}`
       );
 
       const existingFriend = response.data[0];
@@ -96,13 +91,13 @@ function Friend() {
       console.error(error);
     }
   };
-  //친구 삭제 인데 +1 된것 까지 삭제 혹은 그 반대로 +1이 없는 것 까지 삭제
+  //찾아온 친구 id 를이용해 두개다 삭제
   const friendDeleteOnClick = (id: any) => {
-    const deleteAll: any = id + "1";
-    const deleteAll2: any = id.slice(0, -1);
-    DeleteMutation.mutate(id);
-    DeleteMutation.mutate(deleteAll);
-    DeleteMutation.mutate(deleteAll2);
+    const friendDelete = getFriendAuth.filter((i) => {
+      return id === i.friendId || id === i.myId;
+    });
+
+    DeleteMutation.mutate(friendDelete[0].id);
   };
 
   //양쪽 다 친구 내역
@@ -146,6 +141,26 @@ function Friend() {
     return i.friendId === myId && frendSearchInput === "";
   });
 
+  //내가 친구 요청 자동업데이트 되는 친구 계정 바로 가져오기
+  const friendSend = friendAllRecoil.filter((i: FriendSearchProps) => {
+    for (let t = 0; t < friendAddSend.length; t++) {
+      if (friendAddSend[t].friendId === i.id) {
+        return true;
+      }
+    }
+    return false;
+  });
+
+  //친구 요청 온 내역 자동업데이트 되는 친구 계정 바로 가져오기
+  const friendCome = friendAllRecoil.filter((i: FriendSearchProps) => {
+    for (let t = 0; t < friendAddCome.length; t++) {
+      if (friendAddCome[t].myId === i.id) {
+        return true;
+      }
+    }
+    return false;
+  });
+
   return (
     <FriendDiv layoutMenu={layoutMenu}>
       {/* 위 제목과 input layoutstring이 바뀔때마다 바뀌게 */}
@@ -155,17 +170,13 @@ function Friend() {
       </MenuTitleDiv>
 
       {/* 친구 목록 박스 */}
-      {friendAddCome.length === 0 ? (
-        ""
-      ) : (
-        <FriendAddH2>수락 대기 중</FriendAddH2>
-      )}
-      {friendAddCome?.map((i: FriendProps) => {
+      {friendCome.length === 0 ? "" : <FriendAddH2>수락 대기 중</FriendAddH2>}
+      {friendCome?.map((i: FriendSearchProps) => {
         return (
           <FriendBoxDiv>
             <FriendBoxNameDiv>
-              <FriendBoxNameImg src={i.myProfileimg} />
-              <FriendBoxNameH2>{i.myNickName}</FriendBoxNameH2>
+              <FriendBoxNameImg src={i.profileimg} />
+              <FriendBoxNameH2>{i.nickname}</FriendBoxNameH2>
 
               <FriendBoxNameH3
                 onClick={() => {
@@ -185,17 +196,17 @@ function Friend() {
           </FriendBoxDiv>
         );
       })}
-      {friendAddSend.length === 0 ? (
+      {friendSend.length === 0 ? (
         ""
       ) : (
         <FriendAddH2>전송된 친구 요청</FriendAddH2>
       )}
-      {friendAddSend?.map((i: FriendProps) => {
+      {friendSend?.map((i: FriendSearchProps) => {
         return (
           <FriendBoxDiv>
             <FriendBoxNameDiv>
-              <FriendBoxNameImg src={i.friendProfileimg} />
-              <FriendBoxNameH2>{i.friendNickName}</FriendBoxNameH2>
+              <FriendBoxNameImg src={i.profileimg} />
+              <FriendBoxNameH2>{i.nickname}</FriendBoxNameH2>
 
               <FriendBoxCancelP
                 onClick={() => {
@@ -239,11 +250,15 @@ const FriendAddH2 = styled.h2`
 
 const FriendBoxDiv = styled.div`
   margin: 0px auto;
-  width: 350px;
+  width: 100%;
+  padding: 0 25px;
   height: 60px;
   background-color: #263245;
   display: flex;
   align-items: center;
+  &:hover {
+    background-color: #192030;
+  }
 `;
 const FriendBoxNameDiv = styled.div`
   font-size: 14px;

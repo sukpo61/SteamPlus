@@ -20,13 +20,27 @@
   ],
   "friend": [
     {
-      "id": "19dff138-7a3c-4b84-aaff-c07653b028fb",
+      "id": "6f5eb18f-d3e8-49d8-8de3-ec03c417635f",
+      "myId": "76561199478670991",
+      "friendId": "76561198064204836",
+      "myNickName": "1233 #0991",
+      "friendNickName": "PRDG #4836",
+      "myProfileimg": "https://avatars.akamai.steamstatic.com/fef49e7fa7e1997310d705b2a6158ff8dc1cdfeb_full.jpg",
+      "friendProfileimg": "https://avatars.akamai.steamstatic.com/fef49e7fa7e1997310d705b2a6158ff8dc1cdfeb_full.jpg"
+    },
+    {
+      "id": "9f13e6f1-256e-4789-ae28-db8818d37d1d",
       "myId": "76561198064204836",
       "friendId": "76561199478670991",
       "myNickName": "PRDG #4836",
-      "friendNickName": "1233 #0991",
-      "myProfileimg": "https://avatars.akamai.steamstatic.com/fef49e7fa7e1997310d705b2a6158ff8dc1cdfeb_full.jpg",
-      "friendProfileimg": "https://avatars.akamai.steamstatic.com/fef49e7fa7e1997310d705b2a6158ff8dc1cdfeb_full.jpg"
+      "friendNickName": "1233 #0991"
+    },
+    {
+      "id": "6f62513e-4822-42e7-b50e-94f2b99835a8",
+      "myId": "76561199476963056",
+      "friendId": "76561198064204836",
+      "myNickName": "hoitchac123 #3056",
+      "friendNickName": "PRDG #4836"
     }
   ]
 }
