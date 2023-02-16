@@ -43,18 +43,6 @@ function Friend() {
   const myId = localStorage.getItem("steamid");
   const myNickName = localStorage.getItem("nickName");
 
-  // const myId = 2;
-  // const myNickName = "강아지";
-
-  // const myId = 3;
-  // const myNickName = "호랑이";
-
-  //   const myId = 5;
-  // const myNickName = "강아지고양이";
-
-  // const myId = 7;
-  // const myNickName = "Cat";
-
   const [layoutMenu, setLayoutMenu] = useRecoilState<String>(LayoutButton);
 
   //친구검색 input
