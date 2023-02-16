@@ -12,7 +12,7 @@ const LoginPage: any = () => {
   const steamId = params.get("openid.claimed_id")?.split("/")[5];
   const APIKEY = "234E0113F33D5C7C4D4D5292C6774550";
   const serverUrl = "http://localhost:3001/auth/";
-  const [logininfo, setlogininfo] = useState<any>();
+
   const SteamLogin = () => {
     window.location.href = STEAM_OPENID_ENDPOINT;
   };
@@ -42,6 +42,7 @@ const LoginPage: any = () => {
     axios.put(`http://localhost:3001/auth/${steamId}`, userinfo);
     axios.post(serverUrl, userinfo);
     //로컬스토리지에 로그인정보 저장하기
+
     localStorage.setItem("steamid", result.config.params.steamids);
     localStorage.setItem(
       "profileimg",
@@ -58,7 +59,7 @@ const LoginPage: any = () => {
       "gameextrainfo",
       result?.data.response.players[0].gameextrainfo
     );
-    setlogininfo(result.config.params.steamids);
+
     console.log(userinfo);
 
     return result;
@@ -84,6 +85,7 @@ const LoginPage: any = () => {
       userDataGet();
     }
   }, []);
+  //로그아웃
   const logout = () => {
     localStorage.getItem("profileimg");
     localStorage.removeItem("profileimg");
