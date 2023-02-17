@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import axios from "axios";
 import styled from "styled-components";
 import GameChannelBlock from "../components/common/GameChannelBlock";
@@ -8,9 +8,9 @@ function MainPage() {
   return (
     <div style={{ display: "flex", flexDirection: "column" }}>
       <div style={{ position: "relative" }}>
-        <CurrentGameImg src={`${current.image}`} /> // 여기 실행중인 이미지 url
-        <CurrentGameTitle>{current.title}</CurrentGameTitle> // 여기는 실행중인
-        게임제목!!!!!!
+        {/* <CurrentGameImg key={"1568590"} src={`${header_image}`} /> */}
+        {/* <CurrentGameTitle>{current.title}</CurrentGameTitle> // 여기는 실행중인
+        게임제목!!!!!! */}
         <CurrentChannelJoinBtn>게임채널 입장하기</CurrentChannelJoinBtn>
       </div>
       <PopularChannel>
@@ -43,7 +43,7 @@ function MainPage() {
   );
 }
 
-const CurrentGameArea = styled.img`
+const CurrentGameArea = styled.div`
   width: 1820px;
   height: 694px;
   overflow: hidden;

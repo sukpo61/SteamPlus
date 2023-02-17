@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import axios from "axios";
 import { log } from "console";
 import styled from "styled-components";
+import InfiniteScroll from "react-infinite-scroll-component";
 
 import { useNavigate } from "react-router-dom";
 import { BiSearchAlt2 } from "react-icons/bi";
@@ -12,14 +13,61 @@ const ChannelSearchPage: any = () => {
   const APIKEY = "234E0113F33D5C7C4D4D5292C6774550";
   const [searchValue, setSearchValue] = useState("");
   const [searchResult, setSearchResult] = useState<any>([]);
+  const [termResult, setTermResult] = useState("");
 
   // https://cors-anywhere.herokuapp.com/
 
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchValue(e.target.value);
   };
+  const handleTermResult = () => {
+    setTermResult(searchValue);
+    // getGameSummary(searchValue, offset);
+  };
 
-  const getGameSummary = (Value: any) => {
+  const lastGameRef = useRef<any>(null);
+  const [offset, setOffset] = useState<any>(0);
+
+  useEffect(() => {
+    window.addEventListener("scroll", handleScroll); // addEventListener 이벤트 추가
+    return () => window.removeEventListener("scroll", handleScroll); // removeEventListener 이벤트 제거
+  }, []);
+
+  // const handleScroll = useCallback(() => {
+  //   if (
+  //     window.innerHeight + window.pageYOffset >= //영역의 높이 + 컨텐츠를 얼마나 스크롤했는지
+  //     lastGameRef.current.getBoundingClientRect().bottom //getBoundingClientRect = dom의 위치
+  //   ) {
+  //     setOffset(offset + 10);
+  //     getGameSummary(searchValue, offset); //searchValue, offset
+  //   }
+  // }, [offset, searchValue]);
+
+  const handleScroll = () => {
+    const scrollTop = // 화면의 처음부터 ~ 현재 화면에 보이는 부분 + 현재 스크롤 위치
+      (document.documentElement && document.documentElement.scrollTop) ||
+      document.body.scrollTop;
+
+    const scrollHeight = // 전체 화면 길이
+      (document.documentElement && document.documentElement.scrollHeight) ||
+      document.body.scrollHeight;
+
+    const clientHeight = // 현재 화면에서 보이는 height
+      document.documentElement.clientHeight || window.innerHeight;
+
+    const scrolledToBottom =
+      Math.ceil(scrollTop + clientHeight) >= scrollHeight;
+
+    if (scrolledToBottom) {
+      setOffset((prev: any) => prev + 10);
+      console.log("searchvalue", searchValue);
+      getGameSummary(searchValue, offset + 10); // 이부분 수정!!!!!
+    }
+  };
+
+  //디바운싱
+
+  const getGameSummary = (Value: any, offset: number) => {
     axios
       .get(
         "https://cors-anywhere.herokuapp.com/https://store.steampowered.com/api/storesearch",
@@ -28,7 +76,8 @@ const ChannelSearchPage: any = () => {
             cc: "us",
             l: "en",
             term: Value,
-            //limit : 20
+            start: 11,
+            // limit : 20
           },
         }
       )
@@ -70,6 +119,20 @@ const ChannelSearchPage: any = () => {
       });
   };
 
+  // useEffect(() => {
+  //   axios
+  //     .get(
+  //       "https://cors-anywhere.herokuapp.com/https://store.steampowered.com/api/appdetails",
+  //       { params: { appids: "1568590" } }
+  //     )
+  //     .then((res) => {
+  //       console.log("appid", res);
+  //     })
+  //     .catch((error) => {
+  //       console.error(error);
+  //     });
+  // }, []);
+
   return (
     <div
       style={{
@@ -89,18 +152,18 @@ const ChannelSearchPage: any = () => {
             type="text"
             value={searchValue}
             onChange={handleSearch}
-            // handleSearch
           />
           <BiSearchAlt2
             className="searchIcon"
             onClick={() => {
-              getGameSummary(searchValue);
+              getGameSummary(searchValue, offset); //searchValue, offset
+              handleTermResult();
             }}
           />
         </GameSearchInputArea>
       </SearchPageHeader>
       <SearchCount>
-        '{`${searchValue}`}' 검색 결과 {}n 개
+        '{`${termResult}`}' 검색 결과 {}n 개
       </SearchCount>
       <GameSearchList>
         {searchResult.map((game: any) => {
