@@ -25,8 +25,6 @@ const LoginPage: any = () => {
         },
       }
     );
-    console.log(STEAM_OPENID_ENDPOINT);
-    console.log(result);
 
     const userinfo = {
       id: result.config.params.steamids,
@@ -60,8 +58,9 @@ const LoginPage: any = () => {
       "gameextrainfo",
       result?.data.response.players[0].gameextrainfo
     );
+
     console.log(userinfo);
-    // navigate("/main");
+    navigate("/");
     return result;
   };
   //steam userData
@@ -101,7 +100,7 @@ const LoginPage: any = () => {
   };
 
   return (
-    <div>
+    <div style={{ background: "white" }}>
       <button onClick={SteamLogin}>Login with Steam</button>
       <button onClick={deleteHandeler}>회원탈퇴하기</button>
       <button onClick={goto}>클릭</button>

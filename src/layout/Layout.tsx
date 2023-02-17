@@ -118,13 +118,18 @@ function Layout() {
   //   setBothFriendAll(friend);
   // }, []);
   // console.log(friendAddCome.length);
-
+  const ProfileImgUrl = localStorage.getItem("profileimg");
   return (
     <div onContextMenu={(e: any) => e.preventDefault()}>
       <SideBarDiv>
         {/* 프로필 */}
         <Profilebutton onClick={() => LayoutButtonOnClick("profile")}>
-          Profile
+          {/* 로그인이 되어있지않다면과 로그인이 되어있다면의 정보*/}
+          {ProfileImgUrl === null ? (
+            <div>profile</div>
+          ) : (
+            <ProfileImg src={`${ProfileImgUrl}`} />
+          )}
         </Profilebutton>
         {/* 홈 */}
         <Homebutton>Home</Homebutton>
@@ -160,6 +165,12 @@ function Layout() {
 }
 
 export default Layout;
+const Profileimg = styled.div``;
+const ProfileImg = styled.img`
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+`;
 const SideBarDiv = styled.div`
   width: 80px;
   height: 100%;
