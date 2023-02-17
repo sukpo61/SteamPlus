@@ -25,13 +25,13 @@ const ChannelSearchPage: any = () => {
     // getGameSummary(searchValue, offset);
   };
 
-  const lastGameRef = useRef<any>(null);
-  const [offset, setOffset] = useState<any>(0);
+  // const lastGameRef = useRef<any>(null);
+  // const [offset, setOffset] = useState<any>(0);
 
-  useEffect(() => {
-    window.addEventListener("scroll", handleScroll); // addEventListener 이벤트 추가
-    return () => window.removeEventListener("scroll", handleScroll); // removeEventListener 이벤트 제거
-  }, []);
+  // useEffect(() => {
+  //   window.addEventListener("scroll", handleScroll); // addEventListener 이벤트 추가
+  //   return () => window.removeEventListener("scroll", handleScroll); // removeEventListener 이벤트 제거
+  // }, []);
 
   // const handleScroll = useCallback(() => {
   //   if (
@@ -43,44 +43,44 @@ const ChannelSearchPage: any = () => {
   //   }
   // }, [offset, searchValue]);
 
-  const handleScroll = () => {
-    const scrollTop = // 화면의 처음부터 ~ 현재 화면에 보이는 부분 + 현재 스크롤 위치
-      (document.documentElement && document.documentElement.scrollTop) ||
-      document.body.scrollTop;
+  // 무한스크롤 try
 
-    const scrollHeight = // 전체 화면 길이
-      (document.documentElement && document.documentElement.scrollHeight) ||
-      document.body.scrollHeight;
+  // const handleScroll = () => {
+  //   const scrollTop = // 화면의 처음부터 ~ 현재 화면에 보이는 부분 + 현재 스크롤 위치
+  //     (document.documentElement && document.documentElement.scrollTop) ||
+  //     document.body.scrollTop;
 
-    const clientHeight = // 현재 화면에서 보이는 height
-      document.documentElement.clientHeight || window.innerHeight;
+  //   const scrollHeight = // 전체 화면 길이
+  //     (document.documentElement && document.documentElement.scrollHeight) ||
+  //     document.body.scrollHeight;
 
-    const scrolledToBottom =
-      Math.ceil(scrollTop + clientHeight) >= scrollHeight;
+  //   const clientHeight = // 현재 화면에서 보이는 height
+  //     document.documentElement.clientHeight || window.innerHeight;
 
-    if (scrolledToBottom) {
-      setOffset((prev: any) => prev + 10);
-      console.log("searchvalue", searchValue);
-      getGameSummary(searchValue, offset + 10); // 이부분 수정!!!!!
-    }
-  };
+  //   const scrolledToBottom =
+  //     Math.ceil(scrollTop + clientHeight) >= scrollHeight;
+
+  //   if (scrolledToBottom) {
+  //     setOffset((prev: any) => prev + 10);
+  //     console.log("searchvalue", searchValue);
+  //     getGameSummary(searchValue, offset + 10); // 이부분 수정
+  //   }
+  // };
 
   //디바운싱
 
-  const getGameSummary = (Value: any, offset: number) => {
+  // , offset: number
+  const getGameSummary = (searchValue: any) => {
     axios
-      .get(
-        "https://cors-anywhere.herokuapp.com/https://store.steampowered.com/api/storesearch",
-        {
-          params: {
-            cc: "us",
-            l: "en",
-            term: Value,
-            start: 11,
-            // limit : 20
-          },
-        }
-      )
+      .get("https://store.steampowered.com/api/storesearch", {
+        params: {
+          cc: "us",
+          l: "en",
+          term: searchValue,
+          // start: offset,
+          limit: 20,
+        },
+      })
       .then((response) => {
         console.log("result", response);
         response.data.items.map((game: any) => {
@@ -94,13 +94,11 @@ const ChannelSearchPage: any = () => {
 
   const getGameCategory = (gameinfo: any) => {
     axios
-      .get(
-        "https://cors-anywhere.herokuapp.com/https://store.steampowered.com/api/appdetails",
-        { params: { appids: gameinfo.id, filters: "categories" } }
-      )
+      .get("https://store.steampowered.com/api/appdetails", {
+        params: { appids: gameinfo.id, filters: "categories" },
+      })
       .then((res) => {
         console.log("appid", res);
-
         setSearchResult((e: any) => [
           ...e,
           {
@@ -156,7 +154,7 @@ const ChannelSearchPage: any = () => {
           <BiSearchAlt2
             className="searchIcon"
             onClick={() => {
-              getGameSummary(searchValue, offset); //searchValue, offset
+              getGameSummary(searchValue); //searchValue, offset
               handleTermResult();
             }}
           />
