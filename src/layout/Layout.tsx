@@ -198,6 +198,7 @@ const SideBarDiv = styled.div`
   width: 80px;
   height: 100%;
   position: fixed;
+  left: 0;
   background: #080c16;
   z-index: 999999;
 `;
