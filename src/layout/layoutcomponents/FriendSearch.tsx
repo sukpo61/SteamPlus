@@ -126,8 +126,8 @@ function FriendSearch() {
         getFriendAuth[t].friendId === i.id &&
         getFriendAuth[t].myId === myId
       ) {
-        const lowercaseNickname = i.nickname.toLowerCase();
-        const lowercaseSearchInput = frendSearchInput.toLowerCase();
+        const lowercaseNickname = i?.nickname.toLowerCase();
+        const lowercaseSearchInput = frendSearchInput?.toLowerCase();
         return lowercaseNickname.includes(lowercaseSearchInput);
       }
     }
@@ -147,8 +147,8 @@ function FriendSearch() {
       }
     }
     //대문자 검색
-    const lowercaseNickname = i.nickname.toLowerCase();
-    const lowercaseSearchInput = frendSearchInput.toLowerCase();
+    const lowercaseNickname = i.nickname?.toLowerCase();
+    const lowercaseSearchInput = frendSearchInput?.toLowerCase();
     if (i.id === myId) {
       return false;
     } else if (frendSearchInput === "") {

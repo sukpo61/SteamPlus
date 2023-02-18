@@ -31,7 +31,7 @@ function Profile() {
   const steamId = params.get("openid.claimed_id")?.split("/")[5];
   const APIKEY = "234E0113F33D5C7C4D4D5292C6774550";
   const serverUrl = "http://localhost:3001/auth/";
-  const [online, setOnline] = useState("true");
+  const [online, setOnline] = useState(true);
   ///////////////////////////
   const userDataGet = async () => {
     const result = await axios.get(
@@ -45,7 +45,7 @@ function Profile() {
       }
     );
     //로컬스토리지에 로그인정보 저장하기
-    localStorage.setItem("login", online);
+    localStorage.setItem("login", online.toString());
     localStorage.setItem("gameid", result?.data.response.players[0].gameid);
     localStorage.setItem("steamid", result.config.params.steamids);
     localStorage.setItem(
@@ -86,7 +86,22 @@ function Profile() {
 
   //로그아웃 버튼
   const logout = async () => {
-    localStorage.getItem("login");
+    const item = () =>
+      axios
+        .get(`http://localhost:3001/auth/${ProfleSteamId}`)
+        .then((response) => {
+          const i = response.data;
+
+          axios.put(`http://localhost:3001/auth/${ProfleSteamId}`, {
+            ...i,
+            login: false,
+          });
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    item();
+
     localStorage.getItem("gameid");
     localStorage.removeItem("gameid");
     localStorage.getItem("profileimg");
@@ -97,15 +112,35 @@ function Profile() {
     localStorage.removeItem("gameextrainfo");
     localStorage.getItem("steamid");
     localStorage.removeItem("steamid");
+
+    //새로고침
+    window.location.replace("/");
   };
 
   // 온라인 오프라인 토글버튼
   const onLineToogle = async () => {
     const onlineOnOff = ProfileLogin === "true" ? "false" : "true";
     localStorage.setItem("login", onlineOnOff);
-    setOnline("false");
-    axios.put(`http://localhost:3001/auth/${ProfleSteamId}`, online);
-    axios.post(serverUrl, online);
+    setOnline(!online);
+    console.log(ProfleSteamId);
+
+    const item = () =>
+      axios
+        .get(`http://localhost:3001/auth/${ProfleSteamId}`)
+        .then((response) => {
+          const i = response.data;
+
+          axios.put(`http://localhost:3001/auth/${ProfleSteamId}`, {
+            ...i,
+            login: !online,
+          });
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+
+    item();
+    // axios.post(serverUrl, online);
   };
 
   return (
