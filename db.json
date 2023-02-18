@@ -4,20 +4,21 @@
       "id": "76561198064204836",
       "profileimg": "https://avatars.akamai.steamstatic.com/fef49e7fa7e1997310d705b2a6158ff8dc1cdfeb_full.jpg",
       "nickname": "PRDG #4836",
-      "login": false
+      "login": true
     },
     {
       "id": "76561199476963056",
       "profileimg": "https://avatars.akamai.steamstatic.com/fef49e7fa7e1997310d705b2a6158ff8dc1cdfeb_full.jpg",
       "nickname": "hoitchac123 #3056",
       "gameid": "436150",
-      "gameextrainfo": "Governor of Poker 3"
+      "gameextrainfo": "Governor of Poker 3",
+      "login": true
     },
     {
       "id": "76561199478670991",
       "profileimg": "https://avatars.akamai.steamstatic.com/fef49e7fa7e1997310d705b2a6158ff8dc1cdfeb_full.jpg",
       "nickname": "1233 #0991",
-      "login": "true"
+      "login": false
     }
   ],
   "friend": [
