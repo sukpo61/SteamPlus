@@ -16,6 +16,7 @@ function Profile() {
   //로컬 게임정보
   const ProfileGameTitle = localStorage.getItem("gameextrainfo");
   //로컬 로그인정보
+
   const ProfileLogin = localStorage.getItem("login");
   //로컬 스팀아이디
   const ProfleSteamId = localStorage.getItem("steamid");
@@ -45,7 +46,7 @@ function Profile() {
       }
     );
     //로컬스토리지에 로그인정보 저장하기
-    localStorage.setItem("login", online.toString());
+
     localStorage.setItem("gameid", result?.data.response.players[0].gameid);
     localStorage.setItem("steamid", result.config.params.steamids);
     localStorage.setItem(
@@ -158,13 +159,12 @@ function Profile() {
         ) : (
           <ProfileInfoBox>
             <ProfileNickName>
-              {ProfileNicName}{" "}
-              {ProfileLogin === "true" ? <ChannelOn /> : <ChannelOff />}
+              {ProfileNicName} {online ? <ChannelOn /> : <ChannelOff />}
             </ProfileNickName>
 
             <ProfileFriends>친구 몇마리</ProfileFriends>
             <ChangeToggle onClick={onLineToogle}>
-              {ProfileLogin === "true" ? "온라인" : "오프라인"}
+              {online ? "온라인" : "오프라인"}
             </ChangeToggle>
 
             <ProfileLogout onClick={logout}>로그아웃</ProfileLogout>
