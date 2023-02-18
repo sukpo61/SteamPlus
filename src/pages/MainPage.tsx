@@ -163,11 +163,12 @@ const MainLayout = styled.div`
   flex-direction: column;
 `;
 const CurrentGameArea = styled.div`
-  position: relative;
   width: 100%;
   height: 500px;
   display: flex;
   align-items: flex-end;
+  position: relative;
+  z-index: 9;
 `;
 const CurrentGameBox = styled.div`
   position: absolute;
@@ -210,11 +211,12 @@ const CurrentChannelJoinBtn = styled.span`
 `;
 
 const PopularChannel = styled.div`
-  width: 900px;
+  width: 100%;
   height: 380px;
   margin-top: 102px;
-  margin-left: 210px;
+
   display: flex;
+  justify-content: center;
 `;
 
 const PopularChannel1st = styled.div`
@@ -279,7 +281,7 @@ const ChannelTitle1st2 = styled.div`
   font-weight: 600;
   font-size: 13px;
   line-height: 44px;
-  width: 552px;
+  width: 100%;
   height: 44px;
   display: flex;
   align-items: center;
