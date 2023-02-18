@@ -103,6 +103,8 @@ function Profile() {
           console.log(error);
         });
     item();
+    localStorage.getItem("login");
+    localStorage.removeItem("login");
     localStorage.getItem("gameid");
     localStorage.removeItem("gameid");
     localStorage.getItem("profileimg");
@@ -136,7 +138,6 @@ function Profile() {
         .catch((error) => {
           console.log(error);
         });
-
     item();
   };
 
