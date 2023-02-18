@@ -159,13 +159,12 @@ function Profile() {
         ) : (
           <ProfileInfoBox>
             <ProfileNickName>
-              {ProfileNicName}{" "}
-              {ProfileLogin === "true" ? <ChannelOn /> : <ChannelOff />}
+              {ProfileNicName} {online ? <ChannelOn /> : <ChannelOff />}
             </ProfileNickName>
 
             <ProfileFriends>친구 몇마리</ProfileFriends>
             <ChangeToggle onClick={onLineToogle}>
-              {ProfileLogin === "true" ? "온라인" : "오프라인"}
+              {online ? "온라인" : "오프라인"}
             </ChangeToggle>
 
             <ProfileLogout onClick={logout}>로그아웃</ProfileLogout>
