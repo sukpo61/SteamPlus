@@ -3,33 +3,45 @@
     {
       "id": "76561198064204836",
       "profileimg": "https://avatars.akamai.steamstatic.com/fef49e7fa7e1997310d705b2a6158ff8dc1cdfeb_full.jpg",
-      "nickname": "PRDG #4836"
+      "nickname": "PRDG #4836",
+      "login": true
     },
     {
       "id": "76561199476963056",
       "profileimg": "https://avatars.akamai.steamstatic.com/fef49e7fa7e1997310d705b2a6158ff8dc1cdfeb_full.jpg",
       "nickname": "hoitchac123 #3056",
       "gameid": "436150",
-      "gameextrainfo": "Governor of Poker 3"
+      "gameextrainfo": "Governor of Poker 3",
+      "login": true
     },
     {
       "id": "76561199478670991",
       "profileimg": "https://avatars.akamai.steamstatic.com/fef49e7fa7e1997310d705b2a6158ff8dc1cdfeb_full.jpg",
-      "nickname": "1233 #0991"
+      "nickname": "1233 #0991",
+      "login": false
     }
   ],
   "friend": [
     {
-      "id": "20e34ddf-b356-4e18-9446-c1f66216eb1c",
-      "myId": "76561198064204836",
-      "friendId": "76561199476963056",
-      "myNickName": "PRDG #4836",
-      "friendNickName": "hoitchac123 #3056"
+      "id": "6f5eb18f-d3e8-49d8-8de3-ec03c417635f",
+      "myId": "76561199478670991",
+      "friendId": "76561198064204836",
+      "myNickName": "1233 #0991",
+      "friendNickName": "PRDG #4836",
+      "myProfileimg": "https://avatars.akamai.steamstatic.com/fef49e7fa7e1997310d705b2a6158ff8dc1cdfeb_full.jpg",
+      "friendProfileimg": "https://avatars.akamai.steamstatic.com/fef49e7fa7e1997310d705b2a6158ff8dc1cdfeb_full.jpg"
     },
     {
-      "id": "20e34ddf-b356-4e18-9446-c1f66216eb1c1",
+      "id": "6f62513e-4822-42e7-b50e-94f2b99835a8",
       "myId": "76561199476963056",
       "friendId": "76561198064204836",
+      "myNickName": "hoitchac123 #3056",
+      "friendNickName": "PRDG #4836"
+    },
+    {
+      "id": "5a8a071e-c494-4b74-9ff5-dffbe54d6067",
+      "myId": "76561198064204836",
+      "friendId": "76561199476963056",
       "myNickName": "PRDG #4836",
       "friendNickName": "hoitchac123 #3056"
     }

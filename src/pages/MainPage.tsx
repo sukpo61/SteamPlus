@@ -7,7 +7,8 @@ import { useNavigate } from "react-router-dom";
 function MainPage() {
   const navigate = useNavigate();
   const [gameimg, setGameImg] = useState();
-  const GameId = localStorage.getItem("gameid");
+  const [gameTitle, setGameTitle] = useState();
+  const [gameCategories, setGameCategories] = useState();
   const gotologin = () => {
     navigate("/login");
   };
@@ -18,119 +19,209 @@ function MainPage() {
         `https://cors-anywhere.herokuapp.com/http://store.steampowered.com/api/appdetails/`,
         {
           params: {
-            appids: GameId, // 해당 게임의 id값
+            // appids: GameId,
+            appids: "250900", // 해당 게임의 id값
+            language: "korean",
           },
         }
       )
       .then((response) => {
         console.log("gamedetail", response);
         //이미지 네임
-        setGameImg(response.data[`${GameId}`].data.header_image);
+        // setGameImg(response.data[`${GameId}`].data.header_image);
+        setGameImg(response.data[250900].data.header_image);
+        // setGameImg(response.data[250900].data.screenshots[8].path_full);
+        // 게임타이틀
+        setGameTitle(response.data[250900].data.name);
+        // 게임카테고리
+        setGameCategories(response.data[250900].data.genres[0].description);
+        //밑에 log는 게임설명
+        console.log(response.data[250900].data.short_description);
       })
       .catch((error) => {
         // setError("Could not retrieve header image");
       });
   }, []);
-  console.log(gameimg);
 
   return (
-    <div style={{ display: "flex", flexDirection: "column" }}>
-      <div style={{ position: "relative" }}>
-        <CurrentGameArea>
-          <CurrentGameImg src={gameimg} />
-        </CurrentGameArea>
-        <CurrentChannelJoinBtn>게임채널 입장하기</CurrentChannelJoinBtn>
-      </div>
-      <PopularChannel>
-        <PopularChannel1st>
-          <ChannelImg1st></ChannelImg1st>
-          <ChannelTitle1st>Overwatch / 오버워치</ChannelTitle1st>
-          <div
-            style={{
-              display: "flex",
-              flexDirection: "row",
-              justifyContent: "space-between",
-            }}
-          >
-            <ChannelCategory1st>FPS/TPS, 액션</ChannelCategory1st>
-            <ChannelActivate>
-              <ChannelOnOff />
-              <ChannelPlayerCount1st>20명</ChannelPlayerCount1st>
-            </ChannelActivate>
+    <MainLayout>
+      {/* 메인게임 이미지 */}
+      <CurrentGameArea>
+        {/* 게임이미지 */}
+        <CurrentGameImg src={gameimg} />
+        <CurrentGameBox>
+          {/* 게임타이틀 */}
+          <CurrentGameTitle>{gameTitle}</CurrentGameTitle>
+          {/* 게임채널입장*/}
+          <CurrentChannelJoinBtn>게임채널 입장하기</CurrentChannelJoinBtn>
+        </CurrentGameBox>
+      </CurrentGameArea>
+      {/* 아래 */}
+      <PoularChannelLayout>
+        <PopularChannel>
+          <div>
+            <PopularChannel1st>
+              {/*활성화된 게임채널 */}
+              <ChannelImg1st src={gameimg} />
+              <ChannelTitle1st>{gameTitle}</ChannelTitle1st>
+              <ChannelBox>
+                <ChannelCategory1st>{gameCategories}</ChannelCategory1st>
+                <ChannelActivate>
+                  {/* 초록불 */}
+                  <ChannelOnOff />
+                  <ChannelPlayerCount1st>20명</ChannelPlayerCount1st>
+                </ChannelActivate>
+              </ChannelBox>
+            </PopularChannel1st>
           </div>
-        </PopularChannel1st>
-        <PopularChannel2ndTo5th>
-          <PopularChannelList></PopularChannelList>
-          <PopularChannelList></PopularChannelList>
-          <PopularChannelList></PopularChannelList>
-          <PopularChannelList></PopularChannelList>
-        </PopularChannel2ndTo5th>
-      </PopularChannel>
+          <div>
+            <PoularChannelLayout2>
+              <PopularChannel1st2>
+                <ChannelImg1st2 src={gameimg} />{" "}
+                <ChannelTitle1st2>{gameTitle}</ChannelTitle1st2>
+                <ChannelBox2>
+                  <ChannelCategory1st2>{gameCategories}</ChannelCategory1st2>
+                  <ChannelActivate>
+                    {/* 초록불 */}
+                    <ChannelOnOff />
+                    <ChannelPlayerCount1st2>20명</ChannelPlayerCount1st2>
+                  </ChannelActivate>
+                </ChannelBox2>
+              </PopularChannel1st2>
+              <PopularChannel1st2>
+                <ChannelImg1st2 src={gameimg} />{" "}
+                <ChannelTitle1st2>{gameTitle}</ChannelTitle1st2>
+                <ChannelBox2>
+                  <ChannelCategory1st2>{gameCategories}</ChannelCategory1st2>
+                  <ChannelActivate>
+                    {/* 초록불 */}
+                    <ChannelOnOff />
+                    <ChannelPlayerCount1st2>20명</ChannelPlayerCount1st2>
+                  </ChannelActivate>
+                </ChannelBox2>
+              </PopularChannel1st2>
+              <PopularChannel1st2>
+                <ChannelImg1st2 src={gameimg} />{" "}
+                <ChannelTitle1st2>{gameTitle}</ChannelTitle1st2>
+                <ChannelBox2>
+                  <ChannelCategory1st2>{gameCategories}</ChannelCategory1st2>
+                  <ChannelActivate>
+                    {/* 초록불 */}
+                    <ChannelOnOff />
+                    <ChannelPlayerCount1st2>20명</ChannelPlayerCount1st2>
+                  </ChannelActivate>
+                </ChannelBox2>
+              </PopularChannel1st2>
+              <PopularChannel1st2>
+                <ChannelImg1st2 src={gameimg} />{" "}
+                <ChannelTitle1st2>{gameTitle}</ChannelTitle1st2>
+                <ChannelBox2>
+                  <ChannelCategory1st2>{gameCategories}</ChannelCategory1st2>
+                  <ChannelActivate>
+                    {/* 초록불 */}
+                    <ChannelOnOff />
+                    <ChannelPlayerCount1st2>20명</ChannelPlayerCount1st2>
+                  </ChannelActivate>
+                </ChannelBox2>
+              </PopularChannel1st2>
+            </PoularChannelLayout2>
+          </div>
+          {/* <PopularChannel2ndTo5th>
+          <PopularChannelList>2</PopularChannelList>
+          <PopularChannelList>1</PopularChannelList>
+          <PopularChannelList>3</PopularChannelList>
+          <PopularChannelList>5</PopularChannelList>
+        </PopularChannel2ndTo5th> */}
+        </PopularChannel>
+      </PoularChannelLayout>
       {/* <GameChannelList> <GameChannelBlock /> </GameChannelList> */}
-      <button onClick={gotologin}>로그인</button>
-    </div>
+    </MainLayout>
   );
 }
-
+const PoularChannelLayout2 = styled.div`
+  display: grid;
+  grid-template-columns: repeat(2, 2fr);
+  margin-left: 20px;
+  gap: 20px;
+`;
+const PoularChannelLayout = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+`;
+const PoularChannelTitle = styled.div`
+  color: white;
+  font-size: 20px;
+  margin-bottom: 20px;
+`;
+const MainLayout = styled.div`
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+`;
 const CurrentGameArea = styled.div`
-  width: 1820px;
-  height: 694px;
-  overflow: hidden;
+  width: 100%;
+  height: 500px;
+  display: flex;
+  align-items: flex-end;
   position: relative;
+  z-index: 9;
+`;
+const CurrentGameBox = styled.div`
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  margin-left: 50px;
 `;
 const CurrentGameImg = styled.img`
   // img 태그로 교체
-  position: absolute;
-  top: 0;
-  left: 0;
   transform: translate(50, 50);
-  width: 1000px;
+  width: 100%;
   height: 500px;
   object-fit: cover;
 `;
 
-const CurrentGameTitle = styled.div`
-  position: absolute;
+const CurrentGameTitle = styled.span`
   width: 490px;
   left: 80px;
   top: 36px;
-
   font-family: "Montserrat";
   font-weight: 700;
   font-size: 72px;
-  line-height: 88px;
-  letter-spacing: -0.02em;
   text-shadow: 0px 4px 15px rgba(0, 0, 0, 0.25);
   color: #ffffff;
 `;
 
-const CurrentChannelJoinBtn = styled.button`
-  padding: 20px 24px;
-
-  position: absolute;
+const CurrentChannelJoinBtn = styled.span`
+  margin-top: 20px;
+  margin-bottom: 20px;
+  padding: 20px;
   width: 176px;
   height: 52px;
-  left: 1584px;
-  top: 54px;
-
   background: #00b8c8;
   box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.25);
   border-radius: 10px;
-
   font-family: "Noto Sans";
   font-weight: 600;
   font-size: 16px;
-  line-height: 22px;
-  letter-spacing: -0.03em;
-
   color: #ffffff;
 `;
 
-const PopularChannel = styled.div``;
+const PopularChannel = styled.div`
+  width: 100%;
+  height: 380px;
+  margin-top: 102px;
+
+  display: flex;
+  justify-content: center;
+`;
 
 const PopularChannel1st = styled.div`
-  width: 600px;
-  height: 592px;
+  width: 396px;
+  height: 380px;
   padding: 24px;
   display: flex;
   flex-direction: column;
@@ -138,33 +229,67 @@ const PopularChannel1st = styled.div`
   background: #263245;
   border-radius: 20px;
 `;
-
-const ChannelImg1st = styled.div`
+const PopularChannel1st2 = styled.div`
+  width: 232px;
+  height: 180px;
+  text-align: center;
+  background: #263245;
+  border-radius: 20px;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  background: #263245;
+  border-radius: 20px;
+`;
+const ChannelBox = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+`;
+const ChannelBox2 = styled.div`
+  display: flex;
+  justify-content: space-between;
+`;
+const ChannelImg1st = styled.img`
   // img 태그로 교체 필요
-  width: 552px;
-  height: 440px;
-  /* background: url(319284_86167_2452.jpg); */
+  width: 100%;
+  height: 100%;
   box-shadow: inset 0px 4px 10px rgba(0, 0, 0, 0.25);
   border-radius: 20px;
-  background-color: lightgrey;
 `;
-
+const ChannelImg1st2 = styled.img`
+  // img 태그로 교체 필요
+  width: 100%;
+  height: 90%;
+  box-shadow: inset 0px 4px 10px rgba(0, 0, 0, 0.25);
+  border-radius: 20px;
+`;
 const ChannelTitle1st = styled.div`
   font-family: "Noto Sans";
   font-weight: 600;
-  font-size: 32px;
+  font-size: 20px;
   line-height: 44px;
   width: 552px;
   height: 44px;
   display: flex;
   align-items: center;
   letter-spacing: -0.02em;
-
+  color: #ffffff;
+`;
+const ChannelTitle1st2 = styled.div`
+  font-family: "Noto Sans";
+  font-weight: 600;
+  font-size: 13px;
+  line-height: 44px;
+  width: 100%;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  letter-spacing: -0.02em;
   color: #ffffff;
 `;
 const ChannelCategory1st = styled.div`
   height: 27px;
-
   font-family: "Noto Sans";
   font-weight: 400;
   font-size: 20px;
@@ -172,7 +297,17 @@ const ChannelCategory1st = styled.div`
   display: flex;
   align-items: center;
   letter-spacing: -0.03em;
-
+  color: #a7a9ac;
+`;
+const ChannelCategory1st2 = styled.div`
+  height: 27px;
+  font-family: "Noto Sans";
+  font-weight: 400;
+  font-size: 15px;
+  line-height: 27px;
+  display: flex;
+  align-items: center;
+  letter-spacing: -0.03em;
   color: #a7a9ac;
 `;
 
@@ -201,10 +336,19 @@ const ChannelPlayerCount1st = styled.div`
   align-items: center;
   text-align: right;
   letter-spacing: -0.03em;
-
   color: #ffffff;
 `;
-
+const ChannelPlayerCount1st2 = styled.div`
+  font-family: "Noto Sans";
+  font-weight: 400;
+  font-size: 15px;
+  line-height: 33px;
+  display: flex;
+  align-items: center;
+  text-align: right;
+  letter-spacing: -0.03em;
+  color: #ffffff;
+`;
 const PopularChannel2ndTo5th = styled.div``;
 
 const PopularChannelList = styled.div``;
