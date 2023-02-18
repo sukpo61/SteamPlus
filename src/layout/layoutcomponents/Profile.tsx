@@ -2,17 +2,91 @@ import React, { useRef, useState } from "react";
 import { LayoutButton } from "../../recoil/atom";
 import styled from "styled-components";
 import { useRecoilValue } from "recoil";
-import { useNavigate } from "react-router-dom";
+import { Navigate, useNavigate } from "react-router-dom";
+import axios from "axios";
+import { useQuery } from "react-query";
 
 function Profile() {
   // profile 클릭 state
   const layoutMenu = useRecoilValue(LayoutButton);
+  //로컬 프로필이미지
   const ProfileImgUrl = localStorage.getItem("profileimg");
+  //로컬 닉네임
   const ProfileNicName = localStorage.getItem("nickName");
+  //로컬 게임정보
   const ProfileGameTitle = localStorage.getItem("gameextrainfo");
+  //로컬 로그인정보
+  const ProfileLogin = localStorage.getItem("login");
+  //로컬 스팀아이디
+  const ProfleSteamId = localStorage.getItem("steamid");
 
-  //로그아웃
-  const logout = () => {
+  //로그인버튼
+  const STEAM_OPENID_ENDPOINT = `https://steamcommunity.com/openid/login?openid.ns=http://specs.openid.net/auth/2.0&openid.mode=checkid_setup&openid.return_to=http://localhost:3000/login/&openid.realm=http://localhost:3000/login&openid.identity=http://specs.openid.net/auth/2.0/identifier_select&openid.claimed_id=http://specs.openid.net/auth/2.0/identifier_select`;
+  const SteamLogin = () => {
+    window.location.href = STEAM_OPENID_ENDPOINT;
+  };
+  ///////////////////////////
+  const navigate = useNavigate();
+  const params: any = new URLSearchParams(window.location.search);
+  const steamId = params.get("openid.claimed_id")?.split("/")[5];
+  const APIKEY = "234E0113F33D5C7C4D4D5292C6774550";
+  const serverUrl = "http://localhost:3001/auth/";
+  const [online, setOnline] = useState("true");
+  ///////////////////////////
+  const userDataGet = async () => {
+    const result = await axios.get(
+      "https://api.steampowered.com/ISteamUser/GetPlayerSummaries/v2/",
+      {
+        params: {
+          key: APIKEY,
+          //스팀로그인
+          steamids: steamId,
+        },
+      }
+    );
+    //로컬스토리지에 로그인정보 저장하기
+    localStorage.setItem("login", online);
+    localStorage.setItem("gameid", result?.data.response.players[0].gameid);
+    localStorage.setItem("steamid", result.config.params.steamids);
+    localStorage.setItem(
+      "profileimg",
+      result?.data.response.players[0].avatarfull
+    );
+    localStorage.setItem(
+      "nickName",
+      result?.data.response.players[0].personaname +
+        " " +
+        "#" +
+        result.config.params.steamids.slice(13, 18)
+    );
+    localStorage.setItem(
+      "gameextrainfo",
+      result?.data.response.players[0].gameextrainfo
+    );
+
+    //steam에서 변경된사항이 있을때 put을 통해 dbjson을 업데이트해줌
+    const userinfo = {
+      id: result.config.params.steamids,
+      profileimg: result?.data.response.players[0].avatarfull,
+      nickname:
+        result?.data.response.players[0].personaname +
+        " " +
+        "#" +
+        result.config.params.steamids.slice(13, 18),
+      gameid: result?.data.response.players[0].gameid,
+      gameextrainfo: result?.data.response.players[0].gameextrainfo,
+      login: online,
+    };
+    axios.put(`http://localhost:3001/auth/${steamId}`, userinfo);
+    axios.post(serverUrl, userinfo);
+    navigate("/");
+    return result;
+  };
+  const { data } = useQuery("userData", userDataGet);
+
+  //로그아웃 버튼
+  const logout = async () => {
+    localStorage.getItem("login");
     localStorage.getItem("gameid");
     localStorage.removeItem("gameid");
     localStorage.getItem("profileimg");
@@ -23,14 +97,17 @@ function Profile() {
     localStorage.removeItem("gameextrainfo");
     localStorage.getItem("steamid");
     localStorage.removeItem("steamid");
-    // navigate("/mypage");
   };
 
-  const STEAM_OPENID_ENDPOINT = `https://steamcommunity.com/openid/login?openid.ns=http://specs.openid.net/auth/2.0&openid.mode=checkid_setup&openid.return_to=http://localhost:3000/login/&openid.realm=http://localhost:3000/login&openid.identity=http://specs.openid.net/auth/2.0/identifier_select&openid.claimed_id=http://specs.openid.net/auth/2.0/identifier_select`;
-
-  const SteamLogin = () => {
-    window.location.href = STEAM_OPENID_ENDPOINT;
+  // 온라인 오프라인 토글버튼
+  const onLineToogle = async () => {
+    const onlineOnOff = ProfileLogin === "true" ? "false" : "true";
+    localStorage.setItem("login", onlineOnOff);
+    setOnline("false");
+    axios.put(`http://localhost:3001/auth/${ProfleSteamId}`, online);
+    axios.post(serverUrl, online);
   };
+
   return (
     <>
       <ProfileDiv layoutMenu={layoutMenu}>
@@ -47,8 +124,16 @@ function Profile() {
           </ProfileInfoBox>
         ) : (
           <ProfileInfoBox>
-            <ProfileNickName>{ProfileNicName}</ProfileNickName>
+            <ProfileNickName>
+              {ProfileNicName}{" "}
+              {ProfileLogin === "true" ? <ChannelOn /> : <ChannelOff />}
+            </ProfileNickName>
+
             <ProfileFriends>친구 몇마리</ProfileFriends>
+            <ChangeToggle onClick={onLineToogle}>
+              {ProfileLogin === "true" ? "온라인" : "오프라인"}
+            </ChangeToggle>
+
             <ProfileLogout onClick={logout}>로그아웃</ProfileLogout>
           </ProfileInfoBox>
         )}
@@ -82,7 +167,22 @@ function Profile() {
 }
 
 export default Profile;
-
+const ChangeToggle = styled.span`
+  color: white;
+  cursor: pointer;
+`;
+const ChannelOff = styled.div`
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: red;
+`;
+const ChannelOn = styled.div`
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: #23de79;
+`;
 const ProfileLogout = styled.span`
   font-size: 13px;
   cursor: pointer;
@@ -121,7 +221,7 @@ const ProfileFriends = styled.div`
 `;
 const ProfileBox = styled.div`
   width: 352px;
-  height: 559px;
+  height: 459px;
   background-color: #192030;
   margin-left: 24px;
   margin-top: 50px;

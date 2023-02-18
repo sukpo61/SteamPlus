@@ -47,5 +47,5 @@ export default Router;
 const RouteFloat = styled.div<{ layoutMenu: String }>`
   margin-left: ${(props) => (props.layoutMenu === "close" ? "80px" : "480px")};
   transition: 0.5s ease-in-out;
-  /* width: 1440px; */
+  overflow-x: hidden;
 `;
