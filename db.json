@@ -18,55 +18,22 @@
       "profileimg": "https://avatars.akamai.steamstatic.com/fef49e7fa7e1997310d705b2a6158ff8dc1cdfeb_full.jpg",
       "nickname": "123322 #0991",
       "login": true
-    },
-    {
-      "false": "",
-      "id": "wuSTbLT"
-    },
-    {
-      "false": "",
-      "id": "RZAxSqm"
-    },
-    {
-      "false": "",
-      "id": "MvgXuVr"
-    },
-    {
-      "false": "",
-      "id": "yA_CS2T"
-    },
-    {
-      "false": "",
-      "id": "nc-_OUK"
-    },
-    {
-      "false": "",
-      "id": "0Y7nOdo"
-    },
-    {
-      "false": "",
-      "id": "aBPi6zi"
-    },
-    {
-      "false": "",
-      "id": "BLAU-5-"
-    },
-    {
-      "false": "",
-      "id": "sjmY6EJ"
-    },
-    {
-      "false": "",
-      "id": "MbORheH"
-    },
-    {
-      "false": "",
-      "id": "MveNzRh"
-    },
-    {
-      "false": "",
-      "id": "72Pit-J"
     }
   ],
-  "friend": []
+  "friend": [
+    {
+      "id": "088ce591-c38d-47f0-b392-c8e36c0ceedc",
+      "myId": "76561199478670991",
+      "friendId": "76561198064204836",
+      "myNickName": "123322 #0991",
+      "friendNickName": "PRDG #4836"
+    },
+    {
+      "id": "088ce591-c38d-47f0-b392-c8e36c0ceedc1",
+      "myId": "76561198064204836",
+      "friendId": "76561199478670991",
+      "myNickName": "PRDG #4836",
+      "friendNickName": "123322 #0991"
+    }
+  ]
 }
