@@ -18,9 +18,17 @@ import { useQuery } from "react-query";
 import axios from "axios";
 import { FriendProps } from "../layout/layoutcomponents/Friend";
 import { FriendSearchProps } from "../layout/layoutcomponents/FriendSearch";
+import { AiFillHome } from "react-icons/ai";
+import { AiOutlineSearch } from "react-icons/ai";
+import { FaUserFriends } from "react-icons/fa";
+import { MdVoiceChat } from "react-icons/md";
+import { useNavigate } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 
 function Layout() {
-  // console.log(localStorage.getItem("steamid"));
+  const navigate = useNavigate();
+  const location = useLocation();
+  const locationName = location.pathname;
 
   const myId = localStorage.getItem("steamid");
   //레이아웃 종류
@@ -132,23 +140,49 @@ function Layout() {
           )}
         </Profilebutton>
         {/* 홈 */}
-        <Homebutton>Home</Homebutton>
+        <Homebutton
+          locationName={locationName}
+          onClick={() => {
+            FriendButtonOnClick("close");
+            navigate("/");
+          }}
+        >
+          <AiFillHome className="homeIcon" />
+          <p>홈</p>
+        </Homebutton>
         {/* 게임검색 */}
-        <GameSearchbutton onClick={() => LayoutButtonOnClick("gamesearch")}>
-          gamesearch
+        <GameSearchbutton
+          locationName={locationName}
+          onClick={() => {
+            FriendButtonOnClick("close");
+            navigate("/Channelsearchpage");
+          }}
+        >
+          <AiOutlineSearch className="searchIcon" />
+          <p>게임검색</p>
         </GameSearchbutton>
+        {/* 메뉴 구분선 */}
+        <SideLine />
         {/* 친구 */}
-        <Friendbutton onClick={() => FriendButtonOnClick("friend")}>
-          friend
-          {friendAddCome.length === 0 ? (
-            ""
-          ) : (
-            <FriendNotice>{friendAddCome.length}</FriendNotice>
-          )}
+        <Friendbutton
+          onClick={() => {
+            //맨위로 스크롤이동
+            // window.scrollTo({ top: 0, behavior: "smooth" });
+            FriendButtonOnClick("friend");
+          }}
+          layoutMenu={layoutMenu}
+        >
+          <FaUserFriends className="friendIcon" />
+          <p>친구</p>
+          {friendAddCome.length === 0 ? "" : <FriendNotice />}
         </Friendbutton>
         {/* 음성채팅 */}
-        <VoiceTalkbutton onClick={() => LayoutButtonOnClick("voicetalk")}>
-          voicetalk
+        <VoiceTalkbutton
+          onClick={() => LayoutButtonOnClick("voicetalk")}
+          layoutMenu={layoutMenu}
+        >
+          <MdVoiceChat className="chatIcon" />
+          <p>음성채팅</p>
         </VoiceTalkbutton>
       </SideBarDiv>
       {/* 메뉴 컴포넌트 */}
@@ -175,8 +209,9 @@ const SideBarDiv = styled.div`
   width: 80px;
   height: 100%;
   position: fixed;
+  left: 0;
   background: #080c16;
-  z-index: 9999;
+  z-index: 999999;
 `;
 
 const MenuOpenDiv = styled.div<{ layoutMenu: String }>`
@@ -189,7 +224,10 @@ const MenuOpenDiv = styled.div<{ layoutMenu: String }>`
   top: 0;
   bottom: 0;
   transition: 0.5s ease-in-out;
-  border-top-right-radius: 30px;
+  z-index: 99999;
+  box-shadow: 2px 4px 15px 0 #000;
+
+  /* border-top-right-radius: 30px; */
   overflow: scroll;
   &::-webkit-scrollbar {
     display: none;
@@ -208,67 +246,83 @@ const Profilebutton = styled.div`
   cursor: pointer;
 `;
 
-const Homebutton = styled.div`
-  margin: 20px auto 0;
-  border-radius: 25px;
-  font-size: 12px;
-  width: 50px;
-  line-height: 50px;
+const Homebutton = styled.div<{ locationName: String }>`
+  margin: 80px auto 0;
+  font-size: 13px;
   text-align: center;
-  height: 50px;
-  background: #ccc;
+  /* height: 50px; */
+  /* background: #ccc; */
+  color: ${(props) => (props.locationName === "/" ? "#00B8C8" : "#777d87")};
   cursor: pointer;
+  .homeIcon {
+    font-size: 30px;
+    margin-bottom: 5px;
+  }
 `;
 
-const GameSearchbutton = styled.div`
-  margin: 20px auto 0;
-  border-radius: 25px;
-  font-size: 12px;
-  width: 50px;
-  line-height: 50px;
+const GameSearchbutton = styled.div<{ locationName: String }>`
+  margin: 24px auto 0;
+  font-size: 13px;
   text-align: center;
-  height: 50px;
-  background: #ccc;
+  color: ${(props) =>
+    props.locationName === "/Channelsearchpage" ? "#00B8C8" : "#777d87"};
   cursor: pointer;
+  .searchIcon {
+    font-size: 30px;
+    margin-bottom: 5px;
+  }
+`;
+const SideLine = styled.div`
+  margin: 34px auto;
+  height: 1px;
+  width: 45px;
+  background-color: #777d87;
 `;
 
-const Friendbutton = styled.div`
-  margin: 20px auto 0;
-  border-radius: 25px;
-  font-size: 12px;
-  width: 50px;
-  line-height: 50px;
-  text-align: center;
-  height: 50px;
-  background: #ccc;
-  cursor: pointer;
+const Friendbutton = styled.div<{ layoutMenu: String }>`
   position: relative;
+  margin: 0 auto;
+  font-size: 13px;
+  text-align: center;
+  color: ${(props) =>
+    props.layoutMenu === "friend" ||
+    props.layoutMenu === "friendsearch" ||
+    props.layoutMenu === "friendadd"
+      ? "#00B8C8"
+      : "#777d87"};
+  cursor: pointer;
+  .friendIcon {
+    font-size: 30px;
+    margin-bottom: 5px;
+  }
 `;
 
 const FriendNotice = styled.div`
   position: absolute;
-  top: 0;
-  width: 20px;
-  height: 20px;
-  line-height: 15px;
+  bottom: 20px;
+  right: 20px;
+  width: 10px;
+  height: 10px;
+  line-height: 14px;
   color: #fff;
-  font-size: 12px;
+  font-size: 10px;
   text-align: center;
   border-radius: 50%;
   background-color: red;
   font-weight: 500;
 `;
 
-const VoiceTalkbutton = styled.div`
-  margin: 20px auto 0;
-  border-radius: 25px;
-  font-size: 12px;
-  width: 50px;
-  line-height: 50px;
+const VoiceTalkbutton = styled.div<{ layoutMenu: String }>`
+  margin: 24px auto;
+  font-size: 13px;
   text-align: center;
-  height: 50px;
-  background: #ccc;
+  color: ${(props) =>
+    props.layoutMenu === "voicetalk" ? "#00B8C8" : "#777d87"};
   cursor: pointer;
+  .chatIcon {
+    font-size: 30px;
+    margin-bottom: 5px;
+  }
 `;
 // json에 친구서버에 id, nickname, 프로필이미지
 // 내 id 상대방 id
