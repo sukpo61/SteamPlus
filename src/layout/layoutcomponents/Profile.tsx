@@ -79,7 +79,10 @@ function Profile() {
     };
     axios.put(`http://localhost:3001/auth/${steamId}`, userinfo);
     axios.post(serverUrl, userinfo);
-    navigate("/");
+    // navigate("/");
+    //수정
+    window.location.replace("/");
+
     return result;
   };
   const { data } = useQuery("userData", userDataGet);
