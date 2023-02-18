@@ -13,21 +13,14 @@ import axios from "axios";
 import { useMutation } from "react-query";
 import FriendTab from "./FriendTab";
 import { FriendProps } from "./Friend";
+import { v4 as uuidv4 } from "uuid";
+import { FriendSearchProps } from "./FriendSearch";
 
 function Friend() {
   const queryClient = useQueryClient();
 
   const myId = localStorage.getItem("steamid");
   const myNickName = localStorage.getItem("nickName");
-
-  // const myId = 2;
-  // const myNickName = "강아지";
-
-  // const myId = 3;
-  // const myNickName = "호랑이";
-
-  // const myId = 7;
-  // const myNickName = "Cat";
 
   const [layoutMenu, setLayoutMenu] = useRecoilState<String>(LayoutButton);
   //친구검색 input
@@ -41,6 +34,8 @@ function Friend() {
     useRecoilState<FriendProps[]>(getFriend);
   //친구 요청 온 내역 전체
   const [friendAdd] = useRecoilValue(newFriendAdd);
+  //계정 내역 전체 불러오기
+  const [friendAllRecoil, setFriendAllRecoil] = useRecoilState(friendAllState);
 
   //친구 수락
   const postMutation = useMutation(
@@ -69,19 +64,19 @@ function Friend() {
   );
 
   //친구 수락
-  const friendAddOnClick = async (i: FriendProps) => {
+  const friendAddOnClick = async (i: FriendSearchProps) => {
     let friendAdd = {
-      id: i.id + "1",
-      myId: i.friendId,
-      friendId: i.myId,
-      myNickName: i.friendNickName,
-      friendNickName: i.myNickName,
+      id: uuidv4(),
+      myId: myId,
+      friendId: i.id,
+      myNickName: myNickName,
+      friendNickName: i.nickname,
     };
 
     try {
       //상대와 친구가 돼있는지 검사후 이중 저장 방지
       const response = await axios.get(
-        `http://localhost:3001/friend?myId=${i.friendId}&friendId=${myId}`
+        `http://localhost:3001/friend?myId=${myId}&friendId=${i.id}`
       );
 
       const existingFriend = response.data[0];
@@ -96,13 +91,13 @@ function Friend() {
       console.error(error);
     }
   };
-  //친구 삭제 인데 +1 된것 까지 삭제 혹은 그 반대로 +1이 없는 것 까지 삭제
+  //찾아온 친구 id 를이용해 두개다 삭제
   const friendDeleteOnClick = (id: any) => {
-    const deleteAll: any = id + "1";
-    const deleteAll2: any = id.slice(0, -1);
-    DeleteMutation.mutate(id);
-    DeleteMutation.mutate(deleteAll);
-    DeleteMutation.mutate(deleteAll2);
+    const friendDelete = getFriendAuth.filter((i) => {
+      return id === i.friendId || id === i.myId;
+    });
+
+    DeleteMutation.mutate(friendDelete[0].id);
   };
 
   //양쪽 다 친구 내역
@@ -146,6 +141,26 @@ function Friend() {
     return i.friendId === myId && frendSearchInput === "";
   });
 
+  //내가 친구 요청 자동업데이트 되는 친구 계정 바로 가져오기
+  const friendSend = friendAllRecoil.filter((i: FriendSearchProps) => {
+    for (let t = 0; t < friendAddSend.length; t++) {
+      if (friendAddSend[t].friendId === i.id) {
+        return true;
+      }
+    }
+    return false;
+  });
+
+  //친구 요청 온 내역 자동업데이트 되는 친구 계정 바로 가져오기
+  const friendCome = friendAllRecoil.filter((i: FriendSearchProps) => {
+    for (let t = 0; t < friendAddCome.length; t++) {
+      if (friendAddCome[t].myId === i.id) {
+        return true;
+      }
+    }
+    return false;
+  });
+
   return (
     <FriendDiv layoutMenu={layoutMenu}>
       {/* 위 제목과 input layoutstring이 바뀔때마다 바뀌게 */}
@@ -155,76 +170,52 @@ function Friend() {
       </MenuTitleDiv>
 
       {/* 친구 목록 박스 */}
-      <h2
-        style={{
-          fontSize: 18,
-          color: "#fff",
-          marginLeft: "20px",
-          marginTop: "20px",
-        }}
-      >
-        친구요청보냄
-      </h2>
-      {friendAddSend?.map((i: FriendProps) => {
+      {friendCome.length === 0 ? "" : <FriendAddH2>수락 대기 중</FriendAddH2>}
+      {friendCome?.map((i: FriendSearchProps) => {
         return (
           <FriendBoxDiv>
             <FriendBoxNameDiv>
-              <FriendBoxNameImg></FriendBoxNameImg>
-              <FriendBoxNameH2>{i.friendNickName}</FriendBoxNameH2>
+              <FriendBoxNameImg src={i.profileimg} />
+              <FriendBoxNameH2>{i.nickname}</FriendBoxNameH2>
 
-              <FriendBoxNameP
-                onClick={() => {
-                  friendDeleteOnClick(i.id);
-                }}
-              >
-                취소
-              </FriendBoxNameP>
-            </FriendBoxNameDiv>
-
-            <FriendGamingDiv>
-              <h2>dave diver방 참가중</h2>
-              <h2>참가하기</h2>
-            </FriendGamingDiv>
-          </FriendBoxDiv>
-        );
-      })}
-      <h2
-        style={{
-          fontSize: 18,
-          color: "#fff",
-          marginLeft: "20px",
-          marginTop: "20px",
-        }}
-      >
-        친구요청받기
-      </h2>
-      {friendAddCome?.map((i: FriendProps) => {
-        return (
-          <FriendBoxDiv>
-            <FriendBoxNameDiv>
-              <FriendBoxNameImg></FriendBoxNameImg>
-              <FriendBoxNameH2>{i.myNickName}</FriendBoxNameH2>
-
-              <FriendBoxNameP
+              <FriendBoxNameH3
                 onClick={() => {
                   friendAddOnClick(i);
                 }}
               >
                 수락
-              </FriendBoxNameP>
+              </FriendBoxNameH3>
               <FriendBoxNameP
                 onClick={() => {
                   friendDeleteOnClick(i.id);
                 }}
               >
-                삭제
+                거절
               </FriendBoxNameP>
             </FriendBoxNameDiv>
+          </FriendBoxDiv>
+        );
+      })}
+      {friendSend.length === 0 ? (
+        ""
+      ) : (
+        <FriendAddH2>전송된 친구 요청</FriendAddH2>
+      )}
+      {friendSend?.map((i: FriendSearchProps) => {
+        return (
+          <FriendBoxDiv>
+            <FriendBoxNameDiv>
+              <FriendBoxNameImg src={i.profileimg} />
+              <FriendBoxNameH2>{i.nickname}</FriendBoxNameH2>
 
-            <FriendGamingDiv>
-              <h2>dave diver방 참가중</h2>
-              <h2>참가하기</h2>
-            </FriendGamingDiv>
+              <FriendBoxCancelP
+                onClick={() => {
+                  friendDeleteOnClick(i.id);
+                }}
+              >
+                취소
+              </FriendBoxCancelP>
+            </FriendBoxNameDiv>
           </FriendBoxDiv>
         );
       })}
@@ -235,56 +226,95 @@ function Friend() {
 export default Friend;
 const FriendDiv = styled.div<{ layoutMenu: String }>`
   display: ${(props) => (props.layoutMenu === "friendadd" ? "block" : "none")};
-  margin-top: 100px;
+  margin-top: 80px;
   margin-bottom: 30px;
 `;
 
 const MenuTitleDiv = styled.div`
   width: 400px;
-  height: 80px;
+  height: 70px;
   background-color: #263245;
   position: fixed;
   top: 0;
   font-size: 24px;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
   border-top-right-radius: 30px;
 `;
 
+const FriendAddH2 = styled.h2`
+  font-size: 13px;
+  color: #d4d4d4;
+  margin: 16px 0 16px 25px;
+`;
+
 const FriendBoxDiv = styled.div`
-  margin: 10px auto 0;
-  width: 350px;
-  height: 140px;
+  margin: 0px auto;
+  width: 100%;
+  padding: 0 25px;
+  height: 60px;
   background-color: #263245;
-  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  &:hover {
+    background-color: #192030;
+  }
 `;
 const FriendBoxNameDiv = styled.div`
-  padding-top: 15px;
+  font-size: 14px;
+  width: 100%;
   display: flex;
   align-items: center;
 `;
-const FriendBoxNameImg = styled.div`
-  width: 50px;
-  height: 50px;
-  border-radius: 25px;
-  margin-left: 30px;
+const FriendBoxNameImg = styled.img`
+  width: 40px;
+  height: 40px;
+  border-radius: 20px;
   margin-right: 10px;
-  background-color: #ccc;
 `;
 const FriendBoxNameH2 = styled.h2`
   color: #fff;
 `;
-const FriendBoxNameP = styled.p`
+const FriendBoxNameH3 = styled.h3`
   color: #fff;
   margin-left: auto;
-  margin-right: 30px;
+  margin-right: 8px;
+  width: 40px;
+  height: 24px;
+  line-height: 24px;
+  font-size: 12px;
+  border-radius: 8px;
+  background-color: #00b8c8;
+  font-weight: 500;
+  margin-left: auto;
+  text-align: center;
   cursor: pointer;
 `;
-const FriendGamingDiv = styled.div`
-  display: flex;
-  align-items: center;
-  margin-top: 40px;
+
+const FriendBoxNameP = styled.p`
   color: #fff;
-  justify-content: space-around;
+  width: 40px;
+  height: 24px;
+  line-height: 24px;
+  font-weight: 500;
+  font-size: 12px;
+  border-radius: 8px;
+  background-color: #404b5e;
+  text-align: center;
+  cursor: pointer;
+`;
+
+const FriendBoxCancelP = styled.p`
+  color: #fff;
+  width: 40px;
+  height: 24px;
+  line-height: 24px;
+  font-weight: 500;
+  font-size: 12px;
+  border-radius: 8px;
+  margin-left: auto;
+  background-color: #404b5e;
+  text-align: center;
+  margin-left: auto;
+  cursor: pointer;
 `;

@@ -13,23 +13,32 @@ import axios from "axios";
 import { useMutation } from "react-query";
 import FriendTab from "./FriendTab";
 import FriendContextMenu from "./FriendContextMenu";
+import { FriendSearchProps } from "./FriendSearch";
 // import { ContextMenu, MenuItem, ContextMenuTrigger } from "react-contextmenu";
 
 export interface FriendProps {
-  id: String;
-  myId: String;
-  friendId: String;
-  myNickName: String;
-  friendNickName: String;
+  id: any;
+  myId: string;
+  friendId: string;
+  myNickName: string;
+  friendNickName: string;
+  myProfileimg: string;
+  friendProfileimg: string;
 }
 
 function Friend() {
   const queryClient = useQueryClient();
+  // //화면 기준 x,y좌표
+  // const element = document.getElementById("my-element");
+  // const rect = element?.getBoundingClientRect();
+
   //친구 내역 전체 불러오기
   const [getFriendAuth, setGetFriendAuth] =
     useRecoilState<FriendProps[]>(getFriend);
   //친구 요청 온 내역 전체
   const [friendAdd] = useRecoilValue(newFriendAdd);
+  //계정 내역 전체 불러오기
+  const [friendAllRecoil, setFriendAllRecoil] = useRecoilState(friendAllState);
 
   //친구 우클릭
   const [menuPosition, setMenuPosition] = useState<{
@@ -43,18 +52,6 @@ function Friend() {
   const myId = localStorage.getItem("steamid");
   const myNickName = localStorage.getItem("nickName");
 
-  // const myId = 2;
-  // const myNickName = "강아지";
-
-  // const myId = 3;
-  // const myNickName = "호랑이";
-
-  //   const myId = 5;
-  // const myNickName = "강아지고양이";
-
-  // const myId = 7;
-  // const myNickName = "Cat";
-
   const [layoutMenu, setLayoutMenu] = useRecoilState<String>(LayoutButton);
 
   //친구검색 input
@@ -64,30 +61,8 @@ function Friend() {
     setfrendSearchInput(e.target.value);
   };
 
-  // // 친구 삭제
-  // const DeleteMutation = useMutation(
-  //   //넘겨받은 id를 삭제
-  //   (id) => axios.delete(`http://localhost:3001/friend/${id}`),
-  //   {
-  //     onSuccess: () => {
-  //       // 쿼리 무효화
-  //       queryClient.invalidateQueries("friend");
-  //       queryClient.invalidateQueries("friendsearch");
-  //     },
-  //   }
-  // );
-
-  // //친구 삭제 인데 +1 된것 까지 삭제 혹은 그 반대로 +1이 없는 것 까지 삭제
-  // const friendDeleteOnClick = (id: any) => {
-  //   const deleteAll: any = id + "1";
-  //   const deleteAll2: any = id.slice(0, -1);
-  //   DeleteMutation.mutate(id);
-  //   DeleteMutation.mutate(deleteAll);
-  //   DeleteMutation.mutate(deleteAll2);
-  // };
-
   //양쪽 다 친구 내역
-  const friend = getFriendAuth?.filter((i: FriendProps) => {
+  const allFriendList = getFriendAuth?.filter((i: FriendProps) => {
     for (let t = 0; t < friendAdd.length; t++) {
       if (
         friendAdd[t].friendId === i.myId &&
@@ -108,10 +83,23 @@ function Friend() {
     }
   });
 
+  //자동업데이트 되는 친구 계정 바로 가져오기
+  const friend = friendAllRecoil.filter((i: FriendSearchProps) => {
+    for (let t = 0; t < allFriendList.length; t++) {
+      if (allFriendList[t].friendId === i.id) {
+        return true;
+      }
+    }
+    return false;
+  });
+
   // //친구 우클릭
   const handleContextMenu = (event: any) => {
     event.preventDefault();
-    setMenuPosition({ xPos: `${event.pageX}px`, yPos: `${event.pageY}px` });
+    setMenuPosition({
+      xPos: `${event.screenX}px`,
+      yPos: `${event.screenY - 140}px`,
+    });
   };
 
   const handleCloseContextMenu = () => {
@@ -152,7 +140,7 @@ function Friend() {
       </MenuTitleDiv>
 
       {/* 친구 목록 박스 */}
-      {friend?.map((i: FriendProps) => {
+      {friend?.map((i: FriendSearchProps) => {
         return (
           <FriendBoxDiv onContextMenu={handleContextMenu}>
             <FriendContextMenu
@@ -164,19 +152,19 @@ function Friend() {
 
             <FriendBoxNameDiv>
               <FriendBoxNameImgDiv>
-                <FriendBoxNameImg></FriendBoxNameImg>
+                <FriendBoxNameImg src={i.profileimg} />
 
                 {/* 온라인표시 */}
-                <FriendBoxNameOnline />
+                {i.login ? <FriendBoxNameOnline /> : ""}
               </FriendBoxNameImgDiv>
 
-              <FriendBoxNameH2>{i.friendNickName}</FriendBoxNameH2>
+              <FriendBoxNameH2>{i.nickname}</FriendBoxNameH2>
 
               <FriendBoxNamePlayingP>
                 `Dave the Diver`방 참여중
               </FriendBoxNamePlayingP>
 
-              <FriendBoxNotice>11</FriendBoxNotice>
+              <FriendBoxNotice>7</FriendBoxNotice>
             </FriendBoxNameDiv>
           </FriendBoxDiv>
         );
@@ -202,6 +190,7 @@ const MenuTitleDiv = styled.div`
   display: flex;
   flex-direction: column;
   border-top-right-radius: 30px;
+  z-index: 99999999999;
 `;
 const MenuTitleIform = styled.form`
   position: relative;
@@ -228,46 +217,47 @@ const MenuTitleInput = styled.input`
 `;
 
 const FriendBoxDiv = styled.div`
-  margin: 0 auto 10px auto;
-  width: 350px;
-  height: 50px;
+  margin: 0 auto;
+  width: 100%;
+  //수정
+  height: 60px;
   background-color: #263245;
-  border-radius: 10px;
   cursor: pointer;
 `;
 const FriendBoxNameDiv = styled.div`
-  height: 50px;
-  padding-top: 0px;
+  height: 60px;
+  padding: 0 25px;
   display: flex;
   align-items: center;
+  &:hover {
+    background-color: #192030;
+  }
 `;
 const FriendBoxNameImgDiv = styled.div`
   position: relative;
 `;
-const FriendBoxNameImg = styled.div`
+const FriendBoxNameImg = styled.img`
   width: 40px;
   height: 40px;
-  border-radius: 50%;
-  margin-left: 0px;
+  border-radius: 20px;
   margin-right: 10px;
-  background-color: #ccc;
 `;
 const FriendBoxNameOnline = styled.div`
   position: absolute;
   bottom: 0;
-  width: 15px;
-  height: 15px;
+  width: 12px;
+  height: 12px;
   background-color: #23de79;
   border-radius: 50%;
 `;
 const FriendBoxNameH2 = styled.h2`
   color: #fff;
-  font-size: 16px;
+  font-size: 14px;
   margin-right: 10px;
 `;
 const FriendBoxNamePlayingP = styled.p`
   font-size: 10px;
-  color: #d4d4d4;
+  color: #a7a9ac;
 `;
 const FriendBoxNotice = styled.div`
   width: 16px;
@@ -279,10 +269,4 @@ const FriendBoxNotice = styled.div`
   background-color: #ff5b5b;
   border-radius: 50%;
   margin-left: auto;
-`;
-const FriendBoxNameP = styled.p`
-  color: #fff;
-  margin-left: auto;
-  margin-right: 30px;
-  cursor: pointer;
 `;
