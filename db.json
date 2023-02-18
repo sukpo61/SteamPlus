@@ -18,55 +18,31 @@
       "profileimg": "https://avatars.akamai.steamstatic.com/fef49e7fa7e1997310d705b2a6158ff8dc1cdfeb_full.jpg",
       "nickname": "1233 #0991",
       "login": "true"
-    },
-    {
-      "false": "",
-      "id": "wuSTbLT"
-    },
-    {
-      "false": "",
-      "id": "RZAxSqm"
-    },
-    {
-      "false": "",
-      "id": "MvgXuVr"
-    },
-    {
-      "false": "",
-      "id": "yA_CS2T"
-    },
-    {
-      "false": "",
-      "id": "nc-_OUK"
-    },
-    {
-      "false": "",
-      "id": "0Y7nOdo"
-    },
-    {
-      "false": "",
-      "id": "aBPi6zi"
-    },
-    {
-      "false": "",
-      "id": "BLAU-5-"
-    },
-    {
-      "false": "",
-      "id": "sjmY6EJ"
-    },
-    {
-      "false": "",
-      "id": "MbORheH"
-    },
-    {
-      "false": "",
-      "id": "MveNzRh"
-    },
-    {
-      "false": "",
-      "id": "72Pit-J"
     }
   ],
-  "friend": []
+  "friend": [
+    {
+      "id": "6f5eb18f-d3e8-49d8-8de3-ec03c417635f",
+      "myId": "76561199478670991",
+      "friendId": "76561198064204836",
+      "myNickName": "1233 #0991",
+      "friendNickName": "PRDG #4836",
+      "myProfileimg": "https://avatars.akamai.steamstatic.com/fef49e7fa7e1997310d705b2a6158ff8dc1cdfeb_full.jpg",
+      "friendProfileimg": "https://avatars.akamai.steamstatic.com/fef49e7fa7e1997310d705b2a6158ff8dc1cdfeb_full.jpg"
+    },
+    {
+      "id": "6f62513e-4822-42e7-b50e-94f2b99835a8",
+      "myId": "76561199476963056",
+      "friendId": "76561198064204836",
+      "myNickName": "hoitchac123 #3056",
+      "friendNickName": "PRDG #4836"
+    },
+    {
+      "id": "5a8a071e-c494-4b74-9ff5-dffbe54d6067",
+      "myId": "76561198064204836",
+      "friendId": "76561199476963056",
+      "myNickName": "PRDG #4836",
+      "friendNickName": "hoitchac123 #3056"
+    }
+  ]
 }
