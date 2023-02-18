@@ -8,11 +8,11 @@
     },
     {
       "id": "76561199476963056",
-      "profileimg": "https://avatars.akamai.steamstatic.com/fef49e7fa7e1997310d705b2a6158ff8dc1cdfeb_full.jpg",
+      "profileimg": "https://avatars.akamai.steamstatic.com/6639269e3d4820b31c5ec95bedc5ce0063635f54_full.jpg",
       "nickname": "hoitchac123 #3056",
       "gameid": "436150",
       "gameextrainfo": "Governor of Poker 3",
-      "login": true
+      "login": false
     },
     {
       "id": "76561199478670991",
@@ -34,6 +34,20 @@
       "myId": "76561198064204836",
       "friendId": "76561199478670991",
       "myNickName": "PRDG #4836",
+      "friendNickName": "123322 #0991"
+    },
+    {
+      "id": "c63a24be-7093-4048-b07e-3a3ec654976c",
+      "myId": "76561199478670991",
+      "friendId": "76561199476963056",
+      "myNickName": "123322 #0991",
+      "friendNickName": "hoitchac123 #3056"
+    },
+    {
+      "id": "c63a24be-7093-4048-b07e-3a3ec654976c1",
+      "myId": "76561199476963056",
+      "friendId": "76561199478670991",
+      "myNickName": "hoitchac123 #3056",
       "friendNickName": "123322 #0991"
     }
   ]

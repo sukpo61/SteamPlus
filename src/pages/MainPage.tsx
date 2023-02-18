@@ -9,6 +9,7 @@ function MainPage() {
   const [gameimg, setGameImg] = useState();
   const [gameTitle, setGameTitle] = useState();
   const [gameCategories, setGameCategories] = useState();
+  const GameId = localStorage.getItem("gameid");
   const gotologin = () => {
     navigate("/login");
   };
@@ -20,7 +21,7 @@ function MainPage() {
         {
           params: {
             // appids: GameId,
-            appids: "250900", // 해당 게임의 id값
+            appids: 250900, // 해당 게임의 id값
             language: "korean",
           },
         }
@@ -28,15 +29,20 @@ function MainPage() {
       .then((response) => {
         console.log("gamedetail", response);
         //이미지 네임
-        // setGameImg(response.data[`${GameId}`].data.header_image);
         setGameImg(response.data[250900].data.header_image);
-        // setGameImg(response.data[250900].data.screenshots[8].path_full);
-        // 게임타이틀
+
+        // // 게임타이틀
         setGameTitle(response.data[250900].data.name);
-        // 게임카테고리
+        // // 게임카테고리
         setGameCategories(response.data[250900].data.genres[0].description);
         //밑에 log는 게임설명
-        console.log(response.data[250900].data.short_description);
+        console.log(response.data);
+        //api로 게임정보불러오기
+        // setGameTitle(response.data[`${GameId}`].data.name);
+        // setGameImg(response.data[`${GameId}`].data.header_image);
+        // setGameCategories(
+        //   response.data[`${GameId}`].data.genres[0].description
+        // );
       })
       .catch((error) => {
         // setError("Could not retrieve header image");
@@ -174,7 +180,8 @@ const CurrentGameBox = styled.div`
   position: absolute;
   display: flex;
   flex-direction: column;
-  margin-left: 50px;
+  top: 60px;
+  right: 100px;
 `;
 const CurrentGameImg = styled.img`
   // img 태그로 교체
@@ -185,13 +192,10 @@ const CurrentGameImg = styled.img`
 `;
 
 const CurrentGameTitle = styled.span`
-  width: 490px;
-  left: 80px;
-  top: 36px;
+  text-align: right;
   font-family: "Montserrat";
-  font-weight: 700;
-  font-size: 72px;
-  text-shadow: 0px 4px 15px rgba(0, 0, 0, 0.25);
+  font-weight: 500;
+  font-size: 48px;
   color: #ffffff;
 `;
 
