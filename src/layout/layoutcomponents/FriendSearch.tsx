@@ -18,6 +18,7 @@ export interface FriendSearchProps {
   id: string;
   profileimg: string;
   nickname: string;
+  login: boolean;
 }
 
 function FriendSearch() {

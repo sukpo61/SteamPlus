@@ -155,7 +155,7 @@ function Friend() {
                 <FriendBoxNameImg src={i.profileimg} />
 
                 {/* 온라인표시 */}
-                <FriendBoxNameOnline />
+                {i.login ? <FriendBoxNameOnline /> : ""}
               </FriendBoxNameImgDiv>
 
               <FriendBoxNameH2>{i.nickname}</FriendBoxNameH2>
