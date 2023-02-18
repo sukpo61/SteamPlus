@@ -31,6 +31,7 @@ function Layout() {
   const locationName = location.pathname;
 
   const myId = localStorage.getItem("steamid");
+
   //레이아웃 종류
   const [layoutMenu, setLayoutMenu] = useRecoilState<String>(LayoutButton);
   // //친구 알림 내역
@@ -164,26 +165,52 @@ function Layout() {
         {/* 메뉴 구분선 */}
         <SideLine />
         {/* 친구 */}
-        <Friendbutton
-          onClick={() => {
-            //맨위로 스크롤이동
-            // window.scrollTo({ top: 0, behavior: "smooth" });
-            FriendButtonOnClick("friend");
-          }}
-          layoutMenu={layoutMenu}
-        >
-          <FaUserFriends className="friendIcon" />
-          <p>친구</p>
-          {friendAddCome.length === 0 ? "" : <FriendNotice />}
-        </Friendbutton>
+        {myId === null ? (
+          <Friendbutton
+            onClick={() => {
+              alert("로그인 후 사용 가능 합니다.");
+              FriendButtonOnClick("profile");
+            }}
+            layoutMenu={layoutMenu}
+          >
+            <FaUserFriends className="friendIcon" />
+            <p>친구</p>
+          </Friendbutton>
+        ) : (
+          <Friendbutton
+            onClick={() => {
+              //맨위로 스크롤이동
+              // window.scrollTo({ top: 0, behavior: "smooth" });
+              FriendButtonOnClick("friend");
+            }}
+            layoutMenu={layoutMenu}
+          >
+            <FaUserFriends className="friendIcon" />
+            <p>친구</p>
+            {friendAddCome.length === 0 ? "" : <FriendNotice />}
+          </Friendbutton>
+        )}
         {/* 음성채팅 */}
-        <VoiceTalkbutton
-          onClick={() => LayoutButtonOnClick("voicetalk")}
-          layoutMenu={layoutMenu}
-        >
-          <MdVoiceChat className="chatIcon" />
-          <p>음성채팅</p>
-        </VoiceTalkbutton>
+        {myId === null ? (
+          <VoiceTalkbutton
+            onClick={() => {
+              alert("로그인 후 사용 가능 합니다.");
+              LayoutButtonOnClick("profile");
+            }}
+            layoutMenu={layoutMenu}
+          >
+            <MdVoiceChat className="chatIcon" />
+            <p>음성채팅</p>
+          </VoiceTalkbutton>
+        ) : (
+          <VoiceTalkbutton
+            onClick={() => LayoutButtonOnClick("voicetalk")}
+            layoutMenu={layoutMenu}
+          >
+            <MdVoiceChat className="chatIcon" />
+            <p>음성채팅</p>
+          </VoiceTalkbutton>
+        )}
       </SideBarDiv>
       {/* 메뉴 컴포넌트 */}
       <MenuOpenDiv layoutMenu={layoutMenu}>
