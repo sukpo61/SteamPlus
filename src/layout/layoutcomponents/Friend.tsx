@@ -155,7 +155,7 @@ function Friend() {
                 <FriendBoxNameImg src={i.profileimg} />
 
                 {/* 온라인표시 */}
-                {i.login ? <FriendBoxNameOnline /> : ""}
+                {i.login ? <FriendBoxNameOnline /> : <FriendBoxNameOffline />}
               </FriendBoxNameImgDiv>
 
               <FriendBoxNameH2>{i.nickname}</FriendBoxNameH2>
@@ -249,6 +249,16 @@ const FriendBoxNameOnline = styled.div`
   height: 12px;
   background-color: #23de79;
   border-radius: 50%;
+  border: 1px solid #777d87;
+`;
+const FriendBoxNameOffline = styled.div`
+  position: absolute;
+  bottom: 0;
+  width: 12px;
+  height: 12px;
+  background-color: #404b5e;
+  border-radius: 50%;
+  border: 1px solid #777d87;
 `;
 const FriendBoxNameH2 = styled.h2`
   color: #fff;
