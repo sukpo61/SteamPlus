@@ -96,12 +96,13 @@ function Profile() {
             ...i,
             login: false,
           });
+          //새로고침
+          window.location.replace("/");
         })
         .catch((error) => {
           console.log(error);
         });
     item();
-
     localStorage.getItem("gameid");
     localStorage.removeItem("gameid");
     localStorage.getItem("profileimg");
@@ -112,9 +113,6 @@ function Profile() {
     localStorage.removeItem("gameextrainfo");
     localStorage.getItem("steamid");
     localStorage.removeItem("steamid");
-
-    //새로고침
-    window.location.replace("/");
   };
 
   // 온라인 오프라인 토글버튼
@@ -140,7 +138,6 @@ function Profile() {
         });
 
     item();
-    // axios.post(serverUrl, online);
   };
 
   return (
