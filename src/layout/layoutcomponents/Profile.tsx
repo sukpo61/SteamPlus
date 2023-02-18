@@ -20,6 +20,8 @@ function Profile() {
   //로컬 스팀아이디
   const ProfleSteamId = localStorage.getItem("steamid");
 
+  console.log(ProfileNicName);
+
   //로그인버튼
   const STEAM_OPENID_ENDPOINT = `https://steamcommunity.com/openid/login?openid.ns=http://specs.openid.net/auth/2.0&openid.mode=checkid_setup&openid.return_to=http://localhost:3000/login/&openid.realm=http://localhost:3000/login&openid.identity=http://specs.openid.net/auth/2.0/identifier_select&openid.claimed_id=http://specs.openid.net/auth/2.0/identifier_select`;
   const SteamLogin = () => {
@@ -96,6 +98,8 @@ function Profile() {
             ...i,
             login: false,
           });
+          //새로고침
+          window.location.replace("/");
         })
         .catch((error) => {
           console.log(error);
@@ -112,9 +116,6 @@ function Profile() {
     localStorage.removeItem("gameextrainfo");
     localStorage.getItem("steamid");
     localStorage.removeItem("steamid");
-
-    //새로고침
-    window.location.replace("/");
   };
 
   // 온라인 오프라인 토글버튼
