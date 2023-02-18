@@ -4,8 +4,6 @@ import {
   getFriend,
   friendAllState,
   newFriendAdd,
-  myIds,
-  myNickNames,
 } from "../../recoil/atom";
 import styled from "styled-components";
 import { useRecoilState, useRecoilValue } from "recoil";
@@ -17,27 +15,17 @@ import { v4 as uuidv4 } from "uuid";
 import FriendTab from "./FriendTab";
 import { FriendProps } from "./Friend";
 export interface FriendSearchProps {
-  id: String;
-  profileimg: String;
-  nickname: String;
+  id: string;
+  profileimg: string;
+  nickname: string;
+  login: boolean;
 }
 
 function FriendSearch() {
   const queryClient = useQueryClient();
   const myId = localStorage.getItem("steamid");
   const myNickName = localStorage.getItem("nickName");
-
-  // const myId = 2;
-  // const myNickName = "강아지";
-
-  // const myId = 3;
-  // const myNickName = "호랑이";
-
-  // const myId = 5;
-  // const myNickName = "강아지고양이";
-
-  // const myId = 7;
-  // const myNickName = "Cat";
+  const myProfileImg = localStorage.getItem("profileimg");
 
   const [layoutMenu, setLayoutMenu] = useRecoilState<String>(LayoutButton);
   //친구 내역 전체
@@ -128,7 +116,7 @@ function FriendSearch() {
       ) {
         const lowercaseNickname = i?.nickname.toLowerCase();
         const lowercaseSearchInput = frendSearchInput?.toLowerCase();
-        return lowercaseNickname.includes(lowercaseSearchInput);
+        return lowercaseNickname?.includes(lowercaseSearchInput);
       }
     }
   });
@@ -168,14 +156,17 @@ function FriendSearch() {
         {/* 세개의 탭 */}
         <FriendTab />
 
-        <MenuTitleInput onChange={frendSearchOnChange}></MenuTitleInput>
+        <MenuTitleInput
+          onChange={frendSearchOnChange}
+          placeholder="유저 검색"
+        ></MenuTitleInput>
       </MenuTitleDiv>
 
       {/* 친구 목록 박스 */}
       {alreadyFriend?.map((i: FriendSearchProps) => {
         return (
           <FriendBoxDiv>
-            <FriendBoxNameImg></FriendBoxNameImg>
+            <FriendBoxNameImg src={i.profileimg} />
             <FriendBoxNameH2>{i.nickname}</FriendBoxNameH2>
 
             <FriendBoxNameP></FriendBoxNameP>
@@ -185,7 +176,7 @@ function FriendSearch() {
       {friendSearch?.map((i: FriendSearchProps) => {
         return (
           <FriendBoxDiv>
-            <FriendBoxNameImg></FriendBoxNameImg>
+            <FriendBoxNameImg src={i.profileimg} />
             <FriendBoxNameH2>{i.nickname}</FriendBoxNameH2>
 
             <FriendBoxNameP onClick={() => friendAddOnClick(i)}>
@@ -202,7 +193,7 @@ export default FriendSearch;
 const FriendSearchDiv = styled.div<{ layoutMenu: String }>`
   display: ${(props) =>
     props.layoutMenu === "friendsearch" ? "block" : "none"};
-  margin-top: 150px;
+  margin-top: 140px;
   margin-bottom: 30px;
 `;
 
@@ -218,13 +209,6 @@ const MenuTitleDiv = styled.div`
   justify-content: space-between;
   border-top-right-radius: 30px;
 `;
-const MenuTitleFlex = styled.div`
-  width: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: space-around;
-  margin-top: 30px;
-`;
 const MenuTitleInput = styled.input`
   width: 350px;
   height: 40px;
@@ -234,33 +218,34 @@ const MenuTitleInput = styled.input`
   color: #fff;
   border: 0;
   box-shadow: 2px 4px 10px 0 #000 inset;
+  text-indent: 10px;
 `;
 
 const FriendBoxDiv = styled.div`
-  margin: 30px auto 0;
-  width: 350px;
-  height: 100px;
+  width: 100%;
+  padding: 0 25px;
+  height: 60px;
   background-color: #263245;
-  border-radius: 10px;
   display: flex;
   align-items: center;
   justify-content: center;
+  &:hover {
+    background-color: #192030;
+  }
 `;
-const FriendBoxNameImg = styled.div`
-  width: 50px;
-  height: 50px;
-  border-radius: 25px;
-  margin-left: 30px;
+const FriendBoxNameImg = styled.img`
+  width: 40px;
+  height: 40px;
+  border-radius: 20px;
   margin-right: 10px;
-  background-color: #ccc;
 `;
 const FriendBoxNameH2 = styled.h2`
+  font-size: 14px;
   color: #fff;
 `;
 const FriendBoxNameP = styled.p`
-  color: #fff;
+  color: #00b8c8;
   margin-left: auto;
-  margin-right: 30px;
-  font-size: 32px;
+  font-size: 28px;
   cursor: pointer;
 `;
