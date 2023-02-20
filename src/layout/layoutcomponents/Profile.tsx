@@ -16,6 +16,7 @@ function Profile() {
   //로컬 게임정보
   const ProfileGameTitle = localStorage.getItem("gameextrainfo");
   //로컬 로그인정보
+
   const ProfileLogin = localStorage.getItem("login");
   //로컬 스팀아이디
   const ProfleSteamId = localStorage.getItem("steamid");
@@ -45,7 +46,7 @@ function Profile() {
       }
     );
     //로컬스토리지에 로그인정보 저장하기
-    localStorage.setItem("login", online.toString());
+
     localStorage.setItem("gameid", result?.data.response.players[0].gameid);
     localStorage.setItem("steamid", result.config.params.steamids);
     localStorage.setItem(
@@ -106,7 +107,8 @@ function Profile() {
           console.log(error);
         });
     item();
-
+    localStorage.getItem("login");
+    localStorage.removeItem("login");
     localStorage.getItem("gameid");
     localStorage.removeItem("gameid");
     localStorage.getItem("profileimg");
@@ -140,9 +142,7 @@ function Profile() {
         .catch((error) => {
           console.log(error);
         });
-
     item();
-    // axios.post(serverUrl, online);
   };
 
   return (
