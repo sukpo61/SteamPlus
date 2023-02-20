@@ -30,7 +30,7 @@ function Layout() {
   const location = useLocation();
   const locationName = location.pathname;
 
-  const myId = localStorage.getItem("steamid");
+  const myId = sessionStorage.getItem("steamid");
 
   //레이아웃 종류
   const [layoutMenu, setLayoutMenu] = useRecoilState<String>(LayoutButton);
@@ -127,7 +127,7 @@ function Layout() {
   //   setBothFriendAll(friend);
   // }, []);
   // console.log(friendAddCome.length);
-  const ProfileImgUrl = localStorage.getItem("profileimg");
+  const ProfileImgUrl = sessionStorage.getItem("profileimg");
   return (
     <div onContextMenu={(e: any) => e.preventDefault()}>
       <SideBarDiv>
@@ -242,7 +242,6 @@ const SideBarDiv = styled.div`
 `;
 
 const MenuOpenDiv = styled.div<{ layoutMenu: String }>`
-  z-index: 999;
   width: 400px;
   height: 100%;
   background: #263245;

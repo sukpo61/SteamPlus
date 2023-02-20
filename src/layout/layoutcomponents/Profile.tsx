@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { LayoutButton } from "../../recoil/atom";
 import styled from "styled-components";
 import { useRecoilValue } from "recoil";
@@ -10,16 +10,15 @@ function Profile() {
   // profile 클릭 state
   const layoutMenu = useRecoilValue(LayoutButton);
   //로컬 프로필이미지
-  const ProfileImgUrl = localStorage.getItem("profileimg");
+  const ProfileImgUrl = sessionStorage.getItem("profileimg");
   //로컬 닉네임
-  const ProfileNicName = localStorage.getItem("nickName");
+  const ProfileNicName = sessionStorage.getItem("nickName");
   //로컬 게임정보
-  const ProfileGameTitle = localStorage.getItem("gameextrainfo");
+  const ProfileGameTitle = sessionStorage.getItem("gameextrainfo");
   //로컬 로그인정보
-
-  const ProfileLogin = localStorage.getItem("login");
+  const ProfileLogin = sessionStorage.getItem("login");
   //로컬 스팀아이디
-  const ProfleSteamId = localStorage.getItem("steamid");
+  const ProfleSteamId = sessionStorage.getItem("steamid");
 
   //로그인버튼
   const STEAM_OPENID_ENDPOINT = `https://steamcommunity.com/openid/login?openid.ns=http://specs.openid.net/auth/2.0&openid.mode=checkid_setup&openid.return_to=http://localhost:3000/login/&openid.realm=http://localhost:3000/login&openid.identity=http://specs.openid.net/auth/2.0/identifier_select&openid.claimed_id=http://specs.openid.net/auth/2.0/identifier_select`;
@@ -33,6 +32,8 @@ function Profile() {
   const APIKEY = "234E0113F33D5C7C4D4D5292C6774550";
   const serverUrl = "http://localhost:3001/auth/";
   const [online, setOnline] = useState(true);
+  const [isWindowClosing, setIsWindowClosing] = useState(false);
+
   ///////////////////////////
   const userDataGet = async () => {
     const result = await axios.get(
@@ -46,21 +47,21 @@ function Profile() {
       }
     );
     //로컬스토리지에 로그인정보 저장하기
-
-    localStorage.setItem("gameid", result?.data.response.players[0].gameid);
-    localStorage.setItem("steamid", result.config.params.steamids);
-    localStorage.setItem(
+    sessionStorage.setItem("login", online.toString());
+    sessionStorage.setItem("gameid", result?.data.response.players[0].gameid);
+    sessionStorage.setItem("steamid", result.config.params.steamids);
+    sessionStorage.setItem(
       "profileimg",
       result?.data.response.players[0].avatarfull
     );
-    localStorage.setItem(
+    sessionStorage.setItem(
       "nickName",
       result?.data.response.players[0].personaname +
         " " +
         "#" +
         result.config.params.steamids.slice(13, 18)
     );
-    localStorage.setItem(
+    sessionStorage.setItem(
       "gameextrainfo",
       result?.data.response.players[0].gameextrainfo
     );
@@ -77,6 +78,7 @@ function Profile() {
       gameid: result?.data.response.players[0].gameid,
       gameextrainfo: result?.data.response.players[0].gameextrainfo,
       login: online,
+      lastLogin: new Date(),
     };
     axios.put(`http://localhost:3001/auth/${steamId}`, userinfo);
     axios.post(serverUrl, userinfo);
@@ -107,24 +109,57 @@ function Profile() {
           console.log(error);
         });
     item();
-    localStorage.getItem("login");
-    localStorage.removeItem("login");
-    localStorage.getItem("gameid");
-    localStorage.removeItem("gameid");
-    localStorage.getItem("profileimg");
-    localStorage.removeItem("profileimg");
-    localStorage.getItem("nickName");
-    localStorage.removeItem("nickName");
-    localStorage.getItem("gameextrainfo");
-    localStorage.removeItem("gameextrainfo");
-    localStorage.getItem("steamid");
-    localStorage.removeItem("steamid");
+
+    sessionStorage.clear();
+
   };
+  // Retrieve the date from dbjson (assuming it's stored as a string)
+  const storedDateString = "2023-02-20T07:57:53.354Z";
+  const storedDate = new Date(storedDateString);
+  console.log(storedDateString);
+  console.log(storedDate);
+
+  // Get the current time as a Date object
+  const currentTime = new Date();
+
+  // Calculate the difference between the stored date and the current time in milliseconds
+  const timeDiffMs = currentTime.getTime() - storedDate.getTime();
+
+  // Log the time difference in seconds
+  console.log(`Time difference: ${Math.round(timeDiffMs / 1000)} seconds`);
+
+  // 타임스탬프 찍어주기
+  const dataApi = async () => {
+    const rankApi = () =>
+      axios
+        .get(`http://localhost:3001/auth/${ProfleSteamId}`)
+        .then((response) => {
+          const i = response.data;
+          axios.put(`http://localhost:3001/auth/${ProfleSteamId}`, {
+            ...i,
+            lastLogin: new Date(),
+          });
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    rankApi();
+  };
+
+  useEffect(() => {
+    let polling = setInterval(() => {
+      dataApi();
+    }, 30000);
+
+    return () => {
+      clearInterval(polling);
+    };
+  }, []);
 
   // 온라인 오프라인 토글버튼
   const onLineToogle = async () => {
     const onlineOnOff = ProfileLogin === "true" ? "false" : "true";
-    localStorage.setItem("login", onlineOnOff);
+    sessionStorage.setItem("login", onlineOnOff);
     setOnline(!online);
     console.log(ProfleSteamId);
 
@@ -144,7 +179,6 @@ function Profile() {
         });
     item();
   };
-
   return (
     <>
       <ProfileDiv layoutMenu={layoutMenu}>

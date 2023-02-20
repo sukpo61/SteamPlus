@@ -19,8 +19,8 @@ import { FriendSearchProps } from "./FriendSearch";
 function Friend() {
   const queryClient = useQueryClient();
 
-  const myId = localStorage.getItem("steamid");
-  const myNickName = localStorage.getItem("nickName");
+  const myId = sessionStorage.getItem("steamid");
+  const myNickName = sessionStorage.getItem("nickName");
 
   const [layoutMenu, setLayoutMenu] = useRecoilState<String>(LayoutButton);
   //친구검색 input
