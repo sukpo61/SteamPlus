@@ -16,7 +16,6 @@ function Profile() {
   //로컬 게임정보
   const ProfileGameTitle = sessionStorage.getItem("gameextrainfo");
   //로컬 로그인정보
-
   const ProfileLogin = sessionStorage.getItem("login");
   //로컬 스팀아이디
   const ProfleSteamId = sessionStorage.getItem("steamid");
@@ -33,6 +32,8 @@ function Profile() {
   const APIKEY = "234E0113F33D5C7C4D4D5292C6774550";
   const serverUrl = "http://localhost:3001/auth/";
   const [online, setOnline] = useState(true);
+  const [isWindowClosing, setIsWindowClosing] = useState(false);
+
   ///////////////////////////
   const userDataGet = async () => {
     const result = await axios.get(
@@ -45,8 +46,8 @@ function Profile() {
         },
       }
     );
-
-    //세션스토리지에 로그인정보 저장하기
+    //로컬스토리지에 로그인정보 저장하기
+    sessionStorage.setItem("login", online.toString());
     sessionStorage.setItem("gameid", result?.data.response.players[0].gameid);
     sessionStorage.setItem("steamid", result.config.params.steamids);
     sessionStorage.setItem(
@@ -76,6 +77,7 @@ function Profile() {
       gameid: result?.data.response.players[0].gameid,
       gameextrainfo: result?.data.response.players[0].gameextrainfo,
       login: online,
+      lastLogin: new Date(),
     };
     axios.put(`http://localhost:3001/auth/${steamId}`, userinfo);
     axios.post(serverUrl, userinfo);
@@ -140,17 +142,55 @@ function Profile() {
           console.log(error);
         });
     item();
-    //로컬스토리지 전체삭제
-    // localStorage.clear();
+
     sessionStorage.clear();
   };
+  // Retrieve the date from dbjson (assuming it's stored as a string)
+  const storedDateString = "2023-02-20T07:57:53.354Z";
+  const storedDate = new Date(storedDateString);
+  console.log(storedDateString);
+  console.log(storedDate);
+
+  // Get the current time as a Date object
+  const currentTime = new Date();
+
+  // Calculate the difference between the stored date and the current time in milliseconds
+  const timeDiffMs = currentTime.getTime() - storedDate.getTime();
+
+  // Log the time difference in seconds
+  console.log(`Time difference: ${Math.round(timeDiffMs / 1000)} seconds`);
+
+  // 타임스탬프 찍어주기
+  const dataApi = async () => {
+    const rankApi = () =>
+      axios
+        .get(`http://localhost:3001/auth/${ProfleSteamId}`)
+        .then((response) => {
+          const i = response.data;
+          axios.put(`http://localhost:3001/auth/${ProfleSteamId}`, {
+            ...i,
+            lastLogin: new Date(),
+          });
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    rankApi();
+  };
+
+  useEffect(() => {
+    let polling = setInterval(() => {
+      dataApi();
+    }, 30000);
+
+    return () => {
+      clearInterval(polling);
+    };
+  }, []);
 
   // 온라인 오프라인 토글버튼
   const onLineToogle = async () => {
     const onlineOnOff = ProfileLogin === "true" ? "false" : "true";
-    //로컬
-    // localStorage.setItem("login", onlineOnOff);
-    //세션스토리지
     sessionStorage.setItem("login", onlineOnOff);
     setOnline(!online);
     const item = () =>
@@ -169,53 +209,6 @@ function Profile() {
         });
     item();
   };
-
-  // 닫기전 실행함수
-  // useEffect(() => {
-  //   window.onunload = (event: any) => {
-  //     alert("gg");
-  //     return alert("gg1");
-  //   };
-  //   const item = () =>
-  //     axios
-  //       .get(`http://localhost:3001/auth/${ProfleSteamId}`)
-  //       .then((response) => {
-  //         const i = response.data;
-
-  //         axios.put(`http://localhost:3001/auth/${ProfleSteamId}`, {
-  //           ...i,
-  //           login: false,
-  //         });
-  //       })
-  //       .catch((error) => {
-  //         console.log(error);
-  //       });
-  //   item();
-  // }, []);
-
-  // window.onbeforeunload = async function () {
-  //   const item = () =>
-  //     axios
-  //       .get(`http://localhost:3001/auth/${ProfleSteamId}`)
-  //       .then((response) => {
-  //         const i = response.data;
-
-  //         axios.put(`http://localhost:3001/auth/${ProfleSteamId}`, {
-  //           ...i,
-  //           login: false,
-  //         });
-  //         //새로고침
-  //         // window.location.replace("/");
-  //       })
-  //       .catch((error) => {
-  //         console.log(error);
-  //       });
-  //   item();
-  //로컬스토리지 전체삭제
-  // localStorage.clear();
-  // sessionStorage.clear();
-  // };
-
   return (
     <>
       <ProfileDiv layoutMenu={layoutMenu}>

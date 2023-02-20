@@ -242,7 +242,6 @@ const SideBarDiv = styled.div`
 `;
 
 const MenuOpenDiv = styled.div<{ layoutMenu: String }>`
-  z-index: 999;
   width: 400px;
   height: 100%;
   background: #263245;
