@@ -5,7 +5,7 @@ import styled from "styled-components";
 
 import { useNavigate } from "react-router-dom";
 import { BiSearchAlt2 } from "react-icons/bi";
-import GameChannelBlock from "../components/common/GameChannelBlock";
+import GameChannelBlock from "../components/GameChannelBlock";
 import { useRecoilState, atom } from "recoil";
 
 const ChannelSearchPage: any = () => {

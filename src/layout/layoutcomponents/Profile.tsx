@@ -111,6 +111,7 @@ function Profile() {
     item();
 
     sessionStorage.clear();
+
   };
   // Retrieve the date from dbjson (assuming it's stored as a string)
   const storedDateString = "2023-02-20T07:57:53.354Z";
@@ -176,9 +177,7 @@ function Profile() {
         .catch((error) => {
           console.log(error);
         });
-
     item();
-    // axios.post(serverUrl, online);
   };
   return (
     <>
