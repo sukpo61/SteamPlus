@@ -49,8 +49,8 @@ function Friend() {
     yPos: "-1000px",
   });
 
-  const myId = localStorage.getItem("steamid");
-  const myNickName = localStorage.getItem("nickName");
+  const myId = sessionStorage.getItem("steamid");
+  const myNickName = sessionStorage.getItem("nickName");
 
   const [layoutMenu, setLayoutMenu] = useRecoilState<String>(LayoutButton);
 
@@ -123,6 +123,7 @@ function Friend() {
       window.removeEventListener("click", handleWindowClick);
     };
   }, [menuPosition]);
+
   return (
     <FriendDiv layoutMenu={layoutMenu}>
       {/* 위 제목과 input layoutstring이 바뀔때마다 바뀌게 */}
@@ -155,6 +156,7 @@ function Friend() {
                 <FriendBoxNameImg src={i.profileimg} />
 
                 {/* 온라인표시 */}
+
                 {i.login ? <FriendBoxNameOnline /> : <FriendBoxNameOffline />}
               </FriendBoxNameImgDiv>
 
