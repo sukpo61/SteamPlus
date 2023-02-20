@@ -2,8 +2,8 @@ import { atom, selector } from "recoil";
 import { FriendProps } from "../layout/layoutcomponents/Friend";
 import { FriendSearchProps } from "../layout/layoutcomponents/FriendSearch";
 
-const myId = localStorage.getItem("steamid");
-const myNickName = localStorage.getItem("nickName");
+const myId = sessionStorage.getItem("steamid");
+const myNickName = sessionStorage.getItem("nickName");
 
 export const LayoutButton = atom<String>({
   key: "Layout",
