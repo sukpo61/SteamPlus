@@ -111,22 +111,7 @@ function Profile() {
     item();
 
     sessionStorage.clear();
-
   };
-  // Retrieve the date from dbjson (assuming it's stored as a string)
-  const storedDateString = "2023-02-20T07:57:53.354Z";
-  const storedDate = new Date(storedDateString);
-  console.log(storedDateString);
-  console.log(storedDate);
-
-  // Get the current time as a Date object
-  const currentTime = new Date();
-
-  // Calculate the difference between the stored date and the current time in milliseconds
-  const timeDiffMs = currentTime.getTime() - storedDate.getTime();
-
-  // Log the time difference in seconds
-  console.log(`Time difference: ${Math.round(timeDiffMs / 1000)} seconds`);
 
   // 타임스탬프 찍어주기
   const dataApi = async () => {
