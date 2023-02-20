@@ -19,13 +19,14 @@ export interface FriendSearchProps {
   profileimg: string;
   nickname: string;
   login: boolean;
+  lastLogin: any;
 }
 
 function FriendSearch() {
   const queryClient = useQueryClient();
-  const myId = localStorage.getItem("steamid");
-  const myNickName = localStorage.getItem("nickName");
-  const myProfileImg = localStorage.getItem("profileimg");
+  const myId = sessionStorage.getItem("steamid");
+  const myNickName = sessionStorage.getItem("nickName");
+  const myProfileImg = sessionStorage.getItem("profileimg");
 
   const [layoutMenu, setLayoutMenu] = useRecoilState<String>(LayoutButton);
   //친구 내역 전체
