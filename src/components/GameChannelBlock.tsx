@@ -10,7 +10,7 @@ interface Game {
 interface Props {
   game: any;
 }
-function GameChannelBlock({ game }: Props) {
+function GameChannelBlock({ game }: any) {
   const navigate = useNavigate();
   return (
     <GameListBlock>
