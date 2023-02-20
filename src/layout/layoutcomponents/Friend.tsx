@@ -124,6 +124,16 @@ function Friend() {
     };
   }, [menuPosition]);
 
+  //친구 온라인 상태확인
+  const isFriendOnline = (lastLogin: string): boolean => {
+    const TEN_MINUTES_IN_MS = 60 * 1000; //1분
+    const date = new Date();
+    const lastLoginDate = new Date(lastLogin);
+    const diffInMs = date.getTime() - lastLoginDate.getTime();
+    const diffInSec = Math.round(diffInMs / 1000);
+    return diffInSec < TEN_MINUTES_IN_MS / 1000;
+  };
+
   return (
     <FriendDiv layoutMenu={layoutMenu}>
       {/* 위 제목과 input layoutstring이 바뀔때마다 바뀌게 */}
@@ -156,8 +166,11 @@ function Friend() {
                 <FriendBoxNameImg src={i.profileimg} />
 
                 {/* 온라인표시 */}
-
-                {i.login ? <FriendBoxNameOnline /> : <FriendBoxNameOffline />}
+                {i.login && isFriendOnline(i.lastLogin) ? (
+                  <FriendBoxNameOnline />
+                ) : (
+                  <FriendBoxNameOffline />
+                )}
               </FriendBoxNameImgDiv>
 
               <FriendBoxNameH2>{i.nickname}</FriendBoxNameH2>
