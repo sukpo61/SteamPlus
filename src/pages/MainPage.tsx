@@ -83,4 +83,152 @@ const MainLayout = styled.div`
   flex-direction: column;
 `;
 
+const CurrentGameArea = styled.div`
+  width: 1820px;
+  height: 694px;
+  overflow: hidden;
+  position: relative;
+`;
+const CurrentGameImg = styled.img`
+  // img 태그로 교체
+  position: absolute;
+  top: 0;
+  left: 0;
+  transform: translate(50, 50);
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+`;
+
+const CurrentGameTitle = styled.div`
+  position: absolute;
+  width: 490px;
+  left: 80px;
+  top: 36px;
+
+  font-family: "Montserrat";
+  font-weight: 700;
+  font-size: 72px;
+  line-height: 88px;
+  letter-spacing: -0.02em;
+  text-shadow: 0px 4px 15px rgba(0, 0, 0, 0.25);
+  color: #ffffff;
+`;
+
+const CurrentChannelJoinBtn = styled.button`
+  padding: 20px 24px;
+
+  position: absolute;
+  width: 176px;
+  height: 52px;
+  left: 1584px;
+  top: 54px;
+
+  background: #00b8c8;
+  box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.25);
+  border-radius: 10px;
+
+  font-family: "Noto Sans";
+  font-weight: 600;
+  font-size: 16px;
+  line-height: 22px;
+  letter-spacing: -0.03em;
+
+  color: #ffffff;
+`;
+
+const PopularChannel = styled.div``;
+
+const PopularChannel1st = styled.div`
+  width: 600px;
+  height: 592px;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+
+  background: #263245;
+  border-radius: 20px;
+`;
+
+const ChannelImg1st = styled.div`
+  // img 태그로 교체 필요
+  width: 552px;
+  height: 440px;
+  /* background: url(319284_86167_2452.jpg); */
+  box-shadow: inset 0px 4px 10px rgba(0, 0, 0, 0.25);
+  border-radius: 20px;
+  background-color: lightgrey;
+`;
+
+const ChannelTitle1st = styled.div`
+  font-family: "Noto Sans";
+  font-weight: 600;
+  font-size: 32px;
+  line-height: 44px;
+
+  width: 552px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  letter-spacing: -0.02em;
+
+  color: #ffffff;
+`;
+const ChannelCategory1st = styled.div`
+  height: 27px;
+
+  font-family: "Noto Sans";
+  font-weight: 400;
+  font-size: 20px;
+  line-height: 27px;
+  display: flex;
+  align-items: center;
+  letter-spacing: -0.03em;
+
+  color: #a7a9ac;
+`;
+
+const ChannelActivate = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  /* width: 69px; */
+  height: 33px;
+  gap: 8px;
+`;
+
+const ChannelOnOff = styled.div`
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: #23de79;
+`;
+
+const ChannelPlayerCount1st = styled.div`
+  font-family: "Noto Sans";
+  font-weight: 400;
+  font-size: 24px;
+  line-height: 33px;
+
+  display: flex;
+  align-items: center;
+  text-align: right;
+  letter-spacing: -0.03em;
+
+  color: #ffffff;
+`;
+
+const PopularChannel2ndTo5th = styled.div``;
+
+const PopularChannelList = styled.div``;
+
+const GameChannelList = styled.div`
+  width: 1400px; // MianPage SearchPage에서 사이즈 조절 필요
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  margin-left: 210px;
+  /* overflow: hidden; */
+`;
 export default MainPage;
