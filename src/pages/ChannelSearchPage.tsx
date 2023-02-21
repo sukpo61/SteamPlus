@@ -3,7 +3,6 @@ import axios from "axios";
 import { log } from "console";
 import styled from "styled-components";
 import InfiniteScroll from "react-infinite-scroll-component";
-// import {getGameSummary, getGameCategory} from "../../api"
 
 import { useQuery, useQueryClient} from "react-query";
 
@@ -88,6 +87,7 @@ const ChannelSearchPage: any = () => {
     const gameSummary = await axios
       .get(`https://store.steampowered.com/api/storesearch/?cc=us&l=en&term=${termResult}`) // 게임 Id만 가져오기!!!
       const gameList = []
+      console.log('api', )
     for(let i=0; i<gameSummary?.data.items.length; i++){
       const gameCategoryData2 = await axios.get(`https://store.steampowered.com/api/appdetails/?appids=${gameSummary?.data.items[i].id}`)
       //썸네일, 제목, 장르
@@ -105,6 +105,19 @@ const ChannelSearchPage: any = () => {
 
 
 
+    // axios
+    //   .get(
+    //     "https://store.steampowered.com/api/appdetails",
+    //     { params: { appids: 2200780 } }
+    //   )
+    //   .then((res) => {
+    //     console.log("appid", res);
+    //   })
+    //   .catch((error) => {
+    //     console.error(error);
+    //   });
+    
+
 
   return (
     <div
@@ -114,7 +127,7 @@ const ChannelSearchPage: any = () => {
         flexDirection: "column",
         width: "100%",
         height: "100%",
-        minHeight: 1080,
+        // minHeight: 1080,
       }}
     >
       <SearchPageHeader>
@@ -153,35 +166,33 @@ const ChannelSearchPage: any = () => {
 const SearchPageHeader = styled.div`
   background-color: #404b5e;
   /* position: absolute; */
-  width: 1820px;
-  height: 120px;
+  width: 100%;
+  height: 72px;
   display: flex;
   align-items: center;
   gap: 20px;
-  padding: 32px 24px 20px 24px;
+  padding: 16px 56px;
 `;
 
 const SteamPlusLogo = styled.div`
-  width: 70px;
-  height: 68px;
+  width: 40px;
+  height: 40px;
   background: #a7a9ac;
-  border-radius: 20px;
+  border-radius: 10px;
 `;
 const GameSearchInputArea = styled.div`
   width: 632px;
-  height: 68px;
+  height: 40px;
   background: #192030;
   box-shadow: inset 0px 4px 10px rgba(0, 0, 0, 0.25);
-  border-radius: 20px;
-  padding: 20px 24px;
+  border-radius: 10px;
+  padding: 9px 16px;
   display: flex;
   align-items: center;
   justify-content: space-between;
   .searchIcon {
-    width: 48px;
-    height: 48px;
-    left: 568px;
-    top: 12px;
+    width: 24px;
+    height: 24px;
     color: #777d87;
     cursor: pointer;
   }
@@ -192,8 +203,8 @@ const GameSearchInput = styled.input`
   font-family: "Noto Sans";
   font-style: normal;
   font-weight: 400;
-  font-size: 20px;
-  line-height: 27px;
+  font-size: 16px;
+  line-height: 22px;
   letter-spacing: -0.03em;
   background: none;
   color: #d4d4d4;
@@ -201,8 +212,8 @@ const GameSearchInput = styled.input`
 `;
 
 const SearchCount = styled.div`
-  margin-top: 24px;
-  margin-bottom: 60px;
+  margin-top: 40px;
+  margin-bottom: 40px;
   font-family: Inter;
   font-style: normal;
   font-weight: 400;

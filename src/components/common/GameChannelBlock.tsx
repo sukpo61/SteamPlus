@@ -27,7 +27,7 @@ function GameChannelBlock({ game }: any) {
             <GameChannelTitle>{`${game?.name}`}</GameChannelTitle>
           </TitleLinear>
           <GameChannelInfo>
-            <GameChannelCategory>{game.genres[0]?.description}, {game.genres[1]?.description}, {game.genres[2]?.description}</GameChannelCategory>
+            <GameChannelCategory>{game.genres[0]?.description} {game.genres[1]?.description} {game.genres[2]?.description}</GameChannelCategory>
             {/* <GameChannelCategory>{game.genres[1]?.description}</GameChannelCategory>
  <GameChannelCategory>{game.genres[2]?.description}</GameChannelCategory> */}
     
@@ -58,8 +58,8 @@ function GameChannelBlock({ game }: any) {
 const GameListBlock = styled.div`
   display: flex;
   flex-direction: row;
-  width: 890px; // 홈에서 width 길이 조절 필요
-  height: 108px;
+  width: 900px; // 홈에서 width 길이 조절 필요
+  height: 100px;
   border-radius: 10px;
   overflow: hidden;
 `;
@@ -67,8 +67,8 @@ const GameListBlock = styled.div`
 const GameChannelImgArea = styled.div`
   // 썸네일
   /* background-color: lightgrey; */
-  width: 270px;
-  height: 108px;
+  width: 212px;
+  height: 100px;
   overflow: hidden;
   position: relative;
 `;
@@ -79,7 +79,7 @@ const GameChannelImg = styled.img`
   left: 0;
   transform: translate(50, 50);
   width: auto;
-  height: 108px;
+  height: 100px;
   object-fit: cover;
 `;
 const GameChannelDetailPart = styled.div`
@@ -87,8 +87,8 @@ const GameChannelDetailPart = styled.div`
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
-  width: 620px; // 홈에서 사이즈 조절 필요
-  height: 108px;
+  width: 688px; // 홈에서 사이즈 조절 필요
+  height: 100px;
 
   background-color: #263245;
   padding: 24px 24px 24px 20px;
