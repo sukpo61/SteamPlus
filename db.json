@@ -52,6 +52,20 @@
       "friendId": "76561199478670991",
       "myNickName": "hoitchac123 #3056",
       "friendNickName": "123322 #0991"
+    },
+    {
+      "id": "4c9eef63-6e0a-4051-967a-0251cd637419",
+      "myId": "76561198993103426",
+      "friendId": "76561199478670991",
+      "myNickName": "yogurt #3426",
+      "friendNickName": "1233 #0991"
+    },
+    {
+      "id": "3137eff7-89a8-4906-a6a4-b8e2ecdf52f7",
+      "myId": "76561198993103426",
+      "friendId": "76561199476963056",
+      "myNickName": "yogurt #3426",
+      "friendNickName": "hoitchac123 #3056"
     }
   ]
 }
