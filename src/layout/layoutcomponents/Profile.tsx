@@ -3,6 +3,7 @@ import { LayoutButton } from "../../recoil/atom";
 import styled from "styled-components";
 import { useRecoilValue } from "recoil";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 import { useQuery } from "react-query";
 
 function Profile() {
@@ -19,13 +20,12 @@ function Profile() {
   //로컬 스팀아이디
   const ProfleSteamId = sessionStorage.getItem("steamid");
 
-  //로그인버튼
+  // 어스아이디
   const STEAM_OPENID_ENDPOINT = `https://steamcommunity.com/openid/login?openid.ns=http://specs.openid.net/auth/2.0&openid.mode=checkid_setup&openid.return_to=http://localhost:3000/login/&openid.realm=http://localhost:3000/login&openid.identity=http://specs.openid.net/auth/2.0/identifier_select&openid.claimed_id=http://specs.openid.net/auth/2.0/identifier_select`;
   const SteamLogin = () => {
     window.location.href = STEAM_OPENID_ENDPOINT;
   };
   ///////////////////////////
-
   const params: any = new URLSearchParams(window.location.search);
   const steamId = params.get("openid.claimed_id")?.split("/")[5];
   const APIKEY = "234E0113F33D5C7C4D4D5292C6774550";
@@ -44,7 +44,7 @@ function Profile() {
         },
       }
     );
-    //로컬스토리지에 로그인정보 저장하기
+    //세션스토리지에 로그인정보 저장하기
     sessionStorage.setItem("login", online.toString());
     sessionStorage.setItem("gameid", result?.data.response.players[0].gameid);
     sessionStorage.setItem("steamid", result.config.params.steamids);
@@ -77,88 +77,59 @@ function Profile() {
       login: online,
       lastLogin: new Date(),
     };
+
     axios.put(`http://localhost:3001/auth/${steamId}`, userinfo);
     axios.post(serverUrl, userinfo);
-    // navigate("/");
-    //수정
-    // window.location.replace("/");
+    window.location.replace("/");
 
     return result;
   };
   const { data } = useQuery("userData", userDataGet);
 
+  //유저 db정보 가져오기
+  const getLoginData = async () => {
+    const result = await axios.get(
+      `http://localhost:3001/auth/${ProfleSteamId}`
+    );
+    // 타임스탬프 찍어주기
+    await axios.put(`http://localhost:3001/auth/${ProfleSteamId}`, {
+      ...result?.data,
+      lastLogin: new Date(),
+    });
+    return result;
+  };
+  const { data: loginInformation } = useQuery("loginInformation", getLoginData);
+
   //로그아웃 버튼
   const logout = async () => {
-    const item = () =>
-      axios
-        .get(`http://localhost:3001/auth/${ProfleSteamId}`)
-        .then((response) => {
-          const i = response.data;
-
-          axios.put(`http://localhost:3001/auth/${ProfleSteamId}`, {
-            ...i,
-            login: false,
-          });
-          //새로고침
-          window.location.replace("/");
-        })
-        .catch((error) => {
-          console.log(error);
-        });
-    item();
-
+    await axios.put(`http://localhost:3001/auth/${ProfleSteamId}`, {
+      ...loginInformation?.data,
+      login: false,
+    });
+    window.location.replace("/");
     sessionStorage.clear();
   };
-
-  // 타임스탬프 찍어주기
-  const dataApi = async () => {
-    const rankApi = () =>
-      axios
-        .get(`http://localhost:3001/auth/${ProfleSteamId}`)
-        .then((response) => {
-          const i = response.data;
-          axios.put(`http://localhost:3001/auth/${ProfleSteamId}`, {
-            ...i,
-            lastLogin: new Date(),
-          });
-        })
-        .catch((error) => {
-          console.log(error);
-        });
-    rankApi();
-  };
-
-  useEffect(() => {
-    let polling = setInterval(() => {
-      dataApi();
-    }, 30000);
-
-    return () => {
-      clearInterval(polling);
-    };
-  }, []);
-
   // 온라인 오프라인 토글버튼
   const onLineToogle = async () => {
     const onlineOnOff = ProfileLogin === "true" ? "false" : "true";
     sessionStorage.setItem("login", onlineOnOff);
     setOnline(!online);
-    const item = () =>
-      axios
-        .get(`http://localhost:3001/auth/${ProfleSteamId}`)
-        .then((response) => {
-          const i = response.data;
 
-          axios.put(`http://localhost:3001/auth/${ProfleSteamId}`, {
-            ...i,
-            login: !online,
-          });
-        })
-        .catch((error) => {
-          console.log(error);
-        });
-    item();
+    await axios.put(`http://localhost:3001/auth/${ProfleSteamId}`, {
+      ...loginInformation?.data,
+      login: !online,
+    });
   };
+
+  useEffect(() => {
+    let polling = setInterval(() => {
+      getLoginData();
+    }, 5000);
+
+    return () => {
+      clearInterval(polling);
+    };
+  }, []);
   return (
     <>
       <ProfileDiv layoutMenu={layoutMenu}>

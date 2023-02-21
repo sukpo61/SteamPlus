@@ -1,22 +1,19 @@
 import React from "react";
 import styled from "styled-components";
-export const ActivateChannel = ({
-  gameimg,
-  gameTitle,
-  gameCategories,
-}: any) => {
+export const ActivateChannel = ({ game }: any) => {
   return (
     <>
       <ActivateChannelLayout>
         <ActivateChannel1st>
           <ChannelTitle>현재활성화된 채널</ChannelTitle>
-          <ActivateChannelImg1st src={gameimg} />
+          <ActivateChannelImg1st src={game?.gameSubimg} />
           <ActivateChannelContents>
             <div style={{ display: "flex", flexDirection: "column" }}>
-              <ActivateChannelTitle>{gameTitle}</ActivateChannelTitle>
+              <ActivateChannelTitle>{game?.gametitle}</ActivateChannelTitle>
               <ActivateChannelBox>
                 <ActivateChannelCategory>
-                  {gameCategories}
+                  {game?.gameCategories}, {game?.gameCategories2},{" "}
+                  {game?.gameCategories3}
                 </ActivateChannelCategory>
                 <ActivateChannels>
                   {/* 초록불 */}
