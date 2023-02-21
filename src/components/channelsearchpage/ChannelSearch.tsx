@@ -1,7 +1,7 @@
 import React from "react";
 
-function ChannelSerch() {
+function ChannelSearch() {
   return <div>채널서치</div>;
 }
 
-export default ChannelSerch;
+export default ChannelSearch;
