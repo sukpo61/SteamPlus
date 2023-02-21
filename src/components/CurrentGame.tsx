@@ -2,8 +2,6 @@ import React from "react";
 import styled from "styled-components";
 
 export const CurrentGame = ({ game }: any) => {
-  console.log("data", game);
-
   return (
     <CurrentGameLayout>
       {/* 게임이미지 */}

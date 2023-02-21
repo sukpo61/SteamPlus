@@ -1,4 +1,3 @@
-import React, { useEffect, useState } from "react";
 import axios from "axios";
 import styled from "styled-components";
 import { ActivateChannel } from "../components/ActivateChannel";
@@ -6,15 +5,6 @@ import { PoularChannel } from "../components/PoularChannel";
 import { CurrentGame } from "../components/CurrentGame";
 import { useQuery } from "react-query";
 function MainPage() {
-  //메인이미지
-  const [gameMainSubImg, setGameMainImg] = useState<any>();
-  //인기채널이미지
-  const [gameimg, setGameImg] = useState<any>();
-  //게임타이틀
-  const [gameTitle, setGameTitle] = useState<any>();
-  //게임카테고리
-  const [gameCategories, setGameCategories] = useState<any>();
-
   //게임이미지 불러오기
   const Gamedata = async () => {
     const response = await axios.get(
@@ -38,7 +28,7 @@ function MainPage() {
   };
 
   const { data } = useQuery("Gamedata", Gamedata);
-  console.log("1", data?.gameCategories2);
+  // console.log("data2", data);
 
   return (
     <MainLayout>
