@@ -126,12 +126,12 @@ function Friend() {
 
   //친구 온라인 상태확인
   const isFriendOnline = (lastLogin: string): boolean => {
-    const TEN_MINUTES_IN_MS = 60 * 1000; //1분
+    const TEN_MINUTES = 60 * 1000; //1분
     const date = new Date();
     const lastLoginDate = new Date(lastLogin);
     const diffInMs = date.getTime() - lastLoginDate.getTime();
     const diffInSec = Math.round(diffInMs / 1000);
-    return diffInSec < TEN_MINUTES_IN_MS / 1000;
+    return diffInSec < TEN_MINUTES / 1000;
   };
 
   return (
