@@ -2,7 +2,6 @@ import React, { useEffect, useRef, useState } from "react";
 import { LayoutButton } from "../../recoil/atom";
 import styled from "styled-components";
 import { useRecoilValue } from "recoil";
-import { Navigate, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useQuery } from "react-query";
 
@@ -32,9 +31,8 @@ function Profile() {
   const APIKEY = "234E0113F33D5C7C4D4D5292C6774550";
   const serverUrl = "http://localhost:3001/auth/";
   const [online, setOnline] = useState(true);
-  const [isWindowClosing, setIsWindowClosing] = useState(false);
 
-  ///////////////////////////
+  //로그인
   const userDataGet = async () => {
     const result = await axios.get(
       "https://api.steampowered.com/ISteamUser/GetPlayerSummaries/v2/",
@@ -83,45 +81,11 @@ function Profile() {
     axios.post(serverUrl, userinfo);
     // navigate("/");
     //수정
-    window.location.replace("/");
+    // window.location.replace("/");
 
     return result;
   };
   const { data } = useQuery("userData", userDataGet);
-  //창닫기
-  // window.onunload = function () {
-  //   localStorage.removeItem("key");
-
-  //   // const item = () =>
-  //   //   axios
-  //   //     .get(`http://localhost:3001/auth/${ProfleSteamId}`)
-  //   //     .then((response) => {
-  //   //       const i = response.data;
-
-  //   //       axios.put(`http://localhost:3001/auth/${ProfleSteamId}`, {
-  //   //         ...i,
-  //   //         login: false,
-  //   //       });
-  //   //       //새로고침
-  //   //       window.location.replace("/");
-  //   //     })
-  //   //     .catch((error) => {
-  //   //       console.log(error);
-  //   //     });
-  //   // item();
-  //   localStorage.getItem("login");
-  //   localStorage.removeItem("login");
-  //   localStorage.getItem("gameid");
-  //   localStorage.removeItem("gameid");
-  //   localStorage.getItem("profileimg");
-  //   localStorage.removeItem("profileimg");
-  //   localStorage.getItem("nickName");
-  //   localStorage.removeItem("nickName");
-  //   localStorage.getItem("gameextrainfo");
-  //   localStorage.removeItem("gameextrainfo");
-  //   localStorage.getItem("steamid");
-  //   localStorage.removeItem("steamid");
-  // };
 
   //로그아웃 버튼
   const logout = async () => {
