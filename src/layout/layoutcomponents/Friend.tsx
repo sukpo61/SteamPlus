@@ -140,7 +140,6 @@ function Friend() {
       <MenuTitleDiv>
         {/* 세개의 탭 */}
         <FriendTab />
-
         <MenuTitleIform>
           <MenuTitleInput
             onChange={frendSearchOnChange}

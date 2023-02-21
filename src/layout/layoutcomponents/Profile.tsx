@@ -80,11 +80,14 @@ function Profile() {
 
     axios.put(`http://localhost:3001/auth/${steamId}`, userinfo);
     axios.post(serverUrl, userinfo);
+
     window.location.replace("/");
 
-    return result;
+    return userinfo;
   };
   const { data } = useQuery("userData", userDataGet);
+
+  console.log("da2ta", data);
 
   //유저 db정보 가져오기
   const getLoginData = async () => {
@@ -92,10 +95,26 @@ function Profile() {
       `http://localhost:3001/auth/${ProfleSteamId}`
     );
     // 타임스탬프 찍어주기
-    await axios.put(`http://localhost:3001/auth/${ProfleSteamId}`, {
-      ...result?.data,
-      lastLogin: new Date(),
-    });
+    if (data === undefined) {
+      await axios.put(`http://localhost:3001/auth/${ProfleSteamId}`, {
+        ...result?.data,
+        lastLogin: new Date(),
+      });
+    } else {
+      await axios.put(`http://localhost:3001/auth/${ProfleSteamId}`, {
+        id: data?.id,
+        profileimg: data?.profileimg,
+        nickname: data?.nickname,
+        gameid: data?.gameid,
+        gameextrainfo: data?.gameextrainfo,
+        login: data?.login,
+        lastLogin: new Date(),
+      });
+    }
+    // await axios.put(`http://localhost:3001/auth/${ProfleSteamId}`, {
+    //   // ...result?.data,
+    //   // lastLogin: new Date(),
+    // });
     return result;
   };
   const { data: loginInformation } = useQuery("loginInformation", getLoginData);
@@ -130,6 +149,10 @@ function Profile() {
       clearInterval(polling);
     };
   }, []);
+
+  // if (isLoading) {
+  //   return <p>Loading data...</p>;
+  // }
   return (
     <>
       <ProfileDiv layoutMenu={layoutMenu}>
@@ -146,12 +169,11 @@ function Profile() {
           </ProfileInfoBox>
         ) : (
           <ProfileInfoBox>
-            <ProfileNickName>
-              {ProfileNicName} {online ? <ChannelOn /> : <ChannelOff />}
-            </ProfileNickName>
+            <ProfileNickName>{ProfileNicName}</ProfileNickName>
 
-            <ProfileFriends>친구 몇마리</ProfileFriends>
+            {/* <ProfileFriends>친구 몇마리</ProfileFriends> */}
             <ChangeToggle onClick={onLineToogle}>
+              {online ? <ChannelOn /> : <ChannelOff />}
               {online ? "온라인" : "오프라인"}
             </ChangeToggle>
 
@@ -189,6 +211,10 @@ function Profile() {
 
 export default Profile;
 const ChangeToggle = styled.span`
+  display: flex;
+  font-size: 14px;
+  justify-content: center;
+  margin: 15px 0;
   color: white;
   cursor: pointer;
 `;
@@ -197,12 +223,14 @@ const ChannelOff = styled.div`
   height: 12px;
   border-radius: 50%;
   background: red;
+  margin-right: 5px;
 `;
 const ChannelOn = styled.div`
   width: 12px;
   height: 12px;
   border-radius: 50%;
   background: #23de79;
+  margin-right: 5px;
 `;
 const ProfileLogout = styled.span`
   font-size: 13px;
@@ -220,10 +248,13 @@ const ProfileImgBox = styled.div`
   justify-content: center;
   align-items: center;
   margin: 70px auto 0;
+  // border: 1px solid #ccc;
+  // box-shadow: 0px 0px 20px 3px #727272;
 `;
 const ProfileImg = styled.img`
   width: 173px;
   height: 173px;
+  background-color: green;
 `;
 const ProfileInfoBox = styled.div`
   color: white;
@@ -232,9 +263,10 @@ const ProfileInfoBox = styled.div`
   justify-content: center;
   align-items: center;
   flex-direction: column;
+  justify-content: center;
 `;
 const ProfileNickName = styled.div`
-  font-size: 24px;
+  font-size: 20px;
 `;
 const ProfileFriends = styled.div`
   margin-top: 10px;
