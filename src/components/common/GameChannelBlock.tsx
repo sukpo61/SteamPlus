@@ -13,21 +13,24 @@ interface Props {
   game: any;
 }
 
-function GameChannelBlock({ game }: Props) {
+function GameChannelBlock({ game }: any) {
   const navigate = useNavigate();
 
   return (
     <GameListBlock>
       <GameChannelImgArea>
-        <GameChannelImg src={`${game.image}`} />
+        <GameChannelImg src={`${game?.header_image}`} />
       </GameChannelImgArea>
       <GameChannelDetailPart>
         <div>
           <TitleLinear>
-            <GameChannelTitle>{`${game.name}`}</GameChannelTitle>
+            <GameChannelTitle>{`${game?.name}`}</GameChannelTitle>
           </TitleLinear>
           <GameChannelInfo>
-            <GameChannelCategory>{game.cate}</GameChannelCategory>
+            <GameChannelCategory>{game.genres[0]?.description}, {game.genres[1]?.description}, {game.genres[2]?.description}</GameChannelCategory>
+            {/* <GameChannelCategory>{game.genres[1]?.description}</GameChannelCategory>
+ <GameChannelCategory>{game.genres[2]?.description}</GameChannelCategory> */}
+    
             <NumberOfPlayer>
               <div
                 style={{
