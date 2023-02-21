@@ -146,7 +146,6 @@ const ChannelSearchPage: any = () => {
           );
         })}
       </GameSearchList>
-
     </div>
   );
 };
@@ -178,7 +177,6 @@ const GameSearchInputArea = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
-
   .searchIcon {
     width: 48px;
     height: 48px;
@@ -197,7 +195,6 @@ const GameSearchInput = styled.input`
   font-size: 20px;
   line-height: 27px;
   letter-spacing: -0.03em;
-
   background: none;
   color: #d4d4d4;
   border-style: none;
