@@ -1,10 +1,10 @@
 import React from "react";
 import styled from "styled-components";
-export const CurrentGame = ({ gameimg, gameTitle }: any) => {
+export const CurrentGame = ({ gameMainSubImg, gameTitle }: any) => {
   return (
     <CurrentGameLayout>
       {/* 게임이미지 */}
-      <CurrentGameImg src={gameimg} />
+      <CurrentGameImg src={gameMainSubImg} />
       <CurrentGameBlackImg />
       <CurrentGameBox>
         {/* 게임타이틀 */}
