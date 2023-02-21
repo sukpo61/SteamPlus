@@ -1,6 +1,6 @@
 import React from "react";
 import styled from "styled-components";
-export const PoularChannel = ({ gameimg, gameTitle, gameCategories }: any) => {
+export const PoularChannel = ({ game }: any) => {
   return (
     <PoularChannelLayout>
       <>
@@ -9,10 +9,13 @@ export const PoularChannel = ({ gameimg, gameTitle, gameCategories }: any) => {
           <PopularChannel1st>
             {/*활성화된 게임채널 */}
             <PopularChannelTitle>인기채널</PopularChannelTitle>
-            <PopularChannelImg1st src={gameimg} />
-            <PoPularChannelTitle>{gameTitle}</PoPularChannelTitle>
+            <PopularChannelImg1st src={game?.gameSubimg} />
+            <PoPularChannelTitle>{game?.gametitle}</PoPularChannelTitle>
             <ChannelBox>
-              <PoPularChannelCategory>{gameCategories}</PoPularChannelCategory>
+              <PoPularChannelCategory>
+                {game?.gameCategories}, {game?.gameCategories2},{" "}
+                {game?.gameCategories3}
+              </PoPularChannelCategory>
               <PoPularChannelActivate>
                 {/* 초록불 */}
                 <ChannelOnOff />
@@ -22,9 +25,9 @@ export const PoularChannel = ({ gameimg, gameTitle, gameCategories }: any) => {
           </PopularChannel1st>
           <PoularChannelLayout2>
             <PopularChannel1st2>
-              <PoPularChannelImg src={gameimg} />
+              <PoPularChannelImg src={game?.gameSubimg} />
               <PoPularChannelBox>
-                <ChannelTitle1st2>{gameTitle}</ChannelTitle1st2>
+                <ChannelTitle1st2>{game?.gametitle}</ChannelTitle1st2>
                 {/* <ChannelCategory1st2>{gameCategories}</ChannelCategory1st2> */}
                 <PoPularChannelActivate>
                   {/* 초록불 */}
@@ -34,9 +37,9 @@ export const PoularChannel = ({ gameimg, gameTitle, gameCategories }: any) => {
               </PoPularChannelBox>
             </PopularChannel1st2>
             <PopularChannel1st2>
-              <PoPularChannelImg src={gameimg} />
+              <PoPularChannelImg src={game?.gameSubimg} />
               <PoPularChannelBox>
-                <ChannelTitle1st2>{gameTitle}</ChannelTitle1st2>
+                <ChannelTitle1st2>{game?.gametitle}</ChannelTitle1st2>
                 {/* <ChannelCategory1st2>{gameCategories}</ChannelCategory1st2> */}
                 <PoPularChannelActivate>
                   {/* 초록불 */}
@@ -46,9 +49,9 @@ export const PoularChannel = ({ gameimg, gameTitle, gameCategories }: any) => {
               </PoPularChannelBox>
             </PopularChannel1st2>
             <PopularChannel1st2>
-              <PoPularChannelImg src={gameimg} />
+              <PoPularChannelImg src={game?.gameSubimg} />
               <PoPularChannelBox>
-                <ChannelTitle1st2>{gameTitle}</ChannelTitle1st2>
+                <ChannelTitle1st2>{game?.gametitle}</ChannelTitle1st2>
                 {/* <ChannelCategory1st2>{gameCategories}</ChannelCategory1st2> */}
                 <PoPularChannelActivate>
                   {/* 초록불 */}
@@ -292,6 +295,7 @@ const ChannelPlayerCount1st = styled.div`
   font-size: 14px;
   margin-right: 16px;
   color: #ffffff;
+  width: 100%;
 `;
 const ChannelPlayerCount1st2 = styled.div`
   font-family: "Noto Sans";
