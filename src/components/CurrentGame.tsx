@@ -35,9 +35,11 @@ const CurrentGameImg = styled.img`
   width: 100%;
   height: 700px;
   object-fit: cover;
+  position: fixed;
+  top: 0;
 `;
 const CurrentGameBlackImg = styled.div`
-  position: absolute;
+  position: fixed;
   width: 100%;
   height: 700px;
   top: 0;
