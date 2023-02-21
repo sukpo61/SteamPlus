@@ -89,7 +89,7 @@ const ActivateChannelBox = styled.div`
 const ActivateChannelImg1st = styled.img`
   // img 태그로 교체 필요
   margin: 10px;
-  width: 130px;
+  width: 300px;
   height: 130px;
   box-shadow: inset 0px 4px 10px rgba(0, 0, 0, 0.25);
   border-radius: 10px;

@@ -58,15 +58,27 @@ export const PoularChannel = ({ gameimg, gameTitle, gameCategories }: any) => {
               </PoPularChannelBox>
             </PopularChannel1st2>
             <PopularChannel1st2>
-              <PoPularChannelImg src={gameimg} />
+              {/* <PoPularChannelImg src={gameimg} /> */}
+              <div
+                style={{
+                  color: "white",
+                  display: "flex",
+                  justifyContent: "center",
+                  flexDirection: "column",
+                  width: "100%",
+                  height: "100%",
+                  fontSize: "12px",
+                }}
+              >
+                인기채널이 없습니다.
+              </div>
               <PoPularChannelBox>
-                <ChannelTitle1st2>{gameTitle}</ChannelTitle1st2>
+                {/* <ChannelTitle1st2>{gameTitle}</ChannelTitle1st2> */}
                 {/* <ChannelCategory1st2>{gameCategories}</ChannelCategory1st2> */}
-                <PoPularChannelActivate>
-                  {/* 초록불 */}
+                {/* <PoPularChannelActivate>
                   <ChannelOnOff />
                   <ChannelPlayerCount1st2>20명</ChannelPlayerCount1st2>
-                </PoPularChannelActivate>
+                </PoPularChannelActivate> */}
               </PoPularChannelBox>
             </PopularChannel1st2>
           </PoularChannelLayout2>
