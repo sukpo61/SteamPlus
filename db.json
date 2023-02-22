@@ -5,53 +5,37 @@
       "profileimg": "https://avatars.akamai.steamstatic.com/fef49e7fa7e1997310d705b2a6158ff8dc1cdfeb_full.jpg",
       "nickname": "PRDG #4836",
       "login": true,
-      "lastLogin": "2023-02-21T01:16:32.289Z"
+      "lastLogin": "2023-02-21T14:33:50.578Z"
     },
     {
       "id": "76561199476963056",
       "profileimg": "https://avatars.akamai.steamstatic.com/6639269e3d4820b31c5ec95bedc5ce0063635f54_full.jpg",
-      "nickname": "hoitchac123 #3056",
-      "gameid": "436150",
-      "gameextrainfo": "Governor of Poker 3",
-      "lastLogin": "2023-02-20T09:05:36.405Z",
-      "login": true
+      "nickname": "chacha #3056",
+      "login": true,
+      "lastLogin": "2023-02-22T02:25:36.907Z"
     },
     {
       "id": "76561199478670991",
       "profileimg": "https://avatars.akamai.steamstatic.com/fef49e7fa7e1997310d705b2a6158ff8dc1cdfeb_full.jpg",
-      "nickname": "1233 #0991",
-      "lastLogin": "2023-02-20T09:07:34.045Z",
-      "login": true
+      "nickname": "123322 #0991",
+      "login": false,
+      "lastLogin": "2023-02-21T11:24:22.805Z"
     }
   ],
   "friend": [
     {
-      "id": "088ce591-c38d-47f0-b392-c8e36c0ceedc",
-      "myId": "76561199478670991",
+      "id": "6660b20f-d051-4281-9ec7-fdeb1ab607c7",
+      "myId": "76561199476963056",
       "friendId": "76561198064204836",
-      "myNickName": "123322 #0991",
+      "myNickName": "hoitchac123 #3056",
       "friendNickName": "PRDG #4836"
     },
     {
-      "id": "088ce591-c38d-47f0-b392-c8e36c0ceedc1",
+      "id": "b9890c0e-1ce6-4b93-a2ef-4084d40792f9",
       "myId": "76561198064204836",
-      "friendId": "76561199478670991",
-      "myNickName": "PRDG #4836",
-      "friendNickName": "123322 #0991"
-    },
-    {
-      "id": "c63a24be-7093-4048-b07e-3a3ec654976c",
-      "myId": "76561199478670991",
       "friendId": "76561199476963056",
-      "myNickName": "123322 #0991",
+      "myNickName": "PRDG #4836",
       "friendNickName": "hoitchac123 #3056"
-    },
-    {
-      "id": "c63a24be-7093-4048-b07e-3a3ec654976c1",
-      "myId": "76561199476963056",
-      "friendId": "76561199478670991",
-      "myNickName": "hoitchac123 #3056",
-      "friendNickName": "123322 #0991"
     }
   ]
 }
