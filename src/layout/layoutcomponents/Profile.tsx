@@ -80,14 +80,10 @@ function Profile() {
 
     axios.put(`http://localhost:3001/auth/${steamId}`, userinfo);
     axios.post(serverUrl, userinfo);
-
     window.location.replace("/");
-
     return userinfo;
   };
   const { data } = useQuery("userData", userDataGet);
-
-  console.log("da2ta", data);
 
   //유저 db정보 가져오기
   const getLoginData = async () => {
@@ -139,7 +135,37 @@ function Profile() {
       login: !online,
     });
   };
-
+  //새로고침함수
+  window.onbeforeunload = async function () {
+    const result = await axios.get(
+      "https://api.steampowered.com/ISteamUser/GetPlayerSummaries/v2/",
+      {
+        params: {
+          key: APIKEY,
+          //스팀로그인
+          steamids: ProfleSteamId,
+        },
+      }
+    );
+    sessionStorage.setItem("gameid", result?.data.response.players[0].gameid);
+    sessionStorage.setItem("steamid", result.config.params.steamids);
+    sessionStorage.setItem(
+      "profileimg",
+      result?.data.response.players[0].avatarfull
+    );
+    sessionStorage.setItem(
+      "nickName",
+      result?.data.response.players[0].personaname +
+        " " +
+        "#" +
+        result.config.params.steamids.slice(13, 18)
+    );
+    sessionStorage.setItem(
+      "gameextrainfo",
+      result?.data.response.players[0].gameextrainfo
+    );
+    return "Are you sure you want to refresh?";
+  };
   useEffect(() => {
     let polling = setInterval(() => {
       getLoginData();

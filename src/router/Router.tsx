@@ -4,7 +4,7 @@ import SignUp from "../pages/SignUpPage";
 import ChannelSearchPage from "../pages/ChannelSearchPage";
 import FindAccountPage from "../pages/FindAccountPage";
 import FindPasswordPage from "../pages/FindPasswordPage";
-// import Login from "../pages/LoginPage";
+// import Login from "../components/loginpage/Login";
 import MyPage from "../pages/MyPage";
 import TeamChat from "../pages/TeamChat";
 import GlobalStyles from "../GlobalStyles";
