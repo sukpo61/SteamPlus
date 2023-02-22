@@ -105,63 +105,8 @@ function Profile() {
 
   const { data: loginInformation } = useQuery("loginInformation", getLoginData);
 
-  //유저 온라인 타임스탬프
+  //유저 최신정보 & 타임스탬프
   const timeStamp = async () => {
-    const result = await axios.get(
-      "https://api.steampowered.com/ISteamUser/GetPlayerSummaries/v2/",
-      {
-        params: {
-          key: APIKEY,
-          //스팀로그인
-          steamids: ProfleSteamId,
-        },
-      }
-    );
-
-    await axios.put(`http://localhost:3001/auth/${ProfleSteamId}`, {
-      id: result.config.params.steamids,
-      profileimg: result?.data.response.players[0].avatarfull,
-      nickname:
-        result?.data.response.players[0].personaname +
-        " " +
-        "#" +
-        result.config.params.steamids.slice(13, 18),
-      gameid: result?.data.response.players[0].gameid,
-      gameextrainfo: result?.data.response.players[0].gameextrainfo,
-      login: online,
-      lastLogin: new Date(),
-    });
-
-    // await axios.put(`http://localhost:3001/auth/${ProfleSteamId}`, {
-    //   // ...result?.data,
-    //   // lastLogin: new Date(),
-    // });
-    return result;
-  };
-
-  //로그아웃 버튼
-  const logout = async () => {
-    await axios.put(`http://localhost:3001/auth/${ProfleSteamId}`, {
-      ...loginInformation?.data,
-      login: false,
-    });
-    window.location.replace("/");
-    sessionStorage.clear();
-  };
-
-  // 온라인 오프라인 토글버튼
-  const onLineToogle = async () => {
-    const onlineOnOff = ProfileLogin === "true" ? "false" : "true";
-    sessionStorage.setItem("login", onlineOnOff);
-    setOnline(!online);
-
-    await axios.put(`http://localhost:3001/auth/${ProfleSteamId}`, {
-      ...loginInformation?.data,
-      login: !online,
-    });
-  };
-  //새로고침함수
-  window.onunload = async function () {
     const result = await axios.get(
       "https://api.steampowered.com/ISteamUser/GetPlayerSummaries/v2/",
       {
@@ -189,8 +134,81 @@ function Profile() {
       "gameextrainfo",
       result?.data.response.players[0].gameextrainfo
     );
-    return "Are you sure you want to refresh?";
+    await axios.put(`http://localhost:3001/auth/${ProfleSteamId}`, {
+      id: result.config.params.steamids,
+      profileimg: result?.data.response.players[0].avatarfull,
+      nickname:
+        result?.data.response.players[0].personaname +
+        " " +
+        "#" +
+        result.config.params.steamids.slice(13, 18),
+      gameid: result?.data.response.players[0].gameid,
+      gameextrainfo: result?.data.response.players[0].gameextrainfo,
+      login: online,
+      lastLogin: new Date(),
+    });
+
+    // await axios.put(`http://localhost:3001/auth/${ProfleSteamId}`, {
+    //   // ...result?.data,
+    //   // lastLogin: new Date(),
+    // });
+    // return result;
   };
+  //유저 최신정보 & 타임스탬프 새로고침 할 떄 마다.
+  window.onload = timeStamp;
+
+  //로그아웃 버튼
+  const logout = async () => {
+    await axios.put(`http://localhost:3001/auth/${ProfleSteamId}`, {
+      ...loginInformation?.data,
+      login: false,
+    });
+    window.location.replace("/");
+    sessionStorage.clear();
+  };
+
+  // 온라인 오프라인 토글버튼
+  const onLineToogle = async () => {
+    const onlineOnOff = ProfileLogin === "true" ? "false" : "true";
+    sessionStorage.setItem("login", onlineOnOff);
+    setOnline(!online);
+
+    await axios.put(`http://localhost:3001/auth/${ProfleSteamId}`, {
+      ...loginInformation?.data,
+      login: !online,
+    });
+  };
+  // //새로고침함수
+  // window.onload = async function () {
+  //   const result = await axios.get(
+  //     "https://api.steampowered.com/ISteamUser/GetPlayerSummaries/v2/",
+  //     {
+  //       params: {
+  //         key: APIKEY,
+  //         //스팀로그인
+  //         steamids: ProfleSteamId,
+  //       },
+  //     }
+  //   );
+  //   sessionStorage.setItem("gameid", result?.data.response.players[0].gameid);
+  //   sessionStorage.setItem("steamid", result.config.params.steamids);
+  //   sessionStorage.setItem(
+  //     "profileimg",
+  //     result?.data.response.players[0].avatarfull
+  //   );
+  //   sessionStorage.setItem(
+  //     "nickName",
+  //     result?.data.response.players[0].personaname +
+  //       " " +
+  //       "#" +
+  //       result.config.params.steamids.slice(13, 18)
+  //   );
+  //   sessionStorage.setItem(
+  //     "gameextrainfo",
+  //     result?.data.response.players[0].gameextrainfo
+  //   );
+  //   return "Are you sure you want to refresh?";
+  // };
 
   useEffect(() => {
     let polling = setInterval(() => {
