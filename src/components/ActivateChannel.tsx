@@ -1,22 +1,19 @@
 import React from "react";
 import styled from "styled-components";
-export const ActivateChannel = ({
-  gameimg,
-  gameTitle,
-  gameCategories,
-}: any) => {
+export const ActivateChannel = ({ game }: any) => {
   return (
     <>
       <ActivateChannelLayout>
         <ActivateChannel1st>
           <ChannelTitle>현재활성화된 채널</ChannelTitle>
-          <ActivateChannelImg1st src={gameimg} />
+          <ActivateChannelImg1st src={game?.gameSubimg} />
           <ActivateChannelContents>
             <div style={{ display: "flex", flexDirection: "column" }}>
-              <ActivateChannelTitle>{gameTitle}</ActivateChannelTitle>
+              <ActivateChannelTitle>{game?.gametitle}</ActivateChannelTitle>
               <ActivateChannelBox>
                 <ActivateChannelCategory>
-                  {gameCategories}
+                  {game?.gameCategories}, {game?.gameCategories2},{" "}
+                  {game?.gameCategories3}
                 </ActivateChannelCategory>
                 <ActivateChannels>
                   {/* 초록불 */}
@@ -89,7 +86,7 @@ const ActivateChannelBox = styled.div`
 const ActivateChannelImg1st = styled.img`
   // img 태그로 교체 필요
   margin: 10px;
-  width: 130px;
+  width: 300px;
   height: 130px;
   box-shadow: inset 0px 4px 10px rgba(0, 0, 0, 0.25);
   border-radius: 10px;

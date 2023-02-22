@@ -5,13 +5,12 @@ import styled from "styled-components";
 import InfiniteScroll from "react-infinite-scroll-component";
 // import {getGameSummary, getGameCategory} from "../../api"
 
-import { useQuery, useQueryClient} from "react-query";
+import { useQuery, useQueryClient } from "react-query";
 
 import { useNavigate } from "react-router-dom";
 import { BiSearchAlt2 } from "react-icons/bi";
 import GameChannelBlock from "../components/common/GameChannelBlock";
 import { useRecoilState, atom } from "recoil";
-
 
 const ChannelSearchPage: any = () => {
   const APIKEY = "234E0113F33D5C7C4D4D5292C6774550";
@@ -76,35 +75,39 @@ const ChannelSearchPage: any = () => {
 
   //디바운싱
 
-
   // 2200780
 
   // searchValue: any, offset: number
 
   const getGameSummary = async () => {
-    if(searchValue === ""){
+    if (searchValue === "") {
       return;
     }
-    const gameSummary = await axios
-      .get(`https://store.steampowered.com/api/storesearch/?cc=us&l=en&term=${termResult}`) // 게임 Id만 가져오기!!!
-      const gameList = []
-    for(let i=0; i<gameSummary?.data.items.length; i++){
-      const gameCategoryData2 = await axios.get(`https://store.steampowered.com/api/appdetails/?appids=${gameSummary?.data.items[i].id}`)
+    const gameSummary = await axios.get(
+      `https://store.steampowered.com/api/storesearch/?cc=us&l=en&term=${termResult}`
+    ); // 게임 Id만 가져오기!!!
+    const gameList = [];
+    for (let i = 0; i < gameSummary?.data.items.length; i++) {
+      const gameCategoryData2 = await axios.get(
+        `https://store.steampowered.com/api/appdetails/?appids=${gameSummary?.data.items[i].id}`
+      );
       //썸네일, 제목, 장르
-      gameList.push(gameCategoryData2?.data[gameSummary?.data.items[i].id].data)
-    };
-      return gameList
-  }
-  const {data: gameSummaryData} = useQuery(["gameSummaryData", termResult], getGameSummary)
+      gameList.push(
+        gameCategoryData2?.data[gameSummary?.data.items[i].id].data
+      );
+    }
+    return gameList;
+  };
+  const { data: gameSummaryData } = useQuery(
+    ["gameSummaryData", termResult],
+    getGameSummary
+  );
   //검색할때마다 매번 searchValue로 리셋, 새로운 정보를 받아올떄마다 querykey가 바껴야함
   //특정 list를 불러올 때 정적쿼리키를 쓰는게 좋을때가 많음
   //만약 string으로된 키값만 사용한다면 리렌더링될때 불필요한 서버요청을 안하게됨(캐시메모리에 잇는걸 가져다 써서)
   //queryfunction재실행시 캐시메모리에 있는걸 가져다씀
-  
+
   //!!!!!캐시메모리!!!!!!
-
-
-
 
   return (
     <div
@@ -141,7 +144,7 @@ const ChannelSearchPage: any = () => {
         {gameSummaryData?.map((game: any) => {
           return (
             <GameChannelBlockView key={game.id}>
-              <GameChannelBlock game={game}  />
+              <GameChannelBlock game={game} />
             </GameChannelBlockView>
           );
         })}

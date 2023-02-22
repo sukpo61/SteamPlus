@@ -26,6 +26,7 @@
 //         },
 //       }
 //     );
+
 //     //로컬스토리지에 로그인정보 저장하기
 //     localStorage.setItem("login", online);
 //     localStorage.setItem("gameid", result?.data.response.players[0].gameid);
@@ -67,40 +68,40 @@
 
 //   //steam userData
 //   const { data } = useQuery("userData", userDataGet);
+//   console.log("dat1a", data?.data.response.players[0].steamid);
+
 //   const userID = data?.data.response.players[0].steamid;
+// console.log("userID",userID);
 
 //   //dbjson에 유저정보 삭제하기 핸들러
-//   const userDeleteMutation = useMutation(() =>
-//     axios.delete(`${serverUrl}${userID}`)
-//   );
-//   const deleteHandeler = () => {
-//     userDeleteMutation.mutate();
-//     alert("회원탈퇴 되었습니다");
-//     navigate(`/`);
-//   };
-//   const goto = () => {
-//     navigate("/mypage");
-//   };
-//   useEffect(() => {
-//     if (steamId) {
-//       userDataGet();
-//     }
-//   }, []);
+//   // const userDeleteMutation = useMutation(() =>
+//   //   axios.delete(`${serverUrl}${userID}`)
+//   // );
+//   // const deleteHandeler = () => {
+//   //   userDeleteMutation.mutate();
+//   //   alert("회원탈퇴 되었습니다");
+//   //   navigate(`/`);
+//   // };
+//   // const goto = () => {
+//   //   navigate("/mypage");
+//   // };
+//   // useEffect(() => {
+//   //   if (steamId) {
+//   //     userDataGet();
+//   //   }
+//   // }, []);
 
 //   return (
 //     <div style={{ background: "white" }}>
 //       <button onClick={SteamLogin}>Login with Steam</button>
-//       <button onClick={deleteHandeler}>회원탈퇴하기</button>
-//       <button onClick={goto}>클릭</button>
+//       {/* <button onClick={deleteHandeler}>회원탈퇴하기</button> */}
+//       {/* <button onClick={goto}>클릭</button> */}
 //     </div>
 //   );
 // };
 
-// export default LoginPage;
-import React from "react";
+export default LoginPage;
 
 function LoginPage() {
   return <div>LoginPage</div>;
 }
-
-export default LoginPage;

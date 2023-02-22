@@ -146,6 +146,7 @@ function Layout() {
           onClick={() => {
             FriendButtonOnClick("close");
             navigate("/");
+            window.scrollTo({ top: 0, behavior: "smooth" });
           }}
         >
           <AiFillHome className="homeIcon" />
@@ -157,6 +158,7 @@ function Layout() {
           onClick={() => {
             FriendButtonOnClick("close");
             navigate("/Channelsearchpage");
+            window.scrollTo({ top: 0, behavior: "smooth" });
           }}
         >
           <AiOutlineSearch className="searchIcon" />
