@@ -8,7 +8,7 @@ function MainPage() {
   const APIKEY = "234E0113F33D5C7C4D4D5292C6774550";
   const GameId: any = sessionStorage.getItem("gameid");
   const GameIds: any =
-    GameId === "undefined" || "null"
+    GameId === "undefined" || GameId === null
       ? 990080
       : sessionStorage.getItem("gameid");
   //게임이미지 불러오기
