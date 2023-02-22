@@ -97,8 +97,8 @@ function Friend() {
   const handleContextMenu = (event: any) => {
     event.preventDefault();
     setMenuPosition({
-      xPos: `${event.screenX}px`,
-      yPos: `${event.screenY - 140}px`,
+      xPos: `${event.clientX}px`,
+      yPos: `${event.clientY}px`,
     });
   };
 
