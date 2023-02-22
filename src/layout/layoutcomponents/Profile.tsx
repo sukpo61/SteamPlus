@@ -81,17 +81,9 @@ function Profile() {
     axios.put(`http://localhost:3001/auth/${steamId}`, userinfo);
     axios.post(serverUrl, userinfo);
     window.location.replace("/");
-<<<<<<< HEAD
     return userinfo;
   };
   const { data } = useQuery("userData", userDataGet);
-=======
-
-    return result;
-  };
-  const { data } = useQuery("userData", userDataGet);
-  console.log("da2ta", data);
->>>>>>> 502ef5da304caa8c78ca7212b43818c0ce074c31
 
   //유저 db정보 가져오기
   const getLoginData = async () => {
@@ -110,6 +102,7 @@ function Profile() {
 
     return result;
   };
+
   const { data: loginInformation } = useQuery("loginInformation", getLoginData);
 
   //유저 온라인 타임스탬프
@@ -143,7 +136,7 @@ function Profile() {
     //   // ...result?.data,
     //   // lastLogin: new Date(),
     // });
-    // return result;
+    return result;
   };
 
   //로그아웃 버튼
@@ -155,6 +148,7 @@ function Profile() {
     window.location.replace("/");
     sessionStorage.clear();
   };
+
   // 온라인 오프라인 토글버튼
   const onLineToogle = async () => {
     const onlineOnOff = ProfileLogin === "true" ? "false" : "true";
@@ -167,7 +161,7 @@ function Profile() {
     });
   };
   //새로고침함수
-  window.onbeforeunload = async function () {
+  window.onunload = async function () {
     const result = await axios.get(
       "https://api.steampowered.com/ISteamUser/GetPlayerSummaries/v2/",
       {
@@ -197,6 +191,7 @@ function Profile() {
     );
     return "Are you sure you want to refresh?";
   };
+
   useEffect(() => {
     let polling = setInterval(() => {
       timeStamp();

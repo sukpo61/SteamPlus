@@ -7,9 +7,10 @@ import { useQuery } from "react-query";
 function MainPage() {
   const APIKEY = "234E0113F33D5C7C4D4D5292C6774550";
   const GameId: any = sessionStorage.getItem("gameid");
-
   const GameIds: any =
-    GameId === "undefined" ? 990080 : sessionStorage.getItem("gameid");
+    GameId === "undefined" || "null"
+      ? 990080
+      : sessionStorage.getItem("gameid");
   //게임이미지 불러오기
   const Gamedata = async () => {
     const response = await axios.get(
@@ -32,6 +33,7 @@ function MainPage() {
     };
     // return response
   };
+  console.log(GameIds);
 
   const { data }: any = useQuery("Gamedata", Gamedata);
   // console.log("data2", data);
