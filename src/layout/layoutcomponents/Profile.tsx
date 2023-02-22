@@ -81,39 +81,70 @@ function Profile() {
     axios.put(`http://localhost:3001/auth/${steamId}`, userinfo);
     axios.post(serverUrl, userinfo);
     window.location.replace("/");
+<<<<<<< HEAD
     return userinfo;
   };
   const { data } = useQuery("userData", userDataGet);
+=======
+
+    return result;
+  };
+  const { data } = useQuery("userData", userDataGet);
+  console.log("da2ta", data);
+>>>>>>> 502ef5da304caa8c78ca7212b43818c0ce074c31
 
   //유저 db정보 가져오기
   const getLoginData = async () => {
     const result = await axios.get(
       `http://localhost:3001/auth/${ProfleSteamId}`
     );
-    // 타임스탬프 찍어주기
-    if (data === undefined) {
-      await axios.put(`http://localhost:3001/auth/${ProfleSteamId}`, {
-        ...result?.data,
-        lastLogin: new Date(),
-      });
-    } else {
-      await axios.put(`http://localhost:3001/auth/${ProfleSteamId}`, {
-        id: data?.id,
-        profileimg: data?.profileimg,
-        nickname: data?.nickname,
-        gameid: data?.gameid,
-        gameextrainfo: data?.gameextrainfo,
-        login: data?.login,
-        lastLogin: new Date(),
-      });
-    }
+    // // 타임스탬프 찍어주기
+    // if (data === undefined) {
+    //   await axios.put(`http://localhost:3001/auth/${ProfleSteamId}`, {
+    //     ...result?.data,
+    //     lastLogin: new Date(),
+    //   });
+
+    //   return result;
+    // } else {}
+
+    return result;
+  };
+  const { data: loginInformation } = useQuery("loginInformation", getLoginData);
+
+  //유저 온라인 타임스탬프
+  const timeStamp = async () => {
+    const result = await axios.get(
+      "https://api.steampowered.com/ISteamUser/GetPlayerSummaries/v2/",
+      {
+        params: {
+          key: APIKEY,
+          //스팀로그인
+          steamids: ProfleSteamId,
+        },
+      }
+    );
+
+    await axios.put(`http://localhost:3001/auth/${ProfleSteamId}`, {
+      id: result.config.params.steamids,
+      profileimg: result?.data.response.players[0].avatarfull,
+      nickname:
+        result?.data.response.players[0].personaname +
+        " " +
+        "#" +
+        result.config.params.steamids.slice(13, 18),
+      gameid: result?.data.response.players[0].gameid,
+      gameextrainfo: result?.data.response.players[0].gameextrainfo,
+      login: online,
+      lastLogin: new Date(),
+    });
+
     // await axios.put(`http://localhost:3001/auth/${ProfleSteamId}`, {
     //   // ...result?.data,
     //   // lastLogin: new Date(),
     // });
-    return result;
+    // return result;
   };
-  const { data: loginInformation } = useQuery("loginInformation", getLoginData);
 
   //로그아웃 버튼
   const logout = async () => {
@@ -168,8 +199,8 @@ function Profile() {
   };
   useEffect(() => {
     let polling = setInterval(() => {
-      getLoginData();
-    }, 5000);
+      timeStamp();
+    }, 30000);
 
     return () => {
       clearInterval(polling);
