@@ -101,7 +101,10 @@ const ChannelSearchPage: any = () => {
         gameCategoryData2?.data[gameSummary?.data.items[i].id].data
       );
     }
-    return gameList;
+    const filterList = gameList.filter((game) => game.type === "game");
+    console.log("dlc", filterList);
+    return filterList;
+    // return gameList;
   };
   const { data: gameSummaryData } = useQuery(
     ["gameSummaryData", termResult],
@@ -113,7 +116,6 @@ const ChannelSearchPage: any = () => {
   //queryfunction재실행시 캐시메모리에 있는걸 가져다씀
 
   //!!!!!캐시메모리!!!!!!
-
   return (
     <div
       style={{
@@ -122,7 +124,7 @@ const ChannelSearchPage: any = () => {
         flexDirection: "column",
         width: "100%",
         height: "100%",
-        minHeight: 1080,
+        // minHeight: 1080,
       }}
     >
       <SearchPageHeader>
@@ -138,17 +140,19 @@ const ChannelSearchPage: any = () => {
             onClick={() => {
               // getGameSummary(); //searchValue, offset
               handleTermResult();
+              // handleResultList();
             }}
           />
         </GameSearchInputArea>
       </SearchPageHeader>
       <SearchCount>
-        '{`${termResult}`}' 검색 결과 {}n 개
+        '{`${termResult}`}' 검색 결과는 {gameSummaryData?.length ?? "0"}개입니다
       </SearchCount>
       <GameSearchList>
         {gameSummaryData?.map((game: any) => {
+          // console.log("game", game.genre);
           return (
-            <GameChannelBlockView key={game.id}>
+            <GameChannelBlockView key={game?.id}>
               <GameChannelBlock game={game} />
             </GameChannelBlockView>
           );
@@ -157,39 +161,45 @@ const ChannelSearchPage: any = () => {
     </div>
   );
 };
+// ?.filter((game: any) => game?.type === !"dlc")
+
+//data.pages.map(page=>page.results).flat()
+
+const SearchNone = styled.div`
+  color: white;
+  font-size: 2rem;
+`;
 
 const SearchPageHeader = styled.div`
   background-color: #404b5e;
   /* position: absolute; */
-  width: 1820px;
-  height: 120px;
+  width: 100%;
+  height: 72px;
   display: flex;
   align-items: center;
   gap: 20px;
-  padding: 32px 24px 20px 24px;
+  padding: 16px 56px;
 `;
 
 const SteamPlusLogo = styled.div`
-  width: 70px;
-  height: 68px;
+  width: 40px;
+  height: 40px;
   background: #a7a9ac;
-  border-radius: 20px;
+  border-radius: 10px;
 `;
 const GameSearchInputArea = styled.div`
   width: 632px;
-  height: 68px;
+  height: 40px;
   background: #192030;
   box-shadow: inset 0px 4px 10px rgba(0, 0, 0, 0.25);
-  border-radius: 20px;
-  padding: 20px 24px;
+  border-radius: 10px;
+  padding: 9px 16px;
   display: flex;
   align-items: center;
   justify-content: space-between;
   .searchIcon {
-    width: 48px;
-    height: 48px;
-    left: 568px;
-    top: 12px;
+    width: 24px;
+    height: 24px;
     color: #777d87;
     cursor: pointer;
   }
@@ -200,8 +210,8 @@ const GameSearchInput = styled.input`
   font-family: "Noto Sans";
   font-style: normal;
   font-weight: 400;
-  font-size: 20px;
-  line-height: 27px;
+  font-size: 16px;
+  line-height: 22px;
   letter-spacing: -0.03em;
   background: none;
   color: #d4d4d4;
@@ -209,8 +219,8 @@ const GameSearchInput = styled.input`
 `;
 
 const SearchCount = styled.div`
-  margin-top: 24px;
-  margin-bottom: 60px;
+  margin-top: 40px;
+  margin-bottom: 40px;
   font-family: Inter;
   font-style: normal;
   font-weight: 400;
