@@ -27,10 +27,13 @@ function GameChannelBlock({ game }: any) {
             <GameChannelTitle>{`${game?.name}`}</GameChannelTitle>
           </TitleLinear>
           <GameChannelInfo>
-            <GameChannelCategory>{game.genres[0]?.description}, {game.genres[1]?.description}, {game.genres[2]?.description}</GameChannelCategory>
+            <GameChannelCategory>
+              {game.genres[0]?.description}, {game.genres[1]?.description},{" "}
+              {game.genres[2]?.description}
+            </GameChannelCategory>
             {/* <GameChannelCategory>{game.genres[1]?.description}</GameChannelCategory>
  <GameChannelCategory>{game.genres[2]?.description}</GameChannelCategory> */}
-    
+
             <NumberOfPlayer>
               <div
                 style={{
