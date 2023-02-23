@@ -53,16 +53,11 @@ function Layout() {
     useRecoilState<FriendSearchProps[]>(friendAllState);
   //친구 요청 온 내역 전체
   const [friendAdd] = useRecoilValue(newFriendAdd);
-
-  // console.log("params", params);
-
   // window.onload = () => {
-  //   console.log(window.location.pathname.slice(0, 9));
   //   if (window.location.pathname.slice(0, 9) === "/teamchat") {
   //     setLayoutMenu("voicetalk");
   //   }
   // };
-
   //메뉴 탭눌렀을때 (친구제외)
   const LayoutButtonOnClick = (i: string) => {
     if (layoutMenu === i) {
@@ -89,7 +84,6 @@ function Layout() {
     setFriendAllRecoil(response?.data);
     return response;
   };
-
   const { data: friendSearch } = useQuery("friendsearch", getFriendSearch);
 
   const getAllFriend = async () => {
@@ -99,7 +93,6 @@ function Layout() {
 
     return response;
   };
-
   const { isLoading, isError, data, error } = useQuery("friend", getAllFriend);
 
   if (isLoading) {
@@ -207,14 +200,6 @@ function Layout() {
           </Friendbutton>
         )}
         {/* 음성채팅 */}
-        <VoiceTalkbutton
-          onClick={() => LayoutButtonOnClick("voicetalk")}
-          layoutMenu={layoutMenu}
-        >
-          <MdVoiceChat className="chatIcon" />
-          <p>음성채팅</p>
-        </VoiceTalkbutton>
-        {/* 
         {myId === null ? (
           <VoiceTalkbutton
             onClick={() => {
@@ -234,7 +219,7 @@ function Layout() {
             <MdVoiceChat className="chatIcon" />
             <p>음성채팅</p>
           </VoiceTalkbutton>
-        )} */}
+        )}
       </SideBarDiv>
       {/* 메뉴 컴포넌트 */}
       <MenuOpenDiv layoutMenu={layoutMenu}>

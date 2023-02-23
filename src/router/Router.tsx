@@ -12,6 +12,8 @@ import Layout from "../layout/Layout";
 import styled from "styled-components";
 import { useRecoilValue } from "recoil";
 import { LayoutButton } from "../recoil/atom";
+import Testtext from "../pages/Testtext";
+import TestChat from "../pages/TestChat";
 
 const Router = () => {
   // 메뉴 상태 recoil
@@ -20,7 +22,6 @@ const Router = () => {
   return (
     <BrowserRouter>
       <GlobalStyles />
-
       <Layout />
       {/* 메뉴 열리고 닫힐때 페이지 크기 */}
       <RouteFloat
@@ -37,6 +38,8 @@ const Router = () => {
           {/* <Route path="login" element={<Login />} /> */}
           <Route path="Signup" element={<SignUp />} />
           <Route path="/Teamchat/:id" element={<TeamChat />} />
+          <Route path="testtext" element={<Testtext />} />
+          <Route path="testchat" element={<TestChat />} />
         </Routes>
       </RouteFloat>
     </BrowserRouter>
