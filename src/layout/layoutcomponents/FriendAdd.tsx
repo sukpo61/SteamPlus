@@ -94,7 +94,10 @@ function Friend() {
   //찾아온 친구 id 를이용해 두개다 삭제
   const friendDeleteOnClick = (id: any) => {
     const friendDelete = getFriendAuth.filter((i) => {
-      return id === i.friendId || id === i.myId;
+      return (
+        (id === i.friendId && myId === i.myId) ||
+        (myId === i.friendId && id === i.myId)
+      );
     });
 
     DeleteMutation.mutate(friendDelete[0].id);
