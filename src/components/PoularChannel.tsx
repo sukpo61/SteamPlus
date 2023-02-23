@@ -129,7 +129,7 @@ const PopularChannelTitle = styled.div`
   font-size: 20px;
   position: absolute;
   width: 100%;
-  top: -30px;
+  top: -35px;
   text-shadow: 0px 0px 15px white;
 `;
 const PoularChannelLayout2 = styled.div`
@@ -229,7 +229,11 @@ const PopularChannel1st = styled.div`
   background: #263245;
   border-radius: 10px;
   cursor: pointer;
-  box-shadow: 3px 4px 3px 2px black;
+  box-shadow: 0px 0px 15px 0px #000;
+  &:hover {
+    box-shadow: 0px 0px 15px 0px #fff;
+  }
+  transition: 0.5s ease;
 `;
 const PopularChannel1st2 = styled.div`
   width: 232px;
@@ -242,7 +246,11 @@ const PopularChannel1st2 = styled.div`
   background: #263245;
   border-radius: 10px;
   cursor: pointer;
-  box-shadow: 3px 4px 3px 2px black;
+  box-shadow: 0px 0px 15px 0px #000;
+  &:hover {
+    box-shadow: 0px 0px 15px 0px #fff;
+  }
+  transition: 0.5s ease;
 `;
 const ChannelBox = styled.div`
   display: flex;
