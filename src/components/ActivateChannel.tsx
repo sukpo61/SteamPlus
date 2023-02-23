@@ -2,33 +2,31 @@ import React from "react";
 import styled from "styled-components";
 export const ActivateChannel = ({ game }: any) => {
   return (
-    <>
-      <ActivateChannelLayout>
-        <ActivateChannel1st>
-          <ChannelTitle>현재활성화된 채널</ChannelTitle>
-          <ActivateChannelImg1st src={game?.gameSubimg} />
-          <ActivateChannelContents>
-            <div style={{ display: "flex", flexDirection: "column" }}>
-              <ActivateChannelTitle>{game?.gametitle}</ActivateChannelTitle>
-              <ActivateChannelBox>
-                <ActivateChannelCategory>
-                  {game?.gameCategories}, {game?.gameCategories2},{" "}
-                  {game?.gameCategories3}
-                </ActivateChannelCategory>
-                <ActivateChannels>
-                  {/* 초록불 */}
-                  <ChannelOnOff />
-                  <ActivateChannelPlayerCount>20명</ActivateChannelPlayerCount>
-                </ActivateChannels>
-              </ActivateChannelBox>
-            </div>
-            <>
-              <CurrentChannelJoinBtn>입장하기</CurrentChannelJoinBtn>
-            </>
-          </ActivateChannelContents>
-        </ActivateChannel1st>
-      </ActivateChannelLayout>
-    </>
+    <ActivateChannelLayout>
+      <ActivateChannel1st>
+        <ChannelTitle>현재활성화된 채널</ChannelTitle>
+        <ActivateChannelImg1st src={game?.gameSubimg} />
+        <ActivateChannelContents>
+          <div style={{ display: "flex", flexDirection: "column" }}>
+            <ActivateChannelTitle>{game?.gametitle}</ActivateChannelTitle>
+            <ActivateChannelBox>
+              <ActivateChannelCategory>
+                {game?.gameCategories}, {game?.gameCategories2},{" "}
+                {game?.gameCategories3}
+              </ActivateChannelCategory>
+              <ActivateChannels>
+                {/* 초록불 */}
+                <ChannelOnOff />
+                <ActivateChannelPlayerCount>20명</ActivateChannelPlayerCount>
+              </ActivateChannels>
+            </ActivateChannelBox>
+          </div>
+          <>
+            <CurrentChannelJoinBtn>입장하기</CurrentChannelJoinBtn>
+          </>
+        </ActivateChannelContents>
+      </ActivateChannel1st>
+    </ActivateChannelLayout>
   );
 };
 const ChannelOnOff = styled.div`
@@ -97,6 +95,7 @@ const ActivateChannelLayout = styled.div`
   justify-content: center;
   margin-top: 100px;
   position: relative;
+  z-index: 999;
 `;
 const ActivateChannel1st = styled.div`
   width: 900px;
@@ -106,6 +105,7 @@ const ActivateChannel1st = styled.div`
   border-radius: 10px;
   cursor: pointer;
   color: white;
+  position: relative;
 `;
 const CurrentChannelJoinBtn = styled.span`
   width: 150px;

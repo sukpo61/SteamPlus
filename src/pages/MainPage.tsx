@@ -4,26 +4,30 @@ import { ActivateChannel } from "../components/ActivateChannel";
 import { PoularChannel } from "../components/PoularChannel";
 import { CurrentGame } from "../components/CurrentGame";
 import { useQuery } from "react-query";
+
 function MainPage() {
-  const APIKEY = "234E0113F33D5C7C4D4D5292C6774550";
   const GameId: any = sessionStorage.getItem("gameid");
+
   const GameIds: any =
     GameId === "undefined" || GameId === null
       ? 990080
       : sessionStorage.getItem("gameid");
+
   //게임이미지 불러오기
   const Gamedata = async () => {
     const response = await axios.get(
       `https://cors-anywhere.herokuapp.com/http://store.steampowered.com/api/appdetails/`,
       {
         params: {
-          // appids: GameId,
           appids: GameIds, // 해당 게임의 id값
         },
       }
     );
+    console.log("response", response);
 
     return {
+      gamesdescription: response.data[GameIds].data.short_description,
+      gamevideo: response.data[GameIds].data.movies[0].webm.max,
       gametitle: response.data[GameIds].data.name,
       gameCategories: response.data[GameIds].data.genres[0].description,
       gameCategories2: response.data[GameIds].data.genres[1].description,
@@ -31,19 +35,14 @@ function MainPage() {
       gameMainImg: response.data[GameIds].data.screenshots[1].path_full,
       gameSubimg: response.data[GameIds].data.header_image,
     };
-    // return response
   };
-  console.log(GameIds);
 
   const { data }: any = useQuery("Gamedata", Gamedata);
-  // console.log("data2", data);
-  // 새로고침시 업데이트하기
 
   return (
     <MainLayout>
       {/* 메인게임 이미지 */}
       <CurrentGame game={data} />
-
       {/* 인기채널 */}
       <PoularChannel game={data} />
       {/* 현재활성화된 채널 */}

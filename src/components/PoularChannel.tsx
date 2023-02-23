@@ -1,6 +1,17 @@
-import React from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 export const PoularChannel = ({ game }: any) => {
+  const Description = game?.gamesdescription;
+  // const [englishText, setEnglishText] = useState('');
+  // const [koreanText, setKoreanText] = useState('');
+
+  // const handleTranslation = async () => {
+  //   try {
+  //     const result = await translate(englishText, { to: 'ko' });
+  //     setKoreanText(result.text);
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
   return (
     <PoularChannelLayout>
       <>
@@ -10,17 +21,18 @@ export const PoularChannel = ({ game }: any) => {
             {/*활성화된 게임채널 */}
             <PopularChannelTitle>인기채널</PopularChannelTitle>
             <PopularChannelImg1st src={game?.gameSubimg} />
-            <PoPularChannelTitle>{game?.gametitle}</PoPularChannelTitle>
+            <Box>{Description}</Box>
             <ChannelBox>
+              <PoPularChannelTitle>{game?.gametitle}</PoPularChannelTitle>
               <PoPularChannelCategory>
                 {game?.gameCategories}, {game?.gameCategories2},{" "}
                 {game?.gameCategories3}
+                <PoPularChannelActivate>
+                  {/* 초록불 */}
+                  <ChannelOnOff />
+                  <ChannelPlayerCount1st>20명</ChannelPlayerCount1st>
+                </PoPularChannelActivate>
               </PoPularChannelCategory>
-              <PoPularChannelActivate>
-                {/* 초록불 */}
-                <ChannelOnOff />
-                <ChannelPlayerCount1st>20명</ChannelPlayerCount1st>
-              </PoPularChannelActivate>
             </ChannelBox>
           </PopularChannel1st>
           <PoularChannelLayout2>
@@ -28,38 +40,50 @@ export const PoularChannel = ({ game }: any) => {
               <PoPularChannelImg src={game?.gameSubimg} />
               <PoPularChannelBox>
                 <ChannelTitle1st2>{game?.gametitle}</ChannelTitle1st2>
-                {/* <ChannelCategory1st2>{gameCategories}</ChannelCategory1st2> */}
-                <PoPularChannelActivate>
-                  {/* 초록불 */}
-                  <ChannelOnOff />
-                  <ChannelPlayerCount1st2>20명</ChannelPlayerCount1st2>
-                </PoPularChannelActivate>
+                <PoPularChannelCategory2>
+                  {game?.gameCategories}, {game?.gameCategories2},{" "}
+                  {game?.gameCategories3}
+                  <PoPularChannelActivate>
+                    {/* 초록불 */}
+                    <ChannelOnOff />
+                    <ChannelPlayerCount1st2>20명</ChannelPlayerCount1st2>
+                  </PoPularChannelActivate>
+                </PoPularChannelCategory2>
               </PoPularChannelBox>
             </PopularChannel1st2>
             <PopularChannel1st2>
               <PoPularChannelImg src={game?.gameSubimg} />
               <PoPularChannelBox>
                 <ChannelTitle1st2>{game?.gametitle}</ChannelTitle1st2>
-                {/* <ChannelCategory1st2>{gameCategories}</ChannelCategory1st2> */}
-                <PoPularChannelActivate>
-                  {/* 초록불 */}
-                  <ChannelOnOff />
-                  <ChannelPlayerCount1st2>20명</ChannelPlayerCount1st2>
-                </PoPularChannelActivate>
+                <PoPularChannelCategory2>
+                  {game?.gameCategories}, {game?.gameCategories2},{" "}
+                  {game?.gameCategories3}
+                  <PoPularChannelActivate>
+                    {/* 초록불 */}
+                    <ChannelOnOff />
+                    <ChannelPlayerCount1st2>20명</ChannelPlayerCount1st2>
+                  </PoPularChannelActivate>
+                </PoPularChannelCategory2>
               </PoPularChannelBox>
             </PopularChannel1st2>
             <PopularChannel1st2>
               <PoPularChannelImg src={game?.gameSubimg} />
+
               <PoPularChannelBox>
                 <ChannelTitle1st2>{game?.gametitle}</ChannelTitle1st2>
-                {/* <ChannelCategory1st2>{gameCategories}</ChannelCategory1st2> */}
-                <PoPularChannelActivate>
-                  {/* 초록불 */}
-                  <ChannelOnOff />
-                  <ChannelPlayerCount1st2>20명</ChannelPlayerCount1st2>
-                </PoPularChannelActivate>
+
+                <PoPularChannelCategory2>
+                  {game?.gameCategories}, {game?.gameCategories2},{" "}
+                  {game?.gameCategories3}
+                  <PoPularChannelActivate>
+                    {/* 초록불 */}
+                    <ChannelOnOff />
+                    <ChannelPlayerCount1st2>20명</ChannelPlayerCount1st2>
+                  </PoPularChannelActivate>
+                </PoPularChannelCategory2>
               </PoPularChannelBox>
             </PopularChannel1st2>
+
             <PopularChannel1st2>
               {/* <PoPularChannelImg src={gameimg} /> */}
               <div
@@ -90,7 +114,13 @@ export const PoularChannel = ({ game }: any) => {
     </PoularChannelLayout>
   );
 };
+const Box = styled.div`
+  margin: 20px 20px 20px 20px;
 
+  width: 90%;
+  height: 900%;
+  color: #ccc;
+`;
 const PopularChannelTitle = styled.div`
   color: white;
   font-size: 20px;
@@ -210,19 +240,20 @@ const PopularChannel1st2 = styled.div`
 `;
 const ChannelBox = styled.div`
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   justify-content: space-between;
 `;
 const PoPularChannelBox = styled.div`
   display: flex;
-  align-items: center;
-  margin-top: auto;
+  flex-direction: column;
+
+  margin-top: 10px;
 `;
 const PopularChannelImg1st = styled.img`
   // img 태그로 교체 필요
   margin: 16px auto 0;
   width: 360px;
-  height: 285px;
+
   box-shadow: inset 0px 4px 10px rgba(0, 0, 0, 0.25);
   border-radius: 10px;
   object-fit: cover;
@@ -245,7 +276,7 @@ const PoPularChannelTitle = styled.div`
 const ChannelTitle1st2 = styled.div`
   font-family: "Noto Sans";
   font-weight: 600;
-  font-size: 13px;
+  font-size: 16px;
   width: 120px;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -262,23 +293,22 @@ const PoPularChannelCategory = styled.div`
   letter-spacing: -0.03em;
   color: #a7a9ac;
 `;
-const ChannelCategory1st2 = styled.div`
-  height: 27px;
+const PoPularChannelCategory2 = styled.div`
   font-family: "Noto Sans";
   font-weight: 400;
-  font-size: 15px;
-  line-height: 27px;
+  font-size: 12px;
   display: flex;
   align-items: center;
   letter-spacing: -0.03em;
   color: #a7a9ac;
+  width: 100%;
 `;
 
 const PoPularChannelActivate = styled.div`
   display: flex;
   align-items: center;
   margin-left: auto;
-  height: 33px;
+  height: 20px;
   gap: 8px;
 `;
 
@@ -293,9 +323,12 @@ const ChannelPlayerCount1st = styled.div`
   font-family: "Noto Sans";
   font-weight: 300;
   font-size: 14px;
-  margin-right: 16px;
+  display: flex;
+  align-items: center;
+  text-align: right;
+  letter-spacing: -0.03em;
   color: #ffffff;
-  width: 100%;
+  margin-right: 20px;
 `;
 const ChannelPlayerCount1st2 = styled.div`
   font-family: "Noto Sans";
