@@ -24,48 +24,5 @@
       "login": true
     }
   ],
-  "friend": [
-    {
-      "id": "088ce591-c38d-47f0-b392-c8e36c0ceedc",
-      "myId": "76561199478670991",
-      "friendId": "76561198064204836",
-      "myNickName": "123322 #0991",
-      "friendNickName": "PRDG #4836"
-    },
-    {
-      "id": "088ce591-c38d-47f0-b392-c8e36c0ceedc1",
-      "myId": "76561198064204836",
-      "friendId": "76561199478670991",
-      "myNickName": "PRDG #4836",
-      "friendNickName": "123322 #0991"
-    },
-    {
-      "id": "c63a24be-7093-4048-b07e-3a3ec654976c",
-      "myId": "76561199478670991",
-      "friendId": "76561199476963056",
-      "myNickName": "123322 #0991",
-      "friendNickName": "hoitchac123 #3056"
-    },
-    {
-      "id": "c63a24be-7093-4048-b07e-3a3ec654976c1",
-      "myId": "76561199476963056",
-      "friendId": "76561199478670991",
-      "myNickName": "hoitchac123 #3056",
-      "friendNickName": "123322 #0991"
-    },
-    {
-      "id": "4c9eef63-6e0a-4051-967a-0251cd637419",
-      "myId": "76561198993103426",
-      "friendId": "76561199478670991",
-      "myNickName": "yogurt #3426",
-      "friendNickName": "1233 #0991"
-    },
-    {
-      "id": "3137eff7-89a8-4906-a6a4-b8e2ecdf52f7",
-      "myId": "76561198993103426",
-      "friendId": "76561199476963056",
-      "myNickName": "yogurt #3426",
-      "friendNickName": "hoitchac123 #3056"
-    }
-  ]
+  "friend": []
 }
