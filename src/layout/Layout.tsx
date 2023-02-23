@@ -22,13 +22,16 @@ import { AiFillHome } from "react-icons/ai";
 import { AiOutlineSearch } from "react-icons/ai";
 import { FaUserFriends } from "react-icons/fa";
 import { MdVoiceChat } from "react-icons/md";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useLocation } from "react-router-dom";
+import { useParams } from "react-router-dom";
+import socket from "../socket";
 
 function Layout() {
   const navigate = useNavigate();
   const location = useLocation();
   const locationName = location.pathname;
+  const params = useParams();
 
   const myId = sessionStorage.getItem("steamid");
 
@@ -75,19 +78,19 @@ function Layout() {
       setLayoutMenu(i);
     }
   };
-  useEffect(() => {});
+
   const getFriendSearch = async () => {
     const response = await axios.get("http://localhost:3001/auth");
     setFriendAllRecoil(response?.data);
     return response;
   };
-  //렌더링 여러번 되는 문제가 있음
   const { data: friendSearch } = useQuery("friendsearch", getFriendSearch);
 
   const getAllFriend = async () => {
     //비동기함수는 최대한 동기적으로 활용가능하게
     const response = await axios.get("http://localhost:3001/friend");
     setGetFriendAuth(response?.data);
+
     return response;
   };
   const { isLoading, isError, data, error } = useQuery("friend", getAllFriend);
