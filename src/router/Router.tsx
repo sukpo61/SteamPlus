@@ -20,6 +20,7 @@ const Router = () => {
   return (
     <BrowserRouter>
       <GlobalStyles />
+
       <Layout />
       {/* 메뉴 열리고 닫힐때 페이지 크기 */}
       <RouteFloat
@@ -35,7 +36,7 @@ const Router = () => {
           <Route path="Mypage" element={<MyPage />} />
           {/* <Route path="login" element={<Login />} /> */}
           <Route path="Signup" element={<SignUp />} />
-          <Route path="Teamchat" element={<TeamChat />} />
+          <Route path="/Teamchat/:id" element={<TeamChat />} />
         </Routes>
       </RouteFloat>
     </BrowserRouter>
