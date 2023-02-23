@@ -5,24 +5,65 @@
       "profileimg": "https://avatars.akamai.steamstatic.com/fef49e7fa7e1997310d705b2a6158ff8dc1cdfeb_full.jpg",
       "nickname": "PRDG #4836",
       "login": true,
-      "lastLogin": "2023-02-21T01:16:32.289Z"
+      "lastLogin": "2023-02-23T11:56:45.175Z"
     },
     {
       "id": "76561199476963056",
       "profileimg": "https://avatars.akamai.steamstatic.com/6639269e3d4820b31c5ec95bedc5ce0063635f54_full.jpg",
-      "nickname": "hoitchac123 #3056",
-      "gameid": "436150",
-      "gameextrainfo": "Governor of Poker 3",
-      "lastLogin": "2023-02-20T09:05:36.405Z",
-      "login": true
+      "nickname": "chacha11 #3056",
+      "login": true,
+      "lastLogin": "2023-02-23T12:59:18.227Z"
     },
     {
       "id": "76561199478670991",
       "profileimg": "https://avatars.akamai.steamstatic.com/fef49e7fa7e1997310d705b2a6158ff8dc1cdfeb_full.jpg",
-      "nickname": "1233 #0991",
-      "lastLogin": "2023-02-20T09:07:34.045Z",
-      "login": true
+      "nickname": "123322 #0991",
+      "login": false,
+      "lastLogin": "2023-02-23T12:45:30.920Z"
+    },
+    {
+      "id": "76561199480236040",
+      "profileimg": "https://avatars.akamai.steamstatic.com/fef49e7fa7e1997310d705b2a6158ff8dc1cdfeb_full.jpg",
+      "nickname": "prdg990515 #6040",
+      "login": true,
+      "lastLogin": "2023-02-23T00:17:19.407Z"
+    },
+    {
+      "id": "76561198993103426",
+      "profileimg": "https://avatars.akamai.steamstatic.com/03cd6f04c259111170c871d9ba0bed5f78420cc7_full.jpg",
+      "nickname": "yogurt #3426",
+      "login": true,
+      "lastLogin": "2023-02-23T14:23:59.217Z"
     }
   ],
-  "friend": []
+  "friend": [
+    {
+      "id": "a9d03b84-bd3b-4aaf-a17c-6b3d14b2f15c",
+      "myId": "76561198064204836",
+      "friendId": "76561199478670991",
+      "myNickName": "PRDG #4836",
+      "friendNickName": "123322 #0991"
+    },
+    {
+      "id": "627a7e62-cc74-4430-bf4d-3ba50dd95370",
+      "myId": "76561198064204836",
+      "friendId": "76561199480236040",
+      "myNickName": "PRDG #4836",
+      "friendNickName": "prdg990515 #6040"
+    },
+    {
+      "id": "8bc3bd2f-4eb0-45d2-9296-367c008c2fee",
+      "myId": "76561199480236040",
+      "friendId": "76561198064204836",
+      "myNickName": "prdg990515 #6040",
+      "friendNickName": "PRDG #4836"
+    },
+    {
+      "id": "bb3aae15-21e8-4ef7-a494-b63a064f10b8",
+      "myId": "76561199476963056",
+      "friendId": "76561198064204836",
+      "myNickName": "chacha11 #3056",
+      "friendNickName": "PRDG #4836"
+    }
+  ]
 }

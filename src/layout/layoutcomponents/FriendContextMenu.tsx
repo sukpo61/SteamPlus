@@ -8,6 +8,8 @@ import { getFriend } from "../../recoil/atom";
 import { FriendProps } from "./Friend";
 
 function FriendContextMenu({ xPos, yPos, id, onClose }: any) {
+  const myId = sessionStorage.getItem("steamid");
+  const myNickName = sessionStorage.getItem("nickName");
   const queryClient = useQueryClient();
   //친구 내역 전체
   const [getFriendAuth, setGetFriendAuth] =
@@ -33,7 +35,10 @@ function FriendContextMenu({ xPos, yPos, id, onClose }: any) {
   //찾아온 친구 id 를이용해 두개다 삭제
   const friendDeleteOnClick = (id: any) => {
     const friendDelete = getFriendAuth.filter((i) => {
-      return id === i.friendId || id === i.myId;
+      return (
+        (id === i.friendId && i.myId === myId) ||
+        (id === i.myId && myId === i.friendId)
+      );
     });
 
     DeleteMutation.mutate(friendDelete[0].id);

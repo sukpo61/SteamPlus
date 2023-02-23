@@ -48,7 +48,7 @@ function GameChannelBlock({ game }: any) {
         </div>
         <AdmitButton
           onClick={() =>
-            navigate(`/teamchat/:${game.name.replaceAll(" ", "_")}`, {
+            navigate(`/Teamchat/:${game.name.replaceAll(" ", "_")}`, {
               state: game?.filter(
                 (x: any) => x.steam_appid === game.steam_appid
               ),
@@ -62,7 +62,6 @@ function GameChannelBlock({ game }: any) {
     </GameListBlock>
   );
 }
-
 const GameListBlock = styled.div`
   display: flex;
   flex-direction: row;

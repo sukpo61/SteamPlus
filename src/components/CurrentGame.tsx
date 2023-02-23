@@ -1,21 +1,32 @@
 import React from "react";
 import styled from "styled-components";
-export const CurrentGame = ({ gameimg, gameTitle }: any) => {
+
+export const CurrentGame = ({ game }: any) => {
+  const Video = game?.gamevideo === null ? game?.gameMainImg : game?.gamevideo;
+  const Title = game?.gametitle;
+
   return (
     <CurrentGameLayout>
       {/* 게임이미지 */}
-      <CurrentGameImg src={gameimg} />
+      {/* <CurrentGameImg src={game?.gameMainImg} /> */}
+      <GameVideo src={Video} controls autoPlay muted loop />
       <CurrentGameBlackImg />
       <CurrentGameBox>
         {/* 게임타이틀 */}
-        <CurrentGameTitle>{gameTitle}</CurrentGameTitle>
+        <CurrentGameTitle>{Title}</CurrentGameTitle>
         {/* 게임채널입장*/}
         <CurrentChannelJoinBtn>게임채널 입장하기</CurrentChannelJoinBtn>
       </CurrentGameBox>
     </CurrentGameLayout>
   );
 };
-
+const GameVideo = styled.video`
+  width: 100%;
+  height: 700px;
+  object-fit: cover;
+  position: fixed;
+  top: 0;
+`;
 const CurrentGameLayout = styled.div`
   width: 100%;
   height: 700px;
@@ -57,7 +68,7 @@ const CurrentGameTitle = styled.span`
   font-family: "Montserrat";
   font-weight: 700;
   font-size: 72px;
-  text-shadow: 0px 4px 15px rgba(0, 0, 0, 0.25);
+  text-shadow: 0px 0px 15px white;
   color: #ffffff;
 `;
 
@@ -65,7 +76,7 @@ const CurrentChannelJoinBtn = styled.span`
   width: 150px;
   height: 40px;
   line-height: 40px;
-  margin-top: 15px;
+  margin-top: 25px;
   margin-left: auto;
   text-align: center;
   background: #00b8c8;
