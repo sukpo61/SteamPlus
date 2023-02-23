@@ -25,8 +25,8 @@ const ChannelSearchPage: any = () => {
     setSearchValue(e.target.value);
   };
   const handleTermResult = () => {
-    setSearchResult([]);
     setTermResult(searchValue);
+    setSearchResult([]);
     // getGameSummary(searchValue, offset);
     // queryClient.invalidateQueries("gameSummaryData")
   };
@@ -81,6 +81,11 @@ const ChannelSearchPage: any = () => {
 
   const getGameSummary = async () => {
     if (searchValue === "") {
+      return;
+    } else if (termResult.length < 2) {
+      alert("나가");
+      setTermResult("");
+      setSearchValue("");
       return;
     }
     const gameSummary = await axios.get(
