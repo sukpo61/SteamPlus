@@ -9,6 +9,7 @@ import { useRecoilState } from "recoil";
 import { FriendSearchProps } from "./FriendSearch";
 
 function VoiceTalk() {
+  console.log("1234");
   const layoutMenu = useRecoilValue(LayoutButton);
   const [createDisplay, setCreateDisplay] = useState(false);
   const [roomsInfo, setRoomsInfo] = useState([]);

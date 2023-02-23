@@ -1,32 +1,112 @@
 import React from "react";
 import styled from "styled-components";
-export const ActivateChannel = ({ game }: any) => {
+export const ActivateChannel = ({ game, data2 }: any) => {
+  const gameImg1 = data2?.game1?.header_image;
+  const gameName1 = data2?.game1?.name;
+  const gameImg2 = data2?.game2?.header_image;
+  const gameName2 = data2?.game2?.name;
+  const gameImg3 = data2?.game3?.header_image;
+  const gameName3 = data2?.game3?.name;
+
   return (
     <>
       <ActivateChannelLayout>
-        <ActivateChannel1st>
+        <div style={{ display: "flex", flexDirection: "column" }}>
           <ChannelTitle>현재활성화된 채널</ChannelTitle>
-          <ActivateChannelImg1st src={game?.gameSubimg} />
-          <ActivateChannelContents>
-            <div style={{ display: "flex", flexDirection: "column" }}>
-              <ActivateChannelTitle>{game?.gametitle}</ActivateChannelTitle>
-              <ActivateChannelBox>
-                <ActivateChannelCategory>
-                  {game?.gameCategories}, {game?.gameCategories2},{" "}
-                  {game?.gameCategories3}
-                </ActivateChannelCategory>
-                <ActivateChannels>
-                  {/* 초록불 */}
-                  <ChannelOnOff />
-                  <ActivateChannelPlayerCount>20명</ActivateChannelPlayerCount>
-                </ActivateChannels>
-              </ActivateChannelBox>
-            </div>
-            <>
-              <CurrentChannelJoinBtn>입장하기</CurrentChannelJoinBtn>
-            </>
-          </ActivateChannelContents>
-        </ActivateChannel1st>
+          <ActivateChannel1st>
+            <ActivateChannelImg1st src={game?.gameSubimg} />
+            <ActivateChannelContents>
+              <div style={{ display: "flex", flexDirection: "column" }}>
+                <ActivateChannelTitle>{game?.gametitle}</ActivateChannelTitle>
+                <ActivateChannelBox>
+                  <ActivateChannelCategory>
+                    {game?.gameCategories} {game?.gameCategories2}{" "}
+                    {game?.gameCategories3}
+                  </ActivateChannelCategory>
+                  <ActivateChannels>
+                    {/* 초록불 */}
+                    <ChannelOnOff />
+                    <ActivateChannelPlayerCount>
+                      20명
+                    </ActivateChannelPlayerCount>
+                  </ActivateChannels>
+                </ActivateChannelBox>
+              </div>
+              <>
+                <CurrentChannelJoinBtn>입장하기</CurrentChannelJoinBtn>
+              </>
+            </ActivateChannelContents>
+          </ActivateChannel1st>
+          <ActivateChannel1st>
+            <ActivateChannelImg1st src={gameImg1} />
+            <ActivateChannelContents>
+              <div style={{ display: "flex", flexDirection: "column" }}>
+                <ActivateChannelTitle>{gameName1}</ActivateChannelTitle>
+                <ActivateChannelBox>
+                  <ActivateChannelCategory>
+                    Action Adventure
+                  </ActivateChannelCategory>
+                  <ActivateChannels>
+                    {/* 초록불 */}
+                    <ChannelOnOff />
+                    <ActivateChannelPlayerCount>
+                      20명
+                    </ActivateChannelPlayerCount>
+                  </ActivateChannels>
+                </ActivateChannelBox>
+              </div>
+              <>
+                <CurrentChannelJoinBtn>입장하기</CurrentChannelJoinBtn>
+              </>
+            </ActivateChannelContents>
+          </ActivateChannel1st>
+          <ActivateChannel1st>
+            <ActivateChannelImg1st src={gameImg2} />
+            <ActivateChannelContents>
+              <div style={{ display: "flex", flexDirection: "column" }}>
+                <ActivateChannelTitle>{gameName2}</ActivateChannelTitle>
+                <ActivateChannelBox>
+                  <ActivateChannelCategory>
+                    Action RPG Strategy
+                  </ActivateChannelCategory>
+                  <ActivateChannels>
+                    {/* 초록불 */}
+                    <ChannelOnOff />
+                    <ActivateChannelPlayerCount>
+                      20명
+                    </ActivateChannelPlayerCount>
+                  </ActivateChannels>
+                </ActivateChannelBox>
+              </div>
+              <>
+                <CurrentChannelJoinBtn>입장하기</CurrentChannelJoinBtn>
+              </>
+            </ActivateChannelContents>
+          </ActivateChannel1st>
+          <ActivateChannel1st>
+            <ActivateChannelImg1st src={gameImg3} />
+            <ActivateChannelContents>
+              <div style={{ display: "flex", flexDirection: "column" }}>
+                <ActivateChannelTitle>{gameName3}</ActivateChannelTitle>
+                <ActivateChannelBox>
+                  <ActivateChannelCategory>
+                    RPG Simulation
+                  </ActivateChannelCategory>
+                  <ActivateChannels>
+                    {/* 초록불 */}
+                    <ChannelOnOff />
+                    <ActivateChannelPlayerCount>
+                      20명
+                    </ActivateChannelPlayerCount>
+                  </ActivateChannels>
+                </ActivateChannelBox>
+              </div>
+              <>
+                <CurrentChannelJoinBtn>입장하기</CurrentChannelJoinBtn>
+              </>
+            </ActivateChannelContents>
+          </ActivateChannel1st>
+        </div>
       </ActivateChannelLayout>
     </>
   );
@@ -42,7 +122,7 @@ const ChannelTitle = styled.div`
   font-size: 20px;
   position: absolute;
   width: 100%;
-  top: -30px;
+  text-shadow: 0px 0px 15px white;
 `;
 const ActivateChannelContents = styled.div`
   display: flex;
@@ -95,8 +175,9 @@ const ActivateChannelImg1st = styled.img`
 const ActivateChannelLayout = styled.div`
   display: flex;
   justify-content: center;
-  margin-top: 100px;
+  margin-top: 80px;
   position: relative;
+  z-index: 999;
 `;
 const ActivateChannel1st = styled.div`
   width: 900px;
@@ -106,6 +187,9 @@ const ActivateChannel1st = styled.div`
   border-radius: 10px;
   cursor: pointer;
   color: white;
+  position: relative;
+  margin-top: 30px;
+  box-shadow: 3px 4px 3px 2px black;
 `;
 const CurrentChannelJoinBtn = styled.span`
   width: 150px;
