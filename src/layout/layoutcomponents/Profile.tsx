@@ -58,7 +58,7 @@ function Profile() {
       result?.data.response.players[0].personaname +
         " " +
         "#" +
-        result.config.params.steamids.slice(13, 18)
+        result?.config.params.steamids.slice(13, 18)
     );
     sessionStorage.setItem(
       "gameextrainfo",
@@ -73,7 +73,7 @@ function Profile() {
         result?.data.response.players[0].personaname +
         " " +
         "#" +
-        result.config.params.steamids.slice(13, 18),
+        result?.config.params.steamids.slice(13, 18),
       gameid: result?.data.response.players[0].gameid,
       gameextrainfo: result?.data.response.players[0].gameextrainfo,
       login: online,
@@ -109,7 +109,7 @@ function Profile() {
   };
 
   const { data: recentGame } = useQuery("getRecentGameData", getRecentGameData);
-  const GameData = recentGame?.data.response.games.slice(0, 3);
+  const GameData = recentGame?.data.response.games;
 
   //유저 최신정보 & 타임스탬프
   const timeStamp = async () => {
