@@ -28,11 +28,10 @@ function GameChannelBlock({ game }: any) {
           </TitleLinear>
           <GameChannelInfo>
             <GameChannelCategory>
-              {game.genres[0]?.description}, {game.genres[1]?.description},{" "}
-              {game.genres[2]?.description}
+              {game.genres ? game?.genres[0]?.description : null}&nbsp;
+              {game.genres ? game?.genres[1]?.description : null}&nbsp;
+              {game.genres ? game?.genres[2]?.description : null}&nbsp;
             </GameChannelCategory>
-            {/* <GameChannelCategory>{game.genres[1]?.description}</GameChannelCategory>
- <GameChannelCategory>{game.genres[2]?.description}</GameChannelCategory> */}
 
             <NumberOfPlayer>
               <div
@@ -48,8 +47,14 @@ function GameChannelBlock({ game }: any) {
           </GameChannelInfo>
         </div>
         <AdmitButton
-          onClick={() => navigate(`/teamchat/:${game.name}`, {})}
-          key={game.id}
+          onClick={() =>
+            navigate(`/Teamchat/:${game.name.replaceAll(" ", "_")}`, {
+              state: game?.filter(
+                (x: any) => x.steam_appid === game.steam_appid
+              ),
+            })
+          }
+          key={game?.id}
         >
           입장하기
         </AdmitButton>
