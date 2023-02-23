@@ -24,11 +24,14 @@ import { FaUserFriends } from "react-icons/fa";
 import { MdVoiceChat } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
 import { useLocation } from "react-router-dom";
+import { useParams } from "react-router-dom";
+import socket from "../socket";
 
 function Layout() {
   const navigate = useNavigate();
   const location = useLocation();
   const locationName = location.pathname;
+  const params = useParams();
 
   const myId = sessionStorage.getItem("steamid");
 
@@ -50,7 +53,11 @@ function Layout() {
     useRecoilState<FriendSearchProps[]>(friendAllState);
   //친구 요청 온 내역 전체
   const [friendAdd] = useRecoilValue(newFriendAdd);
-
+  // window.onload = () => {
+  //   if (window.location.pathname.slice(0, 9) === "/teamchat") {
+  //     setLayoutMenu("voicetalk");
+  //   }
+  // };
   //메뉴 탭눌렀을때 (친구제외)
   const LayoutButtonOnClick = (i: string) => {
     if (layoutMenu === i) {
@@ -88,13 +95,13 @@ function Layout() {
   };
   const { isLoading, isError, data, error } = useQuery("friend", getAllFriend);
 
-  // if (isLoading) {
-  //   return <p>로딩중</p>;
-  // }
-  // if (isError) {
-  //   console.log("오류내용", error);
-  //   return <p>오류</p>;
-  // }
+  if (isLoading) {
+    return <p>로딩중</p>;
+  }
+  if (isError) {
+    console.log("오류내용", error);
+    return <p>오류</p>;
+  }
 
   //양쪽 다 친구 내역
   const friend = getFriendAuth?.filter((i: FriendProps) => {
@@ -146,6 +153,7 @@ function Layout() {
           onClick={() => {
             FriendButtonOnClick("close");
             navigate("/");
+            window.scrollTo({ top: 0, behavior: "smooth" });
           }}
         >
           <AiFillHome className="homeIcon" />
@@ -157,6 +165,7 @@ function Layout() {
           onClick={() => {
             FriendButtonOnClick("close");
             navigate("/Channelsearchpage");
+            window.scrollTo({ top: 0, behavior: "smooth" });
           }}
         >
           <AiOutlineSearch className="searchIcon" />
