@@ -110,6 +110,7 @@ function Profile() {
 
   const { data: recentGame } = useQuery("getRecentGameData", getRecentGameData);
   const GameData = recentGame?.data.response.games.slice(0, 3);
+  console.log(GameData);
 
   //유저 최신정보 & 타임스탬프
   const timeStamp = async () => {
