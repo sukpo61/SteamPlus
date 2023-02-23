@@ -9,7 +9,6 @@ export const CurrentGame = ({ game }: any) => {
     <CurrentGameLayout>
       {/* 게임이미지 */}
       {/* <CurrentGameImg src={game?.gameMainImg} /> */}
-
       <GameVideo src={Video} controls autoPlay muted loop />
       <CurrentGameBlackImg />
       <CurrentGameBox>
