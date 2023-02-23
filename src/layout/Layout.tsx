@@ -22,7 +22,7 @@ import { AiFillHome } from "react-icons/ai";
 import { AiOutlineSearch } from "react-icons/ai";
 import { FaUserFriends } from "react-icons/fa";
 import { MdVoiceChat } from "react-icons/md";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 
 function Layout() {
@@ -50,7 +50,11 @@ function Layout() {
     useRecoilState<FriendSearchProps[]>(friendAllState);
   //친구 요청 온 내역 전체
   const [friendAdd] = useRecoilValue(newFriendAdd);
-
+  // window.onload = () => {
+  //   if (window.location.pathname.slice(0, 9) === "/teamchat") {
+  //     setLayoutMenu("voicetalk");
+  //   }
+  // };
   //메뉴 탭눌렀을때 (친구제외)
   const LayoutButtonOnClick = (i: string) => {
     if (layoutMenu === i) {
@@ -71,30 +75,30 @@ function Layout() {
       setLayoutMenu(i);
     }
   };
-
+  useEffect(() => {});
   const getFriendSearch = async () => {
     const response = await axios.get("http://localhost:3001/auth");
     setFriendAllRecoil(response?.data);
     return response;
   };
+  //렌더링 여러번 되는 문제가 있음
   const { data: friendSearch } = useQuery("friendsearch", getFriendSearch);
 
   const getAllFriend = async () => {
     //비동기함수는 최대한 동기적으로 활용가능하게
     const response = await axios.get("http://localhost:3001/friend");
     setGetFriendAuth(response?.data);
-
     return response;
   };
   const { isLoading, isError, data, error } = useQuery("friend", getAllFriend);
 
-  // if (isLoading) {
-  //   return <p>로딩중</p>;
-  // }
-  // if (isError) {
-  //   console.log("오류내용", error);
-  //   return <p>오류</p>;
-  // }
+  if (isLoading) {
+    return <p>로딩중</p>;
+  }
+  if (isError) {
+    console.log("오류내용", error);
+    return <p>오류</p>;
+  }
 
   //양쪽 다 친구 내역
   const friend = getFriendAuth?.filter((i: FriendProps) => {
