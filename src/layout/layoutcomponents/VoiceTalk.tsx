@@ -4,6 +4,7 @@ import styled from "styled-components";
 import { useRecoilValue } from "recoil";
 
 function VoiceTalk() {
+  console.log("1234");
   const layoutMenu = useRecoilValue(LayoutButton);
 
   return <VoiceTalkDiv layoutMenu={layoutMenu}>VoiceTalk</VoiceTalkDiv>;
