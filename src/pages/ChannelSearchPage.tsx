@@ -101,7 +101,10 @@ const ChannelSearchPage: any = () => {
         gameCategoryData2?.data[gameSummary?.data.items[i].id].data
       );
     }
-    return gameList;
+    const filterList = gameList.filter((game) => game.type === "game");
+    console.log("dlc", filterList);
+    return filterList;
+    // return gameList;
   };
   const { data: gameSummaryData } = useQuery(
     ["gameSummaryData", termResult],
