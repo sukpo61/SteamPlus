@@ -109,7 +109,10 @@ function Profile() {
   };
 
   const { data: recentGame } = useQuery("getRecentGameData", getRecentGameData);
-  const GameData = recentGame?.data.response.games.slice(0, 3);
+  // const GameData = recentGame?.data.response.games.slice(0, 3);
+  const GameData = recentGame?.data?.response.games;
+
+  console.log("GameData", GameData);
 
   //유저 최신정보 & 타임스탬프
   const timeStamp = async () => {
@@ -235,10 +238,16 @@ function Profile() {
             </>
           ) : (
             <>
-              <RecentGame> 최근 활동한 게임</RecentGame>
-              {GameData?.map((gameData: any) => {
-                return <RecentGameData gameData={gameData} />;
-              })}
+              {GameData === undefined ? (
+                <RecentGame> 최근 활동한 게임이 없습니다.</RecentGame>
+              ) : (
+                <>
+                  <RecentGame> 최근 활동한 게임</RecentGame>
+                  {GameData?.slice(0, 3).map((gameData: any) => {
+                    return <RecentGameData gameData={gameData} />;
+                  })}{" "}
+                </>
+              )}
             </>
           )}
         </ProfileBox>
