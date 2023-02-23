@@ -4,12 +4,15 @@ import { ActivateChannel } from "../components/ActivateChannel";
 import { PoularChannel } from "../components/PoularChannel";
 import { CurrentGame } from "../components/CurrentGame";
 import { useQuery } from "react-query";
+//578080
+//582010
+//945360
+
 function MainPage() {
-  const APIKEY = "234E0113F33D5C7C4D4D5292C6774550";
   const GameId: any = sessionStorage.getItem("gameid");
   const GameIds: any =
     GameId === "undefined" || GameId === null
-      ? 1672970
+      ? 945360
       : sessionStorage.getItem("gameid");
   //게임이미지 불러오기
   const Gamedata = async () => {
@@ -17,37 +20,55 @@ function MainPage() {
       `https://cors-anywhere.herokuapp.com/http://store.steampowered.com/api/appdetails/`,
       {
         params: {
-          // appids: GameId,
-          appids: GameIds, // 해당 게임의 id값
+          appids: GameIds, // 해당 게임의 id값'
         },
       }
     );
-
-    return {
-      gametitle: response.data[GameIds].data.name,
-      gameCategories: response.data[GameIds].data.genres[0].description,
-      gameCategories2: response.data[GameIds].data.genres[1].description,
-      gameCategories3: response.data[GameIds].data.genres[2].description,
-      gameMainImg: response.data[GameIds].data.screenshots[1].path_full,
-      gameSubimg: response.data[GameIds].data.header_image,
+    const aaa: any = {
+      gamesdescription: response?.data[GameIds].data.short_description,
+      gamevideo: response?.data[GameIds].data.movies[0].webm.max,
+      gametitle: response?.data[GameIds].data.name,
+      gameCategories: response?.data[GameIds].data.genres[0].description,
+      gameCategories2:
+        response?.data[GameIds].data.genres.length < 2
+          ? ""
+          : response?.data[GameIds].data.genres[1].description,
+      gameCategories3:
+        response?.data[GameIds].data.genres.length < 3
+          ? ""
+          : response?.data[GameIds].data.genres[2].description,
+      gameMainImg: response?.data[GameIds].data.screenshots[1].path_full,
+      gameSubimg: response?.data[GameIds].data.header_image,
     };
-    // return response
+    return aaa;
   };
-  // console.log(GameIds);
-
   const { data }: any = useQuery("Gamedata", Gamedata);
-  // console.log("data2", data);
-  // 새로고침시 업데이트하기
+
+  ///인기게임 데이터 api
+  const getFeaturedGames = async () => {
+    const response = await axios.get(
+      "https://store.steampowered.com/api/featured"
+    );
+    console.log("response", response?.data?.featured_win[0]);
+
+    const FeaturedGames: any = {
+      game1: response?.data?.featured_win[0],
+      game2: response?.data?.featured_win[1],
+      game3: response?.data?.featured_win[2],
+    };
+    return FeaturedGames;
+  };
+
+  const { data: dataa }: any = useQuery("getFeaturedGames", getFeaturedGames);
 
   return (
     <MainLayout>
       {/* 메인게임 이미지 */}
       <CurrentGame game={data} />
-
       {/* 인기채널 */}
-      <PoularChannel game={data} />
+      <PoularChannel game={data} data2={dataa} />
       {/* 현재활성화된 채널 */}
-      <ActivateChannel game={data} />
+      <ActivateChannel game={data} data2={dataa} />
     </MainLayout>
   );
 }
