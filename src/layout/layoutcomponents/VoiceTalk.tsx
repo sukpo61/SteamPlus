@@ -23,8 +23,6 @@ function VoiceTalk() {
     reset: resetTitle,
   } = useInput("");
 
-  console.log(friendAllRecoil);
-
   const onRoomSubmit = (newroom: any) => {
     if (roomtitle === "") {
       window.alert("제목을 입력하세요");
@@ -47,7 +45,7 @@ function VoiceTalk() {
 
   const handleJoin = async (NewData: any) => {
     if (currentRoom) {
-      socket.emit("join_room", NewData);
+      socket.emit("leave", NewData);
     }
     socket.emit("join_room", NewData);
     // await getMedia();dd
@@ -59,17 +57,52 @@ function VoiceTalk() {
     return (
       <RoomWrap key={room.name}>
         <RoomTitleWrap>
-          <span>#{room.name.split("/")[1]}</span>
+          <span
+            onClick={() => {
+              setCurrentRoom(room.name);
+              handleJoin({
+                roomtitle: room.name,
+                channelName,
+              });
+            }}
+          >
+            #{room.name}
+          </span>
           <span></span>
         </RoomTitleWrap>
-        {room.name === currentRoom ? (
+        <RoomUserList>
+          {room.userinfo.map((user: any) => {
+            const info = friendAllRecoil.find((e: any) => e.id === user.userid);
+
+            return (
+              <RoomUserWrap key={info?.id}>
+                <img src={info?.profileimg}></img>
+                <span>{info?.nickname}</span>
+              </RoomUserWrap>
+            );
+          })}
+        </RoomUserList>
+        {/* {room.name === currentRoom ? (
           <Usercount>
             <Usercircle></Usercircle>
             <span>{room.userinfo.length}</span>
           </Usercount>
         ) : (
-          <RoomUserList>현재룸</RoomUserList>
-        )}
+          <RoomUserList>
+            {room.userinfo.map((user: any) => {
+              const info = friendAllRecoil.find(
+                (e: any) => e.id === user.userid
+              );
+
+              return (
+                <RoomUserWrap key={info?.id}>
+                  <img src={info?.profileimg}></img>
+                  <span>{info?.nickname}</span>
+                </RoomUserWrap>
+              );
+            })}
+          </RoomUserList>
+        )} */}
       </RoomWrap>
     );
   });
@@ -159,6 +192,19 @@ const Usercount = styled.div`
   display: flex;
   flex-direction: row;
   color: white;
+`;
+const RoomUserWrap = styled.div`
+  margin-top: 16px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  color: white;
+  img {
+    width: 40px;
+    height: 40px;
+    border-radius: 20px;
+    margin-right: 12px;
+  }
 `;
 const RoomUserList = styled.div`
   margin-top: 16px;
