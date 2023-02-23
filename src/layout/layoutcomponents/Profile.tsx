@@ -1,10 +1,11 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { LayoutButton } from "../../recoil/atom";
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
 import { useRecoilValue } from "recoil";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { useQuery } from "react-query";
+import RecentGameData from "../../components/RecentGameData";
 
 function Profile() {
   // profile 클릭 state
@@ -63,6 +64,7 @@ function Profile() {
       "gameextrainfo",
       result?.data.response.players[0].gameextrainfo
     );
+
     //steam에서 변경된사항이 있을때 put을 통해 dbjson을 업데이트해줌
     const userinfo = {
       id: result.config.params.steamids,
@@ -80,6 +82,7 @@ function Profile() {
 
     axios.put(`http://localhost:3001/auth/${steamId}`, userinfo);
     axios.post(serverUrl, userinfo);
+
     window.location.replace("/");
     return userinfo;
   };
@@ -90,20 +93,23 @@ function Profile() {
     const result = await axios.get(
       `http://localhost:3001/auth/${ProfleSteamId}`
     );
-    // // 타임스탬프 찍어주기
-    // if (data === undefined) {
-    //   await axios.put(`http://localhost:3001/auth/${ProfleSteamId}`, {
-    //     ...result?.data,
-    //     lastLogin: new Date(),
-    //   });
-
-    //   return result;
-    // } else {}
 
     return result;
   };
 
   const { data: loginInformation } = useQuery("loginInformation", getLoginData);
+
+  //최근 게임활동 정보가져오기
+  const getRecentGameData = async () => {
+    const recentGame = await axios.get(
+      `http://api.steampowered.com/IPlayerService/GetRecentlyPlayedGames/v0001/?key=${APIKEY}&steamid=${ProfleSteamId}&format=json`
+    );
+    // sessionStorage.setItem("recentGame", recentGame.data.response.games);
+    return recentGame;
+  };
+
+  const { data: recentGame } = useQuery("getRecentGameData", getRecentGameData);
+  const GameData = recentGame?.data.response.games.slice(0, 3);
 
   //유저 최신정보 & 타임스탬프
   const timeStamp = async () => {
@@ -117,6 +123,7 @@ function Profile() {
         },
       }
     );
+
     sessionStorage.setItem("gameid", result?.data.response.players[0].gameid);
     sessionStorage.setItem("steamid", result.config.params.steamids);
     sessionStorage.setItem(
@@ -147,12 +154,6 @@ function Profile() {
       login: online,
       lastLogin: new Date(),
     });
-
-    // await axios.put(`http://localhost:3001/auth/${ProfleSteamId}`, {
-    //   // ...result?.data,
-    //   // lastLogin: new Date(),
-    // });
-    // return result;
   };
   //유저 최신정보 & 타임스탬프 새로고침 할 떄 마다.
   window.onload = timeStamp;
@@ -172,43 +173,11 @@ function Profile() {
     const onlineOnOff = ProfileLogin === "true" ? "false" : "true";
     sessionStorage.setItem("login", onlineOnOff);
     setOnline(!online);
-
     await axios.put(`http://localhost:3001/auth/${ProfleSteamId}`, {
       ...loginInformation?.data,
       login: !online,
     });
   };
-  // //새로고침함수
-  // window.onload = async function () {
-  //   const result = await axios.get(
-  //     "https://api.steampowered.com/ISteamUser/GetPlayerSummaries/v2/",
-  //     {
-  //       params: {
-  //         key: APIKEY,
-  //         //스팀로그인
-  //         steamids: ProfleSteamId,
-  //       },
-  //     }
-  //   );
-  //   sessionStorage.setItem("gameid", result?.data.response.players[0].gameid);
-  //   sessionStorage.setItem("steamid", result.config.params.steamids);
-  //   sessionStorage.setItem(
-  //     "profileimg",
-  //     result?.data.response.players[0].avatarfull
-  //   );
-  //   sessionStorage.setItem(
-  //     "nickName",
-  //     result?.data.response.players[0].personaname +
-  //       " " +
-  //       "#" +
-  //       result.config.params.steamids.slice(13, 18)
-  //   );
-  //   sessionStorage.setItem(
-  //     "gameextrainfo",
-  //     result?.data.response.players[0].gameextrainfo
-  //   );
-  //   return "Are you sure you want to refresh?";
-  // };
 
   useEffect(() => {
     let polling = setInterval(() => {
@@ -220,23 +189,23 @@ function Profile() {
     };
   }, []);
 
-  // if (isLoading) {
-  //   return <p>Loading data...</p>;
-  // }
   return (
     <>
       <ProfileDiv layoutMenu={layoutMenu}>
-        <ProfileImgBox>
-          {ProfileNicName === null ? (
-            <ProfileImg src={require("../../img/img1.png")} />
-          ) : (
-            <ProfileImg src={`${ProfileImgUrl}`} />
-          )}
-        </ProfileImgBox>
         {ProfileNicName === null ? (
-          <ProfileInfoBox>
-            <ProfileNickName>비회원</ProfileNickName>
-          </ProfileInfoBox>
+          ""
+        ) : (
+          <>
+            <ProfileLogout onClick={logout}>로그아웃</ProfileLogout>
+            <ProfileImgBox>
+              {" "}
+              <ProfileImg src={`${ProfileImgUrl}`} />{" "}
+            </ProfileImgBox>
+          </>
+        )}
+
+        {ProfileNicName === null ? (
+          ""
         ) : (
           <ProfileInfoBox>
             <ProfileNickName>{ProfileNicName}</ProfileNickName>
@@ -246,12 +215,10 @@ function Profile() {
               {online ? <ChannelOn /> : <ChannelOff />}
               {online ? "온라인" : "오프라인"}
             </ChangeToggle>
-
-            <ProfileLogout onClick={logout}>로그아웃</ProfileLogout>
           </ProfileInfoBox>
         )}
 
-        <ProfileBox>
+        <ProfileBox ProfileNicName={ProfileNicName}>
           {ProfileNicName === null ? (
             <>
               <ProfileGameComments>
@@ -267,11 +234,12 @@ function Profile() {
               </ProfileGameLogin>
             </>
           ) : (
-            <ProfileGameTitles>
-              {ProfileGameTitle === "undefined"
-                ? "현재진행중인 게임이 없습니다."
-                : ProfileGameTitle + " " + "게임중 입니다."}
-            </ProfileGameTitles>
+            <>
+              <RecentGame> 최근 활동한 게임</RecentGame>
+              {GameData?.map((gameData: any) => {
+                return <RecentGameData gameData={gameData} />;
+              })}
+            </>
           )}
         </ProfileBox>
       </ProfileDiv>
@@ -280,6 +248,36 @@ function Profile() {
 }
 
 export default Profile;
+
+const moveUpAndDown = keyframes`
+  0% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-400px);
+  }
+  100% {
+    transform: translateY(0);
+  }
+`;
+
+const ScrollContainer = styled.div`
+  width: 800px;
+  height: 200px;
+  overflow: hidden;
+`;
+
+const ScrollContent = styled.div`
+  display: flex;
+  flex-direction: column;
+  animation: ${moveUpAndDown} 7s linear infinite;
+`;
+
+const ScrollItem = styled.div`
+  height: 100px;
+  background-color: #ccc;
+  margin-bottom: 20px;
+`;
 const ChangeToggle = styled.span`
   display: flex;
   font-size: 14px;
@@ -303,10 +301,16 @@ const ChannelOn = styled.div`
   margin-right: 5px;
 `;
 const ProfileLogout = styled.span`
+  color: #ccc;
   font-size: 13px;
   cursor: pointer;
+  position: absolute;
+  right: 20px;
 `;
 const ProfileDiv = styled.div<{ layoutMenu: String }>`
+  padding-top: 20px;
+  height: 100%;
+
   display: ${(props) => (props.layoutMenu === "profile" ? "block" : "none")};
 `;
 const ProfileImgBox = styled.div`
@@ -317,9 +321,7 @@ const ProfileImgBox = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  margin: 70px auto 0;
-  // border: 1px solid #ccc;
-  // box-shadow: 0px 0px 20px 3px #727272;
+  margin: 0px auto 0;
 `;
 const ProfileImg = styled.img`
   width: 173px;
@@ -338,34 +340,28 @@ const ProfileInfoBox = styled.div`
 const ProfileNickName = styled.div`
   font-size: 20px;
 `;
-const ProfileFriends = styled.div`
-  margin-top: 10px;
-  font-size: 15px;
-`;
-const ProfileBox = styled.div`
+
+const ProfileBox = styled.div<{ ProfileNicName: String | null }>`
   width: 352px;
-  height: 459px;
+  height: ${(props) => (props.ProfileNicName === null ? "950px" : "650px")};
   background-color: #192030;
-  margin-left: 24px;
-  margin-top: 50px;
+  margin: ${(props) => (props.ProfileNicName === null ? "" : "20px auto 0")};
+  position: ${(props) => (props.ProfileNicName !== null ? "" : "absolute")};
+  top: ${(props) => (props.ProfileNicName !== null ? "" : "50%")};
+  left: ${(props) => (props.ProfileNicName !== null ? "" : "50%")};
+  transform: ${(props) =>
+    props.ProfileNicName !== null ? "" : "translate(-50%, -50%);"};
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  border-radius: 10px;
 `;
 
-const ProfileBoxLayout = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-`;
-const ProfileGameTitles = styled.div`
-  margin-top: 20px;
-  font-size: 18px;
+const RecentGame = styled.div`
+  margin-top: 35px;
+  margin-bottom: 20px;
   color: white;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
 `;
 const ProfileGameComments = styled.div`
   color: gray;
