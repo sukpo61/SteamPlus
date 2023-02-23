@@ -21,6 +21,9 @@ const ChannelSearchPage: any = () => {
 
   const handleTermResult = () => {
     setTermResult(searchValue);
+    if (searchValue.length < 2) {
+      alert("나가");
+    }
     setSearchResult([]);
     // getGameSummary(searchValue, offset);
     // queryClient.invalidateQueries("gameSummaryData")
@@ -79,8 +82,6 @@ const ChannelSearchPage: any = () => {
     if (searchValue === "") {
       return;
     } else if (termResult.length < 2) {
-      console.log("asdf");
-      alert("두 글자 이상 입력해 주세요");
       setTermResult("");
       setSearchValue("");
       return;
