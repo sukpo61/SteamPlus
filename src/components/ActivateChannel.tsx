@@ -120,6 +120,7 @@ const ChannelOnOff = styled.div`
 const ChannelTitle = styled.div`
   color: white;
   font-size: 20px;
+  top: -5px;
   position: absolute;
   width: 100%;
   text-shadow: 0px 0px 15px white;
@@ -148,7 +149,7 @@ const ActivateChannelPlayerCount = styled.div`
 `;
 const ActivateChannelCategory = styled.div`
   font-family: "Noto Sans";
-  font-weight: 400;
+  font-weight: 200;
   font-size: 16px;
   color: #a7a9ac;
 `;
@@ -157,6 +158,8 @@ const ActivateChannelTitle = styled.div`
   font-weight: 600;
   font-size: 20px;
   color: #ffffff;
+
+  margin-top: -50px;
 `;
 const ActivateChannelBox = styled.div`
   display: flex;
@@ -176,6 +179,7 @@ const ActivateChannelLayout = styled.div`
   display: flex;
   justify-content: center;
   margin-top: 80px;
+  margin-bottom: 80px;
   position: relative;
   z-index: 999;
 `;
@@ -189,7 +193,11 @@ const ActivateChannel1st = styled.div`
   color: white;
   position: relative;
   margin-top: 30px;
-  box-shadow: 3px 4px 3px 2px black;
+  box-shadow: 0px 0px 15px 0px #000;
+  &:hover {
+    box-shadow: 0px 0px 15px 0px #fff;
+  }
+  transition: 0.5s ease;
 `;
 const CurrentChannelJoinBtn = styled.span`
   width: 150px;
@@ -204,4 +212,6 @@ const CurrentChannelJoinBtn = styled.span`
   color: #ffffff;
   cursor: pointer;
   margin-right: 30px;
+
+  margin-top: 70px;
 `;

@@ -76,7 +76,7 @@ const CurrentChannelJoinBtn = styled.span`
   width: 150px;
   height: 40px;
   line-height: 40px;
-  margin-top: 15px;
+  margin-top: 25px;
   margin-left: auto;
   text-align: center;
   background: #00b8c8;
