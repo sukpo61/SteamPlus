@@ -1,17 +1,18 @@
+import axios from "axios";
 import React, { useState } from "react";
+import { useQuery } from "react-query";
 import styled from "styled-components";
-export const PoularChannel = ({ game }: any) => {
-  const Description = game?.gamesdescription;
-  // const [englishText, setEnglishText] = useState('');
-  // const [koreanText, setKoreanText] = useState('');
 
-  // const handleTranslation = async () => {
-  //   try {
-  //     const result = await translate(englishText, { to: 'ko' });
-  //     setKoreanText(result.text);
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
+export const PoularChannel = ({ game, data2 }: any) => {
+  const Description = game?.gamesdescription;
+
+  const gameImg1 = data2?.game1?.header_image;
+  const gameName1 = data2?.game1?.name;
+  const gameImg2 = data2?.game2?.header_image;
+  const gameName2 = data2?.game2?.name;
+  const gameImg3 = data2?.game3?.header_image;
+  const gameName3 = data2?.game3?.name;
+
   return (
     <PoularChannelLayout>
       <>
@@ -21,11 +22,10 @@ export const PoularChannel = ({ game }: any) => {
             {/*활성화된 게임채널 */}
             <PopularChannelTitle>인기채널</PopularChannelTitle>
             <PopularChannelImg1st src={game?.gameSubimg} />
-            <Box>{Description}</Box>
             <ChannelBox>
               <PoPularChannelTitle>{game?.gametitle}</PoPularChannelTitle>
               <PoPularChannelCategory>
-                {game?.gameCategories}, {game?.gameCategories2},{" "}
+                {game?.gameCategories} {game?.gameCategories2}{" "}
                 {game?.gameCategories3}
                 <PoPularChannelActivate>
                   {/* 초록불 */}
@@ -33,18 +33,18 @@ export const PoularChannel = ({ game }: any) => {
                   <ChannelPlayerCount1st>20명</ChannelPlayerCount1st>
                 </PoPularChannelActivate>
               </PoPularChannelCategory>
+              <Box>{Description}</Box>
             </ChannelBox>
           </PopularChannel1st>
           <PoularChannelLayout2>
+            {/* 여기서부터  1 */}
             <PopularChannel1st2>
-              <PoPularChannelImg src={game?.gameSubimg} />
+              <PoPularChannelImg src={gameImg3} />
               <PoPularChannelBox>
-                <ChannelTitle1st2>{game?.gametitle}</ChannelTitle1st2>
+                <ChannelTitle1st2>{gameName3}</ChannelTitle1st2>
                 <PoPularChannelCategory2>
-                  {game?.gameCategories}, {game?.gameCategories2},{" "}
-                  {game?.gameCategories3}
+                  RPG Simulation
                   <PoPularChannelActivate>
-                    {/* 초록불 */}
                     <ChannelOnOff />
                     <ChannelPlayerCount1st2>20명</ChannelPlayerCount1st2>
                   </PoPularChannelActivate>
@@ -52,14 +52,12 @@ export const PoularChannel = ({ game }: any) => {
               </PoPularChannelBox>
             </PopularChannel1st2>
             <PopularChannel1st2>
-              <PoPularChannelImg src={game?.gameSubimg} />
+              <PoPularChannelImg src={gameImg1} />
               <PoPularChannelBox>
-                <ChannelTitle1st2>{game?.gametitle}</ChannelTitle1st2>
+                <ChannelTitle1st2>{gameName1}</ChannelTitle1st2>
                 <PoPularChannelCategory2>
-                  {game?.gameCategories}, {game?.gameCategories2},{" "}
-                  {game?.gameCategories3}
+                  Action Adventure
                   <PoPularChannelActivate>
-                    {/* 초록불 */}
                     <ChannelOnOff />
                     <ChannelPlayerCount1st2>20명</ChannelPlayerCount1st2>
                   </PoPularChannelActivate>
@@ -67,16 +65,12 @@ export const PoularChannel = ({ game }: any) => {
               </PoPularChannelBox>
             </PopularChannel1st2>
             <PopularChannel1st2>
-              <PoPularChannelImg src={game?.gameSubimg} />
-
+              <PoPularChannelImg src={gameImg2} />
               <PoPularChannelBox>
-                <ChannelTitle1st2>{game?.gametitle}</ChannelTitle1st2>
-
+                <ChannelTitle1st2>{gameName2}</ChannelTitle1st2>
                 <PoPularChannelCategory2>
-                  {game?.gameCategories}, {game?.gameCategories2},{" "}
-                  {game?.gameCategories3}
+                  Action RPG Strategy
                   <PoPularChannelActivate>
-                    {/* 초록불 */}
                     <ChannelOnOff />
                     <ChannelPlayerCount1st2>20명</ChannelPlayerCount1st2>
                   </PoPularChannelActivate>
@@ -84,6 +78,7 @@ export const PoularChannel = ({ game }: any) => {
               </PoPularChannelBox>
             </PopularChannel1st2>
 
+            {/* 여기서부터 */}
             <PopularChannel1st2>
               {/* <PoPularChannelImg src={gameimg} /> */}
               <div
@@ -115,11 +110,19 @@ export const PoularChannel = ({ game }: any) => {
   );
 };
 const Box = styled.div`
+  padding-top: 20px;
+  border-top: 1px solid #ccc;
   margin: 20px 20px 20px 20px;
-
-  width: 90%;
-  height: 900%;
   color: #ccc;
+  width: 90%;
+  max-height: 100px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: normal;
+  display: -webkit-box;
+  -webkit-line-clamp: 5; /* 최대 3줄까지 나눔 */
+  -webkit-box-orient: vertical;
+  word-break: break-all;
 `;
 const PopularChannelTitle = styled.div`
   color: white;
@@ -127,6 +130,7 @@ const PopularChannelTitle = styled.div`
   position: absolute;
   width: 100%;
   top: -30px;
+  text-shadow: 0px 0px 15px white;
 `;
 const PoularChannelLayout2 = styled.div`
   display: grid;
@@ -225,6 +229,7 @@ const PopularChannel1st = styled.div`
   background: #263245;
   border-radius: 10px;
   cursor: pointer;
+  box-shadow: 3px 4px 3px 2px black;
 `;
 const PopularChannel1st2 = styled.div`
   width: 232px;
@@ -237,6 +242,7 @@ const PopularChannel1st2 = styled.div`
   background: #263245;
   border-radius: 10px;
   cursor: pointer;
+  box-shadow: 3px 4px 3px 2px black;
 `;
 const ChannelBox = styled.div`
   display: flex;
@@ -246,7 +252,6 @@ const ChannelBox = styled.div`
 const PoPularChannelBox = styled.div`
   display: flex;
   flex-direction: column;
-
   margin-top: 10px;
 `;
 const PopularChannelImg1st = styled.img`
@@ -269,15 +274,17 @@ const PoPularChannelTitle = styled.div`
   font-family: "Noto Sans";
   font-weight: 600;
   font-size: 20px;
-  margin: 16px 0px 0 16px;
+  margin: 16px 0px 0 20px;
   letter-spacing: -0.02em;
   color: #ffffff;
 `;
 const ChannelTitle1st2 = styled.div`
+  display: flex;
+
   font-family: "Noto Sans";
   font-weight: 600;
   font-size: 16px;
-  width: 120px;
+  width: 100%;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -287,7 +294,7 @@ const PoPularChannelCategory = styled.div`
   font-family: "Noto Sans";
   font-weight: 400;
   font-size: 16px;
-  margin-left: 16px;
+  margin-left: 20px;
   display: flex;
   align-items: center;
   letter-spacing: -0.03em;
