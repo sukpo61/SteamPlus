@@ -2,7 +2,6 @@ import React, { useState, useEffect, useRef, useCallback } from "react";
 import axios from "axios";
 import { log } from "console";
 import styled from "styled-components";
-import InfiniteScroll from "react-infinite-scroll-component";
 
 import { useQuery, useQueryClient, useInfiniteQuery } from "react-query";
 
@@ -12,7 +11,6 @@ import GameChannelBlock from "../components/common/GameChannelBlock";
 import { useRecoilState, atom } from "recoil";
 
 const ChannelSearchPage: any = () => {
-  const APIKEY = "234E0113F33D5C7C4D4D5292C6774550";
   const [searchValue, setSearchValue] = useState("");
   const [searchResult, setSearchResult] = useState<any>([null]); // 검색어 없을때 예외처리
   const [termResult, setTermResult] = useState("");
@@ -25,20 +23,16 @@ const ChannelSearchPage: any = () => {
   };
 
   const handleTermResult = () => {
-    if (searchValue.length <= 1) {
-      alert("두 글자 이상 입력해 주세요");
-      setTermResult(termResult);
-    } else {
-      setSearchResult([]);
-      setTermResult(searchValue);
-    }
+    // if (searchValue.length <= 1) {
+    //   alert("두 글자 이상 입력해 주세요");
+    //   // setTermResult(termResult);
+    //   return;
+    // } else {
+    setSearchResult([]);
+    setTermResult(searchValue);
     // getGameSummary(searchValue, offset);
     // queryClient.invalidateQueries("gameSummaryData")
   };
-
-  // const handleResultList = () => {
-  //   setSearchResult([]);
-  // };
 
   // 리액트 인피니티 스크롤러
   //  https://velog.io/@blee94/React-Pagination-Infinite-Scroll-%ED%8E%98%EC%9D%B4%EC%A7%80%EB%84%A4%EC%9D%B4%EC%85%98%EA%B3%BC-%EB%AC%B4%ED%95%9C%EC%8A%A4%ED%81%AC%EB%A1%A4-%EC%97%90-%EB%8C%80%ED%95%B4-ARABOZA
@@ -102,6 +96,11 @@ const ChannelSearchPage: any = () => {
   const getGameSummary = async () => {
     if (searchValue === "") {
       return;
+    } else if (termResult.length < 2) {
+      alert("두 글자 이상 입력해 주세요");
+      setTermResult("");
+      setSearchValue("");
+      return;
     }
     const gameSummary = await axios.get(
       `https://store.steampowered.com/api/storesearch/?cc=us&l=en&term=${termResult}&pagesize=20`
@@ -132,7 +131,7 @@ const ChannelSearchPage: any = () => {
     data: gameSummaryData, // 게임id
   } = useQuery(["gameSummaryData", termResult], getGameSummary);
 
-  // console.log("gameSummaryData", gameSummaryData);
+  console.log("gameSummaryData", gameSummaryData);
 
   //검색할때마다 매번 searchValue로 리셋, 새로운 정보를 받아올떄마다 querykey가 바껴야함
   //특정 list를 불러올 때 정적쿼리키를 쓰는게 좋을때가 많음
@@ -191,7 +190,6 @@ const ChannelSearchPage: any = () => {
       </SearchCount>
       <GameSearchList>
         {gameSummaryData?.map((game: any) => {
-          // console.log("game", game.genre);
           return (
             <GameChannelBlockView key={game?.id}>
               <GameChannelBlock game={game} />
