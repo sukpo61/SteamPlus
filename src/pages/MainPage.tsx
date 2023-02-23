@@ -9,7 +9,7 @@ function MainPage() {
   const GameId: any = sessionStorage.getItem("gameid");
   const GameIds: any =
     GameId === "undefined" || GameId === null
-      ? 990080
+      ? 1672970
       : sessionStorage.getItem("gameid");
   //게임이미지 불러오기
   const Gamedata = async () => {
