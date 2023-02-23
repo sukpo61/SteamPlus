@@ -27,10 +27,14 @@ function GameChannelBlock({ game }: any) {
             <GameChannelTitle>{`${game?.name}`}</GameChannelTitle>
           </TitleLinear>
           <GameChannelInfo>
-            <GameChannelCategory>{game.genres[0]?.description} {game.genres[1]?.description} {game.genres[2]?.description}</GameChannelCategory>
+            <GameChannelCategory>
+              {game.genres ? game?.genres[0]?.description : null}&nbsp;
+              {game.genres ? game?.genres[1]?.description : null}&nbsp;
+              {game.genres ? game?.genres[2]?.description : null}&nbsp;
+            </GameChannelCategory>
             {/* <GameChannelCategory>{game.genres[1]?.description}</GameChannelCategory>
  <GameChannelCategory>{game.genres[2]?.description}</GameChannelCategory> */}
-    
+
             <NumberOfPlayer>
               <div
                 style={{
@@ -46,7 +50,7 @@ function GameChannelBlock({ game }: any) {
         </div>
         <AdmitButton
           onClick={() => navigate(`/teamchat/:${game.name}`, {})}
-          key={game.id}
+          key={game?.id}
         >
           입장하기
         </AdmitButton>
