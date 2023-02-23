@@ -235,10 +235,16 @@ function Profile() {
             </>
           ) : (
             <>
-              <RecentGame> 최근 활동한 게임</RecentGame>
-              {GameData?.map((gameData: any) => {
-                return <RecentGameData gameData={gameData} />;
-              })}
+              {GameData === undefined ? (
+                <RecentGame> 최근 활동한 게임이 없습니다.</RecentGame>
+              ) : (
+                <>
+                  <RecentGame> 최근 활동한 게임</RecentGame>
+                  {GameData?.slice(0, 3).map((gameData: any) => {
+                    return <RecentGameData gameData={gameData} />;
+                  })}{" "}
+                </>
+              )}
             </>
           )}
         </ProfileBox>
