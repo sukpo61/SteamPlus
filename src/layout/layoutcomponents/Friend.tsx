@@ -39,7 +39,8 @@ function Friend() {
   const [friendAdd] = useRecoilValue(newFriendAdd);
   //계정 내역 전체 불러오기
   const [friendAllRecoil, setFriendAllRecoil] = useRecoilState(friendAllState);
-
+  //우클릭한 친구 id 가져오기
+  const [clickedId, setClickedId] = useState<string>("");
   //친구 우클릭
   const [menuPosition, setMenuPosition] = useState<{
     xPos: string;
@@ -94,11 +95,12 @@ function Friend() {
   });
 
   // //친구 우클릭
-  const handleContextMenu = (event: any) => {
+  const handleContextMenu = (event: any, i: string) => {
     event.preventDefault();
+    setClickedId(i);
     setMenuPosition({
-      xPos: `${event.screenX}px`,
-      yPos: `${event.screenY - 140}px`,
+      xPos: `${event.clientX}px`,
+      yPos: `${event.clientY}px`,
     });
   };
 
@@ -118,7 +120,6 @@ function Friend() {
       //클릭하면 이벤트 삭제
       window.removeEventListener("click", handleWindowClick);
     }
-
     return () => {
       window.removeEventListener("click", handleWindowClick);
     };
@@ -152,12 +153,14 @@ function Friend() {
       {/* 친구 목록 박스 */}
       {friend?.map((i: FriendSearchProps) => {
         return (
-          <FriendBoxDiv onContextMenu={handleContextMenu}>
+          <FriendBoxDiv
+            onContextMenu={(event) => handleContextMenu(event, i.id)}
+          >
             <FriendContextMenu
               xPos={menuPosition.xPos}
               yPos={menuPosition.yPos}
               onClose={handleCloseContextMenu}
-              id={i.id}
+              id={clickedId}
             />
 
             <FriendBoxNameDiv>
