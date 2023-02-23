@@ -33,7 +33,7 @@ function MainPage() {
     };
     // return response
   };
-  console.log(GameIds);
+  // console.log(GameIds);
 
   const { data }: any = useQuery("Gamedata", Gamedata);
   // console.log("data2", data);
