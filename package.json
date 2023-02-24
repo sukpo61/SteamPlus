@@ -33,7 +33,6 @@
     "react-hook-form": "^7.43.1",
     "react-horizontal-scrolling-menu": "^3.2.3",
     "react-icons": "^4.7.1",
-    "react-infinite-scroll-component": "^6.1.0",
     "react-modal": "^3.16.1",
     "react-query": "^3.39.3",
     "react-router-dom": "6.4",
