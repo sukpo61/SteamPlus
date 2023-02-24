@@ -2,8 +2,6 @@ import React, { useState, useEffect, useRef, useCallback } from "react";
 import axios from "axios";
 import { log } from "console";
 import styled from "styled-components";
-import InfiniteScroll from "react-infinite-scroll-component";
-// import {getGameSummary, getGameCategory} from "../../api"
 
 import { useQuery, useQueryClient } from "react-query";
 
@@ -13,23 +11,26 @@ import GameChannelBlock from "../components/common/GameChannelBlock";
 import { useRecoilState, atom } from "recoil";
 
 const ChannelSearchPage: any = () => {
-  const APIKEY = "234E0113F33D5C7C4D4D5292C6774550";
   const [searchValue, setSearchValue] = useState("");
   const [searchResult, setSearchResult] = useState<any>([null]); // 검색어 없을때 예외처리
   const [termResult, setTermResult] = useState("");
 
-  // const queryClient = useQueryClient()
-  // https://cors-anywhere.herokuapp.com/
-
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchValue(e.target.value);
   };
+
   const handleTermResult = () => {
     setTermResult(searchValue);
+    if (searchValue.length < 2) {
+      alert("나가");
+    }
     setSearchResult([]);
     // getGameSummary(searchValue, offset);
     // queryClient.invalidateQueries("gameSummaryData")
   };
+
+  //https://github.com/Revadike/InternalSteamWebAPI
+  // steam 공식 github!!!!!!!!!!!!!!!!!
 
   // const lastGameRef = useRef<any>(null);
   // const [offset, setOffset] = useState<any>(0);
@@ -38,6 +39,8 @@ const ChannelSearchPage: any = () => {
   //   window.addEventListener("scroll", handleScroll); // addEventListener 이벤트 추가
   //   return () => window.removeEventListener("scroll", handleScroll); // removeEventListener 이벤트 제거
   // }, []);
+
+  // 킵
 
   // const handleScroll = useCallback(() => {
   //   if (
@@ -73,25 +76,22 @@ const ChannelSearchPage: any = () => {
   //   }
   // };
 
-  //디바운싱
-
-  // 2200780
-
   // searchValue: any, offset: number
 
   const getGameSummary = async () => {
     if (searchValue === "") {
       return;
     } else if (termResult.length < 2) {
-      alert("나가");
       setTermResult("");
       setSearchValue("");
       return;
     }
     const gameSummary = await axios.get(
-      `https://store.steampowered.com/api/storesearch/?cc=us&l=en&term=${termResult}`
+      `https://store.steampowered.com/api/storesearch/?cc=us&l=en&term=${termResult}&pagesize=20`
     ); // 게임 Id만 가져오기!!!
+
     const gameList = [];
+
     for (let i = 0; i < gameSummary?.data.items.length; i++) {
       const gameCategoryData2 = await axios.get(
         `https://store.steampowered.com/api/appdetails/?appids=${gameSummary?.data.items[i].id}`
@@ -103,19 +103,18 @@ const ChannelSearchPage: any = () => {
     }
     const filterList = gameList.filter((game) => game.type === "game");
     console.log("dlc", filterList);
-    return filterList;
-    // return gameList;
+    return filterList; // filterDLC는 getGameSummary 안에서만 사용 가능!!!!
   };
-  const { data: gameSummaryData } = useQuery(
-    ["gameSummaryData", termResult],
-    getGameSummary
-  );
-  //검색할때마다 매번 searchValue로 리셋, 새로운 정보를 받아올떄마다 querykey가 바껴야함
-  //특정 list를 불러올 때 정적쿼리키를 쓰는게 좋을때가 많음
-  //만약 string으로된 키값만 사용한다면 리렌더링될때 불필요한 서버요청을 안하게됨(캐시메모리에 잇는걸 가져다 써서)
-  //queryfunction재실행시 캐시메모리에 있는걸 가져다씀
 
-  //!!!!!캐시메모리!!!!!!
+  // useInView = react-intersection-observer 라이브러리
+  // 리스트 끝까지 내렸을때 inview가 true가 됨(성민준님 추정)
+
+  const {
+    data: gameSummaryData, // 게임id
+  } = useQuery(["gameSummaryData", termResult], getGameSummary);
+
+  console.log("gameSummaryData", gameSummaryData);
+
   return (
     <div
       style={{
