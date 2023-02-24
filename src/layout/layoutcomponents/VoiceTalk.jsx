@@ -10,6 +10,7 @@ import { FriendSearchProps } from "./FriendSearch";
 import { DataChannelMapRecoil } from "../../recoil/atom";
 import { chatTextRecoil } from "../../recoil/atom";
 import TeamChat from "../../pages/TeamChat";
+import { useLocation } from "react-router";
 
 function VoiceTalk() {
   const layoutMenu = useRecoilValue(LayoutButton);

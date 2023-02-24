@@ -49,7 +49,7 @@ function MainPage() {
   ///인기게임 데이터 api
   const getFeaturedGames = async () => {
     const response = await axios.get(
-      "https://store.steampowered.com/api/featured"
+      "https://cors-anywhere.herokuapp.com/https://store.steampowered.com/api/featured"
     );
 
     const FeaturedGames: any = {
