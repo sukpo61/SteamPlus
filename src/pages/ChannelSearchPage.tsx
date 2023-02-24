@@ -22,7 +22,7 @@ const ChannelSearchPage: any = () => {
   const handleTermResult = () => {
     setTermResult(searchValue);
     if (searchValue.length < 2) {
-      alert("나가");
+      alert("두 글자 이상 입력해 주세요");
     }
     setSearchResult([]);
     // getGameSummary(searchValue, offset);
