@@ -26,11 +26,11 @@ const ChannelSearchPage: any = () => {
   };
   const handleTermResult = () => {
     setTermResult(searchValue);
+    if (searchValue.length < 2) {
+      alert("나가");
+    }
     setSearchResult([]);
-    // getGameSummary(searchValue, offset);
-    // queryClient.invalidateQueries("gameSummaryData")
   };
-
   // const lastGameRef = useRef<any>(null);
   // const [offset, setOffset] = useState<any>(0);
 
@@ -83,7 +83,6 @@ const ChannelSearchPage: any = () => {
     if (searchValue === "") {
       return;
     } else if (termResult.length < 2) {
-      alert("나가");
       setTermResult("");
       setSearchValue("");
       return;

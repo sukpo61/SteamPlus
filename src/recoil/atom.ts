@@ -20,11 +20,6 @@ export const friendAllState = atom<FriendSearchProps[]>({
   default: [],
 });
 
-// export const FriendNoticeAll = atom({
-//   key: "FriendNoticeAll",
-//   default: "0",
-// });
-
 //친구 요청 온 내역 전체
 export const newFriendAdd = selector({
   key: "newFriendAdd",
