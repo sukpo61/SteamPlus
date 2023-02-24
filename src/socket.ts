@@ -19,3 +19,27 @@ if (userid) {
 }
 
 export default socket;
+
+{
+  /* {room.name === currentRoom ? (
+          <Usercount>
+            <Usercircle></Usercircle>
+            <span>{room.userinfo.length}</span>
+          </Usercount>
+        ) : (
+          <RoomUserList>
+            {room.userinfo.map((user: any) => {
+              const info = friendAllRecoil.find(
+                (e: any) => e.id === user.userid
+              );
+
+              return (
+                <RoomUserWrap key={info?.id}>
+                  <img src={info?.profileimg}></img>
+                  <span>{info?.nickname}</span>
+                </RoomUserWrap>
+              );
+            })}
+          </RoomUserList>
+        )} */
+}
