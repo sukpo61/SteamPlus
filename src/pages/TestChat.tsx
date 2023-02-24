@@ -42,6 +42,8 @@ function TestChat() {
       text: textInput,
       time: timeString,
     };
+
+    const stringnewChat = JSON.stringify(newChat);
     setChatText((i: any) => [...i, newChat]);
     setTextInput("");
   };
