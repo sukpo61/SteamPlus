@@ -45,6 +45,7 @@ function VoiceTalk() {
     try {
       const myStream = await navigator.mediaDevices.getUserMedia({
         video: true,
+        audio: true,
       });
       setLocalStream(myStream);
       console.log("getMedia");
@@ -199,8 +200,8 @@ function VoiceTalk() {
       .getTracks()
       .forEach((track) => NewUserPeerConnection.addTrack(track, localStream));
 
-    NewUserPeerConnection.ontrack = (event) => {
-      handleAddStream(userid, event.streams[0]);
+    NewUserPeerConnection.onaddtrack = (event) => {
+      handleAddStream(userid, event.stream);
     };
 
     NewUserPeerConnection.onicecandidate = (event) => {
