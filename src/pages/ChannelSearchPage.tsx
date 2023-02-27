@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef, useCallback } from "react";
 import axios from "axios";
 import { log } from "console";
 import styled from "styled-components";
+import { useInfiniteQuery } from "react-query";
 
 import { useQuery, useQueryClient } from "react-query";
 
@@ -24,7 +25,7 @@ const ChannelSearchPage: any = () => {
     if (searchValue.length < 2) {
       alert("두 글자 이상 입력해 주세요");
     }
-    setSearchResult([]);
+    // setSearchResult([]);
     // getGameSummary(searchValue, offset);
     // queryClient.invalidateQueries("gameSummaryData")
   };
@@ -87,7 +88,7 @@ const ChannelSearchPage: any = () => {
       return;
     }
     const gameSummary = await axios.get(
-      `https://store.steampowered.com/api/storesearch/?cc=us&l=en&term=${termResult}&pagesize=20`
+      `https://store.steampowered.com/api/storesearch/?cc=us&l=en&term=${termResult}` // &pagesize=20
     ); // 게임 Id만 가져오기!!!
 
     const gameList = [];
@@ -111,7 +112,21 @@ const ChannelSearchPage: any = () => {
 
   const {
     data: gameSummaryData, // 게임id
-  } = useQuery(["gameSummaryData", termResult], getGameSummary);
+    fetchNextPage,
+    hasNextPage,
+  } = useInfiniteQuery(["gameSummaryData", termResult], getGameSummary, {
+    getNextPageParam: (lastPage: any) => {
+      if (lastPage?.page <= lastPage?.total_pages) {
+        return lastPage?.page + 1;
+      }
+    },
+  });
+
+  // const loadMore = async () => {
+  //   if (hasNextPage) {
+  //     await fetchNextPage();
+  //   }
+  // };
 
   console.log("gameSummaryData", gameSummaryData);
 
@@ -137,7 +152,7 @@ const ChannelSearchPage: any = () => {
           <BiSearchAlt2
             className="searchIcon"
             onClick={() => {
-              // getGameSummary(); //searchValue, offset
+              getGameSummary(); //searchValue, offset
               handleTermResult();
               // handleResultList();
             }}
@@ -145,17 +160,23 @@ const ChannelSearchPage: any = () => {
         </GameSearchInputArea>
       </SearchPageHeader>
       <SearchCount>
-        '{`${termResult}`}' 검색 결과는 {gameSummaryData?.length ?? "0"}개입니다
+        {/* '{`${termResult}`}' 검색 결과는 {gameSummaryData?.length ??"0"}개입니다 */}
       </SearchCount>
       <GameSearchList>
-        {gameSummaryData?.map((game: any) => {
-          // console.log("game", game.genre);
-          return (
-            <GameChannelBlockView key={game?.id}>
-              <GameChannelBlock game={game} />
-            </GameChannelBlockView>
-          );
-        })}
+        {gameSummaryData?.pages
+          .map((page: any) => page?.results)
+          .flat()
+          .map((game: any) => {
+            if (game === undefined) {
+              return <SearchNone>검색 결과가 없습니다</SearchNone>;
+            }
+            console.log("game", game);
+            return (
+              <GameChannelBlockView key={game?.id}>
+                <GameChannelBlock game={game} />
+              </GameChannelBlockView>
+            );
+          })}
       </GameSearchList>
     </div>
   );
