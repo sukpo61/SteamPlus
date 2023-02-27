@@ -28,6 +28,22 @@ export const chatTextRecoil = atom<any>({
   key: "chatTextRecoil",
   default: [],
 });
+export const AllStreamsRecoil = atom<any>({
+  key: "AllStreamsRecoil",
+  default: [],
+});
+export const videoDisplayRecoil = atom<any>({
+  key: "videoDisplayRecoil",
+  default: false,
+});
+export const channelNameRecoil = atom<any>({
+  key: "channelNameRecoil",
+  default: "",
+});
+export const currentRoomRecoil = atom<any>({
+  key: "videoDisplayRecoil",
+  default: "",
+});
 
 // export const FriendNoticeAll = atom({
 //   key: "FriendNoticeAll",

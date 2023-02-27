@@ -3,8 +3,12 @@ import React, { useEffect, useRef, useState } from "react";
 import socket from "../socket";
 import Testtext from "./Testtext";
 import { useRecoilState } from "recoil";
-import { DataChannelMapRecoil } from "../recoil/atom";
-import { chatTextRecoil } from "../recoil/atom";
+import {
+  DataChannelMapRecoil,
+  chatTextRecoil,
+  channelNameRecoil,
+  currentRoomRecoil,
+} from "../recoil/atom";
 import { useLocation } from "react-router";
 import axios from "axios";
 
@@ -18,11 +22,15 @@ const TeamChat = () => {
   //내 프로필이미지
   const ProfileImgUrl = sessionStorage.getItem("profileimg");
 
-  const [channelName, setchannelName] = useState<any>("Dead space");
+  // const [channelName, setchannelName] = useRecoilState<any>(channelNameRecoil);
+
+  const [currentRoom, setCurrentRoom] = useRecoilState(currentRoomRecoil);
 
   const [background, setBackground] = useState<any>("");
 
   // const { state: gameid } = useLocation();
+
+  const channelName = "Dead space";
 
   const gameid = 1693980;
 
@@ -52,9 +60,7 @@ const TeamChat = () => {
       gameSubimg: response?.data[gameid].data.header_image,
     };
 
-    console.log(response);
-
-    setchannelName(response?.data[gameid].data.name);
+    // setchannelName(response?.data[gameid].data.name);
 
     setBackground(response?.data[gameid].data.background);
   };
@@ -104,11 +110,10 @@ const TeamChat = () => {
 
     setTextInput("");
   };
-  //입력시 맨 아래로 스크롤a
+  //입력시 맨 아래로 스크롤aas
   const chatContainerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    console.log("chatText", chatText);
     if (chatContainerRef.current) {
       chatContainerRef.current.scrollTop =
         chatContainerRef.current.scrollHeight;
@@ -116,7 +121,6 @@ const TeamChat = () => {
   }, [chatText]);
 
   useEffect(() => {
-    console.log("effected");
     socket.emit("requestrooms", channelName);
     Gamedata();
     return () => {
@@ -126,7 +130,7 @@ const TeamChat = () => {
   return (
     <ChatPageDiv>
       <Background src={background}></Background>
-      <ChatPageHeaderDiv>#채팅방_1234</ChatPageHeaderDiv>
+      <ChatPageHeaderDiv>{currentRoom}</ChatPageHeaderDiv>
       <ChatContentsDiv ref={chatContainerRef}>
         <ChatContentsMarginDiv>
           {chatText.map((chat: any) => {

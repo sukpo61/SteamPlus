@@ -7,22 +7,26 @@ import useInput from "../../hooks/useInput";
 import { friendAllState } from "../../recoil/atom";
 import { useRecoilState } from "recoil";
 import { FriendSearchProps } from "./FriendSearch";
-import { DataChannelMapRecoil } from "../../recoil/atom";
-import { chatTextRecoil } from "../../recoil/atom";
+
+import {
+  chatTextRecoil,
+  AllStreamsRecoil,
+  DataChannelMapRecoil,
+  videoDisplayRecoil,
+  currentRoomRecoil,
+  channelNameRecoil,
+} from "../../recoil/atom";
+
 import TeamChat from "../../pages/TeamChat";
 import { useLocation } from "react-router";
 
 function VoiceTalk() {
   const layoutMenu = useRecoilValue(LayoutButton);
   const [createDisplay, setCreateDisplay] = useState(false);
-  const [videoDisplay, setvideoDisplay] = useState(false);
   const [roomsInfo, setRoomsInfo] = useState([]);
-  const [currentRoom, setCurrentRoom] = useState(null);
-  const channelName = "Dead space";
   const myuserid = sessionStorage.getItem("steamid");
 
   const [localStream, setLocalStream] = useState(null);
-  const [AllStreams, setAllStreams] = useState([]);
   const [username, setUsername] = useState("");
   const [RtcPeerConnectionMap, setRtcPeerConnectionMap] = useState(new Map());
 
@@ -31,7 +35,15 @@ function VoiceTalk() {
 
   const [friendAllRecoil, setFriendAllRecoil] = useRecoilState(friendAllState);
 
+  const [AllStreams, setAllStreams] = useRecoilState(AllStreamsRecoil);
+
   const [chatText, setChatText] = useRecoilState(chatTextRecoil);
+
+  const [videoDisplay, setvideoDisplay] = useRecoilState(videoDisplayRecoil);
+
+  const [currentRoom, setCurrentRoom] = useRecoilState(currentRoomRecoil);
+
+  // const [channelName, setchannelName] = useRecoilState(channelNameRecoil);
 
   const {
     value: roomtitle,
@@ -41,6 +53,8 @@ function VoiceTalk() {
 
   //dddd
 
+  const channelName = "Dead space";
+
   async function getMedia() {
     try {
       const myStream = await navigator.mediaDevices.getUserMedia({
@@ -48,7 +62,6 @@ function VoiceTalk() {
         audio: true,
       });
       setLocalStream(myStream);
-      console.log("getMedia");
       handleAddStream(myuserid, myStream);
     } catch (e) {
       console.log(e);
@@ -67,18 +80,20 @@ function VoiceTalk() {
       console.error("Error starting screen share", error);
     }
   };
-  //d
+  //dsdasd
   const handleAddStream = (userid, stream) => {
     if (stream) {
-      console.log(stream);
       setAllStreams((e) => [...e, { userid, stream }]);
     }
   };
 
   const handleJoin = async (NewData) => {
     if (currentRoom) {
-      socket.emit("leave", myuserid, NewData);
+      console.log(currentRoom);
+      handleLeave(currentRoom);
     }
+    setCurrentRoom(NewData.roomtitle);
+
     await getMedia();
     socket.emit("join_room", NewData);
   };
@@ -96,15 +111,20 @@ function VoiceTalk() {
       setRtcPeerConnectionMap(() => new Map());
       setDataChannelMap(() => new Map());
     }
-
+    setCurrentRoom("");
     setAllStreams([]);
     socket.emit("leave", myuserid, {
       roomtitle: roomname,
       channelName,
     });
+    socket.off("welcome");
+    socket.off("offer");
+    socket.off("answer");
+    socket.off("ice");
+    socket.off("leave");
   };
 
-  const onRoomSubmit = (newroom) => {
+  const onRoomSubmit = () => {
     if (roomtitle === "") {
       window.alert("제목을 입력하세요");
       return;
@@ -113,7 +133,6 @@ function VoiceTalk() {
       roomtitle,
       channelName,
     };
-    setCurrentRoom(newroom);
     handleJoin(NewData);
     resetTitle();
     setCreateDisplay(false);
@@ -164,23 +183,6 @@ function VoiceTalk() {
     );
   });
 
-  const StreamList = AllStreams.map((data) => {
-    const info = friendAllRecoil.find((e) => e.id === data.userid);
-
-    const remotehandleVideoRef = (video) => {
-      if (video) {
-        video.srcObject = data.stream;
-      }
-    };
-
-    return (
-      <VideoWrap key={data.userid}>
-        <video ref={remotehandleVideoRef} autoPlay playsInline muted />
-        <span>{info?.nickname}</span>
-      </VideoWrap>
-    );
-  });
-
   const createRTCPeerConnection = async (userid) => {
     const NewUserPeerConnection = new RTCPeerConnection({
       iceServers: [
@@ -200,7 +202,8 @@ function VoiceTalk() {
       .getTracks()
       .forEach((track) => NewUserPeerConnection.addTrack(track, localStream));
 
-    NewUserPeerConnection.onaddtrack = (event) => {
+    NewUserPeerConnection.onaddstream = (event) => {
+      console.log("addstream on");
       handleAddStream(userid, event.stream);
     };
 
@@ -239,13 +242,17 @@ function VoiceTalk() {
       socket.off("leave");
 
       socket.on("welcome", async (answerid) => {
+        console.log("welcomed");
+
+        if (answerid === myuserid) {
+          return;
+        }
         const MyPeerConnection = await createRTCPeerConnection(answerid);
 
         const myData = createData(MyPeerConnection, answerid);
 
         myData.onmessage = (message) => {
           const data = JSON.parse(message.data);
-          console.log("1", data);
           setChatText((e) => [...e, data]);
         };
 
@@ -255,20 +262,19 @@ function VoiceTalk() {
 
         socket.emit("offer", offer, myuserid, answerid);
       });
-
+      //ddd
       socket.on("offer", async (offer, offerid, answerid) => {
+        console.log("offered");
         const MyPeerConnection = await createRTCPeerConnection(offerid);
 
         MyPeerConnection.ondatachannel = (e) => {
           const myData = createAnswerData(e.channel, offerid);
           myData.onmessage = (message) => {
             const data = JSON.parse(message.data);
-            console.log("2", data);
 
             setChatText((e) => [...e, data]);
           };
         };
-        console.log(chatText);
         MyPeerConnection.setRemoteDescription(offer);
 
         const answer = await MyPeerConnection.createAnswer();
@@ -287,7 +293,7 @@ function VoiceTalk() {
           RtcPeerConnectionMap.get(targetid).addIceCandidate(ice);
         }
       });
-
+      //sdfsdfd
       socket.on("leave", (targetid) => {
         RtcPeerConnectionMap.get(targetid).close();
         setRtcPeerConnectionMap((e) => {
@@ -313,14 +319,12 @@ function VoiceTalk() {
   }, [localStream, RtcPeerConnectionMap, DataChannelMap]);
 
   useEffect(() => {
-    console.log("socket on");
     socket.on("requestrooms", (roomsinfo) => {
-      console.log("requestrooms", roomsinfo);
+      console.log(roomsinfo);
       setRoomsInfo(roomsinfo);
     });
 
     socket.on("updaterooms", (roomsinfo) => {
-      console.log("updaterooms", roomsinfo);
       setRoomsInfo(roomsinfo);
     });
   }, []);
@@ -370,9 +374,6 @@ function VoiceTalk() {
           비디오토글
         </span>
       </Controlbox>
-      <VideosWrap toggle={videoDisplay}>
-        <VideosList videocount={AllStreams.length}>{StreamList}</VideosList>
-      </VideosWrap>
     </VoiceTalkDiv>
   );
 }
@@ -389,43 +390,7 @@ const VoiceTalkWrap = styled.div`
   padding: 24px;
   color: white;
 `;
-const VideosWrap = styled.div`
-  top: ${(props) => (props.toggle ? "72px" : "-70%")};
-  transition: all 0.5s;
-  right: 0;
-  width: calc(100% - 480px);
-  height: calc((100% - 72px) / 2);
-  position: fixed;
-  display: flex;
-  flex-direction: row;
-  padding: 24px;
-  color: white;
-  background: #131a28;
-  z-index: 9;
-  justify-content: center;
-  align-items: center;
-  video {
-    border-radius: 30px;
-  }
-`;
-const VideoWrap = styled.div`
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-`;
 
-const VideosList = styled.div`
-  width: ${(props) => {
-    const videocount = props.videocount;
-    return `calc(100% /${videocount})`;
-  }};
-  display: flex;
-  flex-direction: row;
-  padding: 24px;
-  color: white;
-  justify-content: center;
-  align-items: center;
-`;
 const RoomWrap = styled.div`
   display: flex;
   flex-direction: column;
