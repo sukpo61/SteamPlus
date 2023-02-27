@@ -7,6 +7,8 @@ import {
   friendAllState,
   newFriendAdd,
   BothFriend,
+  videoDisplayRecoil,
+  AllStreamsRecoil,
 } from "../recoil/atom";
 import Profile from "./layoutcomponents/Profile";
 import GameSearch from "./layoutcomponents/GameSearch";
@@ -53,6 +55,11 @@ function Layout() {
     useRecoilState<FriendSearchProps[]>(friendAllState);
   //친구 요청 온 내역 전체
   const [friendAdd] = useRecoilValue(newFriendAdd);
+
+  const [videoDisplay, setvideoDisplay] = useRecoilState(videoDisplayRecoil);
+
+  const [AllStreams, setAllStreams] = useRecoilState(AllStreamsRecoil);
+
   // window.onload = () => {
   //   if (window.location.pathname.slice(0, 9) === "/teamchat") {
   //     setLayoutMenu("voicetalk");
@@ -135,6 +142,23 @@ function Layout() {
   // }, []);
   // console.log(friendAddCome.length);
   const ProfileImgUrl = sessionStorage.getItem("profileimg");
+
+  const StreamList = AllStreams.map((data: any) => {
+    const info = friendAllRecoil.find((e) => e.id === data.userid);
+
+    const remotehandleVideoRef = (video: any) => {
+      if (video) {
+        video.srcObject = data.stream;
+      }
+    };
+
+    return (
+      <VideoWrap key={data.userid}>
+        <video ref={remotehandleVideoRef} autoPlay playsInline muted />
+        <span>{info?.nickname}</span>
+      </VideoWrap>
+    );
+  });
   return (
     <div onContextMenu={(e: any) => e.preventDefault()}>
       <SideBarDiv>
@@ -230,12 +254,53 @@ function Layout() {
         <VoiceTalk />
         <FriendAdd />
       </MenuOpenDiv>
+      <VideosWrap toggle={videoDisplay}>
+        <VideosList videocount={AllStreams.length}>{StreamList}</VideosList>
+      </VideosWrap>
     </div>
   );
 }
 
 export default Layout;
 const Profileimg = styled.div``;
+const VideosWrap = styled.div<any>`
+  top: ${(props) => (props.toggle ? "72px" : "-70%")};
+  transition: all 0.5s;
+  right: 0;
+  width: calc(100% - 480px);
+  height: calc((100% - 72px) / 2);
+  position: fixed;
+  display: flex;
+  flex-direction: row;
+  padding: 24px;
+  color: white;
+  background: #131a28;
+  z-index: 9;
+  justify-content: center;
+  align-items: center;
+  video {
+    border-radius: 30px;
+  }
+`;
+
+const VideoWrap = styled.div`
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+`;
+
+const VideosList = styled.div<any>`
+  width: ${(props) => {
+    const videocount = props.videocount;
+    return `calc(100% /${videocount})`;
+  }};
+  display: flex;
+  flex-direction: row;
+  padding: 24px;
+  color: white;
+  justify-content: center;
+  align-items: center;
+`;
 const ProfileImg = styled.img`
   width: 50px;
   height: 50px;
