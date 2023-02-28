@@ -28,9 +28,12 @@ function GameChannelBlock({ game }: any) {
           </TitleLinear>
           <GameChannelInfo>
             <GameChannelCategory>
-              {game.genres ? game?.genres[0]?.description : null}&nbsp;
+              {/* {game.genres ? game?.genres[0]?.description : null}&nbsp;
               {game.genres ? game?.genres[1]?.description : null}&nbsp;
-              {game.genres ? game?.genres[2]?.description : null}&nbsp;
+              {game.genres ? game?.genres[2]?.description : null} */}
+              {game?.genres[0]?.description ?? ""}&nbsp;
+              {game?.genres[1]?.description ?? ""}&nbsp;
+              {game?.genres[2]?.description ?? ""}
             </GameChannelCategory>
 
             <NumberOfPlayer>
