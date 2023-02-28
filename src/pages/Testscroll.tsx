@@ -3,6 +3,7 @@ import axios from "axios";
 import InfiniteScroll from "react-infinite-scroll-component";
 
 interface Game {
+  external_games: any;
   id: number;
   name: string;
   background_image: string;
@@ -12,6 +13,7 @@ const GameSearch = (): JSX.Element => {
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [games, setGames] = useState<any>([]);
   const [page, setPage] = useState<number>(1);
+  const [steamId, setSteamId] = useState<any>();
 
   const fetchGames = async (): Promise<void> => {
     const response = await axios.get(
@@ -19,9 +21,17 @@ const GameSearch = (): JSX.Element => {
     );
     const data = response.data.results as Game[];
     setGames((games: any) => [...games, ...data]);
+    // setSteamId((games: any) => [
+    //   ...games,
+    //   ...data?.map((game) => ({
+    //     ...game,
+    //     steam_id: game?.external_games.find((g: any) => g?.category === "steam")
+    //       ?.uid,
+    //   })),
+    // ]);
     setPage((page) => page + 1);
   };
-  // console.log(games);
+  console.log(steamId);
   const aaa = games.filter((i: any) => {
     return i?.stores && i?.stores[0].store.name === "Steam";
   });
@@ -36,6 +46,14 @@ const GameSearch = (): JSX.Element => {
   useEffect(() => {
     fetchGames();
   }, [searchTerm]);
+
+  // var steam = require("steam-searcher");
+
+  // steam.find({ search: "Hitman 2" }, function (err: any, game: any) {
+  //   if (err) console.log(err);
+  //   //game is the data as a JSON.
+  //   console.log(game.name);
+  // });
 
   return (
     <div>
