@@ -11,6 +11,8 @@ import {
 } from "../recoil/atom";
 import { useLocation } from "react-router";
 import axios from "axios";
+import Aos from "aos";
+import "aos/dist/aos.css";
 
 const TeamChat = () => {
   const [DataChannelMap, setDataChannelMap] =
@@ -96,12 +98,13 @@ const TeamChat = () => {
       profileImg: ProfileImgUrl,
       text: textInput,
       time: timeString,
+      type: "message",
     };
 
     const stringnewChat = JSON.stringify(newChat);
 
     setChatText((i: any) => [...i, newChat]);
-    console.log(DataChannelMap);
+
     DataChannelMap.forEach((channel: any, id: any) => {
       if (channel.readyState === "open") {
         channel.send(stringnewChat);
@@ -123,10 +126,13 @@ const TeamChat = () => {
   useEffect(() => {
     socket.emit("requestrooms", channelName);
     Gamedata();
+    Aos.init();
+
     return () => {
       socket.off("requestrooms");
     };
   }, []);
+
   return (
     <ChatPageDiv>
       <Background src={background}></Background>
@@ -134,11 +140,25 @@ const TeamChat = () => {
       <ChatContentsDiv ref={chatContainerRef}>
         <ChatContentsMarginDiv>
           {chatText.map((chat: any) => {
-            return <Testtext chat={chat} />;
+            if (chat.id === myId) {
+              return (
+                <div data-aos="fade-left">
+                  <Testtext chat={chat} />
+                </div>
+              );
+            } else if (chat.type === "alarm") {
+              return <Testtext chat={chat} />;
+            } else {
+              return (
+                <div data-aos="fade-right">
+                  <Testtext chat={chat} />
+                </div>
+              );
+            }
           })}
         </ChatContentsMarginDiv>
       </ChatContentsDiv>
-      <ChatInputForm onSubmit={chatInputOnSubmit}>
+      <ChatInputForm onSubmit={chatInputOnSubmit} toggle={currentRoom}>
         <ChatInput
           placeholder="#채팅방_1에 보낼 메세지를 입력하세요."
           onChange={chatInputOnChange}
@@ -154,6 +174,7 @@ export default TeamChat;
 const ChatPageDiv = styled.div`
   height: 100vh;
   position: relative;
+  overflow: hidden;
 `;
 const Background = styled.img`
   width: 100%;
@@ -192,13 +213,14 @@ const ChatContentsDiv = styled.div`
 const ChatContentsMarginDiv = styled.div`
   margin-top: auto;
 `;
-const ChatInputForm = styled.form`
+const ChatInputForm = styled.form<any>`
   position: absolute;
   width: 70%;
   height: 70px;
   left: 50%;
   transform: translateX(-50%);
-  bottom: 0;
+  transition: all 0.5s;
+  bottom: ${(props) => (props.toggle ? "0" : "-80px")};
   padding-bottom: 30px;
   overflow: hidden;
 `;
