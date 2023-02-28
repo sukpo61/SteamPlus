@@ -119,17 +119,17 @@ const ChannelSearchPage: any = () => {
   // useInView = react-intersection-observer 라이브러리
   // 리스트 끝까지 내렸을때 inview가 true가 됨(성민준님 추정)
 
-  const {
-    data: gameSummaryData, // 게임id
-    fetchNextPage,
-    hasNextPage,
-  } = useInfiniteQuery(["gameSummaryData", termResult], getGameSummary, {
-    getNextPageParam: (lastPage: any) => {
-      if (lastPage?.page <= lastPage?.total_pages) {
-        return lastPage?.page + 1;
-      }
-    },
-  });
+  // const {
+  //   data: gameSummaryData, // 게임id
+  //   fetchNextPage,
+  //   hasNextPage,
+  // } = useInfiniteQuery(["gameSummaryData", termResult], getGameSummary, {
+  //   getNextPageParam: (lastPage: any) => {
+  //     if (lastPage?.page <= lastPage?.total_pages) {
+  //       return lastPage?.page + 1;
+  //     }
+  //   },
+  // });
 
   // const loadMore = async () => {
   //   if (hasNextPage) {
@@ -172,9 +172,9 @@ const ChannelSearchPage: any = () => {
         '{`${termResult}`}' 검색 결과는 {getGameSummary.length ?? "0"}개입니다
       </SearchCount>
       <GameSearchList>
-        {gameSummaryData?.pages
+        {searchResult // gameSummaryData?.pages
           // .map((page: any) => page?.results)
-          .flat()
+          // .flat()
           .map((game: any) => {
             if (game === undefined) {
               return <div></div>;
