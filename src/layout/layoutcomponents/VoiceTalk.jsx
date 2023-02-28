@@ -95,38 +95,41 @@ function VoiceTalk() {
     setCurrentRoom(NewData.roomtitle);
 
     await getMedia();
-    socket.emit("join_room", NewData);
+    socket.emit("join_room", NewData, myuserid);
   };
 
-  const handleLeave = (roomname) => {
+  const handleLeave = async (roomname) => {
     if (RtcPeerConnectionMap.size !== 0) {
-      socket.emit("test");
       RtcPeerConnectionMap.forEach((peerconnection, id) => {
         peerconnection.close();
       });
       RtcPeerConnectionMap.forEach((channel, id) => {
         channel.close();
       });
-      localStream.getTracks().forEach((track) => track.stop());
+
+      // localStream.getTracks().forEach((track) => track.stop());
+
       setRtcPeerConnectionMap(() => new Map());
       setDataChannelMap(() => new Map());
     }
     setCurrentRoom("");
     setAllStreams([]);
+    setChatText([]);
+    setvideoDisplay(false);
+
     socket.emit("leave", myuserid, {
       roomtitle: roomname,
       channelName,
     });
-    socket.off("welcome");
-    socket.off("offer");
-    socket.off("answer");
-    socket.off("ice");
-    socket.off("leave");
   };
 
   const onRoomSubmit = () => {
     if (roomtitle === "") {
       window.alert("제목을 입력하세요");
+      return;
+    }
+    if (roomsInfo.map((e) => e.name).includes(roomtitle)) {
+      window.alert("제목이 존재합니다.");
       return;
     }
     let NewData = {
@@ -149,6 +152,9 @@ function VoiceTalk() {
         <RoomTitleWrap>
           <span
             onClick={() => {
+              if (currentRoom === room.name) {
+                return;
+              }
               setCurrentRoom(room.name);
               handleJoin({
                 roomtitle: room.name,
@@ -219,6 +225,24 @@ function VoiceTalk() {
     return NewUserPeerConnection;
   };
 
+  const joinAlarm = (answerid) => {
+    const info = friendAllRecoil.find((e) => e.id === answerid);
+
+    return {
+      id: answerid,
+      text: `${info.nickname} 님이 참여하셨습니다.`,
+      type: "alarm",
+    };
+  };
+  const leaveAlarm = (targetid) => {
+    const info = friendAllRecoil.find((e) => e.id === targetid);
+
+    return {
+      id: targetid,
+      text: `${info.nickname} 님이 떠나셨습니다.`,
+      type: "alarm",
+    };
+  };
   const createData = (MyPeerConnection, answerid) => {
     const newDataChannel = MyPeerConnection.createDataChannel("chat");
 
@@ -242,11 +266,12 @@ function VoiceTalk() {
       socket.off("leave");
 
       socket.on("welcome", async (answerid) => {
-        console.log("welcomed");
-
         if (answerid === myuserid) {
           return;
         }
+        console.log("welcome");
+        setChatText((e) => [...e, joinAlarm(answerid)]);
+
         const MyPeerConnection = await createRTCPeerConnection(answerid);
 
         const myData = createData(MyPeerConnection, answerid);
@@ -306,6 +331,7 @@ function VoiceTalk() {
           return e;
         });
         setAllStreams((e) => e.filter((stream) => stream.userid !== targetid));
+        setChatText((e) => [...e, leaveAlarm(targetid)]);
       });
     }
 
@@ -320,7 +346,6 @@ function VoiceTalk() {
 
   useEffect(() => {
     socket.on("requestrooms", (roomsinfo) => {
-      console.log(roomsinfo);
       setRoomsInfo(roomsinfo);
     });
 
@@ -348,7 +373,7 @@ function VoiceTalk() {
           </VoiceTalkTopbar>
           <RoomTitleInput></RoomTitleInput>
         </VoiceTalkTop>
-        {createDisplay && (
+        <RoomtoggleForm toggle={createDisplay}>
           <CreateRoomWrap>
             <CreateTitleInput
               className="title"
@@ -362,8 +387,8 @@ function VoiceTalk() {
               <TitleConfirm onClick={onRoomSubmit}>확인</TitleConfirm>
             </ConfirmWrap>
           </CreateRoomWrap>
-        )}
-        <RoomListWrap>{RoomList}</RoomListWrap>
+          <RoomListWrap>{RoomList}</RoomListWrap>
+        </RoomtoggleForm>
       </VoiceTalkWrap>
       <Controlbox>
         <span
@@ -387,8 +412,16 @@ const VoiceTalkDiv = styled.div`
 const VoiceTalkWrap = styled.div`
   display: flex;
   flex-direction: column;
-  padding: 24px;
+  padding: 0 24px;
   color: white;
+`;
+const RoomtoggleForm = styled.div`
+  position: relative;
+  top: ${(props) => (props.toggle ? "0px" : "-224px")};
+  transition: all 0.5s;
+  display: flex;
+  flex-direction: column;
+  z-index: 1;
 `;
 
 const RoomWrap = styled.div`
@@ -502,9 +535,12 @@ const RoomListWrap = styled.div`
 const VoiceTalkTop = styled.div`
   display: flex;
   flex-direction: column;
-  height: 96px;
+  height: 140px;
   justify-content: space-between;
-  margin-bottom: 20px;
+  padding: 24px 0 20px 0;
+  background-color: #263245;
+  z-index: 5;
+  border-radius: 0 0 10px 10px;
 `;
 const VoiceTalkTopbar = styled.div`
   display: flex;

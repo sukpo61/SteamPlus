@@ -41,7 +41,7 @@ export const channelNameRecoil = atom<any>({
   default: "",
 });
 export const currentRoomRecoil = atom<any>({
-  key: "videoDisplayRecoil",
+  key: "currentRoomRecoil",
   default: "",
 });
 

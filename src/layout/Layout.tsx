@@ -155,7 +155,9 @@ function Layout() {
     return (
       <VideoWrap key={data.userid}>
         <video ref={remotehandleVideoRef} autoPlay playsInline muted />
-        <span>{info?.nickname}</span>
+        <Usernickname>
+          <span>{info?.nickname}</span>
+        </Usernickname>
       </VideoWrap>
     );
   });
@@ -254,8 +256,14 @@ function Layout() {
         <VoiceTalk />
         <FriendAdd />
       </MenuOpenDiv>
-      <VideosWrap toggle={videoDisplay}>
-        <VideosList videocount={AllStreams.length}>{StreamList}</VideosList>
+      <VideosWrap toggle={videoDisplay} widthprop={layoutMenu}>
+        <VideoPosition>
+          <VideosList videocount={AllStreams.length}>{StreamList}</VideosList>
+          <VideoControl>
+            <img src="/img/closevideo.png"></img>
+            <img src="/img/roomexit.png"></img>
+          </VideoControl>
+        </VideoPosition>
       </VideosWrap>
     </div>
   );
@@ -263,16 +271,17 @@ function Layout() {
 
 export default Layout;
 const Profileimg = styled.div``;
+
 const VideosWrap = styled.div<any>`
   top: ${(props) => (props.toggle ? "72px" : "-70%")};
-  transition: all 0.5s;
+  transition: all 0.72s;
   right: 0;
-  width: calc(100% - 480px);
+  width: ${(props) =>
+    props.widthprop === "close" ? "100%" : "calc(100% - 480px)"};
   height: calc((100% - 72px) / 2);
   position: fixed;
   display: flex;
-  flex-direction: row;
-  padding: 24px;
+  flex-direction: column;
   color: white;
   background: #131a28;
   z-index: 9;
@@ -280,23 +289,48 @@ const VideosWrap = styled.div<any>`
   align-items: center;
   video {
     border-radius: 30px;
+    height: 100%;
   }
 `;
 
 const VideoWrap = styled.div`
-  width: 100%;
+  position: relative;
+  height: 100%;
   display: flex;
   flex-direction: column;
 `;
-
-const VideosList = styled.div<any>`
-  width: ${(props) => {
-    const videocount = props.videocount;
-    return `calc(100% /${videocount})`;
-  }};
+const Usernickname = styled.div`
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  background: rgba(8, 12, 22, 0.6);
+  border-radius: 8px;
+  padding: 4px 8px;
+  bottom: 8px;
+  left: 8px;
+`;
+const VideoPosition = styled.div`
+  width: 100%;
+  height: 100%;
+  display: flex;
+  position: relative;
+  align-items: center;
+  flex-direction: column;
+`;
+const VideoControl = styled.div`
+  position: absolute;
+  width: 100%;
   display: flex;
   flex-direction: row;
-  padding: 24px;
+  justify-content: center;
+  bottom: 24px;
+  gap: 12px;
+`;
+
+const VideosList = styled.div<any>`
+  height: 100%;
+  display: flex;
+  flex-direction: row;
   color: white;
   justify-content: center;
   align-items: center;
