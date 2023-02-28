@@ -140,14 +140,14 @@ const TeamChat = () => {
       <ChatContentsDiv ref={chatContainerRef}>
         <ChatContentsMarginDiv>
           {chatText.map((chat: any) => {
-            if (chat.id === myId) {
+            if (chat.type === "alarm") {
+              return <Testtext chat={chat} />;
+            } else if (chat.id === myId) {
               return (
                 <div data-aos="fade-left">
                   <Testtext chat={chat} />
                 </div>
               );
-            } else if (chat.type === "alarm") {
-              return <Testtext chat={chat} />;
             } else {
               return (
                 <div data-aos="fade-right">

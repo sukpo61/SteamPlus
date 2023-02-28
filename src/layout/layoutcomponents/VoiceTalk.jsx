@@ -15,10 +15,17 @@ import {
   videoDisplayRecoil,
   currentRoomRecoil,
   channelNameRecoil,
+  videoRoomExitRecoil,
 } from "../../recoil/atom";
 
 import TeamChat from "../../pages/TeamChat";
 import { useLocation } from "react-router";
+
+import { MdExitToApp } from "react-icons/md";
+import { MdVolumeUp } from "react-icons/md";
+import { MdSettings } from "react-icons/md";
+import { BsFillMicFill } from "react-icons/bs";
+import { MdVideocam } from "react-icons/md";
 
 function VoiceTalk() {
   const layoutMenu = useRecoilValue(LayoutButton);
@@ -27,7 +34,9 @@ function VoiceTalk() {
   const myuserid = sessionStorage.getItem("steamid");
 
   const [localStream, setLocalStream] = useState(null);
-  const [username, setUsername] = useState("");
+
+  const [settingstate, setSettingstate] = useState(false);
+
   const [RtcPeerConnectionMap, setRtcPeerConnectionMap] = useState(new Map());
 
   const [DataChannelMap, setDataChannelMap] =
@@ -42,6 +51,8 @@ function VoiceTalk() {
   const [videoDisplay, setvideoDisplay] = useRecoilState(videoDisplayRecoil);
 
   const [currentRoom, setCurrentRoom] = useRecoilState(currentRoomRecoil);
+
+  const [videoRoomExit, setVideoRoomExit] = useRecoilState(videoRoomExitRecoil);
 
   // const [channelName, setchannelName] = useRecoilState(channelNameRecoil);
 
@@ -89,13 +100,12 @@ function VoiceTalk() {
 
   const handleJoin = async (NewData) => {
     if (currentRoom) {
-      console.log(currentRoom);
       handleLeave(currentRoom);
     }
     setCurrentRoom(NewData.roomtitle);
-
     await getMedia();
     socket.emit("join_room", NewData, myuserid);
+    setChatText((e) => [...e, enterAlarm(NewData.roomtitle)]);
   };
 
   const handleLeave = async (roomname) => {
@@ -149,29 +159,29 @@ function VoiceTalk() {
   const RoomList = roomsInfo.map((room) => {
     return (
       <RoomWrap key={room.name}>
-        <RoomTitleWrap>
-          <span
-            onClick={() => {
-              if (currentRoom === room.name) {
-                return;
-              }
-              setCurrentRoom(room.name);
-              handleJoin({
-                roomtitle: room.name,
-                channelName,
-              });
-            }}
-          >
-            #{room.name}
-          </span>
+        <RoomTitleWrap
+          onClick={() => {
+            if (currentRoom === room.name) {
+              return;
+            }
+            setCurrentRoom(room.name);
+            handleJoin({
+              roomtitle: room.name,
+              channelName,
+            });
+          }}
+        >
+          <span>#{room.name}</span>
           {room.userinfo.map((e) => e.userid).includes(myuserid) && (
-            <span
-              onClick={() => {
-                handleLeave(room.name);
-              }}
-            >
-              나가기
-            </span>
+            <div>
+              <MdExitToApp
+                size={24}
+                color="#F05656"
+                onClick={() => {
+                  handleLeave(room.name);
+                }}
+              ></MdExitToApp>
+            </div>
           )}
         </RoomTitleWrap>
         <RoomUserList>
@@ -240,6 +250,13 @@ function VoiceTalk() {
     return {
       id: targetid,
       text: `${info.nickname} 님이 떠나셨습니다.`,
+      type: "alarm",
+    };
+  };
+  const enterAlarm = (roomname) => {
+    return {
+      id: myuserid,
+      text: `${roomname} 방에 입장하셨습니다.`,
       type: "alarm",
     };
   };
@@ -354,6 +371,12 @@ function VoiceTalk() {
     });
   }, []);
 
+  useEffect(() => {
+    if (currentRoom) {
+      handleLeave(currentRoom);
+    }
+  }, [videoRoomExit]);
+
   return (
     <VoiceTalkDiv layoutMenu={layoutMenu}>
       <VoiceTalkWrap>
@@ -391,13 +414,20 @@ function VoiceTalk() {
         </RoomtoggleForm>
       </VoiceTalkWrap>
       <Controlbox>
-        <span
-          onClick={() => {
-            setvideoDisplay((e) => !e);
-          }}
-        >
-          비디오토글
-        </span>
+        <div>
+          <BsFillMicFill></BsFillMicFill>
+          <MdVolumeUp></MdVolumeUp>
+        </div>
+        <div>
+          {currentRoom && (
+            <MdVideocam
+              onClick={() => {
+                setvideoDisplay((e) => !e);
+              }}
+            ></MdVideocam>
+          )}
+          <MdSettings></MdSettings>
+        </div>
       </Controlbox>
     </VoiceTalkDiv>
   );
@@ -431,14 +461,26 @@ const RoomWrap = styled.div`
   background: #131a28;
   border-radius: 10px;
   padding: 20px;
+  &:hover {
+    background: #161d2c;
+  }
 `;
 const RoomTitleWrap = styled.div`
+  height: 24px;
   display: flex;
   flex-direction: row;
   justify-content: space-between;
+  align-items: center;
   color: white;
-  background: #131a28;
   border-radius: 10px;
+  &:hover {
+  }
+  div {
+    cursor: pointer;
+  }
+  span {
+    cursor: pointer;
+  }
 `;
 const Usercount = styled.div`
   margin-top: 16px;
@@ -517,15 +559,23 @@ const CreateTitleInput = styled.input`
 `;
 
 const Controlbox = styled.div`
+  font-size: 24px;
   position: absolute;
   bottom: 0;
   background-color: #131a28;
   height: 60px;
   width: 100%;
   display: flex;
+  justify-content: space-between;
   flex-direction: row;
-  padding: 24px;
+  align-items: center;
   color: white;
+  padding: 0 20px;
+  div {
+    cursor: pointer;
+    display: flex;
+    gap: 12px;
+  }
 `;
 const RoomListWrap = styled.div`
   display: flex;
