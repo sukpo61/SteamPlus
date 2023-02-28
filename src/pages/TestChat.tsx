@@ -1,16 +1,8 @@
-import styled from "styled-components";
 import React, { useEffect, useRef, useState } from "react";
-import socket from "../socket";
+import styled from "styled-components";
 import Testtext from "./Testtext";
-import { useRecoilState } from "recoil";
-import { DataChannelMapRecoil } from "../recoil/atom";
-import { chatTextRecoil } from "../recoil/atom";
-import { useLocation } from "react-router";
-import axios from "axios";
 
-const TeamChat = () => {
-  const [DataChannelMap, setDataChannelMap] =
-    useRecoilState(DataChannelMapRecoil);
+function TestChat() {
   //내 아이디
   const myId = sessionStorage.getItem("steamid");
   //내 닉네임
@@ -18,49 +10,8 @@ const TeamChat = () => {
   //내 프로필이미지
   const ProfileImgUrl = sessionStorage.getItem("profileimg");
 
-  const [channelName, setchannelName] = useState<any>("Dead space");
-
-  const [background, setBackground] = useState<any>("");
-
-  // const { state: gameid } = useLocation();
-
-  const gameid = 1693980;
-
-  const Gamedata = async () => {
-    const response = await axios.get(
-      `https://cors-anywhere.herokuapp.com/http://store.steampowered.com/api/appdetails/`,
-      {
-        params: {
-          appids: gameid, // 해당 게임의 id값'
-        },
-      }
-    );
-    const gameinfo = {
-      gamesdescription: response?.data[gameid].data.short_description,
-      gamevideo: response?.data[gameid].data.movies[0].webm.max,
-      gametitle: response?.data[gameid].data.name,
-      gameCategories: response?.data[gameid].data.genres[0].description,
-      gameCategories2:
-        response?.data[gameid].data.genres.length < 2
-          ? ""
-          : response?.data[gameid].data.genres[1].description,
-      gameCategories3:
-        response?.data[gameid].data.genres.length < 3
-          ? ""
-          : response?.data[gameid].data.genres[2].description,
-      gameMainImg: response?.data[gameid].data.screenshots[1].path_full,
-      gameSubimg: response?.data[gameid].data.header_image,
-    };
-
-    console.log(response);
-
-    setchannelName(response?.data[gameid].data.name);
-
-    setBackground(response?.data[gameid].data.background);
-  };
-
   //채팅으로 보낼 배열
-  const [chatText, setChatText] = useRecoilState<any>(chatTextRecoil);
+  const [chatText, setChatText] = useState<any>([]);
   //입력 input
   const [textInput, setTextInput] = useState<any>("");
   //입력 input
@@ -93,39 +44,19 @@ const TeamChat = () => {
     };
 
     const stringnewChat = JSON.stringify(newChat);
-
     setChatText((i: any) => [...i, newChat]);
-    console.log(DataChannelMap);
-    DataChannelMap.forEach((channel: any, id: any) => {
-      if (channel.readyState === "open") {
-        channel.send(stringnewChat);
-      }
-    });
-
     setTextInput("");
   };
-  //입력시 맨 아래로 스크롤a
+  //입력시 맨 아래로 스크롤
   const chatContainerRef = useRef<HTMLDivElement>(null);
-
   useEffect(() => {
-    console.log("chatText", chatText);
     if (chatContainerRef.current) {
       chatContainerRef.current.scrollTop =
         chatContainerRef.current.scrollHeight;
     }
   }, [chatText]);
-
-  useEffect(() => {
-    console.log("effected");
-    socket.emit("requestrooms", channelName);
-    Gamedata();
-    return () => {
-      socket.off("requestrooms");
-    };
-  }, []);
   return (
     <ChatPageDiv>
-      <Background src={background}></Background>
       <ChatPageHeaderDiv>#채팅방_1234</ChatPageHeaderDiv>
       <ChatContentsDiv ref={chatContainerRef}>
         <ChatContentsMarginDiv>
@@ -143,20 +74,12 @@ const TeamChat = () => {
       </ChatInputForm>
     </ChatPageDiv>
   );
-};
-//d
-export default TeamChat;
+}
 
+export default TestChat;
 const ChatPageDiv = styled.div`
   height: 100vh;
   position: relative;
-`;
-const Background = styled.img`
-  width: 100%;
-  height: 100vh;
-  position: absolute;
-  object-fit: cover;
-  object-position: center;
 `;
 const ChatPageHeaderDiv = styled.div`
   width: 100%;
