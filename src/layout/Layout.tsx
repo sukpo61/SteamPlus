@@ -7,6 +7,7 @@ import {
   friendAllState,
   newFriendAdd,
   BothFriend,
+  AboutPagesState,
 } from "../recoil/atom";
 import Profile from "./layoutcomponents/Profile";
 import GameSearch from "./layoutcomponents/GameSearch";
@@ -26,24 +27,22 @@ import { useNavigate } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 import { useParams } from "react-router-dom";
 import socket from "../socket";
+import AboutPages from "./layoutcomponents/AboutPages";
 
 function Layout() {
   const navigate = useNavigate();
   const location = useLocation();
   const locationName = location.pathname;
-  const params = useParams();
 
   const myId = sessionStorage.getItem("steamid");
 
   //레이아웃 종류
   const [layoutMenu, setLayoutMenu] = useRecoilState<String>(LayoutButton);
+  //설명페이지 온오프
+  const [aboutPagesOnOff, setAboutPagesOnOff] =
+    useRecoilState<String>(AboutPagesState);
   // //친구 알림 내역
-  // const [FriendNoticeLength, setFriendNoticeLength] =
-  //   useRecoilState<any>(FriendNoticeAll);
-  // // console.log(FriendNoticeLength);
-
   const [bothFriendAll, setBothFriendAll] = useRecoilState(BothFriend);
-  // console.log(bothFriendAll);
 
   //친구 내역 전체
   const [getFriendAuth, setGetFriendAuth] =
@@ -53,11 +52,6 @@ function Layout() {
     useRecoilState<FriendSearchProps[]>(friendAllState);
   //친구 요청 온 내역 전체
   const [friendAdd] = useRecoilValue(newFriendAdd);
-  // window.onload = () => {
-  //   if (window.location.pathname.slice(0, 9) === "/teamchat") {
-  //     setLayoutMenu("voicetalk");
-  //   }
-  // };
   //메뉴 탭눌렀을때 (친구제외)
   const LayoutButtonOnClick = (i: string) => {
     if (layoutMenu === i) {
@@ -77,6 +71,10 @@ function Layout() {
     } else {
       setLayoutMenu(i);
     }
+  };
+  // AboutPages클릭
+  const AboutPagesOnClick = () => {
+    setAboutPagesOnOff("aboutPages");
   };
 
   const getFriendSearch = async () => {
@@ -220,6 +218,9 @@ function Layout() {
             <p>음성채팅</p>
           </VoiceTalkbutton>
         )}
+        {/* 소개페이지 */}
+        <AboutPagesDiv onClick={AboutPagesOnClick}>?</AboutPagesDiv>
+        <AboutPages />
       </SideBarDiv>
       {/* 메뉴 컴포넌트 */}
       <MenuOpenDiv layoutMenu={layoutMenu}>
@@ -242,6 +243,9 @@ const ProfileImg = styled.img`
   border-radius: 50%;
 `;
 const SideBarDiv = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   width: 80px;
   height: 100%;
   position: fixed;
@@ -335,7 +339,7 @@ const Friendbutton = styled.div<{ layoutMenu: String }>`
 const FriendNotice = styled.div`
   position: absolute;
   bottom: 20px;
-  right: 20px;
+  left: 25px;
   width: 10px;
   height: 10px;
   line-height: 14px;
@@ -358,6 +362,18 @@ const VoiceTalkbutton = styled.div<{ layoutMenu: String }>`
     font-size: 30px;
     margin-bottom: 5px;
   }
+`;
+const AboutPagesDiv = styled.div`
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  text-align: center;
+  line-height: 27px;
+  border: 1px solid #777d87;
+  color: #777d87;
+  margin-top: auto;
+  margin-bottom: 30px;
+  cursor: pointer;
 `;
 // json에 친구서버에 id, nickname, 프로필이미지
 // 내 id 상대방 id
