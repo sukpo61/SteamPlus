@@ -10,6 +10,11 @@ export const LayoutButton = atom<String>({
   default: "close",
 });
 
+export const AboutPagesState = atom<String>({
+  key: "AboutPages",
+  default: "close",
+});
+
 export const getFriend = atom<any>({
   key: "friendAddState",
   default: [],
@@ -20,7 +25,21 @@ export const friendAllState = atom<FriendSearchProps[]>({
   default: [],
 });
 
-//친구 요청 온 내역 전체
+export const DataChannelMapRecoil = atom<any>({
+  key: "DataChannelMapRecoil",
+  default: new Map(),
+});
+export const chatTextRecoil = atom<any>({
+  key: "chatTextRecoil",
+  default: [],
+});
+
+// export const FriendNoticeAll = atom({
+//   key: "FriendNoticeAll",
+//   default: "0",
+// });
+
+//친구 요청 온 내역 전체d
 export const newFriendAdd = selector({
   key: "newFriendAdd",
   get: ({ get }) => {

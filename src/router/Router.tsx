@@ -14,6 +14,7 @@ import { useRecoilValue } from "recoil";
 import { LayoutButton } from "../recoil/atom";
 import Testtext from "../pages/Testtext";
 import TestChat from "../pages/TestChat";
+import SteamGameSearch from "../pages/Testscroll";
 
 const Router = () => {
   // 메뉴 상태 recoil
@@ -40,6 +41,7 @@ const Router = () => {
           <Route path="/Teamchat/:id" element={<TeamChat />} />
           <Route path="testtext" element={<Testtext />} />
           <Route path="testchat" element={<TestChat />} />
+          <Route path="testscroll" element={<SteamGameSearch />} />
         </Routes>
       </RouteFloat>
     </BrowserRouter>
