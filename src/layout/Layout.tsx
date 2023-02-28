@@ -218,10 +218,27 @@ function Layout() {
             <p>음성채팅</p>
           </VoiceTalkbutton>
         )}
+
+        {/* 커뮤니티 */}
+        {myId === null ? (
+          <Communitybutton
+            onClick={() => {
+              alert("로그인 후 사용 가능 합니다.");
+              LayoutButtonOnClick("profile");
+            }}
+          >
+            <p>커뮤니티</p>
+          </Communitybutton>
+        ) : (
+          <Communitybutton onClick={() => navigate("/Community")}>
+            <p>커뮤니티</p>
+          </Communitybutton>
+        )}
         {/* 소개페이지 */}
         <AboutPagesDiv onClick={AboutPagesOnClick}>?</AboutPagesDiv>
         <AboutPages />
       </SideBarDiv>
+
       {/* 메뉴 컴포넌트 */}
       <MenuOpenDiv layoutMenu={layoutMenu}>
         <Profile />
@@ -236,6 +253,16 @@ function Layout() {
 }
 
 export default Layout;
+const Communitybutton = styled.div`
+  margin: 24px auto;
+  font-size: 13px;
+  text-align: center;
+  color: white;
+  .chatIcon {
+    font-size: 30px;
+    margin-bottom: 5px;
+  }
+`;
 const Profileimg = styled.div``;
 const ProfileImg = styled.img`
   width: 50px;
@@ -338,7 +365,7 @@ const Friendbutton = styled.div<{ layoutMenu: String }>`
 
 const FriendNotice = styled.div`
   position: absolute;
-  bottom: 20px;
+  bottom: 19px;
   left: 25px;
   width: 10px;
   height: 10px;
@@ -347,7 +374,7 @@ const FriendNotice = styled.div`
   font-size: 10px;
   text-align: center;
   border-radius: 50%;
-  background-color: red;
+  background-color: #f05656;
   font-weight: 500;
 `;
 
