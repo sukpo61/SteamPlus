@@ -9,6 +9,7 @@ interface HeaderThProps {
   Width: string;
 }
 export const Community = () => {
+  const steamID = sessionStorage.getItem("steamid");
   const navigate = useNavigate();
 
   //db에있는 post get 해와서 useQuery로 만듥기
@@ -37,7 +38,7 @@ export const Community = () => {
     setSearchText(event.target.value);
   };
 
-  // 온클릭
+  // 검색 온클릭
   const btn = () => {
     if (searchText === "") {
       alert("검색어를 입력하세요");
@@ -53,10 +54,20 @@ export const Community = () => {
   const filteredData = PostData?.filter((post: any) =>
     post.title.toLowerCase().includes(searchTexts.toLowerCase())
   );
+  //새로고침
+  const replace = () => {
+    window.location.replace("Community");
+  };
+  const addPost = () => {
+    if (!steamID) {
+      alert("로그인이 필요합니다");
+      return;
+    } else navigate("/CommunityAddPost");
+  };
   return (
     <>
       <CommunityLayout>
-        <CommunityTitle> Community</CommunityTitle>
+        <CommunityTitle onClick={replace}> Community</CommunityTitle>
         <CommentsWrap>
           <CommunityeHeader>
             <HeaderTh Width="80px">번호</HeaderTh>
@@ -97,9 +108,7 @@ export const Community = () => {
             <button onClick={btn}>검색</button>
           </div>
           <AddPostBtnWrap>
-            <AddPostBtn onClick={() => navigate("/CommunityAddPost")}>
-              게시글 등록
-            </AddPostBtn>
+            <AddPostBtn onClick={addPost}>게시글 등록</AddPostBtn>
           </AddPostBtnWrap>
         </CommentsWrap>
       </CommunityLayout>

@@ -171,6 +171,21 @@ function Layout() {
           <AiOutlineSearch className="searchIcon" />
           <p>게임검색</p>
         </GameSearchbutton>
+        {/* 커뮤니티 */}
+        {myId === null ? (
+          <Communitybutton
+            onClick={() => {
+              alert("로그인 후 사용 가능 합니다.");
+              LayoutButtonOnClick("profile");
+            }}
+          >
+            <p>커뮤니티</p>
+          </Communitybutton>
+        ) : (
+          <Communitybutton onClick={() => navigate("/Community")}>
+            <p>커뮤니티</p>
+          </Communitybutton>
+        )}
         {/* 메뉴 구분선 */}
         <SideLine />
         {/* 친구 */}
@@ -219,21 +234,6 @@ function Layout() {
             <MdVoiceChat className="chatIcon" />
             <p>음성채팅</p>
           </VoiceTalkbutton>
-        )}
-        {/* 커뮤니티 */}
-        {myId === null ? (
-          <Communitybutton
-            onClick={() => {
-              alert("로그인 후 사용 가능 합니다.");
-              LayoutButtonOnClick("profile");
-            }}
-          >
-            <p>커뮤니티</p>
-          </Communitybutton>
-        ) : (
-          <Communitybutton onClick={() => navigate("/Community")}>
-            <p>커뮤니티</p>
-          </Communitybutton>
         )}
       </SideBarDiv>
 
