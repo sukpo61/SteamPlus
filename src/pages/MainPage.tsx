@@ -21,6 +21,7 @@ function MainPage() {
         },
       }
     );
+
     const aaa: any = {
       gamesdescription: response?.data[GameIds].data.short_description,
       gamevideo: response?.data[GameIds].data.movies[0].webm.max,
@@ -44,9 +45,8 @@ function MainPage() {
   ///인기게임 데이터 api
   const getFeaturedGames = async () => {
     const response = await axios.get(
-      "https://store.steampowered.com/api/featured"
+      "https://cors-anywhere.herokuapp.com/https://store.steampowered.com/api/featured"
     );
-    console.log("response", response?.data?.featured_win[0]);
 
     const FeaturedGames: any = {
       game1: response?.data?.featured_win[0],
