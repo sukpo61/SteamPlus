@@ -10,6 +10,7 @@ import {
   videoDisplayRecoil,
   AllStreamsRecoil,
   videoRoomExitRecoil,
+  AboutPagesState,
 } from "../recoil/atom";
 import Profile from "./layoutcomponents/Profile";
 import GameSearch from "./layoutcomponents/GameSearch";
@@ -35,24 +36,22 @@ import { useLocation } from "react-router-dom";
 import { useParams } from "react-router-dom";
 
 import socket from "../socket";
+import AboutPages from "./layoutcomponents/AboutPages";
 
 function Layout() {
   const navigate = useNavigate();
   const location = useLocation();
   const locationName = location.pathname;
-  const params = useParams();
 
   const myId = sessionStorage.getItem("steamid");
 
   //레이아웃 종류
   const [layoutMenu, setLayoutMenu] = useRecoilState<String>(LayoutButton);
+  //설명페이지 온오프
+  const [aboutPagesOnOff, setAboutPagesOnOff] =
+    useRecoilState<String>(AboutPagesState);
   // //친구 알림 내역
-  // const [FriendNoticeLength, setFriendNoticeLength] =
-  //   useRecoilState<any>(FriendNoticeAll);
-  // // console.log(FriendNoticeLength);
-
   const [bothFriendAll, setBothFriendAll] = useRecoilState(BothFriend);
-  // console.log(bothFriendAll);
 
   //친구 내역 전체
   const [getFriendAuth, setGetFriendAuth] =
@@ -88,6 +87,10 @@ function Layout() {
     } else {
       setLayoutMenu(i);
     }
+  };
+  // AboutPages클릭
+  const AboutPagesOnClick = () => {
+    setAboutPagesOnOff("aboutPages");
   };
 
   const getFriendSearch = async () => {
@@ -421,6 +424,9 @@ const ProfileImg = styled.img`
   border-radius: 50%;
 `;
 const SideBarDiv = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   width: 80px;
   height: 100%;
   position: fixed;
@@ -525,8 +531,8 @@ const Friendbutton = styled.div<{ layoutMenu: String }>`
 
 const FriendNotice = styled.div`
   position: absolute;
-  bottom: 20px;
-  right: 20px;
+  bottom: 19px;
+  left: 25px;
   width: 10px;
   height: 10px;
   line-height: 14px;
@@ -534,7 +540,7 @@ const FriendNotice = styled.div`
   font-size: 10px;
   text-align: center;
   border-radius: 50%;
-  background-color: red;
+  background-color: #f05656;
   font-weight: 500;
 `;
 
@@ -549,6 +555,18 @@ const VoiceTalkbutton = styled.div<{ layoutMenu: String }>`
     font-size: 30px;
     margin-bottom: 5px;
   }
+`;
+const AboutPagesDiv = styled.div`
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  text-align: center;
+  line-height: 27px;
+  border: 1px solid #777d87;
+  color: #777d87;
+  margin-top: auto;
+  margin-bottom: 30px;
+  cursor: pointer;
 `;
 // json에 친구서버에 id, nickname, 프로필이미지
 // 내 id 상대방 id

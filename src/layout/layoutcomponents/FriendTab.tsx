@@ -72,7 +72,9 @@ function FriendTab() {
         {friendAddCome.length === 0 ? (
           ""
         ) : (
-          <FriendNotice>{friendAddCome.length}</FriendNotice>
+          <FriendNotice>
+            {friendAddCome.length > 99 ? "99+" : friendAddCome.length}
+          </FriendNotice>
         )}
       </FriendAddDiv>
     </MenuTitleFlex>
@@ -154,14 +156,14 @@ const FriendAddDiv = styled.h2<{ layoutMenu: String }>`
 const FriendNotice = styled.div`
   position: absolute;
   top: 5px;
-  left: 15px;
-  width: 15px;
-  height: 15px;
-  line-height: 15px;
+  right: 5px;
+  width: 18px;
+  height: 13px;
+  line-height: 11px;
   color: #fff;
-  font-size: 12px;
+  font-size: 10px;
   text-align: center;
-  border-radius: 50%;
-  background-color: red;
+  border-radius: 8px;
+  background-color: #f05656;
   font-weight: 500;
 `;

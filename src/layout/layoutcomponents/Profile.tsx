@@ -252,9 +252,10 @@ function Profile() {
               ) : (
                 <>
                   <RecentGame> 최근 활동한 게임</RecentGame>
+
                   {GameData?.slice(0, 3).map((gameData: any) => {
                     return <RecentGameData gameData={gameData} />;
-                  })}{" "}
+                  })}
                 </>
               )}
             </>
@@ -377,7 +378,6 @@ const ProfileBox = styled.div<{ ProfileNicName: String | null }>`
 `;
 
 const RecentGame = styled.div`
-  margin-top: 80px;
   color: #d4d4d4;
   font-size: 14px;
   margin-bottom: 10px;
