@@ -2,8 +2,10 @@ import React, { useState, useEffect, useRef, useCallback } from "react";
 import axios from "axios";
 import { log } from "console";
 import styled from "styled-components";
+import { useInfiniteQuery } from "react-query";
 
 import { useQuery, useQueryClient } from "react-query";
+import { QueryClient } from "react-query";
 
 import { useNavigate } from "react-router-dom";
 import { BiSearchAlt2 } from "react-icons/bi";
@@ -14,20 +16,46 @@ const ChannelSearchPage: any = () => {
   const [searchValue, setSearchValue] = useState("");
   const [searchResult, setSearchResult] = useState<any>([null]); // 검색어 없을때 예외처리
   const [termResult, setTermResult] = useState("");
+  const [filteredCount, setFilteredCount] = useState<number>(0);
 
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchValue(e.target.value);
   };
 
   const handleTermResult = () => {
-    setTermResult(searchValue);
     if (searchValue.length < 2) {
-      alert("나가");
+      alert("두 글자 이상 입력해 주세요");
+    } else {
+      setTermResult(searchValue);
     }
-    setSearchResult([]);
+    // setSearchResult([]);
+
     // getGameSummary(searchValue, offset);
-    // queryClient.invalidateQueries("gameSummaryData")
+    // ueryClient.invalidateQueries("gameSummaryData")
   };
+
+  const handleSearchClick = () => {
+    if (searchValue === "") {
+      return;
+    } else if (searchValue.length < 2) {
+      // searchValue : 새로고침 후 첫검색때 console에 출처 모를 리스트가 찍힘
+      // termResult : 새로고침 후 처음 검색한 검색어는 검색창에서 리셋되고, 두번째 검색어부터 console 찍힘
+      // setTermResult("");
+      // setSearchValue("");
+      // setFilteredCount(0);
+      return;
+    }
+
+    //   if (searchValue.length < 2) {
+    //     return false;
+    //   }
+    getGameSummary();
+  };
+  //
+
+  // useEffect(() => {
+  //   console.log(searchValue);
+  // }, [searchValue]);
 
   //https://github.com/Revadike/InternalSteamWebAPI
   // steam 공식 github!!!!!!!!!!!!!!!!!
@@ -78,16 +106,14 @@ const ChannelSearchPage: any = () => {
 
   // searchValue: any, offset: number
 
+  // npx json-server --watch db.json --port 3001
+  // https://cors-anywhere.herokuapp.com/
+
   const getGameSummary = async () => {
-    if (searchValue === "") {
-      return;
-    } else if (termResult.length < 2) {
-      setTermResult("");
-      setSearchValue("");
-      return;
-    }
+    console.log("termResult", termResult);
+
     const gameSummary = await axios.get(
-      `https://store.steampowered.com/api/storesearch/?cc=us&l=en&term=${termResult}&pagesize=20`
+      `https://store.steampowered.com/api/storesearch/?cc=us&l=en&term="${termResult}"` // &pagesize=20
     ); // 게임 Id만 가져오기!!!
 
     const gameList = [];
@@ -102,8 +128,9 @@ const ChannelSearchPage: any = () => {
       );
     }
     const filterList = gameList.filter((game) => game.type === "game");
-    console.log("dlc", filterList);
-    return filterList; // filterDLC는 getGameSummary 안에서만 사용 가능!!!!
+    console.log("game", filterList);
+    setFilteredCount(filterList.length);
+    return filterList;
   };
 
   // useInView = react-intersection-observer 라이브러리
@@ -111,9 +138,23 @@ const ChannelSearchPage: any = () => {
 
   const {
     data: gameSummaryData, // 게임id
-  } = useQuery(["gameSummaryData", termResult], getGameSummary);
+    fetchNextPage,
+    hasNextPage,
+  } = useInfiniteQuery(["gameSummaryData", termResult], getGameSummary, {
+    getNextPageParam: (lastPage: any) => {
+      if (lastPage?.page <= lastPage?.total_pages) {
+        return lastPage?.page + 1;
+      }
+    },
+  });
 
-  console.log("gameSummaryData", gameSummaryData);
+  const loadMore = async () => {
+    if (hasNextPage) {
+      await fetchNextPage();
+    }
+  };
+
+  // console.log("gameSummaryData", gameSummaryData);
 
   return (
     <div
@@ -137,6 +178,7 @@ const ChannelSearchPage: any = () => {
           <BiSearchAlt2
             className="searchIcon"
             onClick={() => {
+              // handleSearchClick(); //
               // getGameSummary(); //searchValue, offset
               handleTermResult();
               // handleResultList();
@@ -145,17 +187,23 @@ const ChannelSearchPage: any = () => {
         </GameSearchInputArea>
       </SearchPageHeader>
       <SearchCount>
-        '{`${termResult}`}' 검색 결과는 {gameSummaryData?.length ?? "0"}개입니다
+        '{`${termResult}`}' 검색 결과는 {filteredCount}개입니다
       </SearchCount>
       <GameSearchList>
-        {gameSummaryData?.map((game: any) => {
-          // console.log("game", game.genre);
-          return (
-            <GameChannelBlockView key={game?.id}>
-              <GameChannelBlock game={game} />
-            </GameChannelBlockView>
-          );
-        })}
+        {gameSummaryData?.pages
+          // .map((page: any) => page?.results)
+          .flat()
+          .map((game: any) => {
+            if (game === undefined) {
+              return <div></div>;
+            }
+            // console.log("game", game);
+            return (
+              <GameChannelBlockView key={game?.id}>
+                <GameChannelBlock game={game} />
+              </GameChannelBlockView>
+            );
+          })}
       </GameSearchList>
     </div>
   );
