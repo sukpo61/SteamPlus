@@ -307,16 +307,17 @@ export default Layout;
 const Profileimg = styled.div``;
 
 const VideosWrap = styled.div<any>`
+  //나중에 생각하자.
   top: ${(props) => {
     if (props.layout !== "voicetalk") {
       return "-70%";
     }
     if (props.toggle) {
-      return "72px";
+      return "70px";
     }
     return "-70%";
   }};
-  transition: all 0.72s;
+  transition: all 0.5s;
   right: 0;
   width: ${(props) =>
     props.widthprop === "close" ? "calc(100% - 80px)" : "calc(100% - 480px)"};

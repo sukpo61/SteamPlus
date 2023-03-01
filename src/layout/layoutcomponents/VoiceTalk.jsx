@@ -54,7 +54,7 @@ function VoiceTalk() {
 
   const [videoRoomExit, setVideoRoomExit] = useRecoilState(videoRoomExitRecoil);
 
-  // const [channelName, setchannelName] = useRecoilState(channelNameRecoil);
+  const [channelName, setchannelName] = useRecoilState(channelNameRecoil);
 
   const {
     value: roomtitle,
@@ -64,7 +64,7 @@ function VoiceTalk() {
 
   //dddd
 
-  const channelName = "Dead space";
+  // const channelName = "Dead space";
 
   async function getMedia() {
     try {
@@ -233,8 +233,6 @@ function VoiceTalk() {
 
     return NewUserPeerConnection;
   };
-
- 
 
   const joinAlarm = (answerid) => {
     const info = friendAllRecoil.find((e) => e.id === answerid);
