@@ -227,6 +227,7 @@ function Profile() {
                 display: "flex",
                 flexDirection: "column",
                 alignItems: "center",
+                justifyContent: "center",
               }}
             >
               <ProfileGameComments>
@@ -245,7 +246,9 @@ function Profile() {
             <>
               {/* 최근홢동한게임이 없다면 */}
               {GameData === undefined ? (
-                <RecentGame> 최근 활동한 게임이 없습니다.</RecentGame>
+                <RecentGame>
+                  <div>최근 활동한 게임이 없습니다.</div>
+                </RecentGame>
               ) : (
                 <>
                   <RecentGame> 최근 활동한 게임</RecentGame>
@@ -368,19 +371,18 @@ const ProfileBox = styled.div<{ ProfileNicName: String | null }>`
     props.ProfileNicName !== null ? "" : "translate(-50%, -50%);"};
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  align-items: center;
   border-radius: 10px;
+  justify-content: center;
 `;
 
 const RecentGame = styled.div`
-  margin-top: 35px;
-  margin-bottom: 20px;
-  position: relative;
-  right: 0;
-  left: 30px;
-  bottom: -10px;
+  margin-top: 80px;
   color: #d4d4d4;
   font-size: 14px;
+  margin-bottom: 10px;
+  display: flex;
+  width: 86%;
 `;
 const ProfileGameComments = styled.div`
   color: gray;
@@ -388,6 +390,7 @@ const ProfileGameComments = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
 `;
 const ProfileGameLogin = styled.span`
   cursor: pointer;
