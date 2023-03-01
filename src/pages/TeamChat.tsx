@@ -8,6 +8,7 @@ import {
   chatTextRecoil,
   channelNameRecoil,
   currentRoomRecoil,
+  currentGameIdRecoil,
 } from "../recoil/atom";
 import { useLocation } from "react-router";
 import axios from "axios";
@@ -28,13 +29,15 @@ const TeamChat = () => {
 
   const [currentRoom, setCurrentRoom] = useRecoilState(currentRoomRecoil);
 
+  const [currentGameId, setCurrentGameId] = useRecoilState(currentGameIdRecoil);
+
   const [background, setBackground] = useState<any>("");
 
-  // const { state: gameid } = useLocation();
+  const { state: gameinfo } = useLocation();
 
-  // const channelName = "Dead space";
+  console.log(gameinfo);
 
-  const gameid = 1693980;
+  const gameid = gameinfo?.gameid;
 
   const Gamedata = async () => {
     const response = await axios.get(
@@ -45,22 +48,8 @@ const TeamChat = () => {
         },
       }
     );
-    const gameinfo = {
-      gamesdescription: response?.data[gameid].data.short_description,
-      gamevideo: response?.data[gameid].data.movies[0].webm.max,
-      gametitle: response?.data[gameid].data.name,
-      gameCategories: response?.data[gameid].data.genres[0].description,
-      gameCategories2:
-        response?.data[gameid].data.genres.length < 2
-          ? ""
-          : response?.data[gameid].data.genres[1].description,
-      gameCategories3:
-        response?.data[gameid].data.genres.length < 3
-          ? ""
-          : response?.data[gameid].data.genres[2].description,
-      gameMainImg: response?.data[gameid].data.screenshots[1].path_full,
-      gameSubimg: response?.data[gameid].data.header_image,
-    };
+
+    setCurrentGameId(gameid);
 
     setchannelName(response?.data[gameid].data.name);
 

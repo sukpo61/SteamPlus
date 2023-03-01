@@ -142,18 +142,6 @@ function Layout() {
 
   const ProfileImgUrl = sessionStorage.getItem("profileimg");
 
-  // const Mediaquery = () => {
-  //   const videocount = AllStreams.length;
-  //   const videowrapratio =
-  //     (dimensions.width - 528) / (dimensions.height * 0.5 - 83);
-  //   const videosratio = (4 * videocount) / 3;
-  //   if (videowrapratio > videosratio) {
-  //     return true;
-  //   } else {
-  //     return false;
-  //   }
-  // };
-
   const StreamList = AllStreams.map((data: any) => {
     const info = friendAllRecoil.find((e) => e.id === data.userid);
 

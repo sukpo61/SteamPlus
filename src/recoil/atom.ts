@@ -44,6 +44,10 @@ export const currentRoomRecoil = atom<any>({
   key: "currentRoomRecoil",
   default: "",
 });
+export const currentGameIdRecoil = atom<any>({
+  key: "currentGameIdRecoil",
+  default: "",
+});
 export const videoRoomExitRecoil = atom<any>({
   key: "videoRoomExitRecoil",
   default: false,

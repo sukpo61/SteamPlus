@@ -6,6 +6,7 @@ import socket from "../../socket";
 import useInput from "../../hooks/useInput";
 import { friendAllState } from "../../recoil/atom";
 import { useRecoilState } from "recoil";
+import { useNavigate } from "react-router";
 import { FriendSearchProps } from "./FriendSearch";
 
 import {
@@ -16,6 +17,7 @@ import {
   currentRoomRecoil,
   channelNameRecoil,
   videoRoomExitRecoil,
+  currentGameIdRecoil,
 } from "../../recoil/atom";
 
 import TeamChat from "../../pages/TeamChat";
@@ -56,12 +58,15 @@ function VoiceTalk() {
 
   const [channelName, setchannelName] = useRecoilState(channelNameRecoil);
 
+  const [currentGameId, setCurrentGameId] = useRecoilState(currentGameIdRecoil);
+
   const {
     value: roomtitle,
     setinputValue: setRoomTitle,
     reset: resetTitle,
   } = useInput("");
 
+  const navigate = useNavigate();
   //dddd
 
   // const channelName = "Dead space";
@@ -383,7 +388,18 @@ function VoiceTalk() {
         <VoiceTalkTop>
           <VoiceTalkTopbar>
             <ChannelTitle>
-              <span>{channelName}</span>
+              <span
+                onClick={() => {
+                  navigate(`/Teamchat/:${channelName.replaceAll(" ", "-")}`, {
+                    state: {
+                      gameid: currentGameId,
+                      name: channelName,
+                    },
+                  });
+                }}
+              >
+                {channelName}
+              </span>
               <img src="/img/steam_link.png"></img>
             </ChannelTitle>
             <CreateRoom
@@ -620,8 +636,10 @@ const ChannelTitle = styled.div`
   line-height: 28px;
   img {
     margin-left: 8px;
+    cursor: pointer;
   }
   span {
+    cursor: pointer;
   }
 `;
 
