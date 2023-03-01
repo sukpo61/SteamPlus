@@ -24,7 +24,7 @@ const TeamChat = () => {
   //내 프로필이미지
   const ProfileImgUrl = sessionStorage.getItem("profileimg");
 
-  // const [channelName, setchannelName] = useRecoilState<any>(channelNameRecoil);
+  const [channelName, setchannelName] = useRecoilState<any>(channelNameRecoil);
 
   const [currentRoom, setCurrentRoom] = useRecoilState(currentRoomRecoil);
 
@@ -32,7 +32,7 @@ const TeamChat = () => {
 
   // const { state: gameid } = useLocation();
 
-  const channelName = "Dead space";
+  // const channelName = "Dead space";
 
   const gameid = 1693980;
 
@@ -62,7 +62,7 @@ const TeamChat = () => {
       gameSubimg: response?.data[gameid].data.header_image,
     };
 
-    // setchannelName(response?.data[gameid].data.name);
+    setchannelName(response?.data[gameid].data.name);
 
     setBackground(response?.data[gameid].data.background);
   };
@@ -124,7 +124,15 @@ const TeamChat = () => {
   }, [chatText]);
 
   useEffect(() => {
-    socket.emit("requestrooms", channelName);
+    if (channelName) {
+      socket.emit("requestrooms", channelName);
+    }
+    return () => {
+      socket.off("requestrooms");
+    };
+  }, [channelName]);
+
+  useEffect(() => {
     Gamedata();
     Aos.init();
 
