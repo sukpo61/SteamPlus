@@ -23,6 +23,7 @@ import { FriendProps } from "../layout/layoutcomponents/Friend";
 import { FriendSearchProps } from "../layout/layoutcomponents/FriendSearch";
 
 import { AiFillHome } from "react-icons/ai";
+import { FaKeyboard } from "react-icons/fa";
 import { AiOutlineSearch } from "react-icons/ai";
 import { FaUserFriends } from "react-icons/fa";
 import { MdVoiceChat } from "react-icons/md";
@@ -197,6 +198,20 @@ function Layout() {
           <AiOutlineSearch className="searchIcon" />
           <p>게임검색</p>
         </GameSearchbutton>
+        {/* 커뮤니티 */}
+
+        <Communitybutton
+          locationName={locationName}
+          onClick={() => {
+            FriendButtonOnClick("close");
+            navigate("Community");
+            window.scrollTo({ top: 0, behavior: "smooth" });
+          }}
+        >
+          <FaKeyboard className="communityIcon" />
+          <p>커뮤니티</p>
+        </Communitybutton>
+
         {/* 메뉴 구분선 */}
         <SideLine />
         {/* 친구 */}
@@ -247,6 +262,7 @@ function Layout() {
           </VoiceTalkbutton>
         )}
       </SideBarDiv>
+
       {/* 메뉴 컴포넌트 */}
       <MenuOpenDiv layoutMenu={layoutMenu}>
         <Profile />
@@ -466,6 +482,18 @@ const GameSearchbutton = styled.div<{ locationName: String }>`
     props.locationName === "/Channelsearchpage" ? "#00B8C8" : "#777d87"};
   cursor: pointer;
   .searchIcon {
+    font-size: 30px;
+    margin-bottom: 5px;
+  }
+`;
+const Communitybutton = styled.div<{ locationName: String }>`
+  margin: 24px auto 0;
+  font-size: 13px;
+  text-align: center;
+  color: ${(props) =>
+    props.locationName === "/Community" ? "#00B8C8" : "#777d87"};
+  cursor: pointer;
+  .communityIcon {
     font-size: 30px;
     margin-bottom: 5px;
   }
