@@ -350,7 +350,7 @@ const ProfileNickName = styled.div`
 const ProfileBox = styled.div<{ ProfileNicName: String | null }>`
   width: 352px;
   height: ${(props) => (props.ProfileNicName === null ? "950px" : "650px")};
-  background-color: #192030;
+  /* background-color: #192030; */
   margin: ${(props) => (props.ProfileNicName === null ? "" : "20px auto 0")};
   position: ${(props) => (props.ProfileNicName !== null ? "" : "absolute")};
   top: ${(props) => (props.ProfileNicName !== null ? "" : "50%")};
@@ -359,7 +359,6 @@ const ProfileBox = styled.div<{ ProfileNicName: String | null }>`
     props.ProfileNicName !== null ? "" : "translate(-50%, -50%);"};
   display: flex;
   flex-direction: column;
-  align-items: center;
   justify-content: center;
   border-radius: 10px;
 `;
@@ -367,7 +366,12 @@ const ProfileBox = styled.div<{ ProfileNicName: String | null }>`
 const RecentGame = styled.div`
   margin-top: 35px;
   margin-bottom: 20px;
-  color: white;
+  position: relative;
+  right: 0;
+  left: 30px;
+  bottom: -10px;
+  color: #d4d4d4;
+  font-size: 14px;
 `;
 const ProfileGameComments = styled.div`
   color: gray;
