@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { useRecoilState, useRecoilValue } from "recoil";
 import {
@@ -68,11 +68,6 @@ function Layout() {
 
   const [videoRoomExit, setVideoRoomExit] = useRecoilState(videoRoomExitRecoil);
 
-  // window.onload = () => {
-  //   if (window.location.pathname.slice(0, 9) === "/teamchat") {
-  //     setLayoutMenu("voicetalk");
-  //   }
-  // };
   //메뉴 탭눌렀을때 (친구제외)
   const LayoutButtonOnClick = (i: string) => {
     if (layoutMenu === i) {
@@ -145,11 +140,19 @@ function Layout() {
     return i.friendId === myId;
   });
 
-  // useEffect(() => {
-  //   setBothFriendAll(friend);
-  // }, []);
-  // console.log(friendAddCome.length);
   const ProfileImgUrl = sessionStorage.getItem("profileimg");
+
+  // const Mediaquery = () => {
+  //   const videocount = AllStreams.length;
+  //   const videowrapratio =
+  //     (dimensions.width - 528) / (dimensions.height * 0.5 - 83);
+  //   const videosratio = (4 * videocount) / 3;
+  //   if (videowrapratio > videosratio) {
+  //     return true;
+  //   } else {
+  //     return false;
+  //   }
+  // };
 
   const StreamList = AllStreams.map((data: any) => {
     const info = friendAllRecoil.find((e) => e.id === data.userid);
@@ -162,13 +165,14 @@ function Layout() {
 
     return (
       <VideoWrap key={data.userid}>
-        <video ref={remotehandleVideoRef} autoPlay playsInline muted />
+        <Streamvideo ref={remotehandleVideoRef} autoPlay playsInline muted />
         <Usernickname>
           <span>{info?.nickname}</span>
         </Usernickname>
       </VideoWrap>
     );
   });
+
   return (
     <div onContextMenu={(e: any) => e.preventDefault()}>
       <SideBarDiv>
@@ -270,7 +274,7 @@ function Layout() {
         layout={layoutMenu}
       >
         <VideoPosition>
-          <VideosList videocount={AllStreams.length}>{StreamList}</VideosList>
+          <VideosList>{StreamList}</VideosList>
           <VideoControl>
             <ControlButtons>
               <ControlButtonWrap
@@ -316,7 +320,7 @@ const VideosWrap = styled.div<any>`
   right: 0;
   width: ${(props) =>
     props.widthprop === "close" ? "calc(100% - 80px)" : "calc(100% - 480px)"};
-  height: calc((100% - 72px) / 2);
+  height: 480px;
   position: fixed;
   display: flex;
   flex-direction: column;
@@ -325,18 +329,22 @@ const VideosWrap = styled.div<any>`
   z-index: 9;
   justify-content: center;
   align-items: center;
-  video {
-    border-radius: 30px;
-    height: 100%;
-  }
 `;
 
-const VideoWrap = styled.div`
-  position: relative;
+const Streamvideo = styled.video<any>`
+  border-radius: 10px;
+  width: 90%;
   height: 100%;
+`;
+
+const VideoWrap = styled.div<any>`
+  position: relative;
   display: flex;
   flex-direction: column;
+  justify-content: center;
+  align-items: center;
 `;
+
 const ControlButtons = styled.div`
   display: flex;
   flex-direction: row;
@@ -362,7 +370,7 @@ const Usernickname = styled.div`
   border-radius: 8px;
   padding: 4px 8px;
   bottom: 8px;
-  left: 8px;
+  left: 8%;
 `;
 const VideoPosition = styled.div`
   width: 100%;
@@ -393,6 +401,7 @@ const VideoControl = styled.div`
 `;
 
 const VideosList = styled.div<any>`
+  width: 100%;
   height: 100%;
   display: flex;
   flex-direction: row;
@@ -400,7 +409,6 @@ const VideosList = styled.div<any>`
   justify-content: center;
   align-items: center;
   padding: 24px;
-  gap: 20px;
 `;
 const ProfileImg = styled.img`
   width: 50px;

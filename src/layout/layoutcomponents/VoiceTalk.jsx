@@ -219,7 +219,6 @@ function VoiceTalk() {
       .forEach((track) => NewUserPeerConnection.addTrack(track, localStream));
 
     NewUserPeerConnection.onaddstream = (event) => {
-      console.log("addstream on");
       handleAddStream(userid, event.stream);
     };
 
@@ -235,6 +234,8 @@ function VoiceTalk() {
     return NewUserPeerConnection;
   };
 
+ 
+
   const joinAlarm = (answerid) => {
     const info = friendAllRecoil.find((e) => e.id === answerid);
 
@@ -244,6 +245,7 @@ function VoiceTalk() {
       type: "alarm",
     };
   };
+
   const leaveAlarm = (targetid) => {
     const info = friendAllRecoil.find((e) => e.id === targetid);
 
