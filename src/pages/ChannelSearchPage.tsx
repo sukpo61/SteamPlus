@@ -28,11 +28,30 @@ const ChannelSearchPage: any = () => {
     } else {
       setTermResult(searchValue);
     }
-    setSearchResult([]);
+    // setSearchResult([]);
 
     // getGameSummary(searchValue, offset);
     // ueryClient.invalidateQueries("gameSummaryData")
   };
+
+  const handleSearchClick = () => {
+    if (searchValue === "") {
+      return;
+    } else if (searchValue.length < 2) {
+      // searchValue : 새로고침 후 첫검색때 console에 출처 모를 리스트가 찍힘
+      // termResult : 새로고침 후 처음 검색한 검색어는 검색창에서 리셋되고, 두번째 검색어부터 console 찍힘
+      // setTermResult("");
+      // setSearchValue("");
+      // setFilteredCount(0);
+      return;
+    }
+
+    //   if (searchValue.length < 2) {
+    //     return false;
+    //   }
+    getGameSummary();
+  };
+  //
 
   // useEffect(() => {
   //   console.log(searchValue);
@@ -87,25 +106,14 @@ const ChannelSearchPage: any = () => {
 
   // searchValue: any, offset: number
 
+  // npx json-server --watch db.json --port 3001
+  // https://cors-anywhere.herokuapp.com/
+
   const getGameSummary = async () => {
-    if (searchValue === "") {
-      return;
-    } else if (searchValue.length < 2) {
-      // searchValue : 새로고침 후 첫검색때 console에 출처 모를 리스트가 찍힘
-      // termResult : 새로고침 후 처음 검색한 검색어는 검색창에서 리셋되고, 두번째 검색어부터 console 찍힘
-      setTermResult("");
-      setSearchValue("");
-      return;
-    }
-
-    if (searchValue.length < 2) {
-      return false;
-    }
-
     console.log("termResult", termResult);
 
     const gameSummary = await axios.get(
-      `https://store.steampowered.com/api/storesearch/?cc=us&l=en&term=${termResult}` // &pagesize=20
+      `https://store.steampowered.com/api/storesearch/?cc=us&l=en&term="${termResult}"` // &pagesize=20
     ); // 게임 Id만 가져오기!!!
 
     const gameList = [];
@@ -122,7 +130,7 @@ const ChannelSearchPage: any = () => {
     const filterList = gameList.filter((game) => game.type === "game");
     console.log("game", filterList);
     setFilteredCount(filterList.length);
-    return filterList; // filterDLC는 getGameSummary 안에서만 사용 가능!!!!
+    return filterList;
   };
 
   // useInView = react-intersection-observer 라이브러리
@@ -170,7 +178,8 @@ const ChannelSearchPage: any = () => {
           <BiSearchAlt2
             className="searchIcon"
             onClick={() => {
-              getGameSummary(); //searchValue, offset
+              // handleSearchClick(); //
+              // getGameSummary(); //searchValue, offset
               handleTermResult();
               // handleResultList();
             }}
