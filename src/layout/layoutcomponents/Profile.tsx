@@ -192,6 +192,7 @@ function Profile() {
   return (
     <>
       <ProfileDiv layoutMenu={layoutMenu}>
+        {/* 로그인을 안했다면*/}
         {ProfileNicName === null ? (
           ""
         ) : (
@@ -203,7 +204,7 @@ function Profile() {
             </ProfileImgBox>
           </>
         )}
-
+        {/* 로그인을 안했다면*/}
         {ProfileNicName === null ? (
           ""
         ) : (
@@ -219,8 +220,15 @@ function Profile() {
         )}
 
         <ProfileBox ProfileNicName={ProfileNicName}>
+          {/* 로그인을 안했다면*/}
           {ProfileNicName === null ? (
-            <>
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+              }}
+            >
               <ProfileGameComments>
                 <div> 스팀 연동 정보가 없어요</div>
                 <br></br>
@@ -232,9 +240,10 @@ function Profile() {
                 <ProfileGameImg src={require("../../img/img.png")} />
                 Steam 계정으로 로그인
               </ProfileGameLogin>
-            </>
+            </div>
           ) : (
             <>
+              {/* 최근홢동한게임이 없다면 */}
               {GameData === undefined ? (
                 <RecentGame> 최근 활동한 게임이 없습니다.</RecentGame>
               ) : (
