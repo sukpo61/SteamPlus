@@ -4,6 +4,7 @@ import { useQuery } from "react-query";
 import { Navigate, useNavigate, useParams } from "react-router-dom";
 import styled from "styled-components";
 import { useRef } from "react";
+import Comment from "./Comment";
 export const CommunityDetail = () => {
   const navigate = useNavigate();
 
@@ -80,6 +81,9 @@ export const CommunityDetail = () => {
           </PostInfoContainer>
         </TableHeader>
         <ContentWrap>{PostContent}</ContentWrap>
+
+        {/* 댓글 */}
+        <Comment PostId={PostId} />
       </PostpageWrap>
     </PostsWrap>
   );
