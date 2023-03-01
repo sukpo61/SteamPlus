@@ -24,7 +24,7 @@ function MainPage() {
         },
       }
     );
-    console.log("response", GameIds);
+
     const aaa: any = {
       gamesdescription: response?.data[GameIds].data.short_description,
       gamevideo: response?.data[GameIds].data.movies[0].webm.max,
@@ -44,7 +44,6 @@ function MainPage() {
     return aaa;
   };
   const { data }: any = useQuery("Gamedata", Gamedata);
-  console.log("res", GameIds);
 
   ///인기게임 데이터 api
   const getFeaturedGames = async () => {
