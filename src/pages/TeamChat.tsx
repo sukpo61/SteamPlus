@@ -3,10 +3,17 @@ import React, { useEffect, useRef, useState } from "react";
 import socket from "../socket";
 import Testtext from "./Testtext";
 import { useRecoilState } from "recoil";
-import { DataChannelMapRecoil } from "../recoil/atom";
-import { chatTextRecoil } from "../recoil/atom";
+import {
+  DataChannelMapRecoil,
+  chatTextRecoil,
+  channelNameRecoil,
+  currentRoomRecoil,
+  currentGameIdRecoil,
+} from "../recoil/atom";
 import { useLocation } from "react-router";
 import axios from "axios";
+import Aos from "aos";
+import "aos/dist/aos.css";
 
 const TeamChat = () => {
   const [DataChannelMap, setDataChannelMap] =
@@ -18,13 +25,19 @@ const TeamChat = () => {
   //내 프로필이미지
   const ProfileImgUrl = sessionStorage.getItem("profileimg");
 
-  const [channelName, setchannelName] = useState<any>("Dead space");
+  const [channelName, setchannelName] = useRecoilState<any>(channelNameRecoil);
+
+  const [currentRoom, setCurrentRoom] = useRecoilState(currentRoomRecoil);
+
+  const [currentGameId, setCurrentGameId] = useRecoilState(currentGameIdRecoil);
 
   const [background, setBackground] = useState<any>("");
 
-  // const { state: gameid } = useLocation();
+  const { state: gameinfo } = useLocation();
 
-  const gameid = 1693980;
+  console.log(gameinfo);
+
+  const gameid = gameinfo?.gameid;
 
   const Gamedata = async () => {
     const response = await axios.get(
@@ -35,24 +48,8 @@ const TeamChat = () => {
         },
       }
     );
-    const gameinfo = {
-      gamesdescription: response?.data[gameid].data.short_description,
-      gamevideo: response?.data[gameid].data.movies[0].webm.max,
-      gametitle: response?.data[gameid].data.name,
-      gameCategories: response?.data[gameid].data.genres[0].description,
-      gameCategories2:
-        response?.data[gameid].data.genres.length < 2
-          ? ""
-          : response?.data[gameid].data.genres[1].description,
-      gameCategories3:
-        response?.data[gameid].data.genres.length < 3
-          ? ""
-          : response?.data[gameid].data.genres[2].description,
-      gameMainImg: response?.data[gameid].data.screenshots[1].path_full,
-      gameSubimg: response?.data[gameid].data.header_image,
-    };
 
-    console.log(response);
+    setCurrentGameId(gameid);
 
     setchannelName(response?.data[gameid].data.name);
 
@@ -90,12 +87,13 @@ const TeamChat = () => {
       profileImg: ProfileImgUrl,
       text: textInput,
       time: timeString,
+      type: "message",
     };
 
     const stringnewChat = JSON.stringify(newChat);
 
     setChatText((i: any) => [...i, newChat]);
-    console.log(DataChannelMap);
+
     DataChannelMap.forEach((channel: any, id: any) => {
       if (channel.readyState === "open") {
         channel.send(stringnewChat);
@@ -104,11 +102,10 @@ const TeamChat = () => {
 
     setTextInput("");
   };
-  //입력시 맨 아래로 스크롤a
+  //입력시 맨 아래로 스크롤aas
   const chatContainerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    console.log("chatText", chatText);
     if (chatContainerRef.current) {
       chatContainerRef.current.scrollTop =
         chatContainerRef.current.scrollHeight;
@@ -116,25 +113,49 @@ const TeamChat = () => {
   }, [chatText]);
 
   useEffect(() => {
-    console.log("effected");
-    socket.emit("requestrooms", channelName);
+    if (channelName) {
+      socket.emit("requestrooms", channelName);
+    }
+    return () => {
+      socket.off("requestrooms");
+    };
+  }, [channelName]);
+
+  useEffect(() => {
     Gamedata();
+    Aos.init();
+
     return () => {
       socket.off("requestrooms");
     };
   }, []);
+
   return (
     <ChatPageDiv>
       <Background src={background}></Background>
-      <ChatPageHeaderDiv>#채팅방_1234</ChatPageHeaderDiv>
+      <ChatPageHeaderDiv>{currentRoom}</ChatPageHeaderDiv>
       <ChatContentsDiv ref={chatContainerRef}>
         <ChatContentsMarginDiv>
           {chatText.map((chat: any) => {
-            return <Testtext chat={chat} />;
+            if (chat.type === "alarm") {
+              return <Testtext chat={chat} />;
+            } else if (chat.id === myId) {
+              return (
+                <div data-aos="fade-left">
+                  <Testtext chat={chat} />
+                </div>
+              );
+            } else {
+              return (
+                <div data-aos="fade-right">
+                  <Testtext chat={chat} />
+                </div>
+              );
+            }
           })}
         </ChatContentsMarginDiv>
       </ChatContentsDiv>
-      <ChatInputForm onSubmit={chatInputOnSubmit}>
+      <ChatInputForm onSubmit={chatInputOnSubmit} toggle={currentRoom}>
         <ChatInput
           placeholder="#채팅방_1에 보낼 메세지를 입력하세요."
           onChange={chatInputOnChange}
@@ -150,6 +171,7 @@ export default TeamChat;
 const ChatPageDiv = styled.div`
   height: 100vh;
   position: relative;
+  overflow: hidden;
 `;
 const Background = styled.img`
   width: 100%;
@@ -188,13 +210,14 @@ const ChatContentsDiv = styled.div`
 const ChatContentsMarginDiv = styled.div`
   margin-top: auto;
 `;
-const ChatInputForm = styled.form`
+const ChatInputForm = styled.form<any>`
   position: absolute;
   width: 70%;
   height: 70px;
   left: 50%;
   transform: translateX(-50%);
-  bottom: 0;
+  transition: all 0.5s;
+  bottom: ${(props) => (props.toggle ? "0" : "-80px")};
   padding-bottom: 30px;
   overflow: hidden;
 `;
