@@ -4,9 +4,6 @@ import { ActivateChannel } from "../components/ActivateChannel";
 import { PoularChannel } from "../components/PoularChannel";
 import { CurrentGame } from "../components/CurrentGame";
 import { useQuery } from "react-query";
-//578080
-//582010
-//945360
 
 function MainPage() {
   const GameId: any = sessionStorage.getItem("gameid");

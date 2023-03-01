@@ -10,6 +10,11 @@ export const LayoutButton = atom<String>({
   default: "close",
 });
 
+export const AboutPagesState = atom<String>({
+  key: "AboutPages",
+  default: "close",
+});
+
 export const getFriend = atom<any>({
   key: "friendAddState",
   default: [],

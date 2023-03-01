@@ -13,6 +13,7 @@ import { useRecoilValue } from "recoil";
 import { LayoutButton } from "../recoil/atom";
 import Testtext from "../pages/Testtext";
 import TestChat from "../pages/TestChat";
+import SteamGameSearch from "../pages/Testscroll";
 import { Community } from "../pages/Community";
 import { CommunityAddPost } from "../components/communitypage/CommunityAddPost";
 import { CommunityDetail } from "../components/communitypage/CommunityDetail";
@@ -42,6 +43,7 @@ const Router = () => {
           <Route path="/Teamchat/:id" element={<TeamChat />} />
           <Route path="testtext" element={<Testtext />} />
           <Route path="testchat" element={<TestChat />} />
+          <Route path="testscroll" element={<SteamGameSearch />} />
           <Route path="Community" element={<Community />} />
           <Route path="/Community/:id" element={<CommunityDetail />} />
           <Route path="CommunityAddPost" element={<CommunityAddPost />} />
