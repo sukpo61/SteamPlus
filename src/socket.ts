@@ -8,7 +8,7 @@ export const userinfo = {
   id: userid,
 };
 
-// const socket = io("https://young-cases-open-183-109-20-88.loca.lt");
+// const socket = io("https://full-bees-try-183-109-20-88.loca.lt");
 const socket = io("http://localhost:4500");
 
 socket.on("connect", () => {
@@ -42,5 +42,10 @@ export default socket;
               );
             })}
           </RoomUserList>
-        )} */
+        )} 
+          width: ${(props) =>
+    props.videoratio() ? null : `calc(100% / ${props.videocount})`};
+    */
+        
 }
+
