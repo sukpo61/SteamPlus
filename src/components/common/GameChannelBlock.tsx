@@ -30,7 +30,7 @@ function GameChannelBlock({ game }: any) {
             <GameChannelCategory>
               {game.genres ? game?.genres[0]?.description : null}&nbsp;
               {game.genres ? game?.genres[1]?.description : null}&nbsp;
-              {game.genres ? game?.genres[2]?.description : null}&nbsp;
+              {game.genres ? game?.genres[2]?.description : null}
             </GameChannelCategory>
 
             <NumberOfPlayer>
@@ -48,10 +48,11 @@ function GameChannelBlock({ game }: any) {
         </div>
         <AdmitButton
           onClick={() =>
-            navigate(`/Teamchat/:${game.name.replaceAll(" ", "_")}`, {
-              state: game?.filter(
-                (x: any) => x.steam_appid === game.steam_appid
-              ),
+            navigate(`/Teamchat/:${game.name.replaceAll(" ", "-")}`, {
+              state: {
+                gameid: game.steam_appid,
+                name: game.name,
+              },
             })
           }
           key={game?.id}
