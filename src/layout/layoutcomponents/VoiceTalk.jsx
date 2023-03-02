@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { LayoutButton } from "../../recoil/atom";
+import { getFriend, LayoutButton } from "../../recoil/atom";
 import styled from "styled-components";
 import { useRecoilValue } from "recoil";
 import socket from "../../socket";
