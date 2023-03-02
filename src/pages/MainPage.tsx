@@ -60,8 +60,6 @@ function MainPage() {
 
   const { data: dataa }: any = useQuery("getFeaturedGames", getFeaturedGames);
 
-  const;
-
   return (
     <MainLayout>
       {/* 메인게임 이미지 */}
