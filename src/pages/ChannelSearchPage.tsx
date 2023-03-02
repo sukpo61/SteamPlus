@@ -2,92 +2,50 @@ import React, { useState, useEffect, useRef, useCallback } from "react";
 import axios from "axios";
 import { log } from "console";
 import styled from "styled-components";
+import { useInfiniteQuery } from "react-query";
 
-import { useQuery, useQueryClient } from "react-query";
-
-import { useNavigate } from "react-router-dom";
 import { BiSearchAlt2 } from "react-icons/bi";
 import GameChannelBlock from "../components/common/GameChannelBlock";
-import { useRecoilState, atom } from "recoil";
 
 const ChannelSearchPage: any = () => {
   const [searchValue, setSearchValue] = useState("");
   const [searchResult, setSearchResult] = useState<any>([null]); // 검색어 없을때 예외처리
   const [termResult, setTermResult] = useState("");
+  const [filteredCount, setFilteredCount] = useState<number>(0);
 
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchValue(e.target.value);
   };
 
   const handleTermResult = () => {
-    setTermResult(searchValue);
     if (searchValue.length < 2) {
       alert("두 글자 이상 입력해 주세요");
+    } else {
+      setTermResult(searchValue);
     }
-    setSearchResult([]);
-    // getGameSummary(searchValue, offset);
-    // queryClient.invalidateQueries("gameSummaryData")
   };
 
-  //https://github.com/Revadike/InternalSteamWebAPI
-  // steam 공식 github!!!!!!!!!!!!!!!!!
-
-  // const lastGameRef = useRef<any>(null);
-  // const [offset, setOffset] = useState<any>(0);
-
-  // useEffect(() => {
-  //   window.addEventListener("scroll", handleScroll); // addEventListener 이벤트 추가
-  //   return () => window.removeEventListener("scroll", handleScroll); // removeEventListener 이벤트 제거
-  // }, []);
-
-  // 킵
-
-  // const handleScroll = useCallback(() => {
-  //   if (
-  //     window.innerHeight + window.pageYOffset >= //영역의 높이 + 컨텐츠를 얼마나 스크롤했는지
-  //     lastGameRef.current.getBoundingClientRect().bottom //getBoundingClientRect = dom의 위치
-  //   ) {
-  //     setOffset(offset + 10);
-  //     getGameSummary(searchValue); //searchValue, offset
+  // const handleSearchClick = () => {
+  //   if (searchValue === "") {
+  //     return;
+  //   } else if (searchValue.length < 2) {
+  //     // searchValue : 새로고침 후 첫검색때 console에 출처 모를 리스트가 찍힘
+  //     // termResult : 새로고침 후 처음 검색한 검색어는 검색창에서 리셋되고, 두번째 검색어부터 console 찍힘
+  //     return;
   //   }
-  // }, [offset, searchValue]);
-
-  // 무한스크롤 try
-
-  // const handleScroll = () => {
-  //   const scrollTop = // 화면의 처음부터 ~ 현재 화면에 보이는 부분 + 현재 스크롤 위치
-  //     (document.documentElement && document.documentElement.scrollTop) ||
-  //     document.body.scrollTop;
-
-  //   const scrollHeight = // 전체 화면 길이
-  //     (document.documentElement && document.documentElement.scrollHeight) ||
-  //     document.body.scrollHeight;
-
-  //   const clientHeight = // 현재 화면에서 보이는 height
-  //     document.documentElement.clientHeight || window.innerHeight;
-
-  //   const scrolledToBottom =
-  //     Math.ceil(scrollTop + clientHeight) >= scrollHeight;
-
-  //   if (scrolledToBottom) {
-  //     setOffset((prev: any) => prev + 10);
-  //     console.log("searchvalue", searchValue);
-  //     getGameSummary(searchValue, offset + 10); // 이부분 수정
-  //   }
+  //   getGameSummary();
   // };
 
   // searchValue: any, offset: number
 
+  // 초반 10개가 로드되고, 그 10개를 filterList에서 제외한 배열이 스크롤이 바닥에 닿을 때마다 추가로 10개씩 뱉어내게 하면..???
+  // 근데 가능하긴 한가 이거
+
   const getGameSummary = async () => {
-    if (searchValue === "") {
-      return;
-    } else if (termResult.length < 2) {
-      setTermResult("");
-      setSearchValue("");
-      return;
-    }
+    console.log("termResult", termResult);
+
     const gameSummary = await axios.get(
-      `https://store.steampowered.com/api/storesearch/?cc=us&l=en&term=${termResult}&pagesize=20`
+      `https://store.steampowered.com/api/storesearch/?cc=us&l=en&term="${termResult}"` // &pagesize=20
     ); // 게임 Id만 가져오기!!!
 
     const gameList = [];
@@ -100,20 +58,47 @@ const ChannelSearchPage: any = () => {
       gameList.push(
         gameCategoryData2?.data[gameSummary?.data.items[i].id].data
       );
-    }
-    const filterList = gameList.filter((game) => game.type === "game");
-    console.log("dlc", filterList);
-    return filterList; // filterDLC는 getGameSummary 안에서만 사용 가능!!!!
-  };
 
-  // useInView = react-intersection-observer 라이브러리
-  // 리스트 끝까지 내렸을때 inview가 true가 됨(성민준님 추정)
+      console.log("gameCategoryData2", gameCategoryData2);
+    }
+
+    const filterList = gameList.filter((game) => game.type === "game");
+    console.log("game", filterList);
+    setFilteredCount(filterList.length);
+    return filterList;
+  };
 
   const {
     data: gameSummaryData, // 게임id
-  } = useQuery(["gameSummaryData", termResult], getGameSummary);
+    fetchNextPage,
+    hasNextPage,
+  } = useInfiniteQuery(["gameSummaryData", termResult], getGameSummary, {
+    getNextPageParam: (lastPage: any) => {
+      if (lastPage?.page <= lastPage?.total_pages) {
+        return lastPage?.page + 1;
+      }
+    },
+  });
 
-  console.log("gameSummaryData", gameSummaryData);
+  const loadMore = async () => {
+    if (hasNextPage) {
+      await fetchNextPage();
+    }
+  };
+
+  useEffect(() => {
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  const handleScroll = () => {
+    if (
+      window.innerHeight + window.scrollY >=
+      document.body.offsetHeight - 500
+    ) {
+      loadMore();
+    }
+  };
 
   return (
     <div
@@ -137,25 +122,28 @@ const ChannelSearchPage: any = () => {
           <BiSearchAlt2
             className="searchIcon"
             onClick={() => {
-              // getGameSummary(); //searchValue, offset
               handleTermResult();
-              // handleResultList();
             }}
           />
         </GameSearchInputArea>
       </SearchPageHeader>
       <SearchCount>
-        '{`${termResult}`}' 검색 결과는 {gameSummaryData?.length ?? "0"}개입니다
+        '{`${termResult}`}' 검색 결과는 {filteredCount}개입니다
       </SearchCount>
       <GameSearchList>
-        {gameSummaryData?.map((game: any) => {
-          // console.log("game", game.genre);
-          return (
-            <GameChannelBlockView key={game?.id}>
-              <GameChannelBlock game={game} />
-            </GameChannelBlockView>
-          );
-        })}
+        {gameSummaryData?.pages
+          // .map((page: any) => page?.results)
+          .flat()
+          .map((game: any) => {
+            if (game === undefined) {
+              return <div></div>;
+            }
+            return (
+              <GameChannelBlockView key={game?.id}>
+                <GameChannelBlock game={game} />
+              </GameChannelBlockView>
+            );
+          })}
       </GameSearchList>
     </div>
   );
