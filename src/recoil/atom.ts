@@ -10,6 +10,11 @@ export const LayoutButton = atom<String>({
   default: "close",
 });
 
+export const AboutPagesState = atom<String>({
+  key: "AboutPages",
+  default: "close",
+});
+
 export const getFriend = atom<any>({
   key: "friendAddState",
   default: [],
@@ -27,6 +32,34 @@ export const DataChannelMapRecoil = atom<any>({
 export const chatTextRecoil = atom<any>({
   key: "chatTextRecoil",
   default: [],
+});
+export const AllStreamsRecoil = atom<any>({
+  key: "AllStreamsRecoil",
+  default: [],
+});
+export const videoDisplayRecoil = atom<any>({
+  key: "videoDisplayRecoil",
+  default: false,
+});
+export const channelNameRecoil = atom<any>({
+  key: "channelNameRecoil",
+  default: "",
+});
+export const currentRoomRecoil = atom<any>({
+  key: "currentRoomRecoil",
+  default: "",
+});
+export const currentGameIdRecoil = atom<any>({
+  key: "currentGameIdRecoil",
+  default: "",
+});
+export const videoRoomExitRecoil = atom<any>({
+  key: "videoRoomExitRecoil",
+  default: false,
+});
+export const friendroominfoRecoil = atom<any>({
+  key: "friendroominfoRecoil",
+  default: "",
 });
 
 // export const FriendNoticeAll = atom({

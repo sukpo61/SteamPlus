@@ -192,6 +192,7 @@ function Profile() {
   return (
     <>
       <ProfileDiv layoutMenu={layoutMenu}>
+        {/* 로그인을 안했다면*/}
         {ProfileNicName === null ? (
           ""
         ) : (
@@ -203,7 +204,7 @@ function Profile() {
             </ProfileImgBox>
           </>
         )}
-
+        {/* 로그인을 안했다면*/}
         {ProfileNicName === null ? (
           ""
         ) : (
@@ -219,8 +220,16 @@ function Profile() {
         )}
 
         <ProfileBox ProfileNicName={ProfileNicName}>
+          {/* 로그인을 안했다면*/}
           {ProfileNicName === null ? (
-            <>
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
               <ProfileGameComments>
                 <div> 스팀 연동 정보가 없어요</div>
                 <br></br>
@@ -232,17 +241,21 @@ function Profile() {
                 <ProfileGameImg src={require("../../img/img.png")} />
                 Steam 계정으로 로그인
               </ProfileGameLogin>
-            </>
+            </div>
           ) : (
             <>
+              {/* 최근홢동한게임이 없다면 */}
               {GameData === undefined ? (
-                <RecentGame> 최근 활동한 게임이 없습니다.</RecentGame>
+                <RecentGame>
+                  <div>최근 활동한 게임이 없습니다.</div>
+                </RecentGame>
               ) : (
                 <>
                   <RecentGame> 최근 활동한 게임</RecentGame>
+
                   {GameData?.slice(0, 3).map((gameData: any) => {
                     return <RecentGameData gameData={gameData} />;
-                  })}{" "}
+                  })}
                 </>
               )}
             </>
@@ -350,7 +363,7 @@ const ProfileNickName = styled.div`
 const ProfileBox = styled.div<{ ProfileNicName: String | null }>`
   width: 352px;
   height: ${(props) => (props.ProfileNicName === null ? "950px" : "650px")};
-  background-color: #192030;
+  /* background-color: #192030; */
   margin: ${(props) => (props.ProfileNicName === null ? "" : "20px auto 0")};
   position: ${(props) => (props.ProfileNicName !== null ? "" : "absolute")};
   top: ${(props) => (props.ProfileNicName !== null ? "" : "50%")};
@@ -360,14 +373,16 @@ const ProfileBox = styled.div<{ ProfileNicName: String | null }>`
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
   border-radius: 10px;
+  justify-content: center;
 `;
 
 const RecentGame = styled.div`
-  margin-top: 35px;
-  margin-bottom: 20px;
-  color: white;
+  color: #d4d4d4;
+  font-size: 14px;
+  margin-bottom: 10px;
+  display: flex;
+  width: 86%;
 `;
 const ProfileGameComments = styled.div`
   color: gray;
@@ -375,6 +390,7 @@ const ProfileGameComments = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
 `;
 const ProfileGameLogin = styled.span`
   cursor: pointer;

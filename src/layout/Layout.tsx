@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { useRecoilState, useRecoilValue } from "recoil";
 import {
@@ -7,6 +7,10 @@ import {
   friendAllState,
   newFriendAdd,
   BothFriend,
+  videoDisplayRecoil,
+  AllStreamsRecoil,
+  videoRoomExitRecoil,
+  AboutPagesState,
 } from "../recoil/atom";
 import Profile from "./layoutcomponents/Profile";
 import GameSearch from "./layoutcomponents/GameSearch";
@@ -18,32 +22,36 @@ import { useQuery } from "react-query";
 import axios from "axios";
 import { FriendProps } from "../layout/layoutcomponents/Friend";
 import { FriendSearchProps } from "../layout/layoutcomponents/FriendSearch";
+
 import { AiFillHome } from "react-icons/ai";
+import { FaKeyboard } from "react-icons/fa";
 import { AiOutlineSearch } from "react-icons/ai";
 import { FaUserFriends } from "react-icons/fa";
 import { MdVoiceChat } from "react-icons/md";
+import { MdVideocamOff } from "react-icons/md";
+import { MdExitToApp } from "react-icons/md";
+
 import { useNavigate } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 import { useParams } from "react-router-dom";
+
 import socket from "../socket";
+import AboutPages from "./layoutcomponents/AboutPages";
 
 function Layout() {
   const navigate = useNavigate();
   const location = useLocation();
   const locationName = location.pathname;
-  const params = useParams();
 
   const myId = sessionStorage.getItem("steamid");
 
   //레이아웃 종류
   const [layoutMenu, setLayoutMenu] = useRecoilState<String>(LayoutButton);
+  //설명페이지 온오프
+  const [aboutPagesOnOff, setAboutPagesOnOff] =
+    useRecoilState<String>(AboutPagesState);
   // //친구 알림 내역
-  // const [FriendNoticeLength, setFriendNoticeLength] =
-  //   useRecoilState<any>(FriendNoticeAll);
-  // // console.log(FriendNoticeLength);
-
   const [bothFriendAll, setBothFriendAll] = useRecoilState(BothFriend);
-  // console.log(bothFriendAll);
 
   //친구 내역 전체
   const [getFriendAuth, setGetFriendAuth] =
@@ -53,11 +61,13 @@ function Layout() {
     useRecoilState<FriendSearchProps[]>(friendAllState);
   //친구 요청 온 내역 전체
   const [friendAdd] = useRecoilValue(newFriendAdd);
-  // window.onload = () => {
-  //   if (window.location.pathname.slice(0, 9) === "/teamchat") {
-  //     setLayoutMenu("voicetalk");
-  //   }
-  // };
+
+  const [videoDisplay, setvideoDisplay] = useRecoilState(videoDisplayRecoil);
+
+  const [AllStreams, setAllStreams] = useRecoilState(AllStreamsRecoil);
+
+  const [videoRoomExit, setVideoRoomExit] = useRecoilState(videoRoomExitRecoil);
+
   //메뉴 탭눌렀을때 (친구제외)
   const LayoutButtonOnClick = (i: string) => {
     if (layoutMenu === i) {
@@ -77,6 +87,10 @@ function Layout() {
     } else {
       setLayoutMenu(i);
     }
+  };
+  // AboutPages클릭
+  const AboutPagesOnClick = () => {
+    setAboutPagesOnOff("aboutPages");
   };
 
   const getFriendSearch = async () => {
@@ -130,11 +144,27 @@ function Layout() {
     return i.friendId === myId;
   });
 
-  // useEffect(() => {
-  //   setBothFriendAll(friend);
-  // }, []);
-  // console.log(friendAddCome.length);
   const ProfileImgUrl = sessionStorage.getItem("profileimg");
+
+  const StreamList = AllStreams.map((data: any) => {
+    const info = friendAllRecoil.find((e) => e.id === data.userid);
+
+    const remotehandleVideoRef = (video: any) => {
+      if (video) {
+        video.srcObject = data.stream;
+      }
+    };
+
+    return (
+      <VideoWrap key={data.userid}>
+        <Streamvideo ref={remotehandleVideoRef} autoPlay playsInline muted />
+        <Usernickname>
+          <span>{info?.nickname}</span>
+        </Usernickname>
+      </VideoWrap>
+    );
+  });
+
   return (
     <div onContextMenu={(e: any) => e.preventDefault()}>
       <SideBarDiv>
@@ -171,6 +201,20 @@ function Layout() {
           <AiOutlineSearch className="searchIcon" />
           <p>게임검색</p>
         </GameSearchbutton>
+        {/* 커뮤니티 */}
+
+        <Communitybutton
+          locationName={locationName}
+          onClick={() => {
+            FriendButtonOnClick("close");
+            navigate("Community");
+            window.scrollTo({ top: 0, behavior: "smooth" });
+          }}
+        >
+          <FaKeyboard className="communityIcon" />
+          <p>커뮤니티</p>
+        </Communitybutton>
+
         {/* 메뉴 구분선 */}
         <SideLine />
         {/* 친구 */}
@@ -221,6 +265,7 @@ function Layout() {
           </VoiceTalkbutton>
         )}
       </SideBarDiv>
+
       {/* 메뉴 컴포넌트 */}
       <MenuOpenDiv layoutMenu={layoutMenu}>
         <Profile />
@@ -230,18 +275,158 @@ function Layout() {
         <VoiceTalk />
         <FriendAdd />
       </MenuOpenDiv>
+      <VideosWrap
+        toggle={videoDisplay}
+        widthprop={layoutMenu}
+        layout={layoutMenu}
+      >
+        <VideoPosition>
+          <VideosList>{StreamList}</VideosList>
+          <VideoControl>
+            <ControlButtons>
+              <ControlButtonWrap
+                iconcolor="#192030"
+                backcolor="#D4D4D4"
+                onClick={() => {
+                  setvideoDisplay(false);
+                }}
+              >
+                <MdVideocamOff size={24}></MdVideocamOff>
+              </ControlButtonWrap>
+              <ControlButtonWrap
+                backcolor="#F05656"
+                onClick={() => {
+                  setVideoRoomExit((e: any) => !e);
+                }}
+              >
+                <MdExitToApp size={24}></MdExitToApp>
+              </ControlButtonWrap>
+            </ControlButtons>
+          </VideoControl>
+        </VideoPosition>
+      </VideosWrap>
     </div>
   );
 }
 
 export default Layout;
+
 const Profileimg = styled.div``;
+
+const VideosWrap = styled.div<any>`
+  //나중에 생각하자.
+  top: ${(props) => {
+    if (props.layout !== "voicetalk") {
+      return "-70%";
+    }
+    if (props.toggle) {
+      return "70px";
+    }
+    return "-70%";
+  }};
+  transition: all 0.5s;
+  right: 0;
+  width: ${(props) =>
+    props.widthprop === "close" ? "calc(100% - 80px)" : "calc(100% - 480px)"};
+  height: 480px;
+  position: fixed;
+  display: flex;
+  flex-direction: column;
+  color: white;
+  background: #131a28;
+  z-index: 9;
+  justify-content: center;
+  align-items: center;
+`;
+
+const Streamvideo = styled.video<any>`
+  border-radius: 10px;
+  width: 90%;
+  height: 100%;
+`;
+
+const VideoWrap = styled.div<any>`
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+`;
+
+const ControlButtons = styled.div`
+  display: flex;
+  flex-direction: row;
+  gap: 12px;
+  margin-bottom: 24px;
+`;
+const ControlButtonWrap = styled.div<any>`
+  cursor: pointer;
+  display: flex;
+  width: 48px;
+  height: 48px;
+  border-radius: 24px;
+  justify-content: center;
+  align-items: center;
+  background-color: ${(props) => props.backcolor};
+  color: ${(props) => props.iconcolor};
+`;
+const Usernickname = styled.div`
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  background: rgba(8, 12, 22, 0.6);
+  border-radius: 8px;
+  padding: 4px 8px;
+  bottom: 8px;
+  left: 8%;
+`;
+const VideoPosition = styled.div`
+  width: 100%;
+  height: 100%;
+  display: flex;
+  position: relative;
+  align-items: center;
+  flex-direction: column;
+`;
+const VideoControl = styled.div`
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column-reverse;
+  align-items: center;
+  bottom: 0;
+  background: linear-gradient(180deg, rgba(25, 32, 48, 0) 0%, #000000 200%);
+  gap: 12px;
+  opacity: 0;
+  transition: all 0.3s;
+  img {
+    cursor: pointer;
+  }
+  &:hover {
+    opacity: 100;
+  }
+`;
+
+const VideosList = styled.div<any>`
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: row;
+  color: white;
+  justify-content: center;
+  align-items: center;
+  padding: 24px;
+`;
 const ProfileImg = styled.img`
   width: 50px;
   height: 50px;
   border-radius: 50%;
 `;
 const SideBarDiv = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   width: 80px;
   height: 100%;
   position: fixed;
@@ -307,6 +492,18 @@ const GameSearchbutton = styled.div<{ locationName: String }>`
     margin-bottom: 5px;
   }
 `;
+const Communitybutton = styled.div<{ locationName: String }>`
+  margin: 24px auto 0;
+  font-size: 13px;
+  text-align: center;
+  color: ${(props) =>
+    props.locationName === "/Community" ? "#00B8C8" : "#777d87"};
+  cursor: pointer;
+  .communityIcon {
+    font-size: 30px;
+    margin-bottom: 5px;
+  }
+`;
 const SideLine = styled.div`
   margin: 34px auto;
   height: 1px;
@@ -334,8 +531,8 @@ const Friendbutton = styled.div<{ layoutMenu: String }>`
 
 const FriendNotice = styled.div`
   position: absolute;
-  bottom: 20px;
-  right: 20px;
+  bottom: 19px;
+  left: 25px;
   width: 10px;
   height: 10px;
   line-height: 14px;
@@ -343,7 +540,7 @@ const FriendNotice = styled.div`
   font-size: 10px;
   text-align: center;
   border-radius: 50%;
-  background-color: red;
+  background-color: #f05656;
   font-weight: 500;
 `;
 
@@ -358,6 +555,18 @@ const VoiceTalkbutton = styled.div<{ layoutMenu: String }>`
     font-size: 30px;
     margin-bottom: 5px;
   }
+`;
+const AboutPagesDiv = styled.div`
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  text-align: center;
+  line-height: 27px;
+  border: 1px solid #777d87;
+  color: #777d87;
+  margin-top: auto;
+  margin-bottom: 30px;
+  cursor: pointer;
 `;
 // json에 친구서버에 id, nickname, 프로필이미지
 // 내 id 상대방 id

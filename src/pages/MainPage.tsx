@@ -4,9 +4,7 @@ import { ActivateChannel } from "../components/ActivateChannel";
 import { PoularChannel } from "../components/PoularChannel";
 import { CurrentGame } from "../components/CurrentGame";
 import { useQuery } from "react-query";
-//578080
-//582010
-//945360
+import socket from "../socket";
 
 function MainPage() {
   const GameId: any = sessionStorage.getItem("gameid");
@@ -24,8 +22,9 @@ function MainPage() {
         },
       }
     );
-    console.log("response", GameIds);
+
     const aaa: any = {
+      gameid: GameIds,
       gamesdescription: response?.data[GameIds].data.short_description,
       gamevideo: response?.data[GameIds].data.movies[0].webm.max,
       gametitle: response?.data[GameIds].data.name,
@@ -44,7 +43,6 @@ function MainPage() {
     return aaa;
   };
   const { data }: any = useQuery("Gamedata", Gamedata);
-  console.log("res", GameIds);
 
   ///인기게임 데이터 api
   const getFeaturedGames = async () => {

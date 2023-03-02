@@ -7,8 +7,9 @@ console.log(userid);
 export const userinfo = {
   id: userid,
 };
-const socket = io("https://funny-donuts-tickle-183-109-20-88.loca.lt");
-// const socket = io("http://localhost:4500");
+
+// const socket = io("https://full-bees-try-183-109-20-88.loca.lt");
+const socket = io("http://localhost:4500");
 
 socket.on("connect", () => {
   console.log("Connected to server!");
@@ -41,5 +42,10 @@ export default socket;
               );
             })}
           </RoomUserList>
-        )} */
+        )} 
+          width: ${(props) =>
+    props.videoratio() ? null : `calc(100% / ${props.videocount})`};
+    */
+        
 }
+
