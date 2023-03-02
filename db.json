@@ -33,14 +33,14 @@
       "profileimg": "https://avatars.akamai.steamstatic.com/e1dde7fe207a397634580d4755f7890ccf24ddd7_full.jpg",
       "nickname": "sukpo61 #1933",
       "login": true,
-      "lastLogin": "2023-03-01T08:22:06.172Z"
+      "lastLogin": "2023-03-02T08:45:28.927Z"
     },
     {
       "id": "76561199481265910",
       "profileimg": "https://avatars.akamai.steamstatic.com/d2b1575d5ef8e7090c845ce5dbec0a4843dd1f13_full.jpg",
       "nickname": "sukpo6010 #5910",
       "login": true,
-      "lastLogin": "2023-03-01T08:22:22.177Z"
+      "lastLogin": "2023-03-02T08:45:19.118Z"
     },
     {
       "id": "76561198993103426",
@@ -54,7 +54,7 @@
       "profileimg": "https://avatars.akamai.steamstatic.com/eeb79a55acd1519c1a32a65cf813f859e2c87a04_full.jpg",
       "nickname": "sukpo6030 #0364",
       "login": true,
-      "lastLogin": "2023-03-01T06:29:18.742Z"
+      "lastLogin": "2023-03-02T08:45:22.114Z"
     }
   ],
   "friend": [
@@ -92,6 +92,48 @@
       "friendId": "76561199480236040",
       "myNickName": "123322 #0991",
       "friendNickName": "prdg990515 #6040"
+    },
+    {
+      "id": "87b8b323-05ea-49e1-8210-477e2b6e51e6",
+      "myId": "76561198374391933",
+      "friendId": "76561199481265910",
+      "myNickName": "sukpo61 #1933",
+      "friendNickName": "sukpo6010 #5910"
+    },
+    {
+      "id": "0403a9cb-99d4-4b7a-ba67-a534b6040959",
+      "myId": "76561199481265910",
+      "friendId": "76561198374391933",
+      "myNickName": "sukpo6010 #5910",
+      "friendNickName": "sukpo61 #1933"
+    },
+    {
+      "id": "b7c2fc14-1d0d-41b0-855b-f4d936b5872d",
+      "myId": "76561198374391933",
+      "friendId": "76561199482900364",
+      "myNickName": "sukpo61 #1933",
+      "friendNickName": "sukpo6030 #0364"
+    },
+    {
+      "id": "c618603f-bb45-4192-9dce-c5028ffe787b",
+      "myId": "76561199482900364",
+      "friendId": "76561198374391933",
+      "myNickName": "sukpo6030 #0364",
+      "friendNickName": "sukpo61 #1933"
+    },
+    {
+      "id": "917d6ed6-580b-4d0a-a958-8de385aa0973",
+      "myId": "76561199481265910",
+      "friendId": "76561199482900364",
+      "myNickName": "sukpo6010 #5910",
+      "friendNickName": "sukpo6030 #0364"
+    },
+    {
+      "id": "90d1ecb3-be83-4754-aa3b-ff751da80509",
+      "myId": "76561199482900364",
+      "friendId": "76561199481265910",
+      "myNickName": "sukpo6030 #0364",
+      "friendNickName": "sukpo6010 #5910"
     }
   ],
   "post": [
@@ -230,6 +272,14 @@
       "title": "ㅇㅇㅇㅇ",
       "content": "ㄱㅈㄷㅁㅈㄹㅁ",
       "date": "2023.2.28"
+    },
+    {
+      "id": "d08f6713-d13d-4172-8d8b-431b2fb8655c",
+      "steamid": "76561198374391933",
+      "name": "sukpo61 #1933",
+      "title": "ㄴㅇㄹㄴㅇ",
+      "content": "ㄹㄴㅇㄹㄴㅇㄹㄴ",
+      "date": "2023.3.1"
     }
   ],
   "comment": [
@@ -295,6 +345,15 @@
       "date": "2023.3.1 수정",
       "profileImg": "https://avatars.akamai.steamstatic.com/fef49e7fa7e1997310d705b2a6158ff8dc1cdfeb_full.jpg",
       "contents": "ㄴㅁㅇㄹ"
+    },
+    {
+      "id": "b08e88b3-b48b-4275-b012-726afc94ef44",
+      "postId": "d08f6713-d13d-4172-8d8b-431b2fb8655c",
+      "myId": "76561198374391933",
+      "name": "sukpo61 #1933",
+      "date": "2023.3.1 수정",
+      "profileImg": "https://avatars.akamai.steamstatic.com/e1dde7fe207a397634580d4755f7890ccf24ddd7_full.jpg",
+      "contents": "ㄴㅇㄹㅇㄹㅇㄹㅇ"
     }
   ]
 }

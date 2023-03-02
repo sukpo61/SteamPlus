@@ -4,6 +4,7 @@ import { ActivateChannel } from "../components/ActivateChannel";
 import { PoularChannel } from "../components/PoularChannel";
 import { CurrentGame } from "../components/CurrentGame";
 import { useQuery } from "react-query";
+import socket from "../socket";
 
 function MainPage() {
   const GameId: any = sessionStorage.getItem("gameid");
@@ -23,6 +24,7 @@ function MainPage() {
     );
 
     const aaa: any = {
+      gameid: GameIds,
       gamesdescription: response?.data[GameIds].data.short_description,
       gamevideo: response?.data[GameIds].data.movies[0].webm.max,
       gametitle: response?.data[GameIds].data.name,
@@ -57,6 +59,8 @@ function MainPage() {
   };
 
   const { data: dataa }: any = useQuery("getFeaturedGames", getFeaturedGames);
+
+  const;
 
   return (
     <MainLayout>
