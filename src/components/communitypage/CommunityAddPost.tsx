@@ -4,6 +4,8 @@ import { useMutation, useQuery } from "react-query";
 import { useNavigate, useParams } from "react-router-dom";
 import styled from "styled-components";
 import { v4 as uuidv4 } from "uuid";
+import Moment from "react-moment";
+
 export const CommunityAddPost = () => {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
@@ -25,9 +27,27 @@ export const CommunityAddPost = () => {
   const year = newDate.getFullYear();
   const month = newDate.getMonth() + 1;
   const day = newDate.getDate();
-  const date = `${year}.${month}.${day}`;
+  const Hour = newDate.getHours();
+  const Minute = newDate.getMinutes();
+  const date = `${year}/${month}/${day} ${Hour}:${Minute}`;
 
-  //db에있는 post get 해와서 useQuery로 만듥기
+  //시간보여줄 함수
+  const displayCreatedAt = (createdAt: Date): JSX.Element => {
+    const startTime: Date = new Date(createdAt);
+    const nowTime: number = Date.now();
+    const timeDiff: number = Math.floor(nowTime - startTime.getTime());
+    if (timeDiff > -60000) {
+      return <Moment format="방금 전">{startTime}</Moment>;
+    }
+    if (timeDiff < -86400000) {
+      return <Moment format="YYY/MM/DD">{startTime}</Moment>;
+    }
+    return <Moment fromNow>{startTime}</Moment>;
+  };
+
+  //api에 있는 detailPost.createdAt를 바꿔주는 것
+  const nowDate = displayCreatedAt(new Date());
+  const newDates = nowDate.props.format;
 
   // useMutation 적용한 addPost
   const addPostMutation = useMutation(
@@ -42,6 +62,7 @@ export const CommunityAddPost = () => {
     }
   );
 
+  //post 등록 핸들러
   const AddPostHandler = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (title === "" || content === "") {
