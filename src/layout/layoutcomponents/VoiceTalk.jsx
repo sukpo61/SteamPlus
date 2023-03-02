@@ -8,6 +8,7 @@ import { friendAllState } from "../../recoil/atom";
 import { useRecoilState } from "recoil";
 import { useNavigate } from "react-router";
 import { FriendSearchProps } from "./FriendSearch";
+import { useMutation, useQueryClient } from "react-query";
 
 import {
   chatTextRecoil,
@@ -29,12 +30,14 @@ import { MdVolumeUp } from "react-icons/md";
 import { MdSettings } from "react-icons/md";
 import { BsFillMicFill } from "react-icons/bs";
 import { MdVideocam } from "react-icons/md";
+import axios from "axios";
 
 function VoiceTalk() {
   const layoutMenu = useRecoilValue(LayoutButton);
   const [createDisplay, setCreateDisplay] = useState(false);
   const [roomsInfo, setRoomsInfo] = useState([]);
   const myuserid = sessionStorage.getItem("steamid");
+  const myNickName = sessionStorage.getItem("nickName");
 
   const [localStream, setLocalStream] = useState(null);
 
@@ -63,6 +66,8 @@ function VoiceTalk() {
 
   const [friendroominfo, setFriendRoomInfo] =
     useRecoilState(friendroominfoRecoil);
+
+  const [getFriendAuth, setGetFriendAuth] = useRecoilState(getFriend);
 
   const {
     value: roomtitle,
@@ -165,6 +170,57 @@ function VoiceTalk() {
     resetTitle();
   };
 
+  //친구 추가
+  const queryClient = useQueryClient();
+
+  const postMutation = useMutation(
+    (friendAdd) => axios.post("http://localhost:3001/friend", friendAdd),
+    {
+      onSuccess: () => {
+        // 쿼리 무효화
+        queryClient.invalidateQueries(["friend"]);
+        queryClient.invalidateQueries(["friendsearch"]);
+      },
+    }
+  );
+
+  const FriendAdd = async (friendId, friendNickName) => {
+    let friendAdd = {
+      id: uuidv4(),
+      myId: myuserid,
+      friendId: friendId,
+      myNickName: myNickName,
+      friendNickName: friendNickName,
+    };
+    try {
+      //상대와 친구가 돼있는지 검사후 이중 저장 방지
+      const response = await axios.get(
+        `http://localhost:3001/friend?myId=${myId}&friendId=${i.id}`
+      );
+      const existingFriend = response.data[0];
+      if (existingFriend) {
+        return;
+      }
+      postMutation.mutate(friendAdd);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  //이미 친구인 목록
+  const alreadyFriend = friendAllRecoil?.filter((i) => {
+    for (let t = 0; t < getFriendAuth.length; t++) {
+      if (frendSearchInput === "") {
+        return false;
+      } else if (
+        getFriendAuth[t].friendId === i.id &&
+        getFriendAuth[t].myId === myId
+      ) {
+        return true;
+      }
+    }
+  });
+
   const RoomList = roomsInfo.map((room) => {
     return (
       <RoomWrap key={room.name}>
@@ -200,6 +256,11 @@ function VoiceTalk() {
               <RoomUserWrap key={info?.id}>
                 <img src={info?.profileimg}></img>
                 <span>{info?.nickname}</span>
+                {alreadyFriend ? (
+                  ""
+                ) : (
+                  <div onClick={FriendAdd(user?.userid, info?.nickname)}>+</div>
+                )}
               </RoomUserWrap>
             );
           })}
