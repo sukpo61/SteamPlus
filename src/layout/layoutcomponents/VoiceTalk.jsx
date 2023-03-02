@@ -212,7 +212,7 @@ function VoiceTalk() {
     for (let t = 0; t < getFriendAuth.length; t++) {
       if (
         getFriendAuth[t].friendId === i.id &&
-        getFriendAuth[t].myId === myId
+        getFriendAuth[t].myId === myuserid
       ) {
         return true;
       }
