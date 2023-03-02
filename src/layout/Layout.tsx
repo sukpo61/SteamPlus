@@ -267,7 +267,10 @@ function Layout() {
             <p>음성채팅</p>
           </VoiceTalkbutton>
         )}
-        <div onClick={AboutPagesOnClick} style={{ cursor: "pointer" }}>
+        <div
+          onClick={AboutPagesOnClick}
+          style={{ cursor: "pointer", color: "#fff" }}
+        >
           도움말
         </div>
       </SideBarDiv>
