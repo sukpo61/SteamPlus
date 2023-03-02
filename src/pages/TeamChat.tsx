@@ -9,6 +9,7 @@ import {
   channelNameRecoil,
   currentRoomRecoil,
   currentGameIdRecoil,
+  LayoutButton,
 } from "../recoil/atom";
 import { useLocation } from "react-router";
 import axios from "axios";
@@ -29,13 +30,13 @@ const TeamChat = () => {
 
   const [currentRoom, setCurrentRoom] = useRecoilState(currentRoomRecoil);
 
-  const [currentGameId, setCurrentGameId] = useRecoilState(currentGameIdRecoil);
+  const [channelId, setchannelId] = useRecoilState(currentGameIdRecoil);
+
+  const [layoutMenu, setLayoutMenu] = useRecoilState<String>(LayoutButton);
 
   const [background, setBackground] = useState<any>("");
 
   const { state: gameinfo } = useLocation();
-
-  console.log(gameinfo);
 
   const gameid = gameinfo?.gameid;
 
@@ -49,7 +50,7 @@ const TeamChat = () => {
       }
     );
 
-    setCurrentGameId(gameid);
+    setchannelId(gameid);
 
     setchannelName(response?.data[gameid].data.name);
 
@@ -113,21 +114,18 @@ const TeamChat = () => {
   }, [chatText]);
 
   useEffect(() => {
-    if (channelName) {
-      socket.emit("requestrooms", channelName);
+    if (channelId) {
+      socket.emit("requestrooms", channelId);
     }
     return () => {
       socket.off("requestrooms");
     };
-  }, [channelName]);
+  }, [channelId]);
 
   useEffect(() => {
     Gamedata();
     Aos.init();
-
-    return () => {
-      socket.off("requestrooms");
-    };
+    setLayoutMenu("voicetalk");
   }, []);
 
   return (

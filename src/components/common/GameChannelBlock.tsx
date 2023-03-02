@@ -48,10 +48,9 @@ function GameChannelBlock({ game }: any) {
         </div>
         <AdmitButton
           onClick={() =>
-            navigate(`/Teamchat/:${game.name.replaceAll(" ", "-")}`, {
+            navigate(`/Teamchat/:${game.steam_appid}`, {
               state: {
-                gameid: game.steam_appid,
-                name: game.name,
+                gameid: game.steam_appid.toString(),
               },
             })
           }
