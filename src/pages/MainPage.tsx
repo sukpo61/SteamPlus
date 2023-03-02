@@ -4,6 +4,7 @@ import { ActivateChannel } from "../components/ActivateChannel";
 import { PoularChannel } from "../components/PoularChannel";
 import { CurrentGame } from "../components/CurrentGame";
 import { useQuery } from "react-query";
+import { useEffect } from "react";
 import socket from "../socket";
 
 function MainPage() {
@@ -60,7 +61,9 @@ function MainPage() {
 
   const { data: dataa }: any = useQuery("getFeaturedGames", getFeaturedGames);
 
-  const;
+  useEffect(() => {
+    socket.emit("getactivechannels");
+  }, []);
 
   return (
     <MainLayout>
