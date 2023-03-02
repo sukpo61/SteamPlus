@@ -57,6 +57,10 @@ export const videoRoomExitRecoil = atom<any>({
   key: "videoRoomExitRecoil",
   default: false,
 });
+export const friendroominfoRecoil = atom<any>({
+  key: "friendroominfoRecoil",
+  default: "",
+});
 
 // export const FriendNoticeAll = atom({
 //   key: "FriendNoticeAll",
