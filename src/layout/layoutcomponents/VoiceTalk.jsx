@@ -254,11 +254,8 @@ function VoiceTalk() {
               <RoomUserWrap key={info?.id}>
                 <img src={info?.profileimg}></img>
                 <span>{info?.nickname}</span>
-                {alreadyFriend ? (
-                  ""
-                ) : (
-                  <div onClick={FriendAdd(user?.userid, info?.nickname)}>+</div>
-                )}
+
+                <div onClick={FriendAdd(user?.userid, info?.nickname)}>+</div>
               </RoomUserWrap>
             );
           })}
