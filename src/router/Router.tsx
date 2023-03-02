@@ -4,7 +4,6 @@ import SignUp from "../pages/SignUpPage";
 import ChannelSearchPage from "../pages/ChannelSearchPage";
 import FindAccountPage from "../pages/FindAccountPage";
 import FindPasswordPage from "../pages/FindPasswordPage";
-// import Login from "../components/loginpage/Login";
 import MyPage from "../pages/MyPage";
 import TeamChat from "../pages/TeamChat";
 import GlobalStyles from "../GlobalStyles";
@@ -14,7 +13,11 @@ import { useRecoilValue } from "recoil";
 import { LayoutButton } from "../recoil/atom";
 import Testtext from "../pages/Testtext";
 import TestChat from "../pages/TestChat";
-
+import SteamGameSearch from "../pages/Testscroll";
+import { Community } from "../pages/Community";
+import { CommunityAddPost } from "../components/communitypage/CommunityAddPost";
+import { CommunityDetail } from "../components/communitypage/CommunityDetail";
+import { CommunityEditPost } from "../components/communitypage/CommunityEditPost";
 const Router = () => {
   // 메뉴 상태 recoil
   const layoutMenu = useRecoilValue(LayoutButton);
@@ -40,6 +43,11 @@ const Router = () => {
           <Route path="/Teamchat/:id" element={<TeamChat />} />
           <Route path="testtext" element={<Testtext />} />
           <Route path="testchat" element={<TestChat />} />
+          <Route path="testscroll" element={<SteamGameSearch />} />
+          <Route path="Community" element={<Community />} />
+          <Route path="/Community/:id" element={<CommunityDetail />} />
+          <Route path="CommunityAddPost" element={<CommunityAddPost />} />
+          <Route path="CommunityEditPost/:id" element={<CommunityEditPost />} />
         </Routes>
       </RouteFloat>
     </BrowserRouter>

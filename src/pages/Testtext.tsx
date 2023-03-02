@@ -6,6 +6,12 @@ function Testtext({ chat }: any) {
   //세션 아이디
   const myId = sessionStorage.getItem("steamid");
 
+  console.log("masseaged");
+
+  if (chat.type === "alarm") {
+    return <AlarmDiv>{chat.text}</AlarmDiv>;
+  }
+
   return (
     <ChatDiv id={chat.id} myId={myId}>
       <ChatImg src={chat.profileImg}></ChatImg>
@@ -27,9 +33,18 @@ function Testtext({ chat }: any) {
 export default Testtext;
 
 const ChatDiv = styled.div<{ id: any; myId: any }>`
-  margin-bottom: 30px;
+  margin-bottom: 40px;
   display: flex;
   flex-direction: ${(props) => (props.id !== props.myId ? "" : "row-reverse")};
+`;
+const AlarmDiv = styled.div`
+  margin-bottom: 30px;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  color: #d8e6ff;
+  font-size: 15px;
 `;
 const ChatImg = styled.img`
   width: 60px;

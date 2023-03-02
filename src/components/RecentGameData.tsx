@@ -11,43 +11,98 @@ const RecentGameData = ({ gameData }: any) => {
     <RecentGameDataLaout>
       <RecentGameDataImgBox>
         <RecentGameDataImg src={gameimg} />
+        {/* 백그라운드 이미지 */}
+        <CurrentGameBlackImg />
+        <GameBtn>게임 채널 참여</GameBtn>
+        <RecentGameDataBox>
+          <RecentGameDataTiTle> {gameData.name}</RecentGameDataTiTle>
+          <RecentGameDataTime>
+            총 플레이한시간 : {`${hours}시간${minutes}분`}
+          </RecentGameDataTime>
+        </RecentGameDataBox>
       </RecentGameDataImgBox>
-      <RecentGameDataBox>
-        <RecentGameDataTiTle> {gameData.name}</RecentGameDataTiTle>
-        <RecentGameDataTime>
-          총 플레이한시간 : {`${hours}시간${minutes}분`}
-        </RecentGameDataTime>
-      </RecentGameDataBox>
     </RecentGameDataLaout>
   );
 };
 
 export default RecentGameData;
+const GameBtn = styled.span`
+  font-weight: 500;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 13px;
+  line-height: 30px;
+  text-align: center;
+  width: 85px;
+  height: 30px;
+  background: #00b8c8;
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  border-radius: 10px;
+  z-index: 99;
+  display: none;
+`;
+const CurrentGameBlackImg = styled.div`
+  width: 300px;
+  height: 132px;
+  bottom: 0px;
+  position: absolute;
+  background: linear-gradient(
+    180deg,
+    rgba(0, 0, 0, 0) 0%,
+    rgba(0, 0, 0, 0.85) 100%
+  );
+  &:hover {
+    backdrop-filter: blur(2px);
+  }
 
+  /* opacity: 0.5; */
+`;
 const RecentGameDataLaout = styled.div`
-  width: 100%;
+  width: 300px;
+  height: 130px;
   color: white;
   display: flex;
   justify-content: center;
   align-items: center;
   flex-direction: column;
   margin-bottom: 20px;
+  position: relative;
+  z-index: 9;
+  transition: 0.5s ease;
+  &:hover {
+    backdrop-filter: blur(2px);
+    p {
+      display: none;
+    }
+    span {
+      display: block;
+    }
+  }
 `;
-const RecentGameDataTiTle = styled.div`
+const RecentGameDataTiTle = styled.p`
   font-size: 24px;
-  margin-top: 10px;
+  font-weight: 400;
+  width: 100%;
+  display: flex;
+  justify-content: flex-end;
 `;
-const RecentGameDataTime = styled.div`
+const RecentGameDataTime = styled.p`
   font-size: 12px;
-  font-weight: 100;
+  font-weight: 200;
   margin-top: 5px;
   color: #ccc;
+  width: 100%;
+  display: flex;
+  justify-content: flex-end;
+  align-items: flex-end;
 `;
 const RecentGameDataImgBox = styled.div`
-  width: 300px;
-  height: 130px;
+  width: 100%;
+  height: 100%;
   border-radius: 10px;
-  overflow: hidden;
+  /* overflow: hidden; */
 `;
 const RecentGameDataImg = styled.img`
   width: 100%;
@@ -57,5 +112,8 @@ const RecentGameDataImg = styled.img`
 const RecentGameDataBox = styled.div`
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: flex-end;
+  position: absolute;
+  bottom: 5px;
+  right: 5px;
 `;
