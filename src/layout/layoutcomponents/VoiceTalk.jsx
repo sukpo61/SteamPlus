@@ -9,6 +9,7 @@ import { useRecoilState } from "recoil";
 import { useNavigate } from "react-router";
 import { FriendSearchProps } from "./FriendSearch";
 import { useMutation, useQueryClient } from "react-query";
+import { v4 as uuidv4 } from "uuid";
 
 import {
   chatTextRecoil,
@@ -192,19 +193,7 @@ function VoiceTalk() {
       myNickName: myNickName,
       friendNickName: friendNickName,
     };
-    try {
-      //상대와 친구가 돼있는지 검사후 이중 저장 방지
-      const response = await axios.get(
-        `http://localhost:3001/friend?myId=${myId}&friendId=${i.id}`
-      );
-      const existingFriend = response.data[0];
-      if (existingFriend) {
-        return;
-      }
-      postMutation.mutate(friendAdd);
-    } catch (error) {
-      console.error(error);
-    }
+    postMutation.mutate(friendAdd);
   };
 
   //이미 친구인 목록
@@ -255,7 +244,13 @@ function VoiceTalk() {
                 <img src={info?.profileimg}></img>
                 <span>{info?.nickname}</span>
 
-                <div onClick={FriendAdd(user?.userid, info?.nickname)}>+</div>
+                <div
+                  onClick={() => {
+                    FriendAdd(user?.userid, info?.nickname);
+                  }}
+                >
+                  +
+                </div>
               </RoomUserWrap>
             );
           })}
