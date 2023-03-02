@@ -210,9 +210,7 @@ function VoiceTalk() {
   //이미 친구인 목록
   const alreadyFriend = friendAllRecoil?.filter((i) => {
     for (let t = 0; t < getFriendAuth.length; t++) {
-      if (frendSearchInput === "") {
-        return false;
-      } else if (
+      if (
         getFriendAuth[t].friendId === i.id &&
         getFriendAuth[t].myId === myId
       ) {
