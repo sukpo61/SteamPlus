@@ -50,6 +50,8 @@ function Layout() {
   //설명페이지 온오프
   const [aboutPagesOnOff, setAboutPagesOnOff] =
     useRecoilState<String>(AboutPagesState);
+  console.log(aboutPagesOnOff);
+
   // //친구 알림 내역
   const [bothFriendAll, setBothFriendAll] = useRecoilState(BothFriend);
 
@@ -217,6 +219,7 @@ function Layout() {
 
         {/* 메뉴 구분선 */}
         <SideLine />
+
         {/* 친구 */}
         {myId === null ? (
           <Friendbutton
@@ -264,6 +267,9 @@ function Layout() {
             <p>음성채팅</p>
           </VoiceTalkbutton>
         )}
+        <div onClick={AboutPagesOnClick} style={{ cursor: "pointer" }}>
+          도움말
+        </div>
       </SideBarDiv>
 
       {/* 메뉴 컴포넌트 */}
@@ -274,6 +280,7 @@ function Layout() {
         <FriendSearch />
         <VoiceTalk />
         <FriendAdd />
+        <AboutPages />
       </MenuOpenDiv>
       <VideosWrap
         toggle={videoDisplay}
