@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 import {
   LayoutButton,
   getFriend,
@@ -14,6 +14,8 @@ import { useMutation } from "react-query";
 import FriendTab from "./FriendTab";
 import FriendContextMenu from "./FriendContextMenu";
 import { FriendSearchProps } from "./FriendSearch";
+import socket from "../../socket";
+import { resolve } from "path";
 // import { ContextMenu, MenuItem, ContextMenuTrigger } from "react-contextmenu";
 
 export interface FriendProps {
@@ -49,6 +51,8 @@ function Friend() {
     xPos: "-1000px",
     yPos: "-1000px",
   });
+
+  const [friendChannel, setFriendChannel] = useState<any>(new Map());
 
   const myId = sessionStorage.getItem("steamid");
   const myNickName = sessionStorage.getItem("nickName");
@@ -104,8 +108,31 @@ function Friend() {
     });
   };
 
+  const Gamedata = async (frienduserid: any, gameid: any) => {
+    const response = await axios.get(
+      `https://cors-anywhere.herokuapp.com/http://store.steampowered.com/api/appdetails/`,
+      {
+        params: {
+          appids: gameid, // 해당 게임의 id값'
+        },
+      }
+    );
+    setFriendChannel((e: any) =>
+      e.set(frienduserid, `${response?.data[gameid].data.name} 참가중`)
+    );
+  };
+
   const handleCloseContextMenu = () => {
     setMenuPosition({ xPos: "-1000px", yPos: "-1000px" });
+  };
+
+  const getFriendChannel: any = async (userid: any) => {
+    socket.emit("friendchannel", userid);
+    socket.once("friendchannel", (roomname, frienduserid) => {
+      if (frienduserid === userid && roomname) {
+        Gamedata(frienduserid, roomname.split("/")[0]);
+      }
+    });
   };
 
   useEffect(() => {
@@ -152,6 +179,7 @@ function Friend() {
 
       {/* 친구 목록 박스 */}
       {friend?.map((i: FriendSearchProps) => {
+        getFriendChannel(i.id);
         return (
           <FriendBoxDiv
             onContextMenu={(event) => handleContextMenu(event, i.id)}
@@ -178,7 +206,7 @@ function Friend() {
               <FriendBoxNameH2>{i.nickname}</FriendBoxNameH2>
 
               <FriendBoxNamePlayingP>
-                `Dave the Diver`방 참여중
+                {friendChannel.get(i.id)}
               </FriendBoxNamePlayingP>
 
               <FriendBoxNotice>7</FriendBoxNotice>
