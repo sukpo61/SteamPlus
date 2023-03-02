@@ -25,6 +25,9 @@ function AboutPages() {
   //설명페이지 온오프
   const [aboutPagesOnOff, setAboutPagesOnOff] =
     useRecoilState<String>(AboutPagesState);
+
+  console.log(aboutPagesOnOff);
+
   //slider세팅
   const sliderSettings = {
     dots: true,
@@ -76,7 +79,6 @@ export default AboutPages;
 const AboutPagesDiv = styled.div<{ aboutPagesOnOff: any }>`
   display: ${(props) =>
     props.aboutPagesOnOff === "aboutPages" ? "block" : "none"};
-
   position: fixed;
   height: 100%;
   top: 0;
@@ -92,7 +94,7 @@ const AboutPagesDiv = styled.div<{ aboutPagesOnOff: any }>`
     font-size: 40px;
     color: #fff;
     cursor: pointer;
-    z-index: 999;
+    z-index: 9999999999999;
   }
   .slick-dots {
     bottom: 10%;
