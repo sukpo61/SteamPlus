@@ -3,8 +3,9 @@ import styled from "styled-components";
 import { useQuery } from "react-query";
 import Pagination from "react-js-pagination";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { CommunityBox } from "../components/communitypage/CommunityBox";
+import { AiOutlineSearch } from "react-icons/ai";
 interface HeaderThProps {
   Width: string;
 }
@@ -67,13 +68,47 @@ export const Community = () => {
   return (
     <>
       <CommunityLayout>
-        <CommunityTitle onClick={replace}> Community</CommunityTitle>
+        <div
+          style={{
+            height: "390px",
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "center",
+            alignContent: "center",
+            width: "100%",
+          }}
+        >
+          <CommunityTitle onClick={replace}> 커뮤니티</CommunityTitle>
+          <CommunityComment>
+            게임채널에 함께할 구성원을 모집하거나 자유롭게 의견을 나누는
+            공간입니다.
+          </CommunityComment>
+          <Communitycategory>
+            <p style={{ borderBottom: "2px solid aqua", color: "aqua" }}>
+              전체
+            </p>
+            <p>자유</p>
+            <p>모집</p>
+          </Communitycategory>
+        </div>
         <CommentsWrap>
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              width: "100%",
+              marginBottom: "10px",
+            }}
+          >
+            <Communitytitle2>게시판</Communitytitle2>
+            <AddPostBtn onClick={addPost}>글쓰기</AddPostBtn>
+          </div>
           <CommunityeHeader>
             <HeaderTh Width="80px">번호</HeaderTh>
+            <HeaderTh Width="80px">카테고리</HeaderTh>
             <HeaderTh Width="560px">제목</HeaderTh>
             <HeaderTh Width="130px">작성자</HeaderTh>
-            <HeaderTh Width="130px">작성일</HeaderTh>
+            <HeaderTh Width="130px">작성시간</HeaderTh>
           </CommunityeHeader>
           {/* 게시글 조회하기 */}
           {/*reverse()를 넣어서 데이타의 배열을 거꾸로 보여줌*/}
@@ -88,6 +123,15 @@ export const Community = () => {
                 />
               );
             })}
+          <CommunitySerchBar>
+            <CommunitySerchinput
+              type="text"
+              placeholder="게시글검색"
+              value={searchText}
+              onChange={handleSearchTextChange}
+            />
+            <AiOutlineSearch className="searchIcon" onClick={btn} />
+          </CommunitySerchBar>
           {/* 페이지네이션 */}
           <PaginationBox>
             <Pagination
@@ -98,25 +142,54 @@ export const Community = () => {
               onChange={handlePageChange}
             />
           </PaginationBox>
-          <div>
-            <input
-              type="text"
-              placeholder="검색어를 입력하세요"
-              value={searchText}
-              onChange={handleSearchTextChange}
-            />
-            <button onClick={btn}>검색</button>
-          </div>
-          <AddPostBtnWrap>
-            <AddPostBtn onClick={addPost}>게시글 등록</AddPostBtn>
-          </AddPostBtnWrap>
         </CommentsWrap>
       </CommunityLayout>
     </>
   );
 };
-
-//
+const CommunitySerchinput = styled.input`
+  border: none;
+  background: transparent;
+  color: #fff;
+  width: 90%;
+`;
+const CommunitySerchBar = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  padding: 4px 12px;
+  gap: 8px;
+  position: relative;
+  width: 200px;
+  height: 32px;
+  background: #192030;
+  box-shadow: inset 0px 4px 8px rgba(0, 0, 0, 0.25);
+  border-radius: 10px;
+  margin-top: 20px;
+`;
+const Communitycategory = styled.div`
+  display: flex;
+  justify-content: center;
+  gap: 50px;
+  color: #fff;
+  border-bottom: 1pxx solid;
+  display: flex;
+  justify-content: center;
+`;
+const Communitytitle2 = styled.p`
+  font-size: 20;
+  color: white;
+  font-weight: 400;
+`;
+const CommunityComment = styled.div`
+  font-size: 13;
+  color: #a7a9ac;
+  margin-top: 20px;
+  margin-bottom: 70px;
+  display: flex;
+  justify-content: center;
+`;
 const CommunityLayout = styled.div`
   display: flex;
   flex-direction: column;
@@ -125,13 +198,16 @@ const CommunityLayout = styled.div`
   color: white;
 `;
 const CommunityTitle = styled.div`
+  width: 100%;
   position: relative;
   margin: 0 auto;
   font-family: "Noto Sans KR", sans-serif;
   font-style: normal;
-  font-weight: 100;
+  font-weight: 400;
   font-size: 40px;
   line-height: 54px;
+  display: flex;
+  justify-content: center;
 `;
 
 const CommentsWrap = styled.div`
@@ -143,8 +219,8 @@ const CommentsWrap = styled.div`
 
 const CommunityeHeader = styled.div`
   height: 50px;
-  border-top: 1px solid #fff;
-  border-bottom: 1px solid #fff;
+  border-top: 2px solid #00b8c8;
+  border-bottom: 1px solid #a7a9ac;
   display: flex;
   flex-direction: row;
 `;
@@ -156,13 +232,7 @@ const HeaderTh = styled.th<HeaderThProps>`
   height: 50px;
   font-weight: 400;
   font-size: 14px;
-`;
-const AddPostBtnWrap = styled.div`
-  width: 100%;
-  display: flex;
-  align-items: center;
-  flex-direction: row-reverse;
-  margin-bottom: 40px;
+  font-weight: 500;
 `;
 
 const PaginationBox = styled.div`
@@ -170,7 +240,6 @@ const PaginationBox = styled.div`
   .pagination {
     display: flex;
     justify-content: center;
-    margin-top: 15px;
   }
   ul {
     list-style: none;
@@ -204,4 +273,13 @@ const PaginationBox = styled.div`
     background-color: #a5a5a5;
   }
 `;
-const AddPostBtn = styled.span``;
+const AddPostBtn = styled.span`
+  font-weight: 600;
+  font-size: 13px;
+  line-height: 25px;
+  text-align: center;
+  width: 58px;
+  height: 25px;
+  background: #00b8c8;
+  border-radius: 8px;
+`;
