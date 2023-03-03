@@ -1,110 +1,26 @@
 import React from "react";
 import styled from "styled-components";
-export const ActivateChannel = ({ game, data2 }: any) => {
-  const gameImg1 = data2?.game1?.header_image;
-  const gameName1 = data2?.game1?.name;
-  const gameImg2 = data2?.game2?.header_image;
-  const gameName2 = data2?.game2?.name;
-  const gameImg3 = data2?.game3?.header_image;
-  const gameName3 = data2?.game3?.name;
+import GameChannelBlock from "./common/GameChannelBlock";
 
+export const ActivateChannel = ({ gamedata }: any) => {
   return (
     <>
       <ActivateChannelLayout>
         <div style={{ display: "flex", flexDirection: "column" }}>
           <ChannelTitle>현재활성화된 채널</ChannelTitle>
+
           <ActivateChannel1st>
-            <ActivateChannelImg1st src={game?.gameSubimg} />
-            <ActivateChannelContents>
-              <div style={{ display: "flex", flexDirection: "column" }}>
-                <ActivateChannelTitle>{game?.gametitle}</ActivateChannelTitle>
-                <ActivateChannelBox>
-                  <ActivateChannelCategory>
-                    {game?.gameCategories} {game?.gameCategories2}{" "}
-                    {game?.gameCategories3}
-                  </ActivateChannelCategory>
-                  <ActivateChannels>
-                    {/* 초록불 */}
-                    <ChannelOnOff />
-                    <ActivateChannelPlayerCount>
-                      20명
-                    </ActivateChannelPlayerCount>
-                  </ActivateChannels>
-                </ActivateChannelBox>
-              </div>
-              <>
-                <CurrentChannelJoinBtn>입장하기</CurrentChannelJoinBtn>
-              </>
-            </ActivateChannelContents>
-          </ActivateChannel1st>
-          <ActivateChannel1st>
-            <ActivateChannelImg1st src={gameImg1} />
-            <ActivateChannelContents>
-              <div style={{ display: "flex", flexDirection: "column" }}>
-                <ActivateChannelTitle>{gameName1}</ActivateChannelTitle>
-                <ActivateChannelBox>
-                  <ActivateChannelCategory>
-                    Action Adventure
-                  </ActivateChannelCategory>
-                  <ActivateChannels>
-                    {/* 초록불 */}
-                    <ChannelOnOff />
-                    <ActivateChannelPlayerCount>
-                      20명
-                    </ActivateChannelPlayerCount>
-                  </ActivateChannels>
-                </ActivateChannelBox>
-              </div>
-              <>
-                <CurrentChannelJoinBtn>입장하기</CurrentChannelJoinBtn>
-              </>
-            </ActivateChannelContents>
-          </ActivateChannel1st>
-          <ActivateChannel1st>
-            <ActivateChannelImg1st src={gameImg2} />
-            <ActivateChannelContents>
-              <div style={{ display: "flex", flexDirection: "column" }}>
-                <ActivateChannelTitle>{gameName2}</ActivateChannelTitle>
-                <ActivateChannelBox>
-                  <ActivateChannelCategory>
-                    Action RPG Strategy
-                  </ActivateChannelCategory>
-                  <ActivateChannels>
-                    {/* 초록불 */}
-                    <ChannelOnOff />
-                    <ActivateChannelPlayerCount>
-                      20명
-                    </ActivateChannelPlayerCount>
-                  </ActivateChannels>
-                </ActivateChannelBox>
-              </div>
-              <>
-                <CurrentChannelJoinBtn>입장하기</CurrentChannelJoinBtn>
-              </>
-            </ActivateChannelContents>
-          </ActivateChannel1st>
-          <ActivateChannel1st>
-            <ActivateChannelImg1st src={gameImg3} />
-            <ActivateChannelContents>
-              <div style={{ display: "flex", flexDirection: "column" }}>
-                <ActivateChannelTitle>{gameName3}</ActivateChannelTitle>
-                <ActivateChannelBox>
-                  <ActivateChannelCategory>
-                    RPG Simulation
-                  </ActivateChannelCategory>
-                  <ActivateChannels>
-                    {/* 초록불 */}
-                    <ChannelOnOff />
-                    <ActivateChannelPlayerCount>
-                      20명
-                    </ActivateChannelPlayerCount>
-                  </ActivateChannels>
-                </ActivateChannelBox>
-              </div>
-              <>
-                <CurrentChannelJoinBtn>입장하기</CurrentChannelJoinBtn>
-              </>
-            </ActivateChannelContents>
+            {gamedata?.map((game: any) => {
+              if (game === undefined) {
+                return <div></div>;
+              }
+              // console.log("game", game);
+              return (
+                <GameChannelBlockView>
+                  <GameChannelBlock game={game.info} count={game.usercount} />
+                </GameChannelBlockView>
+              );
+            })}
           </ActivateChannel1st>
         </div>
       </ActivateChannelLayout>
@@ -117,6 +33,8 @@ const ChannelOnOff = styled.div`
   border-radius: 50%;
   background: #23de79;
 `;
+
+const GameChannelBlockView = styled.div``;
 const ChannelTitle = styled.div`
   color: white;
   font-size: 20px;
@@ -185,19 +103,11 @@ const ActivateChannelLayout = styled.div`
 `;
 const ActivateChannel1st = styled.div`
   width: 900px;
-  height: 150px;
   display: flex;
-  background: #263245;
-  border-radius: 10px;
-  cursor: pointer;
+  flex-direction: column;
+  gap: 10px;
   color: white;
-  position: relative;
   margin-top: 30px;
-  box-shadow: 0px 0px 15px 0px #000;
-  &:hover {
-    box-shadow: 0px 0px 15px 0px #fff;
-  }
-  transition: 0.5s ease;
 `;
 const CurrentChannelJoinBtn = styled.span`
   width: 150px;
