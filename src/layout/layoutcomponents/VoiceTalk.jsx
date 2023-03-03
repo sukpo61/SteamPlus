@@ -196,7 +196,6 @@ function VoiceTalk() {
     postMutation.mutate(friendAdd);
   };
 
-  //이미 친구인 목록
   const alreadyFriend = friendAllRecoil?.filter((i) => {
     for (let t = 0; t < getFriendAuth.length; t++) {
       if (
@@ -209,15 +208,6 @@ function VoiceTalk() {
     return false;
   });
 
-  const aaa = (user, info) =>
-    alreadyFriend.find((i) => {
-      if (i.id === user?.userid || user?.userid === myuserid) {
-        return false;
-      } else {
-        return true;
-      }
-    });
-  // console.log(aaa());
   const RoomList = roomsInfo.map((room) => {
     return (
       <RoomWrap key={room.name}>
