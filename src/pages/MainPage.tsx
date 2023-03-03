@@ -6,7 +6,7 @@ import { PoularChannel } from "../components/PoularChannel";
 import { CurrentGame } from "../components/CurrentGame";
 import { useQuery } from "react-query";
 import socket from "../socket";
-import LoginModal from "../components/mainpage/LoginModal";
+import Footer from "../components/common/Footer";
 
 function MainPage() {
   const GameId: any = sessionStorage.getItem("gameid");
@@ -62,12 +62,8 @@ function MainPage() {
 
   const { data: dataa }: any = useQuery("getFeaturedGames", getFeaturedGames);
 
-  const [loginModalOpen, setLoginModalOpen] = useState<boolean>(true);
-
   return (
     <MainLayout>
-      {/* 로그인 모달 */}
-      {loginModalOpen && <LoginModal setLoginModalOpen={setLoginModalOpen} />}
       {/* 메인게임 이미지 */}
       <CurrentGame game={data} />
       {/* 인기채널 */}

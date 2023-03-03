@@ -5,6 +5,7 @@ import Pagination from "react-js-pagination";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { CommunityBox } from "../components/communitypage/CommunityBox";
+import Footer from "../components/common/Footer";
 interface HeaderThProps {
   Width: string;
 }
@@ -123,6 +124,7 @@ const CommunityLayout = styled.div`
   align-items: center;
   width: 100%;
   color: white;
+  height: 100%;
 `;
 const CommunityTitle = styled.div`
   position: relative;

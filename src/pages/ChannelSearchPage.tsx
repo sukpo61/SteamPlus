@@ -9,6 +9,10 @@ import { useNavigate } from "react-router-dom";
 import { BiSearchAlt2 } from "react-icons/bi";
 import GameChannelBlock from "../components/common/GameChannelBlock";
 
+import Footer from "../components/common/Footer";
+
+// 게시판 홈 검색
+
 const ChannelSearchPage: any = () => {
   const [searchValue, setSearchValue] = useState("");
   const [searchResult, setSearchResult] = useState<any>([null]); // 검색어 없을때 예외처리
@@ -115,7 +119,8 @@ const ChannelSearchPage: any = () => {
         flexDirection: "column",
         alignItems: "center",
         width: "100%",
-        height: "100%",
+        minHeight: "100vh",
+        // height: "100%",
       }}
     >
       <SearchPageHeader>
@@ -139,6 +144,7 @@ const ChannelSearchPage: any = () => {
           />
         </GameSearchInputArea>
       </SearchPageHeader>
+
       {isLoading && <Loader />}
       {isLoading ? (
         ""
@@ -181,7 +187,7 @@ const SearchNone = styled.div`
 
 const SearchPageHeader = styled.div`
   background-color: #404b5e;
-  /* position: absolute; */
+  position: fixed;
   width: 100%;
   height: 72px;
   display: flex;
@@ -193,6 +199,7 @@ const SearchPageHeader = styled.div`
 
 const SteamPlusLogo = styled.img`
   width: 115px;
+  cursor: pointer;
 `;
 const GameSearchInputArea = styled.div`
   width: 632px;
@@ -225,11 +232,25 @@ const GameSearchInput = styled.input`
   border-style: none;
 `;
 
+// const MainContainer = styled.div`
+//   display: flex;
+//   flex-direction: column;
+//   align-items: center;
+//   width: 100%;
+//   // height: "100vh",
+//   height: 100%;
+//   width: 100vw;
+//   height: 100vh;
+// `;
+
 const BeforeSearch = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
   margin-top: 330px;
+
+  /* width: 100vw; */
+  /* height: 100vh; */
 
   font-family: "Noto Sans";
   font-weight: 500;
@@ -241,7 +262,10 @@ const BeforeSearch = styled.div`
   color: #777d87;
 `;
 
-const AfterSearch = styled.div``;
+const AfterSearch = styled.div`
+  width: 100vw;
+  height: 100vh;
+`;
 
 const SearchCount = styled.div`
   margin-top: 40px;
