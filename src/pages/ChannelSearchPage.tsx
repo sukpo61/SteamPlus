@@ -3,6 +3,8 @@ import axios from "axios";
 import { log } from "console";
 import styled from "styled-components";
 import { useInfiniteQuery } from "react-query";
+import Loader from "../components/common/Loader";
+import { useNavigate } from "react-router-dom";
 
 import { BiSearchAlt2 } from "react-icons/bi";
 import GameChannelBlock from "../components/common/GameChannelBlock";
@@ -12,6 +14,8 @@ const ChannelSearchPage: any = () => {
   const [searchResult, setSearchResult] = useState<any>([null]); // 검색어 없을때 예외처리
   const [termResult, setTermResult] = useState("");
   const [filteredCount, setFilteredCount] = useState<number>(0);
+  const [isLoading, setIsLoading] = useState(true);
+  const navigate = useNavigate();
 
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchValue(e.target.value);
@@ -42,6 +46,8 @@ const ChannelSearchPage: any = () => {
   // 근데 가능하긴 한가 이거
 
   const getGameSummary = async () => {
+    setIsLoading(true);
+
     console.log("termResult", termResult);
 
     const gameSummary = await axios.get(
@@ -65,6 +71,7 @@ const ChannelSearchPage: any = () => {
     const filterList = gameList.filter((game) => game.type === "game");
     console.log("game", filterList);
     setFilteredCount(filterList.length);
+    setIsLoading(false);
     return filterList;
   };
 
@@ -106,13 +113,18 @@ const ChannelSearchPage: any = () => {
         backgroundColor: "#192030",
         display: "flex",
         flexDirection: "column",
+        alignItems: "center",
         width: "100%",
         height: "100%",
-        // minHeight: 1080,
       }}
     >
       <SearchPageHeader>
-        <SteamPlusLogo />
+        <SteamPlusLogo
+          src="/img/SteamPlusLogo2.png"
+          onClick={() => {
+            navigate(`/`);
+          }}
+        />
         <GameSearchInputArea>
           <GameSearchInput
             type="text"
@@ -127,24 +139,34 @@ const ChannelSearchPage: any = () => {
           />
         </GameSearchInputArea>
       </SearchPageHeader>
-      <SearchCount>
-        '{`${termResult}`}' 검색 결과는 {filteredCount}개입니다
-      </SearchCount>
-      <GameSearchList>
-        {gameSummaryData?.pages
-          // .map((page: any) => page?.results)
-          .flat()
-          .map((game: any) => {
-            if (game === undefined) {
-              return <div></div>;
-            }
-            return (
-              <GameChannelBlockView key={game?.id}>
-                <GameChannelBlock game={game} />
-              </GameChannelBlockView>
-            );
-          })}
-      </GameSearchList>
+      {isLoading && <Loader />}
+      {isLoading ? (
+        ""
+      ) : termResult === "" ? (
+        <BeforeSearch>참여하고 싶은 게임 채널을 검색해보세요!</BeforeSearch>
+      ) : (
+        <AfterSearch>
+          <SearchCount>
+            '{`${termResult}`}' 검색 결과는 {filteredCount}
+            개입니다
+          </SearchCount>
+          <GameSearchList>
+            {gameSummaryData?.pages
+              // .map((page: any) => page?.results)
+              .flat()
+              .map((game: any) => {
+                if (game === undefined) {
+                  return <div></div>;
+                }
+                return (
+                  <GameChannelBlockView key={game?.id}>
+                    <GameChannelBlock game={game} />
+                  </GameChannelBlockView>
+                );
+              })}
+          </GameSearchList>
+        </AfterSearch>
+      )}
     </div>
   );
 };
@@ -163,16 +185,14 @@ const SearchPageHeader = styled.div`
   width: 100%;
   height: 72px;
   display: flex;
+  justify-content: center;
   align-items: center;
   gap: 20px;
   padding: 16px 56px;
 `;
 
-const SteamPlusLogo = styled.div`
-  width: 40px;
-  height: 40px;
-  background: #a7a9ac;
-  border-radius: 10px;
+const SteamPlusLogo = styled.img`
+  width: 115px;
 `;
 const GameSearchInputArea = styled.div`
   width: 632px;
@@ -205,6 +225,24 @@ const GameSearchInput = styled.input`
   border-style: none;
 `;
 
+const BeforeSearch = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 330px;
+
+  font-family: "Noto Sans";
+  font-weight: 500;
+  font-size: 20px;
+  line-height: 27px;
+  text-align: center;
+  letter-spacing: -0.03em;
+
+  color: #777d87;
+`;
+
+const AfterSearch = styled.div``;
+
 const SearchCount = styled.div`
   margin-top: 40px;
   margin-bottom: 40px;
@@ -221,7 +259,7 @@ const GameSearchList = styled.div`
   display: flex;
   flex-direction: column;
   gap: 10px;
-  margin-left: 114px;
+  margin-bottom: 40px;
 `;
 
 const GameChannelBlockView = styled.div``;
