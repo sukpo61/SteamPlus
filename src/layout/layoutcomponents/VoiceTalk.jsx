@@ -206,8 +206,18 @@ function VoiceTalk() {
         return true;
       }
     }
+    return false;
   });
 
+  const aaa = (user, info) =>
+    alreadyFriend.find((i) => {
+      if (i.id === user?.userid || user?.userid === myuserid) {
+        return false;
+      } else {
+        return true;
+      }
+    });
+  // console.log(aaa());
   const RoomList = roomsInfo.map((room) => {
     return (
       <RoomWrap key={room.name}>
@@ -243,14 +253,26 @@ function VoiceTalk() {
               <RoomUserWrap key={info?.id}>
                 <img src={info?.profileimg}></img>
                 <span>{info?.nickname}</span>
-
-                <div
-                  onClick={() => {
-                    FriendAdd(user?.userid, info?.nickname);
-                  }}
-                >
-                  +
-                </div>
+                {/* 친구는 예외 처리 */}
+                {console.log(alreadyFriend)}
+                {info?.id === myuserid ||
+                alreadyFriend.find((i) => {
+                  if (i.id === info?.id) {
+                    return true;
+                  } else {
+                    return false;
+                  }
+                }) ? (
+                  ""
+                ) : (
+                  <div
+                    onClick={() => {
+                      FriendAdd(user?.userid, info?.nickname);
+                    }}
+                  >
+                    +
+                  </div>
+                )}
               </RoomUserWrap>
             );
           })}
