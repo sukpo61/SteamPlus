@@ -4,15 +4,10 @@ import { Outlet } from "react-router-dom";
 
 function Footer() {
   return (
-    <div
-      style={{
-        display: "flex",
-        flexDirection: "column",
-        justifyContent: "space-between",
-      }}
-    >
-      <Outlet />
-
+    <>
+      <div style={{ minHeight: "100vh" }}>
+        <Outlet />
+      </div>
       {/* <MainBody></MainBody> */}
       <FooterArea>
         <FooterLogo src="/img/SteamPlusLogo2.png" />
@@ -23,7 +18,7 @@ function Footer() {
           <Member style={{ width: 44 }}>이채은</Member>
         </MemberInfo>
       </FooterArea>
-    </div>
+    </>
   );
 }
 
@@ -38,17 +33,13 @@ function Footer() {
 const FooterArea = styled.div`
   background-color: #263245;
   color: white;
-  position: sticky;
-  bottom: 0;
-  margin-top: -52px;
   width: 100%;
   height: 52px;
   display: flex;
   flex-direction: row;
-  /* justify-content: center; */
   align-items: center;
   z-index: 9999;
-  margin-top: auto;
+  margin-top: -52px;
   gap: 20px;
 `;
 
