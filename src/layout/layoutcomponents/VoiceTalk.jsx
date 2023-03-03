@@ -126,7 +126,7 @@ function VoiceTalk() {
         channel.close();
       });
 
-      // localStream.getTracks().forEach((track) => track.stop());
+      // localStream.getTracks().forEach((track) => track.stop())
 
       setRtcPeerConnectionMap(() => new Map());
       setDataChannelMap(() => new Map());
