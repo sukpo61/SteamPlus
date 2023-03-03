@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useMutation } from "react-query";
 import axios from "axios";
 import { useQueryClient } from "react-query";
@@ -13,6 +13,7 @@ import {
 import { FriendProps } from "./Friend";
 import socket from "../../socket";
 import { useNavigate } from "react-router-dom";
+import { v4 as uuidv4 } from "uuid";
 
 function FriendContextMenu({ xPos, yPos, id, onClose }: any) {
   const myId = sessionStorage.getItem("steamid");
@@ -76,6 +77,34 @@ function FriendContextMenu({ xPos, yPos, id, onClose }: any) {
       }
     });
   };
+  //먼저 채팅 입장을 누르면 uuid로 된 방을 생성 보낼땐 uuid, id, myid를 모두 보내고
+  //서버에서 받은 후 친구에 해당하는 id를 찾아 강제참여 시키고
+  // 연결
+  // socket.on("friendNickName", () => {
+  //   socket.emit("nickName", myId);
+  // });
+  // let userSocketId: any = [];
+  const [userId, setUserId] = useState<any>([]);
+  socket.on("userId", (id) => {
+    console.log(id);
+    setUserId(id);
+    // console.log(userId);
+  });
+  // useEffect(() => {
+  //   console.log(userId);
+  // }, [userId]);
+  const ChatOnClick = (id: any) => {
+    socket.emit("friendChat", id, myId, uuidv4());
+    navigate(`/Teamchat/:${myId}`);
+  };
+
+  socket.on("friendId", (rooms) => {
+    console.log(rooms);
+  });
+
+  useEffect(() => {
+    socket.emit("nickName", myId, socket.id);
+  }, []);
 
   return (
     <>
@@ -87,7 +116,7 @@ function FriendContextMenu({ xPos, yPos, id, onClose }: any) {
         >
           참여하기
         </ContextMenuP>
-        <ContextMenuP>채팅삭제 </ContextMenuP>
+        <ContextMenuP onClick={() => ChatOnClick(id)}>1대1 채팅</ContextMenuP>
         <ContextMenuP
           onClick={() => {
             friendDeleteOnClick(id);
