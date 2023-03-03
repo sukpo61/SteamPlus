@@ -265,13 +265,13 @@ function VoiceTalk() {
                 }) ? (
                   ""
                 ) : (
-                  <div
+                  <FriendAddButton
                     onClick={() => {
                       FriendAdd(user?.userid, info?.nickname);
                     }}
                   >
                     +
-                  </div>
+                  </FriendAddButton>
                 )}
               </RoomUserWrap>
             );
@@ -734,4 +734,10 @@ const RoomTitleInput = styled.input`
   border: 0;
   box-shadow: 2px 4px 10px 0 #000 inset;
   text-indent: 10px;
+`;
+
+const FriendAddButton = styled.button`
+  font-size: 24px;
+  color: #fff;
+  margin-left: auto;
 `;
