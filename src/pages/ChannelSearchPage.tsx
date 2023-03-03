@@ -119,7 +119,7 @@ const ChannelSearchPage: any = () => {
         flexDirection: "column",
         alignItems: "center",
         width: "100%",
-        minHeight: "100vh",
+        // minHeight: "100vh",
         // height: "100%",
       }}
     >
@@ -263,8 +263,8 @@ const BeforeSearch = styled.div`
 `;
 
 const AfterSearch = styled.div`
-  width: 100vw;
-  height: 100vh;
+  /* width: 100vw;
+  height: 100vh; */
 `;
 
 const SearchCount = styled.div`
