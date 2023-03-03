@@ -17,7 +17,6 @@ function LoginModal({ setLoginModalOpen }: Props) {
 
   return (
     <ModalArea>
-      <ModalClose onClick={handleLoginModalClose}>닫기</ModalClose>
       <ModalWindow>
         <ModalIntro>
           로그인하여 Steam+의
@@ -31,14 +30,18 @@ function LoginModal({ setLoginModalOpen }: Props) {
           </LoginBtnText>
         </LoginBtn>
       </ModalWindow>
+      <ModalClose onClick={handleLoginModalClose}>닫기</ModalClose>
     </ModalArea>
   );
 }
 
 const ModalArea = styled.div`
-  position: absolute;
+  position: fixed;
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
+  /* left: 50%; */
+  /* transform: translate(-50%, 0); */
+  margin-left: 120px;
   z-index: 9999;
 `;
 
@@ -47,6 +50,7 @@ const ModalWindow = styled.div`
   height: 120px;
   left: 800px;
   top: 28px;
+  margin-top: 32px;
 
   background: rgba(38, 50, 69, 0.8);
   box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.25);

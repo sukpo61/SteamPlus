@@ -18,6 +18,8 @@ import { Community } from "../pages/Community";
 import { CommunityAddPost } from "../components/communitypage/CommunityAddPost";
 import { CommunityDetail } from "../components/communitypage/CommunityDetail";
 import { CommunityEditPost } from "../components/communitypage/CommunityEditPost";
+import Footer from "../components/common/Footer";
+
 const Router = () => {
   // 메뉴 상태 recoil
   const layoutMenu = useRecoilValue(LayoutButton);
@@ -33,8 +35,18 @@ const Router = () => {
         // onContextMenu={(e: any) => e.preventDefault()}
       >
         <Routes>
-          <Route path="/" element={<MainPage />} />
-          <Route path="Channelsearchpage" element={<ChannelSearchPage />} />
+          <Route element={<Footer />}>
+            <Route path="/" element={<MainPage />} />
+            <Route path="Channelsearchpage" element={<ChannelSearchPage />} />
+            <Route path="Community" element={<Community />} />
+            <Route path="/Community/:id" element={<CommunityDetail />} />
+            <Route path="CommunityAddPost" element={<CommunityAddPost />} />
+            <Route
+              path="CommunityEditPost/:id"
+              element={<CommunityEditPost />}
+            />
+          </Route>
+
           <Route path="Findaccountpage" element={<FindAccountPage />} />
           <Route path="Findpasswordpage" element={<FindPasswordPage />} />
           <Route path="Mypage" element={<MyPage />} />
@@ -44,10 +56,6 @@ const Router = () => {
           <Route path="testtext" element={<Testtext />} />
           <Route path="testchat" element={<TestChat />} />
           <Route path="testscroll" element={<SteamGameSearch />} />
-          <Route path="Community" element={<Community />} />
-          <Route path="/Community/:id" element={<CommunityDetail />} />
-          <Route path="CommunityAddPost" element={<CommunityAddPost />} />
-          <Route path="CommunityEditPost/:id" element={<CommunityEditPost />} />
         </Routes>
       </RouteFloat>
     </BrowserRouter>
