@@ -1,7 +1,10 @@
 import React from "react";
 import styled from "styled-components";
+import { useNavigate } from "react-router-dom";
 
 export const CurrentGame = ({ game }: any) => {
+  const navigate = useNavigate();
+
   const Video = game?.gamevideo === null ? game?.gameMainImg : game?.gamevideo;
   const Title = game?.gametitle;
 
@@ -15,7 +18,17 @@ export const CurrentGame = ({ game }: any) => {
         {/* 게임타이틀 */}
         <CurrentGameTitle>{Title}</CurrentGameTitle>
         {/* 게임채널입장*/}
-        <CurrentChannelJoinBtn>게임채널 입장하기</CurrentChannelJoinBtn>
+        <CurrentChannelJoinBtn
+          onClick={() => {
+            navigate(`/Teamchat/:${game.gameid}`, {
+              state: {
+                gameid: game.gameid.toString(),
+              },
+            });
+          }}
+        >
+          게임채널 입장하기
+        </CurrentChannelJoinBtn>
       </CurrentGameBox>
     </CurrentGameLayout>
   );

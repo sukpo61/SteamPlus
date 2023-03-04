@@ -15,9 +15,10 @@ import {
   DataChannelMapRecoil,
   videoDisplayRecoil,
   currentRoomRecoil,
-  channelNameRecoil,
   videoRoomExitRecoil,
   currentGameIdRecoil,
+  friendroominfoRecoil,
+  channelNameRecoil,
 } from "../../recoil/atom";
 
 import TeamChat from "../../pages/TeamChat";
@@ -58,7 +59,10 @@ function VoiceTalk() {
 
   const [channelName, setchannelName] = useRecoilState(channelNameRecoil);
 
-  const [currentGameId, setCurrentGameId] = useRecoilState(currentGameIdRecoil);
+  const [channelId, setchannelId] = useRecoilState(currentGameIdRecoil);
+
+  const [friendroominfo, setFriendRoomInfo] =
+    useRecoilState(friendroominfoRecoil);
 
   const {
     value: roomtitle,
@@ -69,7 +73,7 @@ function VoiceTalk() {
   const navigate = useNavigate();
   //dddd
 
-  // const channelName = "Dead space";
+  // const channelId = "Dead space";
 
   async function getMedia() {
     try {
@@ -134,7 +138,7 @@ function VoiceTalk() {
 
     socket.emit("leave", myuserid, {
       roomtitle: roomname,
-      channelName,
+      channelId,
     });
   };
 
@@ -149,7 +153,7 @@ function VoiceTalk() {
     }
     let NewData = {
       roomtitle,
-      channelName,
+      channelId,
     };
     handleJoin(NewData);
     resetTitle();
@@ -172,7 +176,7 @@ function VoiceTalk() {
             setCurrentRoom(room.name);
             handleJoin({
               roomtitle: room.name,
-              channelName,
+              channelId,
             });
           }}
         >
@@ -230,7 +234,7 @@ function VoiceTalk() {
     NewUserPeerConnection.onicecandidate = (event) => {
       socket.emit("ice", event.candidate, myuserid, {
         roomtitle,
-        channelName,
+        channelId,
       });
     };
 
@@ -382,6 +386,12 @@ function VoiceTalk() {
     }
   }, [videoRoomExit]);
 
+  useEffect(() => {
+    if (friendroominfo) {
+      handleJoin(friendroominfo);
+    }
+  }, [friendroominfo]);
+
   return (
     <VoiceTalkDiv layoutMenu={layoutMenu}>
       <VoiceTalkWrap>
@@ -390,10 +400,9 @@ function VoiceTalk() {
             <ChannelTitle>
               <span
                 onClick={() => {
-                  navigate(`/Teamchat/:${channelName.replaceAll(" ", "-")}`, {
+                  navigate(`/Teamchat/:${channelId}`, {
                     state: {
-                      gameid: currentGameId,
-                      name: channelName,
+                      gameid: channelId.toString(),
                     },
                   });
                 }}
