@@ -47,9 +47,15 @@ function VoiceTalk() {
 
   const [localStream, setLocalStream] = useState(null);
 
-  const [usercount, setUserCount] = useState("");
+  const [usercount, setUserCount] = useState(2);
+
+  const [checked, setChecked] = useState(false);
 
   const [RtcPeerConnectionMap, setRtcPeerConnectionMap] = useState(new Map());
+
+  const [password, setPassword] = useState("");
+
+  const [isValid, setIsValid] = useState(true);
 
   const [DataChannelMap, setDataChannelMap] =
     useRecoilState(DataChannelMapRecoil);
@@ -83,8 +89,21 @@ function VoiceTalk() {
 
   const location = useLocation().pathname.split("/")[1];
 
-  const handleChange = (event) => {
+  const userCountChange = (event) => {
     setUserCount(event.target.value);
+  };
+  const PasswordChange = () => {
+    setChecked((e) => !e);
+  };
+
+  const handlePasswordChange = (event) => {
+    const input = event.target.value;
+    if (/^\d*$/.test(input)) {
+      setPassword(input);
+      setIsValid(true);
+    } else {
+      setIsValid(false);
+    }
   };
 
   async function getMedia() {
@@ -163,18 +182,39 @@ function VoiceTalk() {
       window.alert("제목이 존재합니다.");
       return;
     }
-    let NewData = {
-      roomtitle,
-      channelId,
-    };
+    if (!/^\d{4}$/.test(password) && checked) {
+      setIsValid(false);
+      return;
+    }
+    let NewData;
+    if (checked) {
+      NewData = {
+        roomtitle,
+        channelId,
+        usercount,
+        password,
+      };
+    } else {
+      NewData = {
+        roomtitle,
+        channelId,
+        usercount,
+        password: "",
+      };
+    }
     handleJoin(NewData);
     resetTitle();
     setCreateDisplay(false);
+    setPassword("");
+    setChecked(false);
+    setIsValid(true);
   };
 
   const RoomCancel = () => {
     setCreateDisplay(false);
     resetTitle();
+    setChecked(false);
+    setIsValid(true);
   };
 
   const RoomList = roomsInfo.map((room) => {
@@ -185,25 +225,23 @@ function VoiceTalk() {
             if (currentRoom === room.name) {
               return;
             }
+            if (room.userinfo.length >= room.usercount) {
+              window.alert("방 인원이 다찼어요.");
+              return;
+            }
             setCurrentRoom(room.name);
             handleJoin({
               roomtitle: room.name,
               channelId,
+              usercount: room.usercount,
             });
           }}
         >
           <span>#{room.name}</span>
-          {room.userinfo.map((e) => e.userid).includes(myuserid) && (
-            <div>
-              <MdExitToApp
-                size={24}
-                color="#F05656"
-                onClick={() => {
-                  handleLeave(room.name);
-                }}
-              ></MdExitToApp>
-            </div>
-          )}
+          <UserCountWrap>
+            <TotalUser>{room.usercount}</TotalUser>
+            <CurrentUser>{room.userinfo.length}</CurrentUser>
+          </UserCountWrap>
         </RoomTitleWrap>
         <RoomUserList>
           {room.userinfo.map((user) => {
@@ -383,13 +421,12 @@ function VoiceTalk() {
   }, [localStream, RtcPeerConnectionMap, DataChannelMap]);
 
   useEffect(() => {
-    console.log("socket on");
     socket.on("requestrooms", (roomsinfo) => {
-      console.log("roomsinfo", roomsinfo);
       setRoomsInfo(roomsinfo);
     });
 
     socket.on("updaterooms", (roomsinfo) => {
+      console.log("roomsinfo", roomsinfo);
       setRoomsInfo(roomsinfo);
     });
   }, []);
@@ -436,33 +473,44 @@ function VoiceTalk() {
             ></CreateTitleInput>
             <SetPasswordWrap>
               <PasswordCheck>
-                <Checkbox></Checkbox>
+                <Checkbox
+                  checked={checked}
+                  onChange={PasswordChange}
+                ></Checkbox>
                 <span>비밀번호설정</span>
               </PasswordCheck>
-              <SetPasswordInput></SetPasswordInput>
+              <SetPasswordInput
+                type="password"
+                id="password"
+                value={password}
+                onChange={handlePasswordChange}
+                minLength={4}
+                maxLength={4}
+                required
+                disabled={!checked}
+              ></SetPasswordInput>
             </SetPasswordWrap>
             <SetCountWrap>
-              <FormControl sx={{ m: 1, minWidth: 120 }} size="small">
-                <InputLabel id="demo-select-small">인원수</InputLabel>
-                <Select
-                  labelId="demo-select-small"
-                  id="demo-select-small"
-                  value={usercount}
-                  label="Age"
-                  onChange={handleChange}
-                >
-                  <MenuItem value={10}>Ten</MenuItem>
-                  <MenuItem value={20}>Twenty</MenuItem>
-                  <MenuItem value={30}>Thirty</MenuItem>
-                </Select>
-              </FormControl>
-              {/* <SetCountInput></SetCountInput>
-              <UserCount>방인원수</UserCount> */}
+              <SetCountSelect value={usercount} onChange={userCountChange}>
+                <option value={2}>2명</option>
+                <option value={3}>3명</option>
+                <option value={4}>4명</option>
+              </SetCountSelect>
+              <UserCount>방인원수</UserCount>
             </SetCountWrap>
-            <ConfirmWrap>
-              <TitleCancle onClick={RoomCancel}>취소</TitleCancle>
-              <TitleConfirm onClick={onRoomSubmit}>확인</TitleConfirm>
-            </ConfirmWrap>
+            <CreateRoomBottom>
+              <div>
+                {checked && (
+                  <PasswordAlert isValid={isValid}>
+                    4자리 숫자를 입력하세요.
+                  </PasswordAlert>
+                )}
+              </div>
+              <ConfirmWrap>
+                <TitleCancle onClick={RoomCancel}>취소</TitleCancle>
+                <TitleConfirm onClick={onRoomSubmit}>확인</TitleConfirm>
+              </ConfirmWrap>
+            </CreateRoomBottom>
           </CreateRoomWrap>
           <RoomListWrap>{RoomList}</RoomListWrap>
         </RoomtoggleForm>
@@ -498,6 +546,15 @@ function VoiceTalk() {
           <PulseLoader color="#ffffff" size={4}></PulseLoader>
         </Chaticon>
       </BacktoChat>
+      <ExitRoom
+        currentRoom={currentRoom}
+        onClick={() => {
+          handleLeave(currentRoom);
+        }}
+      >
+        <span>#{currentRoom}</span>
+        <MdExitToApp size={24} color="#F05656"></MdExitToApp>
+      </ExitRoom>
     </VoiceTalkDiv>
   );
 }
@@ -512,6 +569,37 @@ const VoiceTalkWrap = styled.div`
   display: flex;
   flex-direction: column;
   padding: 0 24px;
+  color: white;
+`;
+const UserCountWrap = styled.div`
+  font-size: 12px;
+  display: flex;
+  flex-direction: row;
+  width: 56px;
+  height: 24px;
+  border-radius: 12px;
+  background-color: #4d5b73;
+  color: white;
+  overflow: hidden;
+`;
+const TotalUser = styled.div`
+  display: flex;
+  flex-direction: row;
+  width: 28px;
+  height: 24px;
+  justify-content: center;
+  align-items: center;
+  background-color: #263245;
+  color: white;
+`;
+const CurrentUser = styled.div`
+  display: flex;
+  flex-direction: row;
+  width: 28px;
+  height: 24px;
+  justify-content: center;
+  align-items: center;
+  background-color: #4d5b73;
   color: white;
 `;
 const BacktoChat = styled.div`
@@ -529,6 +617,30 @@ const BacktoChat = styled.div`
   align-items: center;
   transition: all 0.5s;
 `;
+
+const ExitRoom = styled.div`
+  color: white;
+  cursor: pointer;
+  bottom: ${(props) => (props.currentRoom ? "72px" : "-60px")};
+  right: 12px;
+  position: absolute;
+  background: #192030;
+  box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.25);
+  display: flex;
+  height: 56px;
+  border-radius: 28px;
+  justify-content: center;
+  align-items: center;
+  transition: all 0.5s;
+  padding: 0 20px;
+  &:hover {
+    background: #1d2538;
+  }
+  span {
+    margin-right: 16px;
+  }
+`;
+
 const Chaticon = styled.div`
   background: linear-gradient(
     90deg,
@@ -556,11 +668,11 @@ const RoomWrap = styled.div`
   display: flex;
   flex-direction: column;
   color: white;
-  background: #131a28;
+  background: #404b5e;
   border-radius: 10px;
   padding: 20px;
   &:hover {
-    background: #161d2c;
+    background: #3c4657;
   }
 `;
 const RoomTitleWrap = styled.div`
@@ -613,10 +725,22 @@ const Usercircle = styled.div`
   background-color: #23de79;
 `;
 const ConfirmWrap = styled.div`
-  margin-top: auto;
   display: flex;
   gap: 10px;
   flex-direction: row-reverse;
+  color: white;
+`;
+const PasswordAlert = styled.div`
+  font-size: 12px;
+  display: flex;
+  color: ${(props) => (props.isValid ? "white" : "#F05656")};
+`;
+const CreateRoomBottom = styled.div`
+  margin-top: auto;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
   color: white;
 `;
 const TitleConfirm = styled.button`
@@ -641,7 +765,7 @@ const CreateRoomWrap = styled.div`
   color: white;
   padding: 20px 24px;
   height: 216px;
-  background: #131a28;
+  background: #404b5e;
   border-radius: 10px;
 `;
 const SetPasswordWrap = styled.div`
@@ -684,30 +808,34 @@ const UserCount = styled.div`
 const CreateTitleInput = styled.input`
   height: 40px;
   border-radius: 10px;
-  background-color: #20293d;
+  background: #263245;
+  box-shadow: inset 0px 4px 10px rgba(0, 0, 0, 0.25);
   color: #fff;
   border: 0;
-  box-shadow: inset 0px 4px 10px rgba(0, 0, 0, 0.25);
   text-indent: 10px;
 `;
 const SetPasswordInput = styled.input`
   height: 40px;
   width: 160px;
   border-radius: 10px;
-  background-color: #20293d;
+  background: #263245;
+  box-shadow: inset 0px 4px 10px rgba(0, 0, 0, 0.25);
   color: #fff;
   border: 0;
-  box-shadow: inset 0px 4px 10px rgba(0, 0, 0, 0.25);
   text-indent: 10px;
+  transition: all 0.2s;
+  &:disabled {
+    opacity: 50%;
+  }
 `;
-const SetCountInput = styled.input`
-  width: 176px;
+const SetCountSelect = styled.select`
+  width: 160px;
   height: 40px;
   border-radius: 10px;
-  background-color: #20293d;
+  background: #263245;
+  box-shadow: inset 0px 4px 10px rgba(0, 0, 0, 0.25);
   color: #fff;
   border: 0;
-  box-shadow: inset 0px 4px 10px rgba(0, 0, 0, 0.25);
   text-indent: 10px;
 `;
 
