@@ -20,8 +20,6 @@ function FriendTab() {
     useRecoilState<FriendProps[]>(getFriend);
   //친구 요청 온 내역 전체
   const [friendAdd] = useRecoilValue(newFriendAdd);
-  //채팅 배열
-  const [chatText, setChatText] = useRecoilState<any>(friendChat);
   //개인 채팅 알림
   const [chatTextNotice, setChatTextNotice] =
     useRecoilState<any>(friendChatNotice);
