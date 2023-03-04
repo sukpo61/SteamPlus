@@ -9,8 +9,11 @@ import {
   currentGameIdRecoil,
   friendroominfoRecoil,
   LayoutButton,
+  friendAllState,
+  friendChatNotice,
 } from "../../recoil/atom";
 import { FriendProps } from "./Friend";
+import { FriendSearchProps } from "./FriendSearch";
 import socket from "../../socket";
 import { useNavigate } from "react-router-dom";
 import { v4 as uuidv4 } from "uuid";
@@ -22,7 +25,12 @@ function FriendContextMenu({ xPos, yPos, id, onClose }: any) {
   //친구 내역 전체
   const [getFriendAuth, setGetFriendAuth] =
     useRecoilState<FriendProps[]>(getFriend);
-
+  //계정 내역 전체 불러오기
+  const [friendAllRecoil, setFriendAllRecoil] =
+    useRecoilState<FriendSearchProps[]>(friendAllState);
+  //개인 채팅 알림
+  const [chatTextNotice, setChatTextNotice] =
+    useRecoilState<any>(friendChatNotice);
   const [friendroominfo, setFriendRoomInfo] =
     useRecoilState(friendroominfoRecoil);
 
@@ -86,7 +94,7 @@ function FriendContextMenu({ xPos, yPos, id, onClose }: any) {
   // let userSocketId: any = [];
   const [userId, setUserId] = useState<any>([]);
   socket.on("userId", (id) => {
-    console.log(id);
+    // console.log(id);
     setUserId(id);
     // console.log(userId);
   });
@@ -102,6 +110,16 @@ function FriendContextMenu({ xPos, yPos, id, onClose }: any) {
 
     socket.emit("friendChat", clickId, roomName);
     navigate(`/testchat/:${roomName}`);
+
+    const chatNoticeClear = chatTextNotice.filter((i: any) => {
+      if (i.id === id) {
+        return false;
+      } else {
+        return i;
+      }
+    });
+    setChatTextNotice(chatNoticeClear);
+
     setLayoutMenu("close");
   };
 
@@ -113,6 +131,21 @@ function FriendContextMenu({ xPos, yPos, id, onClose }: any) {
     socket.emit("nickName", myId, socket.id);
   }, []);
 
+  const friendLoggin = friendAllRecoil.find((i: any) => {
+    return i.id === id;
+  });
+  console.log(friendLoggin);
+
+  //친구 온라인 상태확인
+  const isFriendOnline = (lastLogin: string): boolean => {
+    const TEN_MINUTES = 60 * 1000; //1분
+    const date = new Date();
+    const lastLoginDate = new Date(lastLogin);
+    const diffInMs = date.getTime() - lastLoginDate.getTime();
+    const diffInSec = Math.round(diffInMs / 1000);
+    return diffInSec < TEN_MINUTES / 1000;
+  };
+
   return (
     <>
       <ContextMenuDiv yPos={yPos} xPos={xPos} onClick={handleClick}>
@@ -123,7 +156,12 @@ function FriendContextMenu({ xPos, yPos, id, onClose }: any) {
         >
           참여하기
         </ContextMenuP>
-        <ContextMenuP onClick={() => ChatOnClick(id)}>1대1 채팅</ContextMenuP>
+        {friendLoggin?.login && isFriendOnline(friendLoggin?.lastLogin) ? (
+          <ContextMenuP onClick={() => ChatOnClick(id)}>1대1 채팅</ContextMenuP>
+        ) : (
+          ""
+        )}
+
         <ContextMenuP
           onClick={() => {
             friendDeleteOnClick(id);

@@ -5,6 +5,7 @@ import {
   friendAllState,
   newFriendAdd,
   friendChat,
+  friendChatNotice,
 } from "../../recoil/atom";
 import styled from "styled-components";
 import { useRecoilState, useRecoilValue } from "recoil";
@@ -17,6 +18,7 @@ import FriendContextMenu from "./FriendContextMenu";
 import { FriendSearchProps } from "./FriendSearch";
 import socket from "../../socket";
 import { resolve } from "path";
+import { useLocation } from "react-router-dom";
 // import { ContextMenu, MenuItem, ContextMenuTrigger } from "react-contextmenu";
 
 export interface FriendProps {
@@ -31,9 +33,12 @@ export interface FriendProps {
 
 function Friend() {
   const queryClient = useQueryClient();
+  const location = useLocation();
+
   // //화면 기준 x,y좌표
   // const element = document.getElementById("my-element");
   // const rect = element?.getBoundingClientRect();
+  const [currentLocation, setCurrentLocation] = useState(location.pathname);
 
   //친구 내역 전체 불러오기
   const [getFriendAuth, setGetFriendAuth] =
@@ -68,6 +73,9 @@ function Friend() {
   };
   //개인 채팅 알림
   const [chatText, setChatText] = useRecoilState<any>(friendChat);
+  //개인 채팅 알림
+  const [chatTextNotice, setChatTextNotice] =
+    useRecoilState<any>(friendChatNotice);
 
   // const friendChatNotice = chatText.filter((i:any) => {
   //   return i
@@ -168,6 +176,26 @@ function Friend() {
     const diffInSec = Math.round(diffInMs / 1000);
     return diffInSec < TEN_MINUTES / 1000;
   };
+  useEffect(() => {
+    setCurrentLocation(location.pathname.split(":")[1]);
+  }, [location]);
+  console.log("loooocatin", currentLocation);
+
+  useEffect(() => {
+    socket.on("friendNew_message", (newChat) => {
+      setChatText((i: any) => [...i, newChat]);
+      console.log("111111", typeof newChat.roomId, newChat.roomId);
+      console.log("222222", typeof currentLocation, currentLocation);
+      return setChatTextNotice((i: any) => [...i, newChat]);
+
+      if (currentLocation.split(":")[1] == newChat.roomId) {
+        console.log("yes");
+        return;
+      } else {
+        console.log("no");
+      }
+    });
+  }, []);
 
   return (
     <FriendDiv layoutMenu={layoutMenu}>
@@ -216,14 +244,21 @@ function Friend() {
               <FriendBoxNamePlayingP>
                 {friendChannel.get(i.id)}
               </FriendBoxNamePlayingP>
-
-              <FriendBoxNotice>
-                {
-                  chatText.filter((item: any) => {
+              {chatTextNotice.filter((item: any) => {
+                return item.id === i.id;
+              }).length === 0 ? (
+                ""
+              ) : (
+                <FriendBoxNotice>
+                  {chatTextNotice.filter((item: any) => {
                     return item.id === i.id;
-                  }).length
-                }
-              </FriendBoxNotice>
+                  }).length > 100
+                    ? "99+"
+                    : chatTextNotice.filter((item: any) => {
+                        return item.id === i.id;
+                      }).length}
+                </FriendBoxNotice>
+              )}
             </FriendBoxNameDiv>
           </FriendBoxDiv>
         );
@@ -329,13 +364,14 @@ const FriendBoxNamePlayingP = styled.p`
   color: #a7a9ac;
 `;
 const FriendBoxNotice = styled.div`
-  width: 16px;
-  height: 16px;
-  line-height: 16px;
+  width: 18px;
+  height: 13px;
+  line-height: 13px;
   text-align: center;
-  font-size: 12px;
+  font-size: 10px;
+  font-weight: 500;
   color: #fff;
-  background-color: #ff5b5b;
-  border-radius: 50%;
+  background-color: #f05656;
+  border-radius: 8px;
   margin-left: auto;
 `;
