@@ -11,6 +11,8 @@ import GameChannelBlock from "../components/common/GameChannelBlock";
 
 import Footer from "../components/common/Footer";
 
+// import ParticipationRequest from "../layout/ParticipationRequest";
+
 // 게시판 홈 검색
 
 const ChannelSearchPage: any = () => {
@@ -123,6 +125,7 @@ const ChannelSearchPage: any = () => {
         // height: "100%",
       }}
     >
+      {/* <ParticipationRequest /> */}
       <SearchPageHeader>
         <SteamPlusLogo
           src="/img/SteamPlusLogo2.png"
@@ -195,6 +198,7 @@ const SearchPageHeader = styled.div`
   align-items: center;
   gap: 20px;
   padding: 16px 56px;
+  z-index: 999;
 `;
 
 const SteamPlusLogo = styled.img`
@@ -263,8 +267,7 @@ const BeforeSearch = styled.div`
 `;
 
 const AfterSearch = styled.div`
-  /* width: 100vw;
-  height: 100vh; */
+  margin-top: 72px;
 `;
 
 const SearchCount = styled.div`
@@ -283,7 +286,7 @@ const GameSearchList = styled.div`
   display: flex;
   flex-direction: column;
   gap: 10px;
-  margin-bottom: 40px;
+  margin-bottom: 92px;
 `;
 
 const GameChannelBlockView = styled.div``;

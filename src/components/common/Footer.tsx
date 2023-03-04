@@ -5,10 +5,11 @@ import { Outlet } from "react-router-dom";
 function Footer() {
   return (
     <>
-      <div style={{ minHeight: "100vh" }}>
+      <div style={{ minHeight: "100vh", zIndex: "999" }}>
         <Outlet />
       </div>
       {/* <MainBody></MainBody> */}
+
       <FooterArea>
         <FooterLogo src="/img/SteamPlusLogo2.png" />
         <MemberInfo>
@@ -38,7 +39,6 @@ const FooterArea = styled.div`
   display: flex;
   flex-direction: row;
   align-items: center;
-  z-index: 9999;
   margin-top: -52px;
   gap: 20px;
 `;
