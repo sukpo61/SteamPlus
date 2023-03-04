@@ -1,25 +1,33 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
-import { useQuery } from "react-query";
+import { useQuery, useQueryClient } from "react-query";
 import Pagination from "react-js-pagination";
 import axios from "axios";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { CommunityBox } from "../components/communitypage/CommunityBox";
 import { AiOutlineSearch } from "react-icons/ai";
 interface HeaderThProps {
   Width: string;
 }
 export const Community = () => {
+  //css 설정
+
+  //스팀아이디
   const steamID = sessionStorage.getItem("steamid");
   const navigate = useNavigate();
-
   //db에있는 post get 해와서 useQuery로 만듥기
   const CommunityPostData = async () => {
     const response = await axios.get("http://localhost:3001/post");
     return response;
   };
-  const { data: posts }: any = useQuery("CommunityPostData", CommunityPostData);
-  const PostData = posts?.data.slice().reverse();
+
+  useQuery("CommunityPostData", CommunityPostData, {
+    onSuccess: (data) => {
+      setPostData(data?.data.slice().reverse());
+    },
+  });
+
+  // const PostData = posts?.data.slice().reverse();
 
   //Pagination
   const [page, setPage] = useState(1);
@@ -27,6 +35,8 @@ export const Community = () => {
   const handlePageChange = (page: any) => {
     setPage(page);
   };
+
+  const [PostData, setPostData] = useState<any>();
 
   // 인풋값의 온체인지
   const [searchText, setSearchText] = useState("");
@@ -47,14 +57,19 @@ export const Community = () => {
     } else {
       setSearchTexts(searchText);
       setSearchText("");
+      // setToggle((e: any) =>
+      //   e.filter((post: any) =>
+      //     post.title.toLowerCase().includes(searchTexts.toLowerCase())
+      //   )
+      // );
     }
-
     return;
   };
+
   //필터 Data
-  const filteredData = PostData?.filter((post: any) =>
-    post.title.toLowerCase().includes(searchTexts.toLowerCase())
-  );
+  // const filteredData = PostData?.filter((post: any) =>
+  //   post.title.toLowerCase().includes(searchTexts.toLowerCase())
+  // );
   //새로고침
   const replace = () => {
     window.location.replace("Community");
@@ -65,6 +80,41 @@ export const Community = () => {
       return;
     } else navigate("/CommunityAddPost");
   };
+
+  //카테고리 필터 걸기
+  //카테고리 자유 필터
+
+  const categoryFilter = PostData?.filter(
+    (post: any) => post?.category === "자유"
+  );
+  //카테고리 모집 필터
+  const categoryFilter2 = PostData?.filter(
+    (post: any) => post?.category === "모집"
+  );
+  //카테고리 모집 필터
+  const categoryFilter3 = PostData?.filter(
+    (post: any) => post?.category === "자유" || "모집"
+  );
+  // 카테고리 state 기본값은 전체다 보이게
+  const [toggle, setToggle] = useState(categoryFilter3);
+  //카테고리 스타일
+  const [categorySt, setCategorySt] = useState("전체");
+  useEffect(() => {
+    if (PostData) {
+      setToggle(categoryFilter3);
+    }
+  }, [PostData]);
+
+  useEffect(() => {
+    if (searchTexts) {
+      setToggle((e: any) =>
+        e.filter((post: any) =>
+          post.title.toLowerCase().includes(searchTexts.toLowerCase())
+        )
+      );
+    }
+  }, [searchTexts]);
+
   return (
     <>
       <CommunityLayout>
@@ -83,12 +133,31 @@ export const Community = () => {
             게임채널에 함께할 구성원을 모집하거나 자유롭게 의견을 나누는
             공간입니다.
           </CommunityComment>
-          <Communitycategory>
-            <p style={{ borderBottom: "2px solid aqua", color: "aqua" }}>
+          <Communitycategory categorySt={categorySt}>
+            <CommunitySpan
+              onClick={() => {
+                setToggle(categoryFilter3);
+                setCategorySt("전체");
+              }}
+            >
               전체
-            </p>
-            <p>자유</p>
-            <p>모집</p>
+            </CommunitySpan>
+            <CommunitySpan
+              onClick={() => {
+                setToggle(categoryFilter);
+                setCategorySt("자유");
+              }}
+            >
+              자유
+            </CommunitySpan>
+            <CommunitySpan
+              onClick={() => {
+                setToggle(categoryFilter2);
+                setCategorySt("모집");
+              }}
+            >
+              모집
+            </CommunitySpan>
           </Communitycategory>
         </div>
         <CommentsWrap>
@@ -104,15 +173,17 @@ export const Community = () => {
             <AddPostBtn onClick={addPost}>글쓰기</AddPostBtn>
           </div>
           <CommunityeHeader>
-            <HeaderTh Width="80px">번호</HeaderTh>
-            <HeaderTh Width="80px">카테고리</HeaderTh>
-            <HeaderTh Width="560px">제목</HeaderTh>
+            <HeaderTh Width="100px">번호</HeaderTh>
+            <HeaderTh Width="100px">카테고리</HeaderTh>
+            <HeaderTh Width="560px" style={{ paddingLeft: "50px" }}>
+              제목
+            </HeaderTh>
             <HeaderTh Width="130px">작성자</HeaderTh>
             <HeaderTh Width="130px">작성시간</HeaderTh>
           </CommunityeHeader>
           {/* 게시글 조회하기 */}
           {/*reverse()를 넣어서 데이타의 배열을 거꾸로 보여줌*/}
-          {filteredData
+          {toggle
             ?.slice(items * (page - 1), items * (page - 1) + items)
             .map((post: any, index: any) => {
               return (
@@ -123,6 +194,7 @@ export const Community = () => {
                 />
               );
             })}
+
           <CommunitySerchBar>
             <CommunitySerchinput
               type="text"
@@ -137,8 +209,8 @@ export const Community = () => {
             <Pagination
               activePage={page}
               itemsCountPerPage={items}
-              totalItemsCount={filteredData?.length}
-              pageRangeDisplayed={20}
+              totalItemsCount={PostData?.length}
+              pageRangeDisplayed={10}
               onChange={handlePageChange}
             />
           </PaginationBox>
@@ -147,6 +219,13 @@ export const Community = () => {
     </>
   );
 };
+
+const CommunitySpan = styled.span`
+  cursor: pointer;
+  font-weight: 500;
+  font-size: 18px;
+`;
+
 const CommunitySerchinput = styled.input`
   border: none;
   background: transparent;
@@ -163,12 +242,12 @@ const CommunitySerchBar = styled.div`
   position: relative;
   width: 200px;
   height: 32px;
-  background: #192030;
+  background-color: #404b5e;
   box-shadow: inset 0px 4px 8px rgba(0, 0, 0, 0.25);
   border-radius: 10px;
   margin-top: 20px;
 `;
-const Communitycategory = styled.div`
+const Communitycategory = styled.div<{ categorySt: string }>`
   display: flex;
   justify-content: center;
   gap: 50px;
@@ -176,6 +255,21 @@ const Communitycategory = styled.div`
   border-bottom: 1pxx solid;
   display: flex;
   justify-content: center;
+  span:nth-child(1) {
+    border-bottom: ${(props) =>
+      props.categorySt === "전체" ? "2px solid #00b8c8" : ""};
+    color: ${(props) => (props.categorySt === "전체" ? "#00b8c8" : "#fff")};
+  }
+  span:nth-child(2) {
+    border-bottom: ${(props) =>
+      props.categorySt === "자유" ? "2px solid #00b8c8" : ""};
+    color: ${(props) => (props.categorySt === "자유" ? "#00b8c8" : "#fff")};
+  }
+  span:nth-child(3) {
+    border-bottom: ${(props) =>
+      props.categorySt === "모집" ? "2px solid #00b8c8" : ""};
+    color: ${(props) => (props.categorySt === "모집" ? "#00b8c8" : "#fff")};
+  }
 `;
 const Communitytitle2 = styled.p`
   font-size: 20;

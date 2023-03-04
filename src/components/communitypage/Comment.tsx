@@ -25,7 +25,8 @@ function Comment({ PostId }: any) {
   const Hour = newDate.getHours();
   const Minute = newDate.getMinutes();
   const date = `${year}/${month}/${day} ${Hour}:${Minute}`;
-
+  //스팀아이디
+  const steamID = sessionStorage.getItem("steamid");
   const getComment = async () => {
     const response = await axios.get("http://localhost:3001/comment");
     return response;
@@ -35,7 +36,7 @@ function Comment({ PostId }: any) {
   const commentFilter = comment?.filter((i: any) => {
     return i.postId === PostId;
   });
-
+  //댓글등록
   const postMutation = useMutation(
     (newComment: object) =>
       axios.post("http://localhost:3001/comment", newComment),
@@ -45,37 +46,21 @@ function Comment({ PostId }: any) {
       },
     }
   );
-
-  const DeleteMutation = useMutation(
-    (id) => axios.delete(`http://localhost:3001/comment/${id}`),
-    {
-      onSuccess: () => {
-        queryClient.invalidateQueries("comment");
-      },
-    }
-  );
-
-  const EditMutation = useMutation(
-    (editComment: any) =>
-      axios.put(`http://localhost:3001/comment/${editComment.id}`, editComment),
-    {
-      onSuccess: () => {
-        queryClient.invalidateQueries("comment");
-      },
-    }
-  );
-
+  //댓글등록 onChange
   const CommentInputOnChange = (e: any) => {
     setCommentInput(e.target.value);
   };
-
+  //댓글등록 핸들러
   const CommentFormonSubmit = (e: any) => {
     e.preventDefault();
-    if (commentInput === "") {
-      alert("빈칸은 안됨");
+    if (!steamID) {
+      alert("로그인이 필요합니다");
       return;
     }
-
+    if (commentInput === "") {
+      alert("댓글을 입력하세요");
+      return;
+    }
     const newComment = {
       id: uuidv4(),
       postId: PostId,
@@ -85,15 +70,31 @@ function Comment({ PostId }: any) {
       profileImg: ProfileImgUrl,
       contents: commentInput,
     };
-
     postMutation.mutate(newComment);
-
     setCommentInput("");
   };
-
+  //댓글삭제
+  const DeleteMutation = useMutation(
+    (id) => axios.delete(`http://localhost:3001/comment/${id}`),
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries("comment");
+      },
+    }
+  );
   const DeleteOnClick = (id: any) => {
     DeleteMutation.mutate(id);
   };
+  //댓글수정
+  const EditMutation = useMutation(
+    (editComment: any) =>
+      axios.put(`http://localhost:3001/comment/${editComment.id}`, editComment),
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries("comment");
+      },
+    }
+  );
 
   const EditInputOnChange = (e: any) => {
     setEditInput(e.target.value);

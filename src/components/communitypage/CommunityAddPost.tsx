@@ -1,12 +1,12 @@
 import axios from "axios";
 import React, { useState } from "react";
-import { useMutation, useQuery } from "react-query";
-import { useNavigate, useParams } from "react-router-dom";
+import { useMutation } from "react-query";
+import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { v4 as uuidv4 } from "uuid";
-import Moment from "react-moment";
 
 export const CommunityAddPost = () => {
+  const [category, setCategory] = useState("카테고리를 선택하세요");
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const navigate = useNavigate();
@@ -20,117 +20,192 @@ export const CommunityAddPost = () => {
     title: any;
     content: any;
     date: any;
+    count: number;
+    category: any;
   }
 
   //날짜만들기
-  const newDate = new Date();
-  const year = newDate.getFullYear();
-  const month = newDate.getMonth() + 1;
-  const day = newDate.getDate();
-  const Hour = newDate.getHours();
-  const Minute = newDate.getMinutes();
-  const date = `${year}/${month}/${day} ${Hour}:${Minute}`;
-
-  //시간보여줄 함수
-  const displayCreatedAt = (createdAt: Date): JSX.Element => {
-    const startTime: Date = new Date(createdAt);
-    const nowTime: number = Date.now();
-    const timeDiff: number = Math.floor(nowTime - startTime.getTime());
-    if (timeDiff > -60000) {
-      return <Moment format="방금 전">{startTime}</Moment>;
-    }
-    if (timeDiff < -86400000) {
-      return <Moment format="YYY/MM/DD">{startTime}</Moment>;
-    }
-    return <Moment fromNow>{startTime}</Moment>;
-  };
-
-  //api에 있는 detailPost.createdAt를 바꿔주는 것
-  const nowDate = displayCreatedAt(new Date());
-  const newDates = nowDate.props.format;
+  const date = new Date();
+  // const newDate = new Date();
+  // const year = newDate.getFullYear();
+  // const month = newDate.getMonth() + 1;
+  // const day = newDate.getDate();
+  // const Hour = newDate.getHours();
+  // const Minute = newDate.getMinutes();
+  // const date = `${year}/${month}/${day} ${Hour}:${Minute}`;
+  console.log("date", date);
 
   // useMutation 적용한 addPost
   const addPostMutation = useMutation(
     (newPost: PostData) => axios.post("http://localhost:3001/post", newPost),
     {
       onSuccess: () => {
-        alert("등록완료");
         setTitle("");
         setContent("");
-        navigate(`/Community/`);
+        // navigate(`/Community/`);
       },
     }
   );
 
   //post 등록 핸들러
-  const AddPostHandler = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
+  const AddPostHandler = (event: any) => {
     if (title === "" || content === "") {
       window.alert("제목 및 내용을 입력하십시오");
       return;
+    } else if (category === "카테고리를 선택하세요") {
+      window.alert("카테고리를 선택하세요");
+      event.preventDefault();
+      return;
+    } else if (window.confirm("정말 등록하시겠습니까?")) {
+      let newPost: PostData = {
+        id: uuidv4(),
+        steamid: userId!,
+        name: userName!,
+        title,
+        content,
+        date: date,
+        count: 1,
+        category,
+      };
+      addPostMutation.mutate(newPost);
+      //등록하면 등록한 자신의 post를 볼수있게
+      navigate(`/Community/${newPost.id}`);
+    } else {
+      //취소버튼 클릭시 새로고침을 방지해서 작성한 타이틀과 컨텐츠를 유지시켜줌
+      event.preventDefault();
     }
-    let newPost: PostData = {
-      id: uuidv4(),
-      steamid: userId!,
-      name: userName!,
-      title,
-      content,
-      date: date,
-    };
-    addPostMutation.mutate(newPost);
+  };
+
+  //커뮤니티로 이동
+  const gotoCommunity = () => {
+    navigate("/Community");
+  };
+  const handleTitleChange = (event: any) => {
+    setTitle(event.target.value);
+    const newTitle = event.target.value;
+    if (newTitle.length <= 35) {
+      setTitle(newTitle);
+    } else {
+      alert("제목은 35자 이하로 입력해주세요.");
+    }
+  };
+  //카테고리 선택
+  const handleOption1Change = (event: any) => {
+    setCategory(event.target.value);
   };
 
   return (
     <CommunityPostLayout>
-      <AddWrap>
-        <ReserTitle>
-          <span>게시글 등록</span>
-        </ReserTitle>
-        <Form onSubmit={AddPostHandler}>
-          <TitleInput
-            className="title"
-            placeholder="제목을 입력하세요"
-            type="text"
-            value={title}
-            onChange={(e) => {
-              setTitle(e.target.value);
-            }}
-          />
-          <ContentInput
-            placeholder="내용을 입력하세요"
-            // type="text"
-            value={content}
-            onChange={(e) => {
-              setContent(e.target.value);
-            }}
-          />
-          <PostButtonWrap>
-            <AddBtn type="submit">등록</AddBtn>
-            <AddBtn
-              onClick={() => {
-                navigate("/Community");
+      <div
+        style={{
+          height: "390px",
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "center",
+          alignContent: "center",
+          width: "100%",
+        }}
+      >
+        <CommunityTitle onClick={gotoCommunity}> 커뮤니티</CommunityTitle>
+        <CommunityComment>
+          게임채널에 함께할 구성원을 모집하거나 자유롭게 의견을 나누는
+          공간입니다.
+        </CommunityComment>
+      </div>
+      <div style={{ display: "flex", flexDirection: "column" }}>
+        <Communitytitle2>게시글 작성</Communitytitle2>
+        <TableHeader />
+
+        <AddWrap>
+          <label>
+            <select id="menu1" value={category} onChange={handleOption1Change}>
+              <option value="선택">카테고리를 선택하세요</option>
+              <option value="자유">자유</option>
+              <option value="모집">모집</option>
+            </select>
+          </label>
+          <p>제목</p>
+          <Form onSubmit={AddPostHandler}>
+            <TitleInput
+              placeholder="제목을 입력하세요"
+              maxLength={35}
+              value={title}
+              onChange={handleTitleChange}
+            />
+            <p>내용</p>
+            <ContentInput
+              placeholder="내용을 입력하세요"
+              // type="text"
+              value={content}
+              onChange={(e) => {
+                setContent(e.target.value);
               }}
-            >
-              취소
-            </AddBtn>
-          </PostButtonWrap>
-        </Form>
-      </AddWrap>
+            />
+
+            <PostButtonWrap>
+              <AddBtn
+                onClick={() => {
+                  navigate("/Community");
+                }}
+              >
+                취소
+              </AddBtn>
+              <AddBtn>등록</AddBtn>
+            </PostButtonWrap>
+          </Form>
+        </AddWrap>
+      </div>
     </CommunityPostLayout>
   );
 };
+const TableHeader = styled.div`
+  width: 980px;
+  display: flex;
+  flex-direction: column;
+  border-top: 2px solid #00b8c8;
+  margin: 20px 0px;
+`;
+const Communitytitle2 = styled.div`
+  color: whitr;
+  font-weight: 400;
+  font-size: 20px;
+`;
+const CommunityComment = styled.div`
+  font-size: 13;
+  color: #a7a9ac;
+  margin-top: 20px;
+  margin-bottom: 70px;
+  display: flex;
+  justify-content: center;
+`;
+const CommunityTitle = styled.div`
+  width: 100%;
+  position: relative;
+  margin: 0 auto;
+  font-family: "Noto Sans KR", sans-serif;
+  font-style: normal;
+  font-weight: 400;
+  font-size: 40px;
+  line-height: 54px;
+  display: flex;
+  justify-content: center;
+`;
 const CommunityPostLayout = styled.div`
   display: flex;
   flex-direction: column;
+  justify-content: center;
+  align-items: center;
   width: 100%;
   color: white;
+
+  height: 100%;
 `;
 const AddWrap = styled.div`
   position: relative;
   margin: 0 auto;
   display: flex;
   flex-direction: column;
-  width: 80%;
+  width: 100%;
 `;
 
 const Form = styled.form`
@@ -138,39 +213,50 @@ const Form = styled.form`
   display: flex;
   flex-direction: column;
 `;
-const ReserTitle = styled.div`
-  padding-bottom: 15px;
-  display: flex;
-  flex-direction: row;
-  border-bottom: 1px solid #fff;
-  span {
-    font-style: normal;
-    font-weight: 400;
-    font-size: 24px;
-    color: #fff;
-  }
-`;
+
 const TitleInput = styled.input`
-  border: 1px solid #eee;
-  margin-top: 20px;
-  height: 25px;
-  outline: none;
-  padding: 0 10px;
+  border: none;
+  background: transparent;
+  background-color: #404b5e;
+  width: 100%;
+  height: 30px;
+  padding: 10px 12px;
+  box-shadow: inset 0px 4px 8px rgba(0, 0, 0, 0.25);
+  border-radius: 10px;
+  margin: 15px 0px;
+  color: #fff;
 `;
 const ContentInput = styled.textarea`
-  border: 1px solid #eee;
-  margin-top: 20px;
-  height: 300px;
-  outline: none;
-  padding: 10px 10px;
+  color: #fff;
+  border: none;
+  background: transparent;
+  background-color: #404b5e;
+  width: 100%;
+  padding: 10px 12px;
+  box-shadow: inset 0px 4px 8px rgba(0, 0, 0, 0.25);
+  border-radius: 10px;
+  margin-top: 10px;
+  min-height: 150px;
+  height: 100%;
 `;
 const PostButtonWrap = styled.div`
   width: 100%;
   display: flex;
   flex-direction: row-reverse;
-  gap: 20px;
   margin-top: 15px;
 `;
 const AddBtn = styled.button`
   color: white;
+  font-weight: 600;
+  font-size: 13px;
+  line-height: 25px;
+  text-align: center;
+  width: 40px;
+  height: 25px;
+  background: #404b5e;
+  border-radius: 8px;
+  margin-right: 10px;
+  &:hover {
+    background: #00b8c8;
+  }
 `;
