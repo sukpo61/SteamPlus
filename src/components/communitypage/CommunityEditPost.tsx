@@ -122,7 +122,7 @@ export const CommunityEditPost = () => {
 };
 
 const TableHeader = styled.div`
-  width: 980px;
+  width: 1020px;
   display: flex;
   flex-direction: column;
   border-top: 2px solid #00b8c8;
