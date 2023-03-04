@@ -6,7 +6,7 @@ function Testtext({ chat }: any) {
   //세션 아이디
   const myId = sessionStorage.getItem("steamid");
 
-  console.log("masseaged");
+  // console.log("masseaged");
 
   if (chat.type === "alarm") {
     return <AlarmDiv>{chat.text}</AlarmDiv>;

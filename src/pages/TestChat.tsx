@@ -1,6 +1,10 @@
 import React, { useEffect, useRef, useState } from "react";
+import { useParams } from "react-router-dom";
 import styled from "styled-components";
 import Testtext from "./Testtext";
+import socket from "../socket";
+import { useRecoilState } from "recoil";
+import { friendChat } from "../recoil/atom";
 
 function TestChat() {
   //내 아이디
@@ -9,9 +13,14 @@ function TestChat() {
   const myNickName = sessionStorage.getItem("nickName");
   //내 프로필이미지
   const ProfileImgUrl = sessionStorage.getItem("profileimg");
+  //params
+  const params: any = useParams();
+  //socket.io 방아이디
+  const roomId = params?.id.split(":")[1];
+  console.log(roomId);
 
   //채팅으로 보낼 배열
-  const [chatText, setChatText] = useState<any>([]);
+  const [chatText, setChatText] = useRecoilState<any>(friendChat);
   //입력 input
   const [textInput, setTextInput] = useState<any>("");
   //입력 input
@@ -41,7 +50,10 @@ function TestChat() {
       profileImg: ProfileImgUrl,
       text: textInput,
       time: timeString,
+      roomId: roomId,
     };
+
+    socket.emit("friendMessage", newChat, { once: true });
 
     const stringnewChat = JSON.stringify(newChat);
     setChatText((i: any) => [...i, newChat]);
@@ -55,13 +67,24 @@ function TestChat() {
         chatContainerRef.current.scrollHeight;
     }
   }, [chatText]);
+
+  useEffect(() => {
+    socket.on("friendNew_message", (newChat) => {
+      // console.log(newChat);
+      setChatText((i: any) => [...i, newChat]);
+    });
+  }, []);
+  console.log(chatText);
+
   return (
     <ChatPageDiv>
       <ChatPageHeaderDiv>#채팅방_1234</ChatPageHeaderDiv>
       <ChatContentsDiv ref={chatContainerRef}>
         <ChatContentsMarginDiv>
           {chatText.map((chat: any) => {
-            return <Testtext chat={chat} />;
+            if (chat.roomId === roomId) {
+              return <Testtext chat={chat} />;
+            }
           })}
         </ChatContentsMarginDiv>
       </ChatContentsDiv>
