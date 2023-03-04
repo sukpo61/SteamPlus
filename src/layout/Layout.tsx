@@ -11,6 +11,7 @@ import {
   AllStreamsRecoil,
   videoRoomExitRecoil,
   AboutPagesState,
+  friendChat,
 } from "../recoil/atom";
 import Profile from "./layoutcomponents/Profile";
 import GameSearch from "./layoutcomponents/GameSearch";
@@ -63,6 +64,8 @@ function Layout() {
     useRecoilState<FriendSearchProps[]>(friendAllState);
   //친구 요청 온 내역 전체
   const [friendAdd] = useRecoilValue(newFriendAdd);
+  //채팅 배열
+  const [chatText, setChatText] = useRecoilState<any>(friendChat);
 
   const [videoDisplay, setvideoDisplay] = useRecoilState(videoDisplayRecoil);
 
@@ -243,7 +246,11 @@ function Layout() {
           >
             <FaUserFriends className="friendIcon" />
             <p>친구</p>
-            {friendAddCome.length === 0 ? "" : <FriendNotice />}
+            {friendAddCome.length === 0 && chatText.length === 0 ? (
+              ""
+            ) : (
+              <FriendNotice />
+            )}
           </Friendbutton>
         )}
         {/* 음성채팅 */}

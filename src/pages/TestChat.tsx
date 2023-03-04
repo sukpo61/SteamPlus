@@ -4,7 +4,7 @@ import styled from "styled-components";
 import Testtext from "./Testtext";
 import socket from "../socket";
 import { useRecoilState } from "recoil";
-import { friendChat } from "../recoil/atom";
+import { friendChat, friendChatNotice } from "../recoil/atom";
 
 function TestChat() {
   //내 아이디
@@ -27,6 +27,9 @@ function TestChat() {
   const chatInputOnChange = (e: any) => {
     setTextInput(e.target.value);
   };
+  //개인 채팅 알림
+  const [chatTextNotice, setChatTextNotice] =
+    useRecoilState<any>(friendChatNotice);
   //입력 form
   const chatInputOnSubmit = (e: any) => {
     e.preventDefault();
@@ -68,13 +71,29 @@ function TestChat() {
     }
   }, [chatText]);
 
-  useEffect(() => {
-    socket.on("friendNew_message", (newChat) => {
-      // console.log(newChat);
-      setChatText((i: any) => [...i, newChat]);
-    });
-  }, []);
-  console.log(chatText);
+  //friend컴포넌트로 이사
+  // useEffect(() => {
+  //   socket.on("friendNew_message", (newChat) => {
+  //     console.log(newChat);
+  //     setChatText((i: any) => [...i, newChat]);
+  //   });
+  // }, []);
+  // console.log(chatText);
+
+  // function handleBeforeUnload(event: any) {
+  //   event.preventDefault();
+
+  //   const chatNoticeClear = chatTextNotice.filter((i: any) => {
+  //     if (i.id === id) {
+  //       return false;
+  //     } else {
+  //       return i;
+  //     }
+  //   });
+  //   setChatTextNotice(chatNoticeClear);
+  // }
+
+  // window.addEventListener("beforeunload", handleBeforeUnload);
 
   return (
     <ChatPageDiv>
