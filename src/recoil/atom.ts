@@ -69,6 +69,10 @@ export const activechannelsinfoRecoil = atom<any>({
   key: "activechannelsinfoRecoil",
   default: [],
 });
+export const countRecoil = atom<any>({
+  key: "count",
+  default: 0,
+});
 
 // export const FriendNoticeAll = atom({
 //   key: "FriendNoticeAll",
