@@ -2,7 +2,6 @@ import axios from "axios";
 import React, { useState } from "react";
 import { useQuery } from "react-query";
 import styled from "styled-components";
-import { activechannelsinfoRecoil } from "../recoil/atom";
 import { useRecoilState } from "recoil";
 import { popularchannelsRecoil } from "../recoil/atom";
 import { useRecoilValue } from "recoil";
@@ -77,7 +76,12 @@ const PoularChannel = () => {
           {fivearray.slice(0, emptylength).map((_, index) => {
             return (
               <PopularChannel1st2empty>
-                {index + 1 + popularchannels.length}
+                {popularchannels.length === 0 ? (
+                  <span>{index + 2 + popularchannels.length} </span>
+                ) : (
+                  <span>{index + 1 + popularchannels.length} </span>
+                )}
+                <div>인기채널이 없습니다.</div>
               </PopularChannel1st2empty>
             );
           })}
@@ -89,30 +93,6 @@ const PoularChannel = () => {
 
 export default PoularChannel;
 
-const Box = styled.div`
-  padding-top: 20px;
-  border-top: 1px solid #ccc;
-  margin: 20px 20px 20px 20px;
-  color: #ccc;
-  width: 90%;
-  max-height: 100px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: normal;
-  display: -webkit-box;
-  -webkit-line-clamp: 5; /* 최대 3줄까지 나눔 */
-  -webkit-box-orient: vertical;
-  word-break: break-all;
-`;
-const EmptyChannel = styled.div`
-  color: white;
-  display: flex;
-  justify-content: center;
-  flex-direction: column;
-  width: 100%;
-  height: 100%;
-  font-size: 12px;
-`;
 const PopularChannelTitle = styled.div`
   color: white;
   font-size: 20px;
@@ -168,11 +148,7 @@ const PopularChannel1stempty = styled.div`
   flex-direction: column;
   background: #263245;
   border-radius: 10px;
-  cursor: pointer;
   box-shadow: 0px 0px 15px 0px #000;
-  &:hover {
-    box-shadow: 0px 0px 15px 0px #fff;
-  }
   transition: 0.5s ease;
 `;
 const PopularChannel1st2 = styled.div`
@@ -183,7 +159,6 @@ const PopularChannel1st2 = styled.div`
   padding: 12px;
   display: flex;
   flex-direction: column;
-  background: #263245;
   border-radius: 10px;
   cursor: pointer;
   box-shadow: 0px 0px 15px 0px #000;
@@ -193,21 +168,26 @@ const PopularChannel1st2 = styled.div`
   transition: 0.5s ease;
 `;
 const PopularChannel1st2empty = styled.div`
+  position: relative;
+  font-family: "Noto Sans";
+  overflow: hidden;
   color: white;
   width: 232px;
   height: 180px;
-  text-align: center;
+  font-size: 12px;
+  font-weight: 500;
   background: #263245;
-  padding: 12px;
-  display: flex;
   justify-content: center;
   align-items: center;
-  background: #263245;
+  display: flex;
+  align-items: center;
   border-radius: 10px;
-  cursor: pointer;
   box-shadow: 0px 0px 15px 0px #000;
-  &:hover {
-    box-shadow: 0px 0px 15px 0px #fff;
+  span {
+    font-size: 300px;
+    position: absolute;
+    left: -40px;
+    opacity: 20%;
   }
   transition: 0.5s ease;
 `;

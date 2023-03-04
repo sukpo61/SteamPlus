@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, CSSProperties } from "react";
 import { LayoutButton } from "../../recoil/atom";
 import styled from "styled-components";
 import { useRecoilValue } from "recoil";
@@ -8,6 +8,7 @@ import { friendAllState } from "../../recoil/atom";
 import { useRecoilState } from "recoil";
 import { useNavigate } from "react-router";
 import { FriendSearchProps } from "./FriendSearch";
+import PulseLoader from "react-spinners/PulseLoader";
 
 import {
   chatTextRecoil,
@@ -29,6 +30,14 @@ import { MdVolumeUp } from "react-icons/md";
 import { MdSettings } from "react-icons/md";
 import { BsFillMicFill } from "react-icons/bs";
 import { MdVideocam } from "react-icons/md";
+import { AiOutlineBorder } from "react-icons/ai";
+import { AiOutlineCheckSquare } from "react-icons/ai";
+
+import Checkbox from "@mui/material/Checkbox";
+import Select, { SelectChangeEvent } from "@mui/material/Select";
+import InputLabel from "@mui/material/InputLabel";
+import MenuItem from "@mui/material/MenuItem";
+import FormControl from "@mui/material/FormControl";
 
 function VoiceTalk() {
   const layoutMenu = useRecoilValue(LayoutButton);
@@ -38,7 +47,7 @@ function VoiceTalk() {
 
   const [localStream, setLocalStream] = useState(null);
 
-  const [settingstate, setSettingstate] = useState(false);
+  const [usercount, setUserCount] = useState("");
 
   const [RtcPeerConnectionMap, setRtcPeerConnectionMap] = useState(new Map());
 
@@ -71,9 +80,12 @@ function VoiceTalk() {
   } = useInput("");
 
   const navigate = useNavigate();
-  //dddd
 
-  // const channelId = "Dead space";
+  const location = useLocation().pathname.split("/")[1];
+
+  const handleChange = (event) => {
+    setUserCount(event.target.value);
+  };
 
   async function getMedia() {
     try {
@@ -371,7 +383,9 @@ function VoiceTalk() {
   }, [localStream, RtcPeerConnectionMap, DataChannelMap]);
 
   useEffect(() => {
+    console.log("socket on");
     socket.on("requestrooms", (roomsinfo) => {
+      console.log("roomsinfo", roomsinfo);
       setRoomsInfo(roomsinfo);
     });
 
@@ -398,17 +412,7 @@ function VoiceTalk() {
         <VoiceTalkTop>
           <VoiceTalkTopbar>
             <ChannelTitle>
-              <span
-                onClick={() => {
-                  navigate(`/Teamchat/:${channelId}`, {
-                    state: {
-                      gameid: channelId.toString(),
-                    },
-                  });
-                }}
-              >
-                {channelName}
-              </span>
+              <span>{channelName}</span>
               <img src="/img/steam_link.png"></img>
             </ChannelTitle>
             <CreateRoom
@@ -430,6 +434,31 @@ function VoiceTalk() {
               value={roomtitle}
               onChange={setRoomTitle}
             ></CreateTitleInput>
+            <SetPasswordWrap>
+              <PasswordCheck>
+                <Checkbox></Checkbox>
+                <span>비밀번호설정</span>
+              </PasswordCheck>
+              <SetPasswordInput></SetPasswordInput>
+            </SetPasswordWrap>
+            <SetCountWrap>
+              <FormControl sx={{ m: 1, minWidth: 120 }} size="small">
+                <InputLabel id="demo-select-small">인원수</InputLabel>
+                <Select
+                  labelId="demo-select-small"
+                  id="demo-select-small"
+                  value={usercount}
+                  label="Age"
+                  onChange={handleChange}
+                >
+                  <MenuItem value={10}>Ten</MenuItem>
+                  <MenuItem value={20}>Twenty</MenuItem>
+                  <MenuItem value={30}>Thirty</MenuItem>
+                </Select>
+              </FormControl>
+              {/* <SetCountInput></SetCountInput>
+              <UserCount>방인원수</UserCount> */}
+            </SetCountWrap>
             <ConfirmWrap>
               <TitleCancle onClick={RoomCancel}>취소</TitleCancle>
               <TitleConfirm onClick={onRoomSubmit}>확인</TitleConfirm>
@@ -444,7 +473,7 @@ function VoiceTalk() {
           <MdVolumeUp></MdVolumeUp>
         </div>
         <div>
-          {currentRoom && (
+          {location === "Teamchat" && (
             <MdVideocam
               onClick={() => {
                 setvideoDisplay((e) => !e);
@@ -454,6 +483,21 @@ function VoiceTalk() {
           <MdSettings></MdSettings>
         </div>
       </Controlbox>
+      <BacktoChat
+        location={location}
+        currentRoom={currentRoom}
+        onClick={() => {
+          navigate(`/Teamchat/:${channelId}`, {
+            state: {
+              gameid: channelId.toString(),
+            },
+          });
+        }}
+      >
+        <Chaticon>
+          <PulseLoader color="#ffffff" size={4}></PulseLoader>
+        </Chaticon>
+      </BacktoChat>
     </VoiceTalkDiv>
   );
 }
@@ -469,6 +513,35 @@ const VoiceTalkWrap = styled.div`
   flex-direction: column;
   padding: 0 24px;
   color: white;
+`;
+const BacktoChat = styled.div`
+  cursor: pointer;
+  bottom: ${(props) => (props.location !== "Teamchat" ? "72px" : "-60px")};
+  left: 12px;
+  position: absolute;
+  background: #192030;
+  box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.25);
+  display: flex;
+  width: 56px;
+  height: 56px;
+  border-radius: 28px;
+  justify-content: center;
+  align-items: center;
+  transition: all 0.5s;
+`;
+const Chaticon = styled.div`
+  background: linear-gradient(
+    90deg,
+    #12f8d8 -15.62%,
+    #09bec6 40.41%,
+    #007db2 107.07%
+  );
+  width: 30px;
+  height: 24px;
+  border-radius: 8px 8px 8px 0px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 `;
 const RoomtoggleForm = styled.div`
   position: relative;
@@ -567,13 +640,68 @@ const CreateRoomWrap = styled.div`
   padding: 24px;
   color: white;
   padding: 20px 24px;
-  gap: 12px;
   height: 216px;
   background: #131a28;
   border-radius: 10px;
 `;
+const SetPasswordWrap = styled.div`
+  margin-top: 12px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  color: white;
+  align-items: center;
+`;
+const SetCountWrap = styled.div`
+  margin-top: 12px;
+  display: flex;
+  flex-direction: row;
+  flex-direction: row-reverse;
+  color: white;
+  align-items: center;
+`;
+const PasswordCheck = styled.div`
+  color: #777d87;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  color: white;
+  align-items: center;
+  span {
+    font-family: "Noto Sans";
+    font-size: 14px;
+    color: #777d87;
+  }
+`;
+const UserCount = styled.div`
+  margin-right: 15px;
+  color: #d4d4d4;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+`;
 
 const CreateTitleInput = styled.input`
+  height: 40px;
+  border-radius: 10px;
+  background-color: #20293d;
+  color: #fff;
+  border: 0;
+  box-shadow: inset 0px 4px 10px rgba(0, 0, 0, 0.25);
+  text-indent: 10px;
+`;
+const SetPasswordInput = styled.input`
+  height: 40px;
+  width: 160px;
+  border-radius: 10px;
+  background-color: #20293d;
+  color: #fff;
+  border: 0;
+  box-shadow: inset 0px 4px 10px rgba(0, 0, 0, 0.25);
+  text-indent: 10px;
+`;
+const SetCountInput = styled.input`
+  width: 176px;
   height: 40px;
   border-radius: 10px;
   background-color: #20293d;
