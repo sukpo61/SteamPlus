@@ -3,6 +3,9 @@
   <component name="ChangeListManager">
     <list default="true" id="d6e282c2-d74a-4b89-b80b-7bbd366e51eb" name="변경" comment="">
       <change beforePath="$PROJECT_DIR$/db.json" beforeDir="false" afterPath="$PROJECT_DIR$/db.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/layout/layoutcomponents/Friend.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/layout/layoutcomponents/Friend.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/TeamChat.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/TeamChat.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/yarn.lock" beforeDir="false" afterPath="$PROJECT_DIR$/yarn.lock" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />

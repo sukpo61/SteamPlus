@@ -4,8 +4,15 @@ import axios from "axios";
 import { useQueryClient } from "react-query";
 import styled from "styled-components";
 import { useRecoilState } from "recoil";
-import { getFriend } from "../../recoil/atom";
+import {
+  getFriend,
+  currentGameIdRecoil,
+  friendroominfoRecoil,
+  LayoutButton,
+} from "../../recoil/atom";
 import { FriendProps } from "./Friend";
+import socket from "../../socket";
+import { useNavigate } from "react-router-dom";
 
 function FriendContextMenu({ xPos, yPos, id, onClose }: any) {
   const myId = sessionStorage.getItem("steamid");
@@ -14,6 +21,13 @@ function FriendContextMenu({ xPos, yPos, id, onClose }: any) {
   //친구 내역 전체
   const [getFriendAuth, setGetFriendAuth] =
     useRecoilState<FriendProps[]>(getFriend);
+
+  const [friendroominfo, setFriendRoomInfo] =
+    useRecoilState(friendroominfoRecoil);
+
+  const [layoutMenu, setLayoutMenu] = useRecoilState<String>(LayoutButton);
+
+  const navigate = useNavigate();
 
   const handleClick = () => {
     onClose();
@@ -45,10 +59,34 @@ function FriendContextMenu({ xPos, yPos, id, onClose }: any) {
     DeleteMutation.mutate(friendDelete[1].id);
   };
 
+  const joinFriendRoom = (userid: any) => {
+    socket.emit("friendchannel", userid);
+    socket.once("friendchannel", (roomname, frienduserid) => {
+      if (frienduserid === userid && roomname) {
+        console.log("frjoin", roomname);
+        setFriendRoomInfo({
+          roomtitle: roomname.split("/")[1],
+          channelId: roomname.split("/")[0],
+        });
+        navigate(`/Teamchat/:${roomname.split("/")[0]}`, {
+          state: {
+            gameid: roomname.split("/")[0].toString(),
+          },
+        });
+      }
+    });
+  };
+
   return (
     <>
       <ContextMenuDiv yPos={yPos} xPos={xPos} onClick={handleClick}>
-        <ContextMenuP>참여하기</ContextMenuP>
+        <ContextMenuP
+          onClick={() => {
+            joinFriendRoom(id);
+          }}
+        >
+          참여하기
+        </ContextMenuP>
         <ContextMenuP>채팅삭제 </ContextMenuP>
         <ContextMenuP
           onClick={() => {
