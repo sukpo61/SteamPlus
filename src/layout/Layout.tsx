@@ -202,7 +202,6 @@ function Layout() {
           <p>게임검색</p>
         </GameSearchbutton>
         {/* 커뮤니티 */}
-
         <Communitybutton
           locationName={locationName}
           onClick={() => {
