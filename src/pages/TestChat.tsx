@@ -4,11 +4,12 @@ import styled from "styled-components";
 import Testtext from "./Testtext";
 import socket from "../socket";
 import { useRecoilState } from "recoil";
-import { friendChat, friendChatNotice } from "../recoil/atom";
+import { friendAllState, friendChat, friendChatNotice } from "../recoil/atom";
+import { FriendSearchProps } from "../layout/layoutcomponents/FriendSearch";
 
 function TestChat() {
   //내 아이디
-  const myId = sessionStorage.getItem("steamid");
+  const myId: any = sessionStorage.getItem("steamid");
   //내 닉네임
   const myNickName = sessionStorage.getItem("nickName");
   //내 프로필이미지
@@ -19,6 +20,9 @@ function TestChat() {
   const roomId = params?.id.split(":")[1];
   console.log(roomId);
 
+  //계정 내역 전체 불러오기
+  const [friendAllRecoil, setFriendAllRecoil] =
+    useRecoilState<FriendSearchProps[]>(friendAllState);
   //채팅으로 보낼 배열
   const [chatText, setChatText] = useRecoilState<any>(friendChat);
   //입력 input
@@ -80,20 +84,13 @@ function TestChat() {
   // }, []);
   // console.log(chatText);
 
-  // function handleBeforeUnload(event: any) {
-  //   event.preventDefault();
+  const friendChatTitle = friendAllRecoil.find((i: any) => {
+    console.log((roomId - myId).toString());
+    console.log(i);
 
-  //   const chatNoticeClear = chatTextNotice.filter((i: any) => {
-  //     if (i.id === id) {
-  //       return false;
-  //     } else {
-  //       return i;
-  //     }
-  //   });
-  //   setChatTextNotice(chatNoticeClear);
-  // }
-
-  // window.addEventListener("beforeunload", handleBeforeUnload);
+    return i.id === (roomId - myId).toString();
+  });
+  console.log(friendChatTitle);
 
   return (
     <ChatPageDiv>
