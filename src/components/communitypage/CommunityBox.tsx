@@ -15,6 +15,7 @@ export const CommunityBox = ({ post, index }: any) => {
   const Title = post?.title;
   const Category = post?.category;
   const PodstID = post?.id;
+  const PostViewCount = post?.count;
 
   //작성시간 몇분전인지 확인 monents.js 사용함
   const getDayMinuteCounter = (Date: any) => {
@@ -99,11 +100,12 @@ export const CommunityBox = ({ post, index }: any) => {
       <TableTd Width="100px" Color="fff">
         {index}
       </TableTd>
-      <TableTd Width="100px" Color="fff">
+      <TableTd Width="110px" Color="fff">
         {Category}
       </TableTd>
-      <TableTd Width="560px" Color="fff" style={{ paddingLeft: "30px" }}>
+      <TableTd Width="540px" Color="fff" style={{ paddingLeft: "30px" }}>
         <span onClick={handleEditPost}>{Title}</span>
+        {/* 누적댓글수 */}
         <PostCount>[{CommentCt}]</PostCount>
         {/* 포스트 작성한지 10분이 지날때면 스타일을 주기 */}
         {newPost ? <PostNew>{newPost}</PostNew> : ""}
@@ -111,8 +113,11 @@ export const CommunityBox = ({ post, index }: any) => {
       <TableTd Width="130px" Color="#A7A9AC">
         {Name}
       </TableTd>
-      <TableTd Width="130px" Color="#A7A9AC">
+      <TableTd Width="90px" Color="#A7A9AC">
         {dayMinuteCounter}
+      </TableTd>
+      <TableTd Width="50px" Color="#A7A9AC">
+        {PostViewCount}
       </TableTd>
     </CommentWrap>
   );

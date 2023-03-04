@@ -192,7 +192,7 @@ const AddPostBtn = styled.span`
   }
 `;
 const Communitytitle2 = styled.div`
-  color: whitr;
+  color: white;
   font-weight: 400;
   font-size: 20px;
 `;
@@ -237,7 +237,7 @@ const PostpageWrap = styled.div`
 `;
 
 const TableHeader = styled.div`
-  width: 980px;
+  width: 1020px;
   display: flex;
   flex-direction: column;
   border-top: 2px solid #00b8c8;

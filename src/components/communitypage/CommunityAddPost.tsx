@@ -118,11 +118,11 @@ export const CommunityAddPost = () => {
 
         <AddWrap>
           <label>
-            <select id="menu1" value={category} onChange={handleOption1Change}>
-              <option value="선택">카테고리를 선택하세요</option>
-              <option value="자유">자유</option>
-              <option value="모집">모집</option>
-            </select>
+            <Select id="menu1" value={category} onChange={handleOption1Change}>
+              <Option value="선택">카테고리를 선택하세요</Option>
+              <Option value="자유">자유</Option>
+              <Option value="모집">모집</Option>
+            </Select>
           </label>
           <p>제목</p>
           <Form onSubmit={AddPostHandler}>
@@ -158,8 +158,13 @@ export const CommunityAddPost = () => {
     </CommunityPostLayout>
   );
 };
+
+const Select = styled.select`
+  border-radius: 10px;
+`;
+const Option = styled.option``;
 const TableHeader = styled.div`
-  width: 980px;
+  width: 1020px;
   display: flex;
   flex-direction: column;
   border-top: 2px solid #00b8c8;

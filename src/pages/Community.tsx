@@ -174,12 +174,13 @@ export const Community = () => {
           </div>
           <CommunityeHeader>
             <HeaderTh Width="100px">번호</HeaderTh>
-            <HeaderTh Width="100px">카테고리</HeaderTh>
-            <HeaderTh Width="560px" style={{ paddingLeft: "50px" }}>
+            <HeaderTh Width="110px">카테고리</HeaderTh>
+            <HeaderTh Width="540px" style={{ paddingLeft: "50px" }}>
               제목
             </HeaderTh>
             <HeaderTh Width="130px">작성자</HeaderTh>
-            <HeaderTh Width="130px">작성시간</HeaderTh>
+            <HeaderTh Width="90px">작성시간</HeaderTh>
+            <HeaderTh Width="50px">조회수</HeaderTh>
           </CommunityeHeader>
           {/* 게시글 조회하기 */}
           {/*reverse()를 넣어서 데이타의 배열을 거꾸로 보여줌*/}
@@ -272,9 +273,9 @@ const Communitycategory = styled.div<{ categorySt: string }>`
   }
 `;
 const Communitytitle2 = styled.p`
-  font-size: 20;
   color: white;
   font-weight: 400;
+  font-size: 20px;
 `;
 const CommunityComment = styled.div`
   font-size: 13;

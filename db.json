@@ -12,7 +12,7 @@
       "profileimg": "https://avatars.akamai.steamstatic.com/6639269e3d4820b31c5ec95bedc5ce0063635f54_full.jpg",
       "nickname": "chacha11 #3056",
       "login": true,
-      "lastLogin": "2023-03-04T06:51:51.679Z"
+      "lastLogin": "2023-03-04T12:38:35.550Z"
     },
     {
       "id": "76561199478670991",
@@ -112,7 +112,7 @@
       "title": "z",
       "content": "z",
       "date": "2023-03-04T06:33:19.623Z",
-      "count": 3,
+      "count": 4,
       "category": "자유"
     },
     {
@@ -122,7 +122,17 @@
       "title": "어몽하스 하쉴?",
       "content": "어몽하스 하쉴?",
       "date": "2023/3/4 15:49",
-      "count": 2,
+      "count": 10,
+      "category": "모집"
+    },
+    {
+      "id": "71f1e536-f82b-4bb6-b36f-9548725732dc",
+      "steamid": "76561199476963056",
+      "name": "chacha11 #3056",
+      "title": "어몽어스할사람어몽어스할사람어몽어스할사람어몽어스할사람어몽어스할사람",
+      "content": "어몽어스할사람",
+      "date": "2023/3/4 16:53",
+      "count": 10,
       "category": "모집"
     }
   ],
