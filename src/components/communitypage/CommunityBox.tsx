@@ -1,6 +1,6 @@
 import axios from "axios";
 import React, { useState } from "react";
-import { useMutation, useQueryClient } from "react-query";
+import { useMutation, useQuery, useQueryClient } from "react-query";
 import { Navigate, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import Moment from "react-moment";
@@ -14,7 +14,7 @@ export const CommunityBox = ({ post, index }: any) => {
   const Name = post?.name;
   const Title = post?.title;
   const Category = post?.category;
-  const Count = post?.count;
+  const PodstID = post?.id;
 
   //작성시간 몇분전인지 확인 monents.js 사용함
   const getDayMinuteCounter = (Date: any) => {
@@ -83,6 +83,17 @@ export const CommunityBox = ({ post, index }: any) => {
     return;
   };
 
+  //댓글수 카운트
+  const getComment = async () => {
+    const response = await axios.get("http://localhost:3001/comment");
+    return response;
+  };
+  const { data }: any = useQuery("comment", getComment);
+  const comment = data?.data.filter((item: any) => {
+    return item?.postId === PodstID;
+  });
+  const CommentCt = comment?.length;
+
   return (
     <CommentWrap>
       <TableTd Width="100px" Color="fff">
@@ -93,7 +104,7 @@ export const CommunityBox = ({ post, index }: any) => {
       </TableTd>
       <TableTd Width="560px" Color="fff" style={{ paddingLeft: "30px" }}>
         <span onClick={handleEditPost}>{Title}</span>
-        <PostCount>{Count}</PostCount>
+        <PostCount>[{CommentCt}]</PostCount>
         {/* 포스트 작성한지 10분이 지날때면 스타일을 주기 */}
         {newPost ? <PostNew>{newPost}</PostNew> : ""}
       </TableTd>
@@ -122,8 +133,9 @@ const PostNew = styled.div`
   justify-content: center;
   align-items: center;
   color: #fff;
-  line-height: 14px;
+  line-height: 10px;
   text-align: center;
+  margin-bottom: 1px;
 `;
 const CommentWrap = styled.div`
   width: 100%;

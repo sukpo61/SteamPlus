@@ -26,6 +26,8 @@ export const CommunityDetail = () => {
   const PostSteamid = post?.steamid;
   const PostCount = post?.count;
   const Steamid = sessionStorage.getItem("steamid");
+  console.log("post", post);
+
   // 현재시간 - PostDate = 몇분이 지났는지
   const newDate: any = new Date();
   const nowDate: any = newDate - PostDate;
@@ -173,6 +175,7 @@ const CommunityTable = styled.table`
 `;
 
 const AddPostBtn = styled.span`
+  cursor: pointer;
   padding: 4px 8px;
   gap: 10px;
   font-weight: 600;
@@ -202,6 +205,7 @@ const CommunityComment = styled.div`
   justify-content: center;
 `;
 const CommunityTitle = styled.div`
+  cursor: pointer;
   width: 100%;
   position: relative;
   margin: 0 auto;

@@ -292,6 +292,7 @@ const CommunityLayout = styled.div`
   color: white;
 `;
 const CommunityTitle = styled.div`
+  cursor: pointer;
   width: 100%;
   position: relative;
   margin: 0 auto;
@@ -368,6 +369,7 @@ const PaginationBox = styled.div`
   }
 `;
 const AddPostBtn = styled.span`
+  cursor: pointer;
   font-weight: 600;
   font-size: 13px;
   line-height: 25px;

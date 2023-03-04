@@ -26,14 +26,13 @@ export const CommunityAddPost = () => {
 
   //날짜만들기
   const date = new Date();
-  // const newDate = new Date();
-  // const year = newDate.getFullYear();
-  // const month = newDate.getMonth() + 1;
-  // const day = newDate.getDate();
-  // const Hour = newDate.getHours();
-  // const Minute = newDate.getMinutes();
-  // const date = `${year}/${month}/${day} ${Hour}:${Minute}`;
-  console.log("date", date);
+  const newDate = new Date();
+  const year = newDate.getFullYear();
+  const month = newDate.getMonth() + 1;
+  const day = newDate.getDate();
+  const Hour = newDate.getHours();
+  const Minute = newDate.getMinutes();
+  const dates = `${year}/${month}/${day} ${Hour}:${Minute}`;
 
   // useMutation 적용한 addPost
   const addPostMutation = useMutation(
@@ -51,6 +50,7 @@ export const CommunityAddPost = () => {
   const AddPostHandler = (event: any) => {
     if (title === "" || content === "") {
       window.alert("제목 및 내용을 입력하십시오");
+      event.preventDefault();
       return;
     } else if (category === "카테고리를 선택하세요") {
       window.alert("카테고리를 선택하세요");
@@ -63,7 +63,7 @@ export const CommunityAddPost = () => {
         name: userName!,
         title,
         content,
-        date: date,
+        date: dates,
         count: 1,
         category,
       };
