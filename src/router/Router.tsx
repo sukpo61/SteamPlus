@@ -42,7 +42,7 @@ const Router = () => {
           <Route path="Signup" element={<SignUp />} />
           <Route path="/Teamchat/:id" element={<TeamChat />} />
           <Route path="testtext" element={<Testtext />} />
-          <Route path="testchat" element={<TestChat />} />
+          <Route path="/testchat/:id" element={<TestChat />} />
           <Route path="testscroll" element={<SteamGameSearch />} />
           <Route path="Community" element={<Community />} />
           <Route path="/Community/:id" element={<CommunityDetail />} />

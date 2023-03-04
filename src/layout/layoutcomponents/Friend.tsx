@@ -4,6 +4,7 @@ import {
   getFriend,
   friendAllState,
   newFriendAdd,
+  friendChat,
 } from "../../recoil/atom";
 import styled from "styled-components";
 import { useRecoilState, useRecoilValue } from "recoil";
@@ -65,6 +66,12 @@ function Friend() {
   const frendSearchOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setfrendSearchInput(e.target.value);
   };
+  //개인 채팅 알림
+  const [chatText, setChatText] = useRecoilState<any>(friendChat);
+
+  // const friendChatNotice = chatText.filter((i:any) => {
+  //   return i
+  // })
 
   //양쪽 다 친구 내역
   const allFriendList = getFriendAuth?.filter((i: FriendProps) => {
@@ -182,6 +189,7 @@ function Friend() {
         getFriendChannel(i.id);
         return (
           <FriendBoxDiv
+            key={i.id}
             onContextMenu={(event) => handleContextMenu(event, i.id)}
           >
             <FriendContextMenu
@@ -209,7 +217,13 @@ function Friend() {
                 {friendChannel.get(i.id)}
               </FriendBoxNamePlayingP>
 
-              <FriendBoxNotice>7</FriendBoxNotice>
+              <FriendBoxNotice>
+                {
+                  chatText.filter((item: any) => {
+                    return item.id === i.id;
+                  }).length
+                }
+              </FriendBoxNotice>
             </FriendBoxNameDiv>
           </FriendBoxDiv>
         );

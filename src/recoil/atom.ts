@@ -5,6 +5,11 @@ import { FriendSearchProps } from "../layout/layoutcomponents/FriendSearch";
 const myId = sessionStorage.getItem("steamid");
 const myNickName = sessionStorage.getItem("nickName");
 
+export const friendChat = atom<any>({
+  key: "friendChat",
+  default: [],
+});
+
 export const LayoutButton = atom<String>({
   key: "Layout",
   default: "close",

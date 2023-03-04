@@ -16,7 +16,7 @@ import { useNavigate } from "react-router-dom";
 import { v4 as uuidv4 } from "uuid";
 
 function FriendContextMenu({ xPos, yPos, id, onClose }: any) {
-  const myId = sessionStorage.getItem("steamid");
+  const myId: any = sessionStorage.getItem("steamid");
   const myNickName = sessionStorage.getItem("nickName");
   const queryClient = useQueryClient();
   //친구 내역 전체
@@ -90,17 +90,24 @@ function FriendContextMenu({ xPos, yPos, id, onClose }: any) {
     setUserId(id);
     // console.log(userId);
   });
-  // useEffect(() => {
-  //   console.log(userId);
-  // }, [userId]);
+
   const ChatOnClick = (id: any) => {
-    socket.emit("friendChat", id, myId, uuidv4());
-    navigate(`/Teamchat/:${myId}`);
+    //선택한 아이디 불러오기
+    const clickId = userId.find((i: any) => {
+      return i.split("/")[0] === id;
+    });
+    //선택한 아이디와 내아이디 더하기 (방이름)
+    const roomName = parseInt(clickId.split("/")[0]) + parseInt(myId);
+    console.log(roomName);
+
+    socket.emit("friendChat", clickId, roomName);
+    navigate(`/testchat/:${roomName}`);
+    setLayoutMenu("close");
   };
 
-  socket.on("friendId", (rooms) => {
-    console.log(rooms);
-  });
+  // socket.on("friendId", (rooms) => {
+  //   console.log(rooms);
+  // });
 
   useEffect(() => {
     socket.emit("nickName", myId, socket.id);
