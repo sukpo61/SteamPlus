@@ -24,7 +24,11 @@ export const CommunityDetail = () => {
   const PostContent = post?.content;
   const PostId = post?.id;
   const PostSteamid = post?.steamid;
+  const PostCount = post?.count;
   const Steamid = sessionStorage.getItem("steamid");
+  // 현재시간 - PostDate = 몇분이 지났는지
+  const newDate: any = new Date();
+  const nowDate: any = newDate - PostDate;
 
   //삭제 하기
   const PostBoxRef = useRef<any>();
@@ -122,7 +126,7 @@ export const CommunityDetail = () => {
                 <td> 작성시간 </td>
                 <td>{PostDate}</td>
                 <td>조회수</td>
-                <td>30</td>
+                <td>{PostCount}</td>
               </tr>
             </CommunityTable>
             <PostContents>{PostContent}</PostContents>
