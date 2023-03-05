@@ -68,6 +68,8 @@ function VoiceTalk() {
 
   const [isValid, setIsValid] = useState(true);
 
+  const [volumepercent, setVolumePercent] = useState(50);
+
   const [DataChannelMap, setDataChannelMap] =
     useRecoilState(DataChannelMapRecoil);
 
@@ -393,6 +395,10 @@ function VoiceTalk() {
     return channel;
   };
 
+  const VolumeonChange = (e) => {
+    setVolumePercent(e.target.value);
+  };
+
   useEffect(() => {
     if (localStream) {
       socket.off("welcome");
@@ -520,8 +526,6 @@ function VoiceTalk() {
     }
   }, [roomsInfo]);
 
-  console.log("currentRoom", currentRoom);
-
   return (
     <VoiceTalkDiv layoutMenu={layoutMenu}>
       <VoiceTalkWrap>
@@ -644,22 +648,23 @@ function VoiceTalk() {
         </ControlButtons>
         <ControlSlider>
           <SliderWrap>
-            <div>마이크</div>
-            <Box width={300}>
-              <Slider
-                size="small"
-                defaultValue={70}
-                aria-label="Small"
-                valueLabelDisplay="auto"
-              />
-            </Box>
-          </SliderWrap>
-          <SliderWrap>
             <div>음량</div>
             <Box width={300}>
               <Slider
                 size="small"
-                defaultValue={70}
+                defaultValue={50}
+                aria-label="Small"
+                valueLabelDisplay="auto"
+                onChange={VolumeonChange}
+              />
+            </Box>
+          </SliderWrap>
+          <SliderWrap>
+            <div>마이크</div>
+            <Box width={300}>
+              <Slider
+                size="small"
+                defaultValue={50}
                 aria-label="Small"
                 valueLabelDisplay="auto"
               />
@@ -700,6 +705,7 @@ function VoiceTalk() {
 export default VoiceTalk;
 
 const VoiceTalkDiv = styled.div`
+  overflow: hidden;
   display: ${(props) => (props.layoutMenu === "voicetalk" ? "block" : "none")};
 `;
 

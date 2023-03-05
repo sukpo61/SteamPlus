@@ -162,19 +162,19 @@ const TeamChat = () => {
       <ChatPageHeaderDiv>{currentRoom}</ChatPageHeaderDiv>
       <ChatContentsDiv ref={chatContainerRef}>
         <ChatContentsMarginDiv>
-          {chatText.map((chat: any) => {
+          {chatText.map((chat: any, index: number) => {
             if (chat.type === "alarm") {
-              return <Testtext chat={chat} />;
+              return <Testtext chat={chat} key={index} />;
             } else if (chat.id === myId) {
               return (
                 <div data-aos="fade-left">
-                  <Testtext chat={chat} />
+                  <Testtext chat={chat} key={index} />
                 </div>
               );
             } else {
               return (
                 <div data-aos="fade-right">
-                  <Testtext chat={chat} />
+                  <Testtext chat={chat} key={index} />
                 </div>
               );
             }
