@@ -32,6 +32,7 @@ function TestChat() {
   const [textInput, setTextInput] = useState<any>("");
   //입력 input
   const chatInputOnChange = (e: any) => {
+    e.preventDefault();
     setTextInput(e.target.value);
   };
   //개인 채팅 알림
@@ -56,6 +57,7 @@ function TestChat() {
     //채팅으로 보낼 객체
     const newChat = {
       id: myId,
+      uuid: uuidv4(),
       nickName: myNickName,
       profileImg: ProfileImgUrl,
       text: textInput,
@@ -79,8 +81,9 @@ function TestChat() {
   }, [chatText]);
 
   useEffect(() => {
-    Aos.init();
+    Aos.init({ once: true });
   }, []);
+
   //friend컴포넌트로 이사
   // useEffect(() => {
   //   socket.on("friendNew_message", (newChat) => {
@@ -90,7 +93,7 @@ function TestChat() {
   // }, []);
   // console.log(chatText);
 
-  //상대 유저 ID
+  // 상대 유저 ID
   const { state } = useLocation();
 
   const friendChatTitle = friendAllRecoil.find((i: any) => {
@@ -106,13 +109,13 @@ function TestChat() {
             if (chat.roomId === roomId) {
               if (chat.id === myId) {
                 return (
-                  <div data-aos="fade-left" key={uuidv4()}>
+                  <div data-aos="fade-left" key={chat.uuid}>
                     <Testtext chat={chat} />
                   </div>
                 );
               } else {
                 return (
-                  <div data-aos="fade-right" key={uuidv4()}>
+                  <div data-aos="fade-right" key={chat.uuid}>
                     <Testtext chat={chat} />
                   </div>
                 );

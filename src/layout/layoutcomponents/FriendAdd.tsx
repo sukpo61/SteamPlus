@@ -176,7 +176,7 @@ function Friend() {
       {friendCome.length === 0 ? "" : <FriendAddH2>수락 대기 중</FriendAddH2>}
       {friendCome?.map((i: FriendSearchProps) => {
         return (
-          <FriendBoxDiv key={uuidv4()}>
+          <FriendBoxDiv key={i.id}>
             <FriendBoxNameDiv>
               <FriendBoxNameImg src={i.profileimg} />
               <FriendBoxNameH2>{i.nickname}</FriendBoxNameH2>
@@ -206,7 +206,7 @@ function Friend() {
       )}
       {friendSend?.map((i: FriendSearchProps) => {
         return (
-          <FriendBoxDiv key={uuidv4()}>
+          <FriendBoxDiv key={i.id}>
             <FriendBoxNameDiv>
               <FriendBoxNameImg src={i.profileimg} />
               <FriendBoxNameH2>{i.nickname}</FriendBoxNameH2>
