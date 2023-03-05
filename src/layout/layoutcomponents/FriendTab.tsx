@@ -1,5 +1,11 @@
 import React from "react";
-import { LayoutButton, getFriend, newFriendAdd } from "../../recoil/atom";
+import {
+  LayoutButton,
+  getFriend,
+  newFriendAdd,
+  friendChat,
+  friendChatNotice,
+} from "../../recoil/atom";
 import styled from "styled-components";
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import { FriendProps } from "./Friend";
@@ -14,10 +20,13 @@ function FriendTab() {
     useRecoilState<FriendProps[]>(getFriend);
   //친구 요청 온 내역 전체
   const [friendAdd] = useRecoilValue(newFriendAdd);
-
+  //개인 채팅 알림
+  const [chatTextNotice, setChatTextNotice] =
+    useRecoilState<any>(friendChatNotice);
   // //친구 알림 내역
   // const [FriendNoticeLength] = useRecoilValue<any>(FriendNoticeAll);
   // // console.log(FriendNoticeLength);
+  //state 전
 
   //양쪽 다 친구 내역
   const friend = getFriendAuth?.filter((i: FriendProps) => {
@@ -50,6 +59,11 @@ function FriendTab() {
     setLayoutMenu(i);
   };
 
+  //친구 채팅 온내역
+  const chatTextNoticeCount = chatTextNotice.filter((i: any) => {
+    return i.id !== myId;
+  });
+
   return (
     <MenuTitleFlex>
       <FriendMenuDiv
@@ -57,6 +71,15 @@ function FriendTab() {
         onClick={() => FriendButtonOnClick("friend")}
       >
         친구리스트
+        {chatTextNoticeCount.length === 0 ? (
+          ""
+        ) : (
+          <FriendNotice>
+            {chatTextNoticeCount.length > 99
+              ? "99+"
+              : chatTextNoticeCount.length}
+          </FriendNotice>
+        )}
       </FriendMenuDiv>
       <FriendSearchMenuDiv
         layoutMenu={layoutMenu}
@@ -97,6 +120,7 @@ const MenuTitleFlex = styled.div`
   overflow: hidden;
 `;
 const FriendMenuDiv = styled.h2<{ layoutMenu: String }>`
+  position: relative;
   width: 117px;
   height: 100%;
   line-height: 40px;

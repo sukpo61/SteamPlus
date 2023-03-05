@@ -1,5 +1,5 @@
-import React, { useEffect, useState, CSSProperties } from "react";
-import { LayoutButton } from "../../recoil/atom";
+import React, { useEffect, useState } from "react";
+import { getFriend, LayoutButton } from "../../recoil/atom";
 import styled from "styled-components";
 import { useRecoilValue } from "recoil";
 import socket from "../../socket";
@@ -9,6 +9,8 @@ import { useRecoilState } from "recoil";
 import { useNavigate } from "react-router";
 import { FriendSearchProps } from "./FriendSearch";
 import PulseLoader from "react-spinners/PulseLoader";
+import { useMutation, useQueryClient } from "react-query";
+import { v4 as uuidv4 } from "uuid";
 
 import {
   chatTextRecoil,
@@ -38,12 +40,15 @@ import Select, { SelectChangeEvent } from "@mui/material/Select";
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
+import axios from "axios";
+
 
 function VoiceTalk() {
   const layoutMenu = useRecoilValue(LayoutButton);
   const [createDisplay, setCreateDisplay] = useState(false);
   const [roomsInfo, setRoomsInfo] = useState([]);
   const myuserid = sessionStorage.getItem("steamid");
+  const myNickName = sessionStorage.getItem("nickName");
 
   const [localStream, setLocalStream] = useState(null);
 
@@ -78,6 +83,8 @@ function VoiceTalk() {
 
   const [friendroominfo, setFriendRoomInfo] =
     useRecoilState(friendroominfoRecoil);
+
+  const [getFriendAuth, setGetFriendAuth] = useRecoilState(getFriend);
 
   const {
     value: roomtitle,
@@ -157,7 +164,7 @@ function VoiceTalk() {
         channel.close();
       });
 
-      // localStream.getTracks().forEach((track) => track.stop())
+      localStream.getTracks().forEach((track) => track.stop())
 
       setRtcPeerConnectionMap(() => new Map());
       setDataChannelMap(() => new Map());
@@ -217,6 +224,43 @@ function VoiceTalk() {
     setIsValid(true);
   };
 
+  //친구 추가
+  const queryClient = useQueryClient();
+
+  const postMutation = useMutation(
+    (friendAdd) => axios.post("http://localhost:3001/friend", friendAdd),
+    {
+      onSuccess: () => {
+        // 쿼리 무효화
+        queryClient.invalidateQueries(["friend"]);
+        queryClient.invalidateQueries(["friendsearch"]);
+      },
+    }
+  );
+
+  const FriendAdd = async (friendId, friendNickName) => {
+    let friendAdd = {
+      id: uuidv4(),
+      myId: myuserid,
+      friendId: friendId,
+      myNickName: myNickName,
+      friendNickName: friendNickName,
+    };
+    postMutation.mutate(friendAdd);
+  };
+
+  const alreadyFriend = friendAllRecoil?.filter((i) => {
+    for (let t = 0; t < getFriendAuth.length; t++) {
+      if (
+        getFriendAuth[t].friendId === i.id &&
+        getFriendAuth[t].myId === myuserid
+      ) {
+        return true;
+      }
+    }
+    return false;
+  });
+
   const RoomList = roomsInfo.map((room) => {
     return (
       <RoomWrap key={room.name}>
@@ -250,6 +294,26 @@ function VoiceTalk() {
               <RoomUserWrap key={info?.id}>
                 <img src={info?.profileimg}></img>
                 <span>{info?.nickname}</span>
+                {/* 친구는 예외 처리 */}
+                {console.log(alreadyFriend)}
+                {info?.id === myuserid ||
+                alreadyFriend.find((i) => {
+                  if (i.id === info?.id) {
+                    return true;
+                  } else {
+                    return false;
+                  }
+                }) ? (
+                  ""
+                ) : (
+                  <FriendAddButton
+                    onClick={() => {
+                      FriendAdd(user?.userid, info?.nickname);
+                    }}
+                  >
+                    +
+                  </FriendAddButton>
+                )}
               </RoomUserWrap>
             );
           })}
@@ -426,7 +490,6 @@ function VoiceTalk() {
     });
 
     socket.on("updaterooms", (roomsinfo) => {
-      console.log("roomsinfo", roomsinfo);
       setRoomsInfo(roomsinfo);
     });
   }, []);
@@ -917,4 +980,10 @@ const RoomTitleInput = styled.input`
   border: 0;
   box-shadow: 2px 4px 10px 0 #000 inset;
   text-indent: 10px;
+`;
+
+const FriendAddButton = styled.button`
+  font-size: 24px;
+  color: #fff;
+  margin-left: auto;
 `;
