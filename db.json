@@ -5,7 +5,7 @@
       "profileimg": "https://avatars.akamai.steamstatic.com/fef49e7fa7e1997310d705b2a6158ff8dc1cdfeb_full.jpg",
       "nickname": "PRDG #4836",
       "login": true,
-      "lastLogin": "2023-03-04T14:58:41.513Z"
+      "lastLogin": "2023-03-05T04:29:47.626Z"
     },
     {
       "id": "76561199476963056",
@@ -26,7 +26,7 @@
       "profileimg": "https://avatars.akamai.steamstatic.com/fef49e7fa7e1997310d705b2a6158ff8dc1cdfeb_full.jpg",
       "nickname": "prdg990515 #6040",
       "login": true,
-      "lastLogin": "2023-03-04T14:58:20.773Z"
+      "lastLogin": "2023-03-05T04:29:48.664Z"
     },
     {
       "id": "76561198374391933",
@@ -61,7 +61,7 @@
       "profileimg": "https://avatars.akamai.steamstatic.com/fef49e7fa7e1997310d705b2a6158ff8dc1cdfeb_full.jpg",
       "nickname": "sjg990515 #2028",
       "login": true,
-      "lastLogin": "2023-03-04T14:58:37.379Z"
+      "lastLogin": "2023-03-05T04:29:48.740Z"
     }
   ],
   "friend": [
@@ -148,6 +148,20 @@
       "friendId": "76561199483072028",
       "myNickName": "PRDG #4836",
       "friendNickName": "sjg990515 #2028"
+    },
+    {
+      "id": "62c69f9b-01bc-4574-b067-74eba6ed66fa",
+      "myId": "76561199480236040",
+      "friendId": "76561199483072028",
+      "myNickName": "prdg990515 #6040",
+      "friendNickName": "sjg990515 #2028"
+    },
+    {
+      "id": "a7bf2a5f-5998-43f2-9b28-a47e2b3cf352",
+      "myId": "76561199483072028",
+      "friendId": "76561199480236040",
+      "myNickName": "sjg990515 #2028",
+      "friendNickName": "prdg990515 #6040"
     }
   ],
   "post": [

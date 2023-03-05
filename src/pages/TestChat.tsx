@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useLocation, useParams } from "react-router-dom";
 import styled from "styled-components";
 import Testtext from "./Testtext";
 import socket from "../socket";
@@ -84,22 +84,21 @@ function TestChat() {
   // }, []);
   // console.log(chatText);
 
-  const friendChatTitle = friendAllRecoil.find((i: any) => {
-    console.log((roomId - myId).toString());
-    console.log(i);
+  //상대 유저 ID
+  const { state } = useLocation();
 
-    return i.id === (roomId - myId).toString();
+  const friendChatTitle = friendAllRecoil.find((i: any) => {
+    return i.id === state;
   });
-  console.log(friendChatTitle);
 
   return (
     <ChatPageDiv>
-      <ChatPageHeaderDiv>#채팅방_1234</ChatPageHeaderDiv>
+      <ChatPageHeaderDiv>{friendChatTitle?.nickname}</ChatPageHeaderDiv>
       <ChatContentsDiv ref={chatContainerRef}>
         <ChatContentsMarginDiv>
           {chatText.map((chat: any) => {
             if (chat.roomId === roomId) {
-              return <Testtext chat={chat} />;
+              return <Testtext chat={chat} key={roomId} />;
             }
           })}
         </ChatContentsMarginDiv>
