@@ -13,12 +13,15 @@ import {
   AboutPagesState,
   friendChat,
   friendChatNotice,
+  currentRoomRecoil,
+  currentGameIdRecoil,
 } from "../recoil/atom";
 import Profile from "./layoutcomponents/Profile";
 import GameSearch from "./layoutcomponents/GameSearch";
 import Friend from "./layoutcomponents/Friend";
 import FriendSearch from "./layoutcomponents/FriendSearch";
 import VoiceTalk from "./layoutcomponents/VoiceTalk";
+import EmptyVoiceTalk from "./layoutcomponents/EmptyVoiceTalk";
 import FriendAdd from "./layoutcomponents/FriendAdd";
 import { useQuery } from "react-query";
 import axios from "axios";
@@ -77,6 +80,10 @@ function Layout() {
   const [videoRoomExit, setVideoRoomExit] = useRecoilState(videoRoomExitRecoil);
 
   const [loginModalOpen, setLoginModalOpen] = useState<boolean>(true); // 로그인 모달
+
+  const [currentRoom, setCurrentRoom] = useRecoilState(currentRoomRecoil);
+
+  const [channelId, setchannelId] = useRecoilState(currentGameIdRecoil);
 
   //메뉴 탭눌렀을때 (친구제외)
   const LayoutButtonOnClick = (i: string) => {
@@ -167,7 +174,11 @@ function Layout() {
 
     return (
       <VideoWrap key={data.userid}>
-        <Streamvideo ref={remotehandleVideoRef} autoPlay playsInline muted />
+        {data.userid === myId ? (
+          <Streamvideo ref={remotehandleVideoRef} autoPlay playsInline muted />
+        ) : (
+          <Streamvideo ref={remotehandleVideoRef} autoPlay playsInline />
+        )}
         <Usernickname>
           <span>{info?.nickname}</span>
         </Usernickname>
@@ -237,7 +248,6 @@ function Layout() {
 
         {/* 메뉴 구분선 */}
         <SideLine />
-
         {/* 친구 */}
         {myId === null ? (
           <Friendbutton
@@ -281,13 +291,16 @@ function Layout() {
             <p>음성채팅</p>
           </VoiceTalkbutton>
         ) : (
-          <VoiceTalkbutton
-            onClick={() => LayoutButtonOnClick("voicetalk")}
-            layoutMenu={layoutMenu}
-          >
-            <MdVoiceChat className="chatIcon" />
-            <p>음성채팅</p>
-          </VoiceTalkbutton>
+          <VoiceTalkbuttonWrap>
+            {currentRoom && <VoiceTalkON></VoiceTalkON>}
+            <VoiceTalkbutton
+              onClick={() => LayoutButtonOnClick("voicetalk")}
+              layoutMenu={layoutMenu}
+            >
+              <MdVoiceChat className="chatIcon" />
+              <p>음성채팅</p>
+            </VoiceTalkbutton>
+          </VoiceTalkbuttonWrap>
         )}
         <AboutPagesDiv onClick={AboutPagesOnClick}>?</AboutPagesDiv>
       </SideBarDiv>
@@ -298,7 +311,8 @@ function Layout() {
         <GameSearch />
         <Friend />
         <FriendSearch />
-        <VoiceTalk />
+        {channelId ? <VoiceTalk /> : <EmptyVoiceTalk />}
+
         <FriendAdd />
         <AboutPages />
       </MenuOpenDiv>
@@ -588,6 +602,18 @@ const VoiceTalkbutton = styled.div<{ layoutMenu: String }>`
     font-size: 30px;
     margin-bottom: 5px;
   }
+`;
+const VoiceTalkbuttonWrap = styled.div`
+  position: relative;
+`;
+const VoiceTalkON = styled.div`
+  width: 8px;
+  height: 8px;
+  right: 10px;
+  bottom: 48px;
+  border-radius: 4px;
+  background: #f05656;
+  position: absolute;
 `;
 const AboutPagesDiv = styled.div`
   width: 30px;

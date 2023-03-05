@@ -16,6 +16,17 @@ interface Props {
 function GameChannelBlock({ game, count }: any) {
   const navigate = useNavigate();
 
+  const Genres: any = (genres: any) => {
+    if (genres) {
+      {
+        genres.map((e: any) => {
+          return `${e.description} `;
+        });
+      }
+    }
+    return;
+  };
+
   return (
     <GameListBlock>
       <GameChannelImgArea>
@@ -27,12 +38,7 @@ function GameChannelBlock({ game, count }: any) {
             <GameChannelTitle>{`${game?.name}`}</GameChannelTitle>
           </TitleLinear>
           <GameChannelInfo>
-            <GameChannelCategory>
-              {game?.genres.map((e: any) => {
-                return `${e.description} `;
-              })}
-            </GameChannelCategory>
-
+            <GameChannelCategory>{Genres(game.genres)}</GameChannelCategory>
             <NumberOfPlayer>
               <div
                 style={{
