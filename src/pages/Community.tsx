@@ -6,6 +6,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { CommunityBox } from "../components/communitypage/CommunityBox";
 import { AiOutlineSearch } from "react-icons/ai";
+import { padding } from "@mui/system";
 interface HeaderThProps {
   Width: string;
 }
@@ -162,14 +163,14 @@ export const Community = () => {
             <AddPostBtn onClick={addPost}>글쓰기</AddPostBtn>
           </div>
           <CommunityeHeader>
-            <HeaderTh Width="100px">번호</HeaderTh>
-            <HeaderTh Width="110px">카테고리</HeaderTh>
-            <HeaderTh Width="540px" style={{ paddingLeft: "50px" }}>
-              제목
+            <HeaderTh style={{ padding: "0px 16px" }}>번호</HeaderTh>
+            <HeaderTh>카테고리</HeaderTh>
+            <HeaderTh style={{ padding: "0px 250px 0px 235px" }}>제목</HeaderTh>
+            <HeaderTh>작성자</HeaderTh>
+            <HeaderTh style={{ padding: "0px 34px 0px 56px" }}>
+              작성시간
             </HeaderTh>
-            <HeaderTh Width="130px">작성자</HeaderTh>
-            <HeaderTh Width="90px">작성시간</HeaderTh>
-            <HeaderTh Width="50px">조회수</HeaderTh>
+            <HeaderTh>조회수</HeaderTh>
           </CommunityeHeader>
           {/* 게시글 조회하기 */}
           {/*reverse()를 넣어서 데이타의 배열을 거꾸로 보여줌*/}
@@ -184,27 +185,40 @@ export const Community = () => {
                 />
               );
             })}
-
-          <CommunitySerchBar>
-            <CommunitySerchinput
-              ref={SerchRef}
-              type="text"
-              placeholder="게시글검색"
-              value={searchText}
-              onChange={handleSearchTextChange}
-            />
-            <AiOutlineSearch className="searchIcon" onClick={btn} />
-          </CommunitySerchBar>
-          {/* 페이지네이션 */}
-          <PaginationBox>
-            <Pagination
-              activePage={page}
-              itemsCountPerPage={items}
-              totalItemsCount={PostData?.length}
-              pageRangeDisplayed={10}
-              onChange={handlePageChange}
-            />
-          </PaginationBox>
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              flexDirection: "column",
+              marginTop: "30px",
+            }}
+          >
+            <CommunitySerchBar>
+              <CommunitySerchinput
+                ref={SerchRef}
+                type="text"
+                placeholder="게시글검색"
+                value={searchText}
+                onChange={handleSearchTextChange}
+              />
+              <AiOutlineSearch
+                style={{ cursor: "pointer" }}
+                className="searchIcon"
+                onClick={btn}
+              />
+            </CommunitySerchBar>
+            {/* 페이지네이션 */}
+            <PaginationBox>
+              <Pagination
+                activePage={page}
+                itemsCountPerPage={items}
+                totalItemsCount={PostData?.length}
+                pageRangeDisplayed={10}
+                onChange={handlePageChange}
+              />
+            </PaginationBox>
+          </div>
         </CommentsWrap>
       </CommunityLayout>
     </>
@@ -230,13 +244,13 @@ const CommunitySerchBar = styled.div`
   align-items: center;
   padding: 4px 12px;
   gap: 8px;
-  position: relative;
-  width: 200px;
+  position: absolute;
+  width: 280px;
   height: 32px;
+  left: 220px;
   background-color: #404b5e;
   box-shadow: inset 0px 4px 8px rgba(0, 0, 0, 0.25);
   border-radius: 10px;
-  margin-top: 20px;
 `;
 const Communitycategory = styled.div<{ categorySt: string }>`
   display: flex;
@@ -309,9 +323,9 @@ const CommunityeHeader = styled.div`
   border-bottom: 1px solid #a7a9ac;
   display: flex;
   flex-direction: row;
+  width: 836px;
 `;
-const HeaderTh = styled.th<HeaderThProps>`
-  width: ${(props) => props.Width};
+const HeaderTh = styled.th`
   display: flex;
   align-items: center;
   justify-content: center;

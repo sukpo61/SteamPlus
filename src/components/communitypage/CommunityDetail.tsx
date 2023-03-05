@@ -226,18 +226,18 @@ const Postslayout = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  width: 100%;
+  width: 836px;
   color: white;
 `;
 const PostpageWrap = styled.div`
   color: white;
   display: flex;
   flex-direction: column;
-  width: 100%;
+  width: 836px;
 `;
 
 const TableHeader = styled.div`
-  width: 1020px;
+  width: 836px;
   display: flex;
   flex-direction: column;
   border-top: 2px solid #00b8c8;
@@ -249,7 +249,7 @@ const PostContents = styled.div`
   font-size: 14px;
   padding-top: 20px;
   word-break: break-all;
-  width: 980px;
+  width: 836px;
   padding-bottom: 40px;
   border-bottom: 1px solid #777d87;
 `;

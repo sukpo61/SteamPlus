@@ -90,13 +90,16 @@ export const CommunityAddPost = () => {
   const gotoCommunity = () => {
     navigate("/Community");
   };
+  //수정온체인지
   const handleTitleChange = (event: any) => {
     setTitle(event.target.value);
     const newTitle = event.target.value;
-    if (newTitle.length <= 35) {
+    if (newTitle.length <= 30) {
       setTitle(newTitle);
     } else {
-      alert("제목은 35자 이하로 입력해주세요.");
+      alert("제목은 30자 이하로 입력해주세요.");
+      TitleRef.current!.focus();
+      return;
     }
   };
   //카테고리 선택
@@ -139,7 +142,7 @@ export const CommunityAddPost = () => {
             <TitleInput
               ref={TitleRef}
               placeholder="제목을 입력하세요"
-              maxLength={35}
+              maxLength={30}
               value={title}
               onChange={handleTitleChange}
             />
@@ -176,7 +179,7 @@ const Select = styled.select`
 `;
 const Option = styled.option``;
 const TableHeader = styled.div`
-  width: 1020px;
+  width: 836px;
   display: flex;
   flex-direction: column;
   border-top: 2px solid #00b8c8;
