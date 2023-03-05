@@ -46,7 +46,6 @@ import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import axios from "axios";
 
-
 function VoiceTalk() {
   const layoutMenu = useRecoilValue(LayoutButton);
 
@@ -193,7 +192,7 @@ function VoiceTalk() {
         channel.close();
       });
 
-      localStream.getTracks().forEach((track) => track.stop())
+      localStream.getTracks().forEach((track) => track.stop());
 
       setRtcPeerConnectionMap(() => new Map());
       setDataChannelMap(() => new Map());
@@ -269,507 +268,506 @@ function VoiceTalk() {
     resetSbPassword();
   };
 
+  //친구 추가
+  const queryClient = useQueryClient();
 
-    //친구 추가
-    const queryClient = useQueryClient();
+  const postMutation = useMutation(
+    (friendAdd) => axios.post("http://localhost:3001/friend", friendAdd),
+    {
+      onSuccess: () => {
+        // 쿼리 무효화
+        queryClient.invalidateQueries(["friend"]);
+        queryClient.invalidateQueries(["friendsearch"]);
+      },
+    }
+  );
 
-    const postMutation = useMutation(
-        (friendAdd) => axios.post("http://localhost:3001/friend", friendAdd),
-        {
-          onSuccess: () => {
-            // 쿼리 무효화
-            queryClient.invalidateQueries(["friend"]);
-            queryClient.invalidateQueries(["friendsearch"]);
-          },
-        }
-    );
-
-    const FriendAdd = async (friendId, friendNickName) => {
-      let friendAdd = {
-        id: uuidv4(),
-        myId: myuserid,
-        friendId: friendId,
-        myNickName: myNickName,
-        friendNickName: friendNickName,
-      };
-      postMutation.mutate(friendAdd);
+  const FriendAdd = async (friendId, friendNickName) => {
+    let friendAdd = {
+      id: uuidv4(),
+      myId: myuserid,
+      friendId: friendId,
+      myNickName: myNickName,
+      friendNickName: friendNickName,
     };
+    postMutation.mutate(friendAdd);
+  };
 
-    const alreadyFriend = friendAllRecoil?.filter((i) => {
-      for (let t = 0; t < getFriendAuth.length; t++) {
-        if (
-            getFriendAuth[t].friendId === i.id &&
-            getFriendAuth[t].myId === myuserid
-        ) {
-          return true;
-        }
+  const alreadyFriend = friendAllRecoil?.filter((i) => {
+    for (let t = 0; t < getFriendAuth.length; t++) {
+      if (
+        getFriendAuth[t].friendId === i.id &&
+        getFriendAuth[t].myId === myuserid
+      ) {
+        return true;
       }
-      return false;
-    });
+    }
+    return false;
+  });
 
-    const RoomList = roomsInfo.map((room) => {
-      return (
-          <RoomWrap key={room.name}>
-            <RoomTitleWrap
-                onClick={() => {
-                  if (currentRoom === room.name) {
-                    return;
-                  }
-                  if (room.userinfo.length >= room.usercount) {
-                    window.alert("방 인원이 다찼어요.");
-                    return;
-                  }
-                  if (!room.password) {
-                    setCurrentRoom(room.name);
-                    handleJoin({
-                      roomtitle: room.name,
-                      channelId,
-                      usercount: room.usercount,
-                      password: room.password,
-                    });
+  const RoomList = roomsInfo.map((room) => {
+    return (
+      <RoomWrap key={room.name}>
+        <RoomTitleWrap
+          onClick={() => {
+            if (currentRoom === room.name) {
+              return;
+            }
+            if (room.userinfo.length >= room.usercount) {
+              window.alert("방 인원이 다찼어요.");
+              return;
+            }
+            if (!room.password) {
+              setCurrentRoom(room.name);
+              handleJoin({
+                roomtitle: room.name,
+                channelId,
+                usercount: room.usercount,
+                password: room.password,
+              });
+            } else {
+              setPwSubmit(true);
+              setCreateDisplay("pwsubmit");
+              setPwRoomInfo({
+                roomtitle: room.name,
+                channelId,
+                usercount: room.usercount,
+                password: room.password,
+              });
+            }
+          }}
+        >
+          <RoomTitle>
+            <span># {room.name}</span>
+            {room.password && (
+              <div>
+                <MdLockOutline></MdLockOutline>
+              </div>
+            )}
+          </RoomTitle>
+          <UserCountWrap>
+            <CurrentUser>{room.userinfo.length}</CurrentUser>
+            <TotalUser>
+              <span>{room.usercount}</span>
+            </TotalUser>
+          </UserCountWrap>
+        </RoomTitleWrap>
+        <RoomUserList>
+          {room.userinfo.map((user) => {
+            const info = friendAllRecoil.find((e) => e.id === user.userid);
+            return (
+              <RoomUserWrap key={info?.id}>
+                <img src={info?.profileimg}></img>
+                <span>{info?.nickname}</span>
+                {/* 친구는 예외 처리 */}
+                {/* {console.log(alreadyFriend)} */}
+                {info?.id === myuserid ||
+                alreadyFriend?.find((i) => {
+                  if (i.id === info?.id) {
+                    return true;
                   } else {
-                    setPwSubmit(true);
-                    setCreateDisplay("pwsubmit");
-                    setPwRoomInfo({
-                      roomtitle: room.name,
-                      channelId,
-                      usercount: room.usercount,
-                      password: room.password,
-                    });
+                    return false;
                   }
-                }}
-            >
-              <RoomTitle>
-                <span># {room.name}</span>
-                {room.password && (
-                    <div>
-                      <MdLockOutline></MdLockOutline>
-                    </div>
+                }) ? (
+                  ""
+                ) : (
+                  <FriendAddButton
+                    onClick={() => {
+                      FriendAdd(user?.userid, info?.nickname);
+                    }}
+                  >
+                    +
+                  </FriendAddButton>
                 )}
-              </RoomTitle>
-              <UserCountWrap>
-                <CurrentUser>{room.userinfo.length}</CurrentUser>
-                <TotalUser>
-                  <span>{room.usercount}</span>
-                </TotalUser>
-              </UserCountWrap>
-            </RoomTitleWrap>
-            <RoomUserList>
-              {room.userinfo.map((user) => {
-                const info = friendAllRecoil.find((e) => e.id === user.userid);
-                return (
-                    <RoomUserWrap key={info?.id}>
-                      <img src={info?.profileimg}></img>
-                      <span>{info?.nickname}</span>
-                      {/* 친구는 예외 처리 */}
-                      {console.log(alreadyFriend)}
-                      {info?.id === myuserid ||
-                      alreadyFriend.find((i) => {
-                        if (i.id === info?.id) {
-                          return true;
-                        } else {
-                          return false;
-                        }
-                      }) ? (
-                          ""
-                      ) : (
-                          <FriendAddButton
-                              onClick={() => {
-                                FriendAdd(user?.userid, info?.nickname);
-                              }}
-                          >
-                            +
-                          </FriendAddButton>
-                      )}
-                    </RoomUserWrap>
-                );
-              })}
-            </RoomUserList>
-          </RoomWrap>
-      );
+              </RoomUserWrap>
+            );
+          })}
+        </RoomUserList>
+      </RoomWrap>
+    );
+  });
+
+  const createRTCPeerConnection = async (userid) => {
+    const NewUserPeerConnection = new RTCPeerConnection({
+      iceServers: [
+        {
+          urls: [
+            "stun:stun.l.google.com:19302",
+            "stun:stun1.l.google.com:19302",
+            "stun:stun2.l.google.com:19302",
+            "stun:stun3.l.google.com:19302",
+            "stun:stun4.l.google.com:19302",
+          ],
+        },
+      ],
     });
 
-    const createRTCPeerConnection = async (userid) => {
-      const NewUserPeerConnection = new RTCPeerConnection({
-        iceServers: [
-          {
-            urls: [
-              "stun:stun.l.google.com:19302",
-              "stun:stun1.l.google.com:19302",
-              "stun:stun2.l.google.com:19302",
-              "stun:stun3.l.google.com:19302",
-              "stun:stun4.l.google.com:19302",
-            ],
-          },
-        ],
+    localStream
+      .getTracks()
+      .forEach((track) => NewUserPeerConnection.addTrack(track, localStream));
+
+    NewUserPeerConnection.onaddstream = (event) => {
+      handleAddStream(userid, event.stream);
+    };
+
+    NewUserPeerConnection.onicecandidate = (event) => {
+      socket.emit("ice", event.candidate, myuserid, {
+        roomtitle,
+        channelId,
       });
-
-      localStream
-          .getTracks()
-          .forEach((track) => NewUserPeerConnection.addTrack(track, localStream));
-
-      NewUserPeerConnection.onaddstream = (event) => {
-        handleAddStream(userid, event.stream);
-      };
-
-      NewUserPeerConnection.onicecandidate = (event) => {
-        socket.emit("ice", event.candidate, myuserid, {
-          roomtitle,
-          channelId,
-        });
-      };
-
-      setRtcPeerConnectionMap((e) => e.set(userid, NewUserPeerConnection));
-
-      return NewUserPeerConnection;
     };
 
-    const joinAlarm = (answerid) => {
-      const info = friendAllRecoil.find((e) => e.id === answerid);
+    setRtcPeerConnectionMap((e) => e.set(userid, NewUserPeerConnection));
 
-      return {
-        id: answerid,
-        text: `${info.nickname} 님이 참여하셨습니다.`,
-        type: "alarm",
-      };
+    return NewUserPeerConnection;
+  };
+
+  const joinAlarm = (answerid) => {
+    const info = friendAllRecoil.find((e) => e.id === answerid);
+
+    return {
+      id: answerid,
+      text: `${info.nickname} 님이 참여하셨습니다.`,
+      type: "alarm",
     };
+  };
 
-    const leaveAlarm = (targetid) => {
-      const info = friendAllRecoil.find((e) => e.id === targetid);
+  const leaveAlarm = (targetid) => {
+    const info = friendAllRecoil.find((e) => e.id === targetid);
 
-      return {
-        id: targetid,
-        text: `${info.nickname} 님이 떠나셨습니다.`,
-        type: "alarm",
-      };
+    return {
+      id: targetid,
+      text: `${info.nickname} 님이 떠나셨습니다.`,
+      type: "alarm",
     };
-    const enterAlarm = (roomname) => {
-      return {
-        id: myuserid,
-        text: `${roomname} 방에 입장하셨습니다.`,
-        type: "alarm",
-      };
+  };
+  const enterAlarm = (roomname) => {
+    return {
+      id: myuserid,
+      text: `${roomname} 방에 입장하셨습니다.`,
+      type: "alarm",
     };
-    const createData = (MyPeerConnection, answerid) => {
-      const newDataChannel = MyPeerConnection.createDataChannel("chat");
+  };
+  const createData = (MyPeerConnection, answerid) => {
+    const newDataChannel = MyPeerConnection.createDataChannel("chat");
 
-      setDataChannelMap((e) => e.set(answerid, newDataChannel));
+    setDataChannelMap((e) => e.set(answerid, newDataChannel));
 
-      return newDataChannel;
-    };
+    return newDataChannel;
+  };
 
-    const createAnswerData = (channel, offerid) => {
-      setDataChannelMap((e) => e.set(offerid, channel));
+  const createAnswerData = (channel, offerid) => {
+    setDataChannelMap((e) => e.set(offerid, channel));
 
-      return channel;
-    };
+    return channel;
+  };
 
-    const VolumeonChange = (e) => {
-      setVolumePercent(e.target.value);
-    };
+  const VolumeonChange = (e) => {
+    setVolumePercent(e.target.value);
+  };
 
-    useEffect(() => {
-      if (localStream) {
-        socket.off("welcome");
-        socket.off("offer");
-        socket.off("answer");
-        socket.off("ice");
-        socket.off("leave");
+  useEffect(() => {
+    if (localStream) {
+      socket.off("welcome");
+      socket.off("offer");
+      socket.off("answer");
+      socket.off("ice");
+      socket.off("leave");
 
-        socket.on("welcome", async (answerid) => {
-          if (answerid === myuserid) {
-            return;
-          }
-          console.log("welcome");
-          setChatText((e) => [...e, joinAlarm(answerid)]);
+      socket.on("welcome", async (answerid) => {
+        if (answerid === myuserid) {
+          return;
+        }
+        console.log("welcome");
+        setChatText((e) => [...e, joinAlarm(answerid)]);
 
-          const MyPeerConnection = await createRTCPeerConnection(answerid);
+        const MyPeerConnection = await createRTCPeerConnection(answerid);
 
-          const myData = createData(MyPeerConnection, answerid);
+        const myData = createData(MyPeerConnection, answerid);
 
+        myData.onmessage = (message) => {
+          const data = JSON.parse(message.data);
+          setChatText((e) => [...e, data]);
+        };
+
+        const offer = await MyPeerConnection.createOffer();
+
+        MyPeerConnection.setLocalDescription(offer);
+
+        socket.emit("offer", offer, myuserid, answerid);
+      });
+      //ddd
+      socket.on("offer", async (offer, offerid, answerid) => {
+        console.log("offered");
+        const MyPeerConnection = await createRTCPeerConnection(offerid);
+
+        MyPeerConnection.ondatachannel = (e) => {
+          const myData = createAnswerData(e.channel, offerid);
           myData.onmessage = (message) => {
             const data = JSON.parse(message.data);
+
             setChatText((e) => [...e, data]);
           };
+        };
+        MyPeerConnection.setRemoteDescription(offer);
 
-          const offer = await MyPeerConnection.createOffer();
+        const answer = await MyPeerConnection.createAnswer();
 
-          MyPeerConnection.setLocalDescription(offer);
+        MyPeerConnection.setLocalDescription(answer);
 
-          socket.emit("offer", offer, myuserid, answerid);
-        });
-        //ddd
-        socket.on("offer", async (offer, offerid, answerid) => {
-          console.log("offered");
-          const MyPeerConnection = await createRTCPeerConnection(offerid);
-
-          MyPeerConnection.ondatachannel = (e) => {
-            const myData = createAnswerData(e.channel, offerid);
-            myData.onmessage = (message) => {
-              const data = JSON.parse(message.data);
-
-              setChatText((e) => [...e, data]);
-            };
-          };
-          MyPeerConnection.setRemoteDescription(offer);
-
-          const answer = await MyPeerConnection.createAnswer();
-
-          MyPeerConnection.setLocalDescription(answer);
-
-          socket.emit("answer", answer, offerid, answerid);
-        });
-
-        socket.on("answer", (answer, answerid) => {
-          RtcPeerConnectionMap.get(answerid).setRemoteDescription(answer);
-        });
-
-        socket.on("ice", (ice, targetid) => {
-          if (RtcPeerConnectionMap.get(targetid)) {
-            RtcPeerConnectionMap.get(targetid).addIceCandidate(ice);
-          }
-        });
-        //sdfsdfd
-        socket.on("leave", (targetid) => {
-          RtcPeerConnectionMap.get(targetid).close();
-          setRtcPeerConnectionMap((e) => {
-            e.delete(targetid);
-            return e;
-          });
-          DataChannelMap.get(targetid).close();
-          setDataChannelMap((e) => {
-            e.delete(targetid);
-            return e;
-          });
-          setAllStreams((e) => e.filter((stream) => stream.userid !== targetid));
-          setChatText((e) => [...e, leaveAlarm(targetid)]);
-        });
-      }
-
-      return () => {
-        socket.off("welcome");
-        socket.off("offer");
-        socket.off("answer");
-        socket.off("ice");
-        socket.off("leave");
-      };
-    }, [localStream, RtcPeerConnectionMap, DataChannelMap]);
-
-    useEffect(() => {
-      socket.on("requestrooms", (roomsinfo) => {
-        setRoomsInfo(roomsinfo);
+        socket.emit("answer", answer, offerid, answerid);
       });
 
-      socket.on("updaterooms", (roomsinfo) => {
-        setRoomsInfo(roomsinfo);
+      socket.on("answer", (answer, answerid) => {
+        RtcPeerConnectionMap.get(answerid).setRemoteDescription(answer);
       });
-    }, []);
 
-    useEffect(() => {
-      if (currentRoom) {
-        handleLeave(currentRoom);
-      }
-    }, [videoRoomExit]);
+      socket.on("ice", (ice, targetid) => {
+        if (RtcPeerConnectionMap.get(targetid)) {
+          RtcPeerConnectionMap.get(targetid).addIceCandidate(ice);
+        }
+      });
+      //sdfsdfd
+      socket.on("leave", (targetid) => {
+        RtcPeerConnectionMap.get(targetid).close();
+        setRtcPeerConnectionMap((e) => {
+          e.delete(targetid);
+          return e;
+        });
+        DataChannelMap.get(targetid).close();
+        setDataChannelMap((e) => {
+          e.delete(targetid);
+          return e;
+        });
+        setAllStreams((e) => e.filter((stream) => stream.userid !== targetid));
+        setChatText((e) => [...e, leaveAlarm(targetid)]);
+      });
+    }
 
-    useEffect(() => {
-      if (friendroominfo) {
-        handleJoin(friendroominfo);
-      }
-    }, [friendroominfo]);
+    return () => {
+      socket.off("welcome");
+      socket.off("offer");
+      socket.off("answer");
+      socket.off("ice");
+      socket.off("leave");
+    };
+  }, [localStream, RtcPeerConnectionMap, DataChannelMap]);
 
-    useEffect(() => {
-      if (!searchvalue) {
-        setRoomsResult(roomsInfo);
-      } else {
-        setRoomsResult(
-            roomsInfo.filter((room) =>
-                room.name?.toLowerCase().includes(searchvalue.toLowerCase())
-            )
-        );
-      }
-    }, [searchvalue]);
+  useEffect(() => {
+    socket.on("requestrooms", (roomsinfo) => {
+      setRoomsInfo(roomsinfo);
+    });
 
-    useEffect(() => {
-      if (roomsInfo) {
-        setRoomsResult(roomsInfo);
-      }
-    }, [roomsInfo]);
+    socket.on("updaterooms", (roomsinfo) => {
+      setRoomsInfo(roomsinfo);
+    });
+  }, []);
 
-    return (
-        <VoiceTalkDiv layoutMenu={layoutMenu}>
-          <VoiceTalkWrap>
-            <VoiceTalkTop>
-              <VoiceTalkTopbar>
-                <ChannelTitle>
-                  <span>{channelName}</span>
-                  <img src="/img/steam_link.png"></img>
-                </ChannelTitle>
-                <CreateRoom
-                    onClick={() => {
-                      setPwSubmit(false);
-                      setCreateDisplay("roomcreate");
-                    }}
-                >
-                  + 채팅
-                </CreateRoom>
-              </VoiceTalkTopbar>
-              <RoomTitleInputWrap>
-                <RoomTitleInput
-                    className="search"
-                    type="text"
-                    placeholder="채팅방 검색"
-                    value={searchvalue}
-                    onChange={setSearchValue}
-                ></RoomTitleInput>
-                {/* <SearchButtonWrap>
+  useEffect(() => {
+    if (currentRoom) {
+      handleLeave(currentRoom);
+    }
+  }, [videoRoomExit]);
+
+  useEffect(() => {
+    if (friendroominfo) {
+      handleJoin(friendroominfo);
+    }
+  }, [friendroominfo]);
+
+  useEffect(() => {
+    if (!searchvalue) {
+      setRoomsResult(roomsInfo);
+    } else {
+      setRoomsResult(
+        roomsInfo.filter((room) =>
+          room.name?.toLowerCase().includes(searchvalue.toLowerCase())
+        )
+      );
+    }
+  }, [searchvalue]);
+
+  useEffect(() => {
+    if (roomsInfo) {
+      setRoomsResult(roomsInfo);
+    }
+  }, [roomsInfo]);
+
+  return (
+    <VoiceTalkDiv layoutMenu={layoutMenu}>
+      <VoiceTalkWrap>
+        <VoiceTalkTop>
+          <VoiceTalkTopbar>
+            <ChannelTitle>
+              <span>{channelName}</span>
+              <img src="/img/steam_link.png"></img>
+            </ChannelTitle>
+            <CreateRoom
+              onClick={() => {
+                setPwSubmit(false);
+                setCreateDisplay("roomcreate");
+              }}
+            >
+              + 채팅
+            </CreateRoom>
+          </VoiceTalkTopbar>
+          <RoomTitleInputWrap>
+            <RoomTitleInput
+              className="search"
+              type="text"
+              placeholder="채팅방 검색"
+              value={searchvalue}
+              onChange={setSearchValue}
+            ></RoomTitleInput>
+            {/* <SearchButtonWrap>
               <BiSearchAlt2></BiSearchAlt2>
             </SearchButtonWrap> */}
-              </RoomTitleInputWrap>
-            </VoiceTalkTop>
-            <RoomtoggleForm displaystate={createDisplay}>
-              {pwsubmit ? (
-                  <SubbmitPasswordWrap>
-                    <SubmitPwInput
-                        className="title"
-                        type="password"
-                        placeholder="4자리 숫자 비밀번호"
-                        value={sbpassword}
-                        onChange={setSbPassword}
-                    ></SubmitPwInput>
-                    <TitleCancle onClick={SubmitCancle}>취소</TitleCancle>
-                    <TitleConfirm onClick={SubmitPassword}>제출</TitleConfirm>
-                  </SubbmitPasswordWrap>
-              ) : (
-                  <CreateRoomWrap>
-                    <CreateTitleInput
-                        className="title"
-                        type="text"
-                        placeholder="제목을 입력하세요"
-                        value={roomtitle}
-                        onChange={setRoomTitle}
-                    ></CreateTitleInput>
-                    <SetPasswordWrap>
-                      <PasswordCheck>
-                        <Checkbox
-                            checked={checked}
-                            onChange={PasswordChange}
-                        ></Checkbox>
-                        <span>비밀번호설정</span>
-                      </PasswordCheck>
-                      <SetPasswordInput
-                          type="password"
-                          id="password"
-                          value={password}
-                          onChange={handlePasswordChange}
-                          minLength={4}
-                          maxLength={4}
-                          required
-                          disabled={!checked}
-                      ></SetPasswordInput>
-                    </SetPasswordWrap>
-                    <SetCountWrap>
-                      <SetCountSelect value={usercount} onChange={userCountChange}>
-                        <option value={2}>2명</option>
-                        <option value={3}>3명</option>
-                        <option value={4}>4명</option>
-                      </SetCountSelect>
-                      <UserCount>방인원수</UserCount>
-                    </SetCountWrap>
-                    <CreateRoomBottom>
-                      <div>
-                        {checked && (
-                            <PasswordAlert isValid={isValid}>
-                              4자리 숫자를 입력하세요.
-                            </PasswordAlert>
-                        )}
-                      </div>
-                      <ConfirmWrap>
-                        <TitleCancle onClick={RoomCancel}>취소</TitleCancle>
-                        <TitleConfirm onClick={onRoomSubmit}>확인</TitleConfirm>
-                      </ConfirmWrap>
-                    </CreateRoomBottom>
-                  </CreateRoomWrap>
-              )}
+          </RoomTitleInputWrap>
+        </VoiceTalkTop>
+        <RoomtoggleForm displaystate={createDisplay}>
+          {pwsubmit ? (
+            <SubbmitPasswordWrap>
+              <SubmitPwInput
+                className="title"
+                type="password"
+                placeholder="4자리 숫자 비밀번호"
+                value={sbpassword}
+                onChange={setSbPassword}
+              ></SubmitPwInput>
+              <TitleCancle onClick={SubmitCancle}>취소</TitleCancle>
+              <TitleConfirm onClick={SubmitPassword}>제출</TitleConfirm>
+            </SubbmitPasswordWrap>
+          ) : (
+            <CreateRoomWrap>
+              <CreateTitleInput
+                className="title"
+                type="text"
+                placeholder="제목을 입력하세요"
+                value={roomtitle}
+                onChange={setRoomTitle}
+              ></CreateTitleInput>
+              <SetPasswordWrap>
+                <PasswordCheck>
+                  <Checkbox
+                    checked={checked}
+                    onChange={PasswordChange}
+                  ></Checkbox>
+                  <span>비밀번호설정</span>
+                </PasswordCheck>
+                <SetPasswordInput
+                  type="password"
+                  id="password"
+                  value={password}
+                  onChange={handlePasswordChange}
+                  minLength={4}
+                  maxLength={4}
+                  required
+                  disabled={!checked}
+                ></SetPasswordInput>
+              </SetPasswordWrap>
+              <SetCountWrap>
+                <SetCountSelect value={usercount} onChange={userCountChange}>
+                  <option value={2}>2명</option>
+                  <option value={3}>3명</option>
+                  <option value={4}>4명</option>
+                </SetCountSelect>
+                <UserCount>방인원수</UserCount>
+              </SetCountWrap>
+              <CreateRoomBottom>
+                <div>
+                  {checked && (
+                    <PasswordAlert isValid={isValid}>
+                      4자리 숫자를 입력하세요.
+                    </PasswordAlert>
+                  )}
+                </div>
+                <ConfirmWrap>
+                  <TitleCancle onClick={RoomCancel}>취소</TitleCancle>
+                  <TitleConfirm onClick={onRoomSubmit}>확인</TitleConfirm>
+                </ConfirmWrap>
+              </CreateRoomBottom>
+            </CreateRoomWrap>
+          )}
 
-              <RoomListWrap>{RoomList}</RoomListWrap>
-            </RoomtoggleForm>
-          </VoiceTalkWrap>
-          <Controlbox settingon={settingon}>
-            <ControlButtons>
-              <div>
-                <BsFillMicFill></BsFillMicFill>
-                <MdVolumeUp></MdVolumeUp>
-              </div>
-              <div>
-                {location === "Teamchat" && currentRoom && (
-                    <MdVideocam
-                        onClick={() => {
-                          setvideoDisplay((e) => !e);
-                        }}
-                    ></MdVideocam>
-                )}
-                <MdSettings
-                    onClick={() => {
-                      setSettingOn((e) => !e);
-                    }}
-                ></MdSettings>
-              </div>
-            </ControlButtons>
-            <ControlSlider>
-              <SliderWrap>
-                <div>음량</div>
-                <Box width={300}>
-                  <Slider
-                      size="small"
-                      defaultValue={50}
-                      aria-label="Small"
-                      valueLabelDisplay="auto"
-                      onChange={VolumeonChange}
-                  />
-                </Box>
-              </SliderWrap>
-              <SliderWrap>
-                <div>마이크</div>
-                <Box width={300}>
-                  <Slider
-                      size="small"
-                      defaultValue={50}
-                      aria-label="Small"
-                      valueLabelDisplay="auto"
-                  />
-                </Box>
-              </SliderWrap>
-            </ControlSlider>
-            <ControlRooms>
-              <BacktoChat
-                  location={location}
-                  currentRoom={currentRoom}
-                  onClick={() => {
-                    navigate(`/Teamchat/:${channelId}`, {
-                      state: {
-                        gameid: channelId.toString(),
-                      },
-                    });
-                  }}
-              >
-                <Chaticon>
-                  <PulseLoader color="#ffffff" size={4}></PulseLoader>
-                </Chaticon>
-              </BacktoChat>
-              <ExitRoom
-                  currentRoom={currentRoom}
-                  onClick={() => {
-                    handleLeave(currentRoom);
-                  }}
-              >
-                <span>#{currentRoom}</span>
-                <MdExitToApp size={24} color="#F05656"></MdExitToApp>
-              </ExitRoom>
-            </ControlRooms>
-          </Controlbox>
-        </VoiceTalkDiv>
-    );
-  }
+          <RoomListWrap>{RoomList}</RoomListWrap>
+        </RoomtoggleForm>
+      </VoiceTalkWrap>
+      <Controlbox settingon={settingon}>
+        <ControlButtons>
+          <div>
+            <BsFillMicFill></BsFillMicFill>
+            <MdVolumeUp></MdVolumeUp>
+          </div>
+          <div>
+            {location === "Teamchat" && currentRoom && (
+              <MdVideocam
+                onClick={() => {
+                  setvideoDisplay((e) => !e);
+                }}
+              ></MdVideocam>
+            )}
+            <MdSettings
+              onClick={() => {
+                setSettingOn((e) => !e);
+              }}
+            ></MdSettings>
+          </div>
+        </ControlButtons>
+        <ControlSlider>
+          <SliderWrap>
+            <div>음량</div>
+            <Box width={300}>
+              <Slider
+                size="small"
+                defaultValue={50}
+                aria-label="Small"
+                valueLabelDisplay="auto"
+                onChange={VolumeonChange}
+              />
+            </Box>
+          </SliderWrap>
+          <SliderWrap>
+            <div>마이크</div>
+            <Box width={300}>
+              <Slider
+                size="small"
+                defaultValue={50}
+                aria-label="Small"
+                valueLabelDisplay="auto"
+              />
+            </Box>
+          </SliderWrap>
+        </ControlSlider>
+        <ControlRooms>
+          <BacktoChat
+            location={location}
+            currentRoom={currentRoom}
+            onClick={() => {
+              navigate(`/Teamchat/:${channelId}`, {
+                state: {
+                  gameid: channelId.toString(),
+                },
+              });
+            }}
+          >
+            <Chaticon>
+              <PulseLoader color="#ffffff" size={4}></PulseLoader>
+            </Chaticon>
+          </BacktoChat>
+          <ExitRoom
+            currentRoom={currentRoom}
+            onClick={() => {
+              handleLeave(currentRoom);
+            }}
+          >
+            <span>#{currentRoom}</span>
+            <MdExitToApp size={24} color="#F05656"></MdExitToApp>
+          </ExitRoom>
+        </ControlRooms>
+      </Controlbox>
+    </VoiceTalkDiv>
+  );
+}
 
 export default VoiceTalk;
 

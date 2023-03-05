@@ -38,7 +38,11 @@ function GameChannelBlock({ game, count }: any) {
             <GameChannelTitle>{`${game?.name}`}</GameChannelTitle>
           </TitleLinear>
           <GameChannelInfo>
-            <GameChannelCategory>{Genres(game.genres)}</GameChannelCategory>
+            <GameChannelCategory>
+              {game?.genres.map((e: any) => {
+                return `${e.description} `;
+              })}
+            </GameChannelCategory>{" "}
             <NumberOfPlayer>
               <div
                 style={{
