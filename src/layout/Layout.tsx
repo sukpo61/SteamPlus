@@ -276,12 +276,7 @@ function Layout() {
             <p>음성채팅</p>
           </VoiceTalkbutton>
         )}
-        <div
-          onClick={AboutPagesOnClick}
-          style={{ cursor: "pointer", color: "#fff" }}
-        >
-          도움말
-        </div>
+        <AboutPagesDiv onClick={AboutPagesOnClick}>?</AboutPagesDiv>
       </SideBarDiv>
 
       {/* 메뉴 컴포넌트 */}
@@ -581,10 +576,11 @@ const AboutPagesDiv = styled.div`
   border-radius: 50%;
   text-align: center;
   line-height: 27px;
-  border: 1px solid #777d87;
+  border: 2px solid #777d87;
   color: #777d87;
   margin-top: auto;
   margin-bottom: 30px;
+  font-weight: 500;
   cursor: pointer;
 `;
 // json에 친구서버에 id, nickname, 프로필이미지
