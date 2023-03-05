@@ -12,7 +12,7 @@
       "profileimg": "https://avatars.akamai.steamstatic.com/6639269e3d4820b31c5ec95bedc5ce0063635f54_full.jpg",
       "nickname": "chacha11 #3056",
       "login": true,
-      "lastLogin": "2023-03-04T12:38:35.550Z"
+      "lastLogin": "2023-03-05T08:05:09.731Z"
     },
     {
       "id": "76561199478670991",
@@ -176,85 +176,36 @@
       "date": "2023/3/4 16:53",
       "count": 10,
       "category": "모집"
-    }
-  ],
-  "comment": [
+    },
     {
-      "id": "7e0a2461-1a46-4820-9552-278af3ccaae2",
-      "postId": "97e4ac09-17fe-4d9b-8a1d-280500da9a45",
-      "myId": "76561199476963056",
+      "id": "01b9ae86-be21-48ed-a3b6-57b21a38557f",
+      "steamid": "76561199476963056",
       "name": "chacha11 #3056",
-      "date": "2023/3/4 14:57",
-      "profileImg": "https://avatars.akamai.steamstatic.com/6639269e3d4820b31c5ec95bedc5ce0063635f54_full.jpg",
-      "contents": "포스트"
+      "title": "test",
+      "content": "test",
+      "date": "2023/3/4 22:4",
+      "count": 3,
+      "category": "자유"
     },
     {
-      "id": "0c36f619-c948-4a89-8c42-cdbf95d660a7",
-      "postId": "97e4ac09-17fe-4d9b-8a1d-280500da9a45",
-      "myId": "76561199476963056",
+      "id": "051f3c16-cb9e-4c40-9012-1b0e0e0e70ac",
+      "steamid": "76561199476963056",
       "name": "chacha11 #3056",
-      "date": "2023/3/4 15:9",
-      "profileImg": "https://avatars.akamai.steamstatic.com/6639269e3d4820b31c5ec95bedc5ce0063635f54_full.jpg",
-      "contents": "포스트2"
+      "title": "dfsdaf",
+      "content": "sdasdfasd",
+      "date": "2023/3/4 22:49",
+      "count": 7,
+      "category": "자유"
     },
     {
-      "id": "0ac4bff8-d24e-432d-834f-d401324be554",
-      "postId": "97e4ac09-17fe-4d9b-8a1d-280500da9a45",
-      "myId": "76561199476963056",
+      "id": "2edf3454-7df4-446f-95f7-a1b6aa346417",
+      "steamid": "76561199476963056",
       "name": "chacha11 #3056",
-      "date": "2023/3/4 15:14",
-      "profileImg": "https://avatars.akamai.steamstatic.com/6639269e3d4820b31c5ec95bedc5ce0063635f54_full.jpg",
-      "contents": "포스트3"
-    },
-    {
-      "id": "81e2fdcb-4386-4a35-b76c-7ec4c213ac77",
-      "postId": "97e4ac09-17fe-4d9b-8a1d-280500da9a45",
-      "myId": "76561199476963056",
-      "name": "chacha11 #3056",
-      "date": "2023/3/4 15:33",
-      "profileImg": "https://avatars.akamai.steamstatic.com/6639269e3d4820b31c5ec95bedc5ce0063635f54_full.jpg",
-      "contents": "2"
-    },
-    {
-
-      "id": "1390e4cb-a588-47a0-9088-99de6a9da387",
-      "steamid": "76561199478670991",
-      "name": "123322 #0991",
-      "title": "11",
-      "content": "11",
-      "date": "2023.2.28"
-    },
-    {
-      "id": "40a00c9a-c52b-44cd-a6a0-37c5d079f0a1",
-      "steamid": "76561199478670991",
-      "name": "123322 #0991",
-      "title": "zz",
-      "content": "zz",
-      "date": "2023.2.28"
-    },
-    {
-      "id": "ff6b17dd-b109-493e-8d2d-5d49401aeb6d",
-      "steamid": "76561199478670991",
-      "name": "123322 #0991",
-      "title": "zz",
-      "content": "zz",
-      "date": "2023.2.28"
-    },
-    {
-      "id": "3f5a1bb7-24c3-4a35-ae1f-386e5a1fa691",
-      "steamid": "76561198064204836",
-      "name": "PRDG #4836",
-      "title": "ㅇㅇㅇㅇ",
-      "content": "ㄱㅈㄷㅁㅈㄹㅁ",
-      "date": "2023.2.28"
-    },
-    {
-      "id": "d08f6713-d13d-4172-8d8b-431b2fb8655c",
-      "steamid": "76561198374391933",
-      "name": "sukpo61 #1933",
-      "title": "ㄴㅇㄹㄴㅇ",
-      "content": "ㄹㄴㅇㄹㄴㅇㄹㄴ",
-      "date": "2023.3.1"
+      "title": "",
+      "content": "zzzz",
+      "date": "2023/3/4 22:50",
+      "count": 1,
+      "category": "자유"
     }
   ],
   "comment": [
@@ -329,7 +280,42 @@
       "date": "2023.3.1 수정",
       "profileImg": "https://avatars.akamai.steamstatic.com/e1dde7fe207a397634580d4755f7890ccf24ddd7_full.jpg",
       "contents": "ㄴㅇㄹㅇㄹㅇㄹㅇ"
-
+    },
+    {
+      "id": "4129375b-8f04-4002-8783-93c29f046cdb",
+      "postId": "01b9ae86-be21-48ed-a3b6-57b21a38557f",
+      "myId": "76561199476963056",
+      "name": "chacha11 #3056",
+      "date": "2023/3/4 22:11 수정",
+      "profileImg": "https://avatars.akamai.steamstatic.com/6639269e3d4820b31c5ec95bedc5ce0063635f54_full.jpg",
+      "contents": "tss"
+    },
+    {
+      "id": "b929a0a7-f8af-405e-baa4-1eed30442cc5",
+      "postId": "01b9ae86-be21-48ed-a3b6-57b21a38557f",
+      "myId": "76561199476963056",
+      "name": "chacha11 #3056",
+      "date": "2023/3/4 22:15 수정",
+      "profileImg": "https://avatars.akamai.steamstatic.com/6639269e3d4820b31c5ec95bedc5ce0063635f54_full.jpg",
+      "contents": "ㅋㅋㅋㅋㅋ"
+    },
+    {
+      "id": "4ace99d0-5d53-4232-89b5-a176bfb9b216",
+      "postId": "051f3c16-cb9e-4c40-9012-1b0e0e0e70ac",
+      "myId": "76561199476963056",
+      "name": "chacha11 #3056",
+      "date": "2023/3/4 23:20 수정",
+      "profileImg": "https://avatars.akamai.steamstatic.com/6639269e3d4820b31c5ec95bedc5ce0063635f54_full.jpg",
+      "contents": "asdfsdddasdfdㅇ"
+    },
+    {
+      "id": "430836e8-b707-4598-88a5-906afa81f3e4",
+      "postId": "051f3c16-cb9e-4c40-9012-1b0e0e0e70ac",
+      "myId": "76561199476963056",
+      "name": "chacha11 #3056",
+      "date": "2023/3/5 13:0 수정",
+      "profileImg": "https://avatars.akamai.steamstatic.com/6639269e3d4820b31c5ec95bedc5ce0063635f54_full.jpg",
+      "contents": "d222332"
     }
   ]
 }

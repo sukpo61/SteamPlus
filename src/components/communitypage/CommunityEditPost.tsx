@@ -1,5 +1,5 @@
 import axios from "axios";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { useNavigate, useParams } from "react-router-dom";
 import styled from "styled-components";
@@ -21,6 +21,9 @@ export const CommunityEditPost = () => {
   const [postContent, setPostContent] = useState(post?.content);
   const PostId = post?.id;
   const queryClient = useQueryClient();
+  //Ref 존
+  const TitleRef = useRef<any>();
+  const ContentRef = useRef<any>();
 
   //타이틀 체인지 타이틀을 35자로 제한
   const handleTitleChange = (event: any) => {
@@ -30,6 +33,7 @@ export const CommunityEditPost = () => {
       setPostTitles(newTitle);
     } else {
       alert("제목은 35자 이하로 입력해주세요.");
+      TitleRef.current!.focus();
     }
   };
   //컨텐츠 체인지
@@ -48,7 +52,18 @@ export const CommunityEditPost = () => {
     }
   );
   //댓글수정버튼
-  const handleEditPost = () => {
+  const handleEditPost = (event: any) => {
+    if (postTitles === "") {
+      window.alert("제목을 입력해주세요");
+      TitleRef.current!.focus();
+      event.preventDefault();
+      return;
+    } else if (postContent === "") {
+      window.alert("내용을 입력해주세요");
+      ContentRef.current!.focus();
+      event.preventDefault();
+      return;
+    }
     if (window.confirm("정말 수정하시겠습니까?")) {
       const editedPost = { ...post, title: postTitles, content: postContent };
       EditMutation.mutate(editedPost);
@@ -91,6 +106,7 @@ export const CommunityEditPost = () => {
             <p>제목</p>
             <Form onSubmit={handleEditPost}>
               <TitleInput
+                ref={TitleRef}
                 placeholder="제목을 입력하세요"
                 value={postTitles}
                 onChange={handleTitleChange}
@@ -98,6 +114,7 @@ export const CommunityEditPost = () => {
               />
               <p>내용</p>
               <ContentInput
+                ref={ContentRef}
                 placeholder="내용을 입력하세요"
                 value={postContent}
                 onChange={handleContentChange}

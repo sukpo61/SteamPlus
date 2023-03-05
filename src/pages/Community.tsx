@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 import { useQuery, useQueryClient } from "react-query";
 import Pagination from "react-js-pagination";
@@ -10,7 +10,8 @@ interface HeaderThProps {
   Width: string;
 }
 export const Community = () => {
-  //css 설정
+  //Ref존
+  const SerchRef = useRef<any>();
 
   //스팀아이디
   const steamID = sessionStorage.getItem("steamid");
@@ -26,8 +27,6 @@ export const Community = () => {
       setPostData(data?.data.slice().reverse());
     },
   });
-
-  // const PostData = posts?.data.slice().reverse();
 
   //Pagination
   const [page, setPage] = useState(1);
@@ -52,24 +51,15 @@ export const Community = () => {
   // 검색 온클릭
   const btn = () => {
     if (searchText === "") {
-      alert("검색어를 입력하세요");
+      alert("검색어를 입력해주세요");
+      SerchRef.current!.focus();
       return;
     } else {
       setSearchTexts(searchText);
-      setSearchText("");
-      // setToggle((e: any) =>
-      //   e.filter((post: any) =>
-      //     post.title.toLowerCase().includes(searchTexts.toLowerCase())
-      //   )
-      // );
     }
     return;
   };
 
-  //필터 Data
-  // const filteredData = PostData?.filter((post: any) =>
-  //   post.title.toLowerCase().includes(searchTexts.toLowerCase())
-  // );
   //새로고침
   const replace = () => {
     window.location.replace("Community");
@@ -83,7 +73,6 @@ export const Community = () => {
 
   //카테고리 필터 걸기
   //카테고리 자유 필터
-
   const categoryFilter = PostData?.filter(
     (post: any) => post?.category === "자유"
   );
@@ -198,6 +187,7 @@ export const Community = () => {
 
           <CommunitySerchBar>
             <CommunitySerchinput
+              ref={SerchRef}
               type="text"
               placeholder="게시글검색"
               value={searchText}

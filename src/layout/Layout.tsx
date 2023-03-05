@@ -25,6 +25,7 @@ import { FriendSearchProps } from "../layout/layoutcomponents/FriendSearch";
 
 import { AiFillHome } from "react-icons/ai";
 import { FaKeyboard } from "react-icons/fa";
+import { MdDynamicFeed } from "react-icons/md";
 import { AiOutlineSearch } from "react-icons/ai";
 import { FaUserFriends } from "react-icons/fa";
 import { MdVoiceChat } from "react-icons/md";
@@ -210,7 +211,7 @@ function Layout() {
             window.scrollTo({ top: 0, behavior: "smooth" });
           }}
         >
-          <FaKeyboard className="communityIcon" />
+          <MdDynamicFeed className="communityIcon" />
           <p>커뮤니티</p>
         </Communitybutton>
 
