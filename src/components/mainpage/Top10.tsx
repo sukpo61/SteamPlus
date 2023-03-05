@@ -5,6 +5,7 @@ import GameChannelBlock from "../GameChannelBlock";
 import { useQuery } from "react-query";
 import axios from "axios";
 import { Top10Card } from "./Top10Card";
+
 export const Top10 = ({ TopGames }: any) => {
   const [IDS, setIDS] = useState();
   return (
