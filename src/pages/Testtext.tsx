@@ -75,6 +75,7 @@ const ChatBoxTextP = styled.p<{ id: any; myId: any }>`
     props.id !== props.myId ? "0" : "10px"};
   border-top-right-radius: ${(props) =>
     props.id !== props.myId ? "10px" : "0"};
+  word-break: break-all;
 `;
 const ChatBoxTextDateP = styled.p`
   margin-top: auto;
