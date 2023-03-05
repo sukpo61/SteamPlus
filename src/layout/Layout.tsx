@@ -11,6 +11,8 @@ import {
   AllStreamsRecoil,
   videoRoomExitRecoil,
   AboutPagesState,
+  friendChat,
+  friendChatNotice,
 } from "../recoil/atom";
 import Profile from "./layoutcomponents/Profile";
 import GameSearch from "./layoutcomponents/GameSearch";
@@ -64,6 +66,9 @@ function Layout() {
     useRecoilState<FriendSearchProps[]>(friendAllState);
   //친구 요청 온 내역 전체
   const [friendAdd] = useRecoilValue(newFriendAdd);
+  //개인 채팅 알림
+  const [chatTextNotice, setChatTextNotice] =
+    useRecoilState<any>(friendChatNotice);
 
   const [videoDisplay, setvideoDisplay] = useRecoilState(videoDisplayRecoil);
 
@@ -230,98 +235,105 @@ function Layout() {
             <p>커뮤니티</p>
           </Communitybutton>
 
-          {/* 메뉴 구분선 */}
-          <SideLine />
-          {/* 친구 */}
-          {myId === null ? (
-            <Friendbutton
-              onClick={() => {
-                alert("로그인 후 사용 가능 합니다.");
-                FriendButtonOnClick("profile");
-              }}
-              layoutMenu={layoutMenu}
-            >
-              <FaUserFriends className="friendIcon" />
-              <p>친구</p>
-            </Friendbutton>
-          ) : (
-            <Friendbutton
-              onClick={() => {
-                //맨위로 스크롤이동
-                // window.scrollTo({ top: 0, behavior: "smooth" });
-                FriendButtonOnClick("friend");
-              }}
-              layoutMenu={layoutMenu}
-            >
-              <FaUserFriends className="friendIcon" />
-              <p>친구</p>
-              {friendAddCome.length === 0 ? "" : <FriendNotice />}
-            </Friendbutton>
-          )}
-          {/* 음성채팅 */}
-          {myId === null ? (
-            <VoiceTalkbutton
-              onClick={() => {
-                alert("로그인 후 사용 가능 합니다.");
-                LayoutButtonOnClick("profile");
-              }}
-              layoutMenu={layoutMenu}
-            >
-              <MdVoiceChat className="chatIcon" />
-              <p>음성채팅</p>
-            </VoiceTalkbutton>
-          ) : (
-            <VoiceTalkbutton
-              onClick={() => LayoutButtonOnClick("voicetalk")}
-              layoutMenu={layoutMenu}
-            >
-              <MdVoiceChat className="chatIcon" />
-              <p>음성채팅</p>
-            </VoiceTalkbutton>
-          )}
-        </SideBarDiv>
+        {/* 메뉴 구분선 */}
+        <SideLine />
 
-        {/* 메뉴 컴포넌트 */}
-        <MenuOpenDiv layoutMenu={layoutMenu}>
-          <Profile />
-          <GameSearch />
-          <Friend />
-          <FriendSearch />
-          <VoiceTalk />
-          <FriendAdd />
-        </MenuOpenDiv>
-        <VideosWrap
-          toggle={videoDisplay}
-          widthprop={layoutMenu}
-          layout={layoutMenu}
-        >
-          <VideoPosition>
-            <VideosList>{StreamList}</VideosList>
-            <VideoControl>
-              <ControlButtons>
-                <ControlButtonWrap
-                  iconcolor="#192030"
-                  backcolor="#D4D4D4"
-                  onClick={() => {
-                    setvideoDisplay(false);
-                  }}
-                >
-                  <MdVideocamOff size={24}></MdVideocamOff>
-                </ControlButtonWrap>
-                <ControlButtonWrap
-                  backcolor="#F05656"
-                  onClick={() => {
-                    setVideoRoomExit((e: any) => !e);
-                  }}
-                >
-                  <MdExitToApp size={24}></MdExitToApp>
-                </ControlButtonWrap>
-              </ControlButtons>
-            </VideoControl>
-          </VideoPosition>
-        </VideosWrap>
-      </div>
-    </>
+        {/* 친구 */}
+        {myId === null ? (
+          <Friendbutton
+            onClick={() => {
+              alert("로그인 후 사용 가능 합니다.");
+              FriendButtonOnClick("profile");
+            }}
+            layoutMenu={layoutMenu}
+          >
+            <FaUserFriends className="friendIcon" />
+            <p>친구</p>
+          </Friendbutton>
+        ) : (
+          <Friendbutton
+            onClick={() => {
+              //맨위로 스크롤이동
+              // window.scrollTo({ top: 0, behavior: "smooth" });
+              FriendButtonOnClick("friend");
+            }}
+            layoutMenu={layoutMenu}
+          >
+            <FaUserFriends className="friendIcon" />
+            <p>친구</p>
+            {friendAddCome.length === 0 && chatTextNotice.length === 0 ? (
+              ""
+            ) : (
+              <FriendNotice />
+            )}
+          </Friendbutton>
+        )}
+        {/* 음성채팅 */}
+        {myId === null ? (
+          <VoiceTalkbutton
+            onClick={() => {
+              alert("로그인 후 사용 가능 합니다.");
+              LayoutButtonOnClick("profile");
+            }}
+            layoutMenu={layoutMenu}
+          >
+            <MdVoiceChat className="chatIcon" />
+            <p>음성채팅</p>
+          </VoiceTalkbutton>
+        ) : (
+          <VoiceTalkbutton
+            onClick={() => LayoutButtonOnClick("voicetalk")}
+            layoutMenu={layoutMenu}
+          >
+            <MdVoiceChat className="chatIcon" />
+            <p>음성채팅</p>
+          </VoiceTalkbutton>
+        )}
+        <AboutPagesDiv onClick={AboutPagesOnClick}>?</AboutPagesDiv>
+      </SideBarDiv>
+
+      {/* 메뉴 컴포넌트 */}
+      <MenuOpenDiv layoutMenu={layoutMenu}>
+        <Profile />
+        <GameSearch />
+        <Friend />
+        <FriendSearch />
+        <VoiceTalk />
+        <FriendAdd />
+        <AboutPages />
+      </MenuOpenDiv>
+      <VideosWrap
+        toggle={videoDisplay}
+        widthprop={layoutMenu}
+        layout={layoutMenu}
+      >
+        <VideoPosition>
+          <VideosList>{StreamList}</VideosList>
+          <VideoControl>
+            <ControlButtons>
+              <ControlButtonWrap
+                iconcolor="#192030"
+                backcolor="#D4D4D4"
+                onClick={() => {
+                  setvideoDisplay(false);
+                }}
+              >
+                <MdVideocamOff size={24}></MdVideocamOff>
+              </ControlButtonWrap>
+              <ControlButtonWrap
+                backcolor="#F05656"
+                onClick={() => {
+                  setVideoRoomExit((e: any) => !e);
+                }}
+              >
+                <MdExitToApp size={24}></MdExitToApp>
+              </ControlButtonWrap>
+            </ControlButtons>
+          </VideoControl>
+        </VideoPosition>
+      </VideosWrap>
+    </div>
+      </>
   );
 }
 
