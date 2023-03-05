@@ -52,7 +52,7 @@ const PoularChannel = () => {
           {popularchannels.slice(1, 4).map((game: any) => {
             return (
               <PopularChannel1st2
-                key={game.id}
+                key={game?.info.steam_appid}
                 onClick={() =>
                   navigate(`/Teamchat/:${game?.info.steam_appid}`, {
                     state: {
@@ -76,7 +76,7 @@ const PoularChannel = () => {
           })}
           {fivearray.slice(0, emptylength).map((_, index) => {
             return (
-              <PopularChannel1st2empty>
+              <PopularChannel1st2empty key={index}>
                 {popularchannels.length === 0 ? (
                   <span>{index + 2 + popularchannels.length} </span>
                 ) : (
