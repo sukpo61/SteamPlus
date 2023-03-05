@@ -15,7 +15,7 @@ const RecentGameData = ({ gameData }: any) => {
         <CurrentGameBlackImg />
         <GameBtn>게임 채널 참여</GameBtn>
         <RecentGameDataBox>
-          <RecentGameDataTiTle> {gameData.name}</RecentGameDataTiTle>
+          <RecentGameDataTiTle>{gameData.name}</RecentGameDataTiTle>
           <RecentGameDataTime>
             총 플레이한시간 : {`${hours}시간${minutes}분`}
           </RecentGameDataTime>
@@ -56,7 +56,6 @@ const CurrentGameBlackImg = styled.div`
   &:hover {
     backdrop-filter: blur(2px);
   }
-
   /* opacity: 0.5; */
 `;
 const RecentGameDataLaout = styled.div`
@@ -79,14 +78,20 @@ const RecentGameDataLaout = styled.div`
     span {
       display: block;
     }
+    div {
+      backdrop-filter: blur(2px);
+    }
   }
 `;
 const RecentGameDataTiTle = styled.p`
+  text-align: right;
   font-size: 24px;
   font-weight: 400;
   width: 100%;
   display: flex;
   justify-content: flex-end;
+  word-break: keep-all;
+  word-wrap: break-word;
 `;
 const RecentGameDataTime = styled.p`
   font-size: 12px;
@@ -97,6 +102,8 @@ const RecentGameDataTime = styled.p`
   display: flex;
   justify-content: flex-end;
   align-items: flex-end;
+  text-align: end;
+  position: relative; ;
 `;
 const RecentGameDataImgBox = styled.div`
   width: 100%;
@@ -114,6 +121,7 @@ const RecentGameDataBox = styled.div`
   flex-direction: column;
   align-items: flex-end;
   position: absolute;
-  bottom: 5px;
-  right: 5px;
+  bottom: 0px;
+  right: 0px;
+  padding: 5px;
 `;

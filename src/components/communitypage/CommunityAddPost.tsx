@@ -1,5 +1,5 @@
 import axios from "axios";
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import { useMutation } from "react-query";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
@@ -12,6 +12,10 @@ export const CommunityAddPost = () => {
   const navigate = useNavigate();
   const userId = sessionStorage.getItem("steamid");
   const userName = sessionStorage.getItem("nickName");
+
+  //Ref존
+  const TitleRef = useRef<any>();
+  const ContentRef = useRef<any>();
 
   interface PostData {
     id: any;
@@ -48,8 +52,14 @@ export const CommunityAddPost = () => {
 
   //post 등록 핸들러
   const AddPostHandler = (event: any) => {
-    if (title === "" || content === "") {
-      window.alert("제목 및 내용을 입력하십시오");
+    if (title === "") {
+      window.alert("제목을 입력해주세요");
+      TitleRef.current!.focus();
+      event.preventDefault();
+      return;
+    } else if (content === "") {
+      window.alert("내용을 입력해주세요");
+      ContentRef.current!.focus();
       event.preventDefault();
       return;
     } else if (category === "카테고리를 선택하세요") {
@@ -127,6 +137,7 @@ export const CommunityAddPost = () => {
           <p>제목</p>
           <Form onSubmit={AddPostHandler}>
             <TitleInput
+              ref={TitleRef}
               placeholder="제목을 입력하세요"
               maxLength={35}
               value={title}
@@ -134,6 +145,7 @@ export const CommunityAddPost = () => {
             />
             <p>내용</p>
             <ContentInput
+              ref={ContentRef}
               placeholder="내용을 입력하세요"
               // type="text"
               value={content}

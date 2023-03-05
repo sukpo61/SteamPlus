@@ -4,10 +4,11 @@ import { ActivateChannel } from "../components/ActivateChannel";
 import PoularChannel from "../components/PoularChannel";
 import { CurrentGame } from "../components/CurrentGame";
 import { useQuery } from "react-query";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import socket from "../socket";
 import { activechannelsRecoil, activechannelsinfoRecoil } from "../recoil/atom";
 import { useRecoilState } from "recoil";
+import { Top10 } from "../components/mainpage/Top10";
 
 function MainPage() {
   const [activechannels, setActiveChannels] =
@@ -53,21 +54,22 @@ function MainPage() {
   };
   const { data }: any = useQuery("Gamedata", Gamedata);
 
-  ///인기게임 데이터 api
-  const getFeaturedGames = async () => {
+  //top10 game 정보
+  const Top10Game = async () => {
     const response = await axios.get(
-      "https://cors-anywhere.herokuapp.com/https://store.steampowered.com/api/featured"
+      "https://store.steampowered.com/api/featuredcategories/",
+      {
+        params: {
+          f: "games",
+          type: "new",
+          format: "json",
+        },
+      }
     );
 
-    const FeaturedGames: any = {
-      game1: response?.data?.featured_win[0],
-      game2: response?.data?.featured_win[1],
-      game3: response?.data?.featured_win[2],
-    };
-    return FeaturedGames;
+    return response?.data?.top_sellers.items;
   };
-
-  const { data: dataa }: any = useQuery("getFeaturedGames", getFeaturedGames);
+  const { data: TopGame }: any = useQuery("Top10Game", Top10Game);
 
   const getChannelInfo = async (channelid: any, count: any) => {
     const response = await axios.get(
@@ -106,6 +108,22 @@ function MainPage() {
     };
   }, []);
 
+  ///인기게임 데이터 api
+  // const getFeaturedGames = async () => {
+  //   const response = await axios.get(
+  //     "https://cors-anywhere.herokuapp.com/https://store.steampowered.com/api/featured"
+  //   );
+
+  //   const FeaturedGames: any = {
+  //     game1: response?.data?.featured_win[0],
+  //     game2: response?.data?.featured_win[1],
+  //     game3: response?.data?.featured_win[2],
+  //   };
+  //   return FeaturedGames;
+  // };
+
+  // const { data: dataa }: any = useQuery("getFeaturedGames", getFeaturedGames);
+
   return (
     <MainLayout>
       {/* 메인게임 이미지 */}
@@ -115,6 +133,7 @@ function MainPage() {
         <PoularChannel />
         {/* 현재활성화된 채널 */}
         <ActivateChannel gamedata={activeChannelsInfo} />
+        <Top10 TopGames={TopGame} />
       </MainWrap>
     </MainLayout>
   );

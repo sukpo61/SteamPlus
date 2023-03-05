@@ -52,6 +52,7 @@ const PoularChannel = () => {
           {popularchannels.slice(1, 4).map((game: any) => {
             return (
               <PopularChannel1st2
+                key={game.id}
                 onClick={() =>
                   navigate(`/Teamchat/:${game?.info.steam_appid}`, {
                     state: {

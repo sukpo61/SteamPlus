@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useRef } from "react";
 import styled from "styled-components";
 import { useState } from "react";
 import axios from "axios";
@@ -8,6 +8,9 @@ import { useQuery } from "react-query";
 import { useQueryClient } from "react-query";
 
 function Comment({ PostId }: any) {
+  //Ref존
+  const CommentRef = useRef<any>();
+  const CommentsRef = useRef<any>();
   const queryClient = useQueryClient();
 
   const myId = sessionStorage.getItem("steamid");
@@ -59,6 +62,7 @@ function Comment({ PostId }: any) {
     }
     if (commentInput === "") {
       alert("댓글을 입력하세요");
+      CommentRef.current!.focus();
       return;
     }
     const newComment = {
@@ -102,7 +106,8 @@ function Comment({ PostId }: any) {
 
   const EditCommentButton = (id: any) => {
     if (editInput === "") {
-      alert("빈칸은 안됨");
+      alert("수정된 댓글을 입력해주세요");
+      CommentsRef.current!.focus();
       return;
     } else {
       const editComment = {
@@ -111,7 +116,6 @@ function Comment({ PostId }: any) {
         contents: editInput,
       };
       EditMutation.mutate(editComment);
-
       setEditInput("");
       setEditOn("");
     }
@@ -123,6 +127,7 @@ function Comment({ PostId }: any) {
       {/* 댓글 입력칸 */}
       <CommentForm onSubmit={CommentFormonSubmit}>
         <CommentInput
+          ref={CommentRef}
           placeholder="댓글을 입력하세요"
           value={commentInput}
           onChange={CommentInputOnChange}
@@ -149,9 +154,9 @@ function Comment({ PostId }: any) {
                 <CommentName>{i.name}</CommentName>
                 {editOn === i.id ? (
                   <EditInput
-                    placeholder={i.contents}
-                    value={editInput}
+                    defaultValue={i.contents}
                     onChange={EditInputOnChange}
+                    ref={CommentsRef}
                   />
                 ) : (
                   <CommentText>{i.contents}</CommentText>
@@ -247,7 +252,18 @@ const CommentName = styled.h2`
   font-size: #fff;
 `;
 const EditInput = styled.input`
-  margin: auto 0 15px 50px;
+  color: #fff;
+  border: none;
+  background: transparent;
+  background-color: #404b5e;
+  width: 100%;
+  padding: 0px 5px;
+  box-shadow: inset 0px 4px 8px rgba(0, 0, 0, 0.25);
+  border-radius: 10px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  height: 100%;
+  text-indent: 3px;
 `;
 const CommentText = styled.p`
   font-size: 14px;
@@ -266,10 +282,16 @@ const CommentEdit = styled.button`
   margin-bottom: auto;
   font-size: 12px;
   color: #a7a9ac;
+  &:hover {
+    color: #00b8c8;
+  }
 `;
 const CommentDelete = styled.button`
   margin-bottom: auto;
   margin-left: 10px;
   font-size: 12px;
   color: #a7a9ac;
+  &:hover {
+    color: #00b8c8;
+  }
 `;
