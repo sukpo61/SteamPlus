@@ -8,6 +8,7 @@ import { friendAllState, friendChat, friendChatNotice } from "../recoil/atom";
 import { FriendSearchProps } from "../layout/layoutcomponents/FriendSearch";
 import Aos from "aos";
 import "aos/dist/aos.css";
+import { v4 as uuidv4 } from "uuid";
 
 function TestChat() {
   //내 아이디
@@ -105,14 +106,14 @@ function TestChat() {
             if (chat.roomId === roomId) {
               if (chat.id === myId) {
                 return (
-                  <div data-aos="fade-left">
-                    <Testtext chat={chat} key={roomId} />
+                  <div data-aos="fade-left" key={uuidv4()}>
+                    <Testtext chat={chat} />
                   </div>
                 );
               } else {
                 return (
-                  <div data-aos="fade-right">
-                    <Testtext chat={chat} key={roomId} />
+                  <div data-aos="fade-right" key={uuidv4()}>
+                    <Testtext chat={chat} />
                   </div>
                 );
               }
