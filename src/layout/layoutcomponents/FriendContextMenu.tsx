@@ -66,18 +66,17 @@ function FriendContextMenu({ xPos, yPos, id, onClose }: any) {
     socket.emit("friendchannel", userid);
     socket.once("friendchannel", (roomname, frienduserid) => {
       if (frienduserid === userid && roomname) {
-        console.log("frjoin", roomname);
-        setFriendRoomInfo({
-          roomtitle: roomname.split("/")[1],
-          channelId: roomname.split("/")[0],
-        });
-        setCount((e: number) => e + 1);
         navigate(`/Teamchat/:${roomname.split("/")[0]}`, {
           replace: true,
           state: {
             gameid: roomname.split("/")[0].toString(),
           },
         });
+        setFriendRoomInfo({
+          roomtitle: roomname.split("/")[1],
+          channelId: roomname.split("/")[0],
+        });
+        setLayoutMenu("voicetalk");
       }
     });
   };
