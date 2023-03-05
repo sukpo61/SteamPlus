@@ -161,10 +161,13 @@ function Layout() {
         video.srcObject = data.stream;
       }
     };
-
     return (
       <VideoWrap key={data.userid}>
-        <Streamvideo ref={remotehandleVideoRef} autoPlay playsInline muted />
+        {data.userid === myId ? (
+          <Streamvideo ref={remotehandleVideoRef} autoPlay playsInline muted />
+        ) : (
+          <Streamvideo ref={remotehandleVideoRef} autoPlay playsInline />
+        )}
         <Usernickname>
           <span>{info?.nickname}</span>
         </Usernickname>
