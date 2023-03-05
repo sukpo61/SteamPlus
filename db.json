@@ -12,7 +12,7 @@
       "profileimg": "https://avatars.akamai.steamstatic.com/6639269e3d4820b31c5ec95bedc5ce0063635f54_full.jpg",
       "nickname": "chacha11 #3056",
       "login": true,
-      "lastLogin": "2023-03-05T08:05:09.731Z"
+      "lastLogin": "2023-03-05T13:05:53.034Z"
     },
     {
       "id": "76561199478670991",
@@ -204,6 +204,16 @@
       "title": "",
       "content": "zzzz",
       "date": "2023/3/4 22:50",
+      "count": 1,
+      "category": "자유"
+    },
+    {
+      "id": "6b6f2b7b-ee83-41e1-b2a0-9aa781b8e06c",
+      "steamid": "76561199476963056",
+      "name": "chacha11 #3056",
+      "title": "ㅇ",
+      "content": "ㅇ",
+      "date": "2023/3/5 21:40",
       "count": 1,
       "category": "자유"
     }
