@@ -3,20 +3,25 @@ import axios from "axios";
 import { log } from "console";
 import styled from "styled-components";
 import { useInfiniteQuery } from "react-query";
-
-import { useQuery, useQueryClient } from "react-query";
-import { QueryClient } from "react-query";
-
+import Loader from "../components/common/Loader";
 import { useNavigate } from "react-router-dom";
+
 import { BiSearchAlt2 } from "react-icons/bi";
 import GameChannelBlock from "../components/common/GameChannelBlock";
-import { useRecoilState, atom } from "recoil";
+
+import Footer from "../components/common/Footer";
+
+// import ParticipationRequest from "../layout/ParticipationRequest";
+
+// 게시판 홈 검색
 
 const ChannelSearchPage: any = () => {
   const [searchValue, setSearchValue] = useState("");
   const [searchResult, setSearchResult] = useState<any>([null]); // 검색어 없을때 예외처리
   const [termResult, setTermResult] = useState("");
   const [filteredCount, setFilteredCount] = useState<number>(0);
+  const [isLoading, setIsLoading] = useState(true);
+  const navigate = useNavigate();
 
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchValue(e.target.value);
@@ -28,88 +33,27 @@ const ChannelSearchPage: any = () => {
     } else {
       setTermResult(searchValue);
     }
-    // setSearchResult([]);
-
-    // getGameSummary(searchValue, offset);
-    // ueryClient.invalidateQueries("gameSummaryData")
   };
 
-  const handleSearchClick = () => {
-    if (searchValue === "") {
-      return;
-    } else if (searchValue.length < 2) {
-      // searchValue : 새로고침 후 첫검색때 console에 출처 모를 리스트가 찍힘
-      // termResult : 새로고침 후 처음 검색한 검색어는 검색창에서 리셋되고, 두번째 검색어부터 console 찍힘
-      // setTermResult("");
-      // setSearchValue("");
-      // setFilteredCount(0);
-      return;
-    }
-
-    //   if (searchValue.length < 2) {
-    //     return false;
-    //   }
-    getGameSummary();
-  };
-  //
-
-  // useEffect(() => {
-  //   console.log(searchValue);
-  // }, [searchValue]);
-
-  //https://github.com/Revadike/InternalSteamWebAPI
-  // steam 공식 github!!!!!!!!!!!!!!!!!
-
-  // const lastGameRef = useRef<any>(null);
-  // const [offset, setOffset] = useState<any>(0);
-
-  // useEffect(() => {
-  //   window.addEventListener("scroll", handleScroll); // addEventListener 이벤트 추가
-  //   return () => window.removeEventListener("scroll", handleScroll); // removeEventListener 이벤트 제거
-  // }, []);
-
-  // 킵
-
-  // const handleScroll = useCallback(() => {
-  //   if (
-  //     window.innerHeight + window.pageYOffset >= //영역의 높이 + 컨텐츠를 얼마나 스크롤했는지
-  //     lastGameRef.current.getBoundingClientRect().bottom //getBoundingClientRect = dom의 위치
-  //   ) {
-  //     setOffset(offset + 10);
-  //     getGameSummary(searchValue); //searchValue, offset
+  // const handleSearchClick = () => {
+  //   if (searchValue === "") {
+  //     return;
+  //   } else if (searchValue.length < 2) {
+  //     // searchValue : 새로고침 후 첫검색때 console에 출처 모를 리스트가 찍힘
+  //     // termResult : 새로고침 후 처음 검색한 검색어는 검색창에서 리셋되고, 두번째 검색어부터 console 찍힘
+  //     return;
   //   }
-  // }, [offset, searchValue]);
-
-  // 무한스크롤 try
-
-  // const handleScroll = () => {
-  //   const scrollTop = // 화면의 처음부터 ~ 현재 화면에 보이는 부분 + 현재 스크롤 위치
-  //     (document.documentElement && document.documentElement.scrollTop) ||
-  //     document.body.scrollTop;
-
-  //   const scrollHeight = // 전체 화면 길이
-  //     (document.documentElement && document.documentElement.scrollHeight) ||
-  //     document.body.scrollHeight;
-
-  //   const clientHeight = // 현재 화면에서 보이는 height
-  //     document.documentElement.clientHeight || window.innerHeight;
-
-  //   const scrolledToBottom =
-  //     Math.ceil(scrollTop + clientHeight) >= scrollHeight;
-
-  //   if (scrolledToBottom) {
-  //     setOffset((prev: any) => prev + 10);
-  //     console.log("searchvalue", searchValue);
-  //     getGameSummary(searchValue, offset + 10); // 이부분 수정
-  //   }
+  //   getGameSummary();
   // };
 
   // searchValue: any, offset: number
 
-  // npx json-server --watch db.json --port 3001
-  // https://cors-anywhere.herokuapp.com/
+  // 초반 10개가 로드되고, 그 10개를 filterList에서 제외한 배열이 스크롤이 바닥에 닿을 때마다 추가로 10개씩 뱉어내게 하면..???
+  // 근데 가능하긴 한가 이거
 
   const getGameSummary = async () => {
+    setIsLoading(true);
+
     console.log("termResult", termResult);
 
     const gameSummary = await axios.get(
@@ -126,15 +70,16 @@ const ChannelSearchPage: any = () => {
       gameList.push(
         gameCategoryData2?.data[gameSummary?.data.items[i].id].data
       );
+
+      console.log("gameCategoryData2", gameCategoryData2);
     }
+
     const filterList = gameList.filter((game) => game.type === "game");
     console.log("game", filterList);
     setFilteredCount(filterList.length);
+    setIsLoading(false);
     return filterList;
   };
-
-  // useInView = react-intersection-observer 라이브러리
-  // 리스트 끝까지 내렸을때 inview가 true가 됨(성민준님 추정)
 
   const {
     data: gameSummaryData, // 게임id
@@ -154,7 +99,19 @@ const ChannelSearchPage: any = () => {
     }
   };
 
-  // console.log("gameSummaryData", gameSummaryData);
+  useEffect(() => {
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  const handleScroll = () => {
+    if (
+      window.innerHeight + window.scrollY >=
+      document.body.offsetHeight - 500
+    ) {
+      loadMore();
+    }
+  };
 
   return (
     <div
@@ -162,13 +119,20 @@ const ChannelSearchPage: any = () => {
         backgroundColor: "#192030",
         display: "flex",
         flexDirection: "column",
+        alignItems: "center",
         width: "100%",
-        height: "100%",
-        // minHeight: 1080,
+        // minHeight: "100vh",
+        // height: "100%",
       }}
     >
+      {/* <ParticipationRequest /> */}
       <SearchPageHeader>
-        <SteamPlusLogo />
+        <SteamPlusLogo
+          src="/img/SteamPlusLogo2.png"
+          onClick={() => {
+            navigate(`/`);
+          }}
+        />
         <GameSearchInputArea>
           <GameSearchInput
             type="text"
@@ -178,33 +142,40 @@ const ChannelSearchPage: any = () => {
           <BiSearchAlt2
             className="searchIcon"
             onClick={() => {
-              // handleSearchClick(); //
-              // getGameSummary(); //searchValue, offset
               handleTermResult();
-              // handleResultList();
             }}
           />
         </GameSearchInputArea>
       </SearchPageHeader>
-      <SearchCount>
-        '{`${termResult}`}' 검색 결과는 {filteredCount}개입니다
-      </SearchCount>
-      <GameSearchList>
-        {gameSummaryData?.pages
-          // .map((page: any) => page?.results)
-          .flat()
-          .map((game: any) => {
-            if (game === undefined) {
-              return <div></div>;
-            }
-            // console.log("game", game);
-            return (
-              <GameChannelBlockView key={game?.id}>
-                <GameChannelBlock game={game} />
-              </GameChannelBlockView>
-            );
-          })}
-      </GameSearchList>
+
+      {isLoading && <Loader />}
+      {isLoading ? (
+        ""
+      ) : termResult === "" ? (
+        <BeforeSearch>참여하고 싶은 게임 채널을 검색해보세요!</BeforeSearch>
+      ) : (
+        <AfterSearch>
+          <SearchCount>
+            '{`${termResult}`}' 검색 결과는 {filteredCount}
+            개입니다
+          </SearchCount>
+          <GameSearchList>
+            {gameSummaryData?.pages
+              // .map((page: any) => page?.results)
+              .flat()
+              .map((game: any) => {
+                if (game === undefined) {
+                  return <div></div>;
+                }
+                return (
+                  <GameChannelBlockView key={game?.id}>
+                    <GameChannelBlock game={game} />
+                  </GameChannelBlockView>
+                );
+              })}
+          </GameSearchList>
+        </AfterSearch>
+      )}
     </div>
   );
 };
@@ -219,20 +190,20 @@ const SearchNone = styled.div`
 
 const SearchPageHeader = styled.div`
   background-color: #404b5e;
-  /* position: absolute; */
+  position: fixed;
   width: 100%;
   height: 72px;
   display: flex;
+  justify-content: center;
   align-items: center;
   gap: 20px;
   padding: 16px 56px;
+  z-index: 999;
 `;
 
-const SteamPlusLogo = styled.div`
-  width: 40px;
-  height: 40px;
-  background: #a7a9ac;
-  border-radius: 10px;
+const SteamPlusLogo = styled.img`
+  width: 115px;
+  cursor: pointer;
 `;
 const GameSearchInputArea = styled.div`
   width: 632px;
@@ -265,7 +236,41 @@ const GameSearchInput = styled.input`
   border-style: none;
 `;
 
-const SearchCount = styled.div`
+// const MainContainer = styled.div`
+//   display: flex;
+//   flex-direction: column;
+//   align-items: center;
+//   width: 100%;
+//   // height: "100vh",
+//   height: 100%;
+//   width: 100vw;
+//   height: 100vh;
+// `;
+
+const BeforeSearch = styled.p`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 330px;
+
+  /* width: 100vw; */
+  /* height: 100vh; */
+
+  font-family: "Noto Sans";
+  font-weight: 500;
+  font-size: 20px;
+  line-height: 27px;
+  text-align: center;
+  letter-spacing: -0.03em;
+
+  color: #777d87;
+`;
+
+const AfterSearch = styled.div`
+  margin-top: 72px;
+`;
+
+const SearchCount = styled.p`
   margin-top: 40px;
   margin-bottom: 40px;
   font-family: Inter;
@@ -281,7 +286,7 @@ const GameSearchList = styled.div`
   display: flex;
   flex-direction: column;
   gap: 10px;
-  margin-left: 114px;
+  margin-bottom: 92px;
 `;
 
 const GameChannelBlockView = styled.div``;
