@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
-import GameChannelBlock from "../GameChannelBlock";
+import GameChannelBlock from "../common/GameChannelBlock";
 import { useQuery } from "react-query";
 import axios from "axios";
 import { Top10Card } from "./Top10Card";
