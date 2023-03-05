@@ -12,7 +12,7 @@
       "profileimg": "https://avatars.akamai.steamstatic.com/6639269e3d4820b31c5ec95bedc5ce0063635f54_full.jpg",
       "nickname": "chacha11 #3056",
       "login": true,
-      "lastLogin": "2023-03-05T13:05:53.034Z"
+      "lastLogin": "2023-03-05T16:22:15.866Z"
     },
     {
       "id": "76561199478670991",
@@ -174,7 +174,7 @@
       "title": "어몽어스할사람어몽어스할사람어몽어스할사람어몽어스할사람어몽어스할사람",
       "content": "어몽어스할사람",
       "date": "2023/3/4 16:53",
-      "count": 10,
+      "count": 11,
       "category": "모집"
     },
     {
@@ -215,6 +215,36 @@
       "content": "ㅇ",
       "date": "2023/3/5 21:40",
       "count": 1,
+      "category": "자유"
+    },
+    {
+      "id": "ea1fc5a9-c3f6-4493-88cd-93ed1a29d9ff",
+      "steamid": "76561199476963056",
+      "name": "chacha11 #3056",
+      "title": "ㄴㅇㄹㄴㅇㄹㄴㅇㄹㄴㅇㄹㄴㅇㅁㄹㄴㅇㅁㄹㅁㄴㅇㄹㅁㄴㅇㄹㄴㅆ",
+      "content": "ㅁㄴㅇㄹㄴㅇㅁㄹㄴㅇㅁㄹㄴㅇㅁㄹㅁㄴㅇㄹㄴㅁㅇㄹㄴㅁㅇㄹㅁㄴㅇㄹㄴㅁㅇㄹㅁㄴㅇㄹㄴㅁㅇㄹㅁㄴㅇㄹㄴㅇㄹㅁㄴㅇ",
+      "date": "2023/3/6 0:24",
+      "count": 2,
+      "category": "자유"
+    },
+    {
+      "id": "1cdc4929-db7e-4465-a518-ad614a5fa5f7",
+      "steamid": "76561199476963056",
+      "name": "chacha11 #3056",
+      "title": "ㅁㄴㅇㄹㄴㅇㅁㄹㅁㄴㅇㄹㅁㄴㅇㄹㄴㅁㅇㄹㄴㅇㅁㄹㅁㄴㅇㄹㄴㅇㅇ",
+      "content": "ㅋ",
+      "date": "2023/3/6 0:27",
+      "count": 3,
+      "category": "모집"
+    },
+    {
+      "id": "f1047551-557d-496d-a30f-be15f15a8c8c",
+      "steamid": "76561199476963056",
+      "name": "chacha11 #3056",
+      "title": "asdfsadfsadf",
+      "content": "asdfsadfsadf",
+      "date": "2023/3/6 0:50",
+      "count": 4,
       "category": "자유"
     }
   ],
@@ -326,6 +356,24 @@
       "date": "2023/3/5 13:0 수정",
       "profileImg": "https://avatars.akamai.steamstatic.com/6639269e3d4820b31c5ec95bedc5ce0063635f54_full.jpg",
       "contents": "d222332"
+    },
+    {
+      "id": "e9ce2df1-3cd1-4ee5-be3a-ce04cdff6675",
+      "postId": "1cdc4929-db7e-4465-a518-ad614a5fa5f7",
+      "myId": "76561199476963056",
+      "name": "chacha11 #3056",
+      "date": "2023/3/6 0:52",
+      "profileImg": "https://avatars.akamai.steamstatic.com/6639269e3d4820b31c5ec95bedc5ce0063635f54_full.jpg",
+      "contents": "ㅇ"
+    },
+    {
+      "id": "1ed8ac70-0c6f-4f09-b34d-e6cd8d876dd6",
+      "postId": "f1047551-557d-496d-a30f-be15f15a8c8c",
+      "myId": "76561199476963056",
+      "name": "chacha11 #3056",
+      "date": "2023/3/6 1:19 수정",
+      "profileImg": "https://avatars.akamai.steamstatic.com/6639269e3d4820b31c5ec95bedc5ce0063635f54_full.jpg",
+      "contents": "d"
     }
   ]
 }

@@ -6,8 +6,8 @@ import styled from "styled-components";
 import Moment from "react-moment";
 import moment from "moment";
 interface TableTdProps {
-  Width: string;
   Color: string;
+  Width: string;
 }
 export const CommunityBox = ({ post, index }: any) => {
   const navigate = useNavigate();
@@ -57,8 +57,8 @@ export const CommunityBox = ({ post, index }: any) => {
     //포스트 작성한시간
     const postingDate = moment(post?.date);
     const minutesDiff = postingDate.diff(today, "minutes");
-    // 작성한지 10분이 안된 포스트에는 N이 보이게해줌
-    if (minutesDiff > -11) {
+    // 작성한지 30분이 안된 포스트에는 N이 보이게해줌
+    if (minutesDiff > -31) {
       return "N";
     }
   };
@@ -97,26 +97,26 @@ export const CommunityBox = ({ post, index }: any) => {
 
   return (
     <CommentWrap>
-      <TableTd Width="100px" Color="fff">
+      <TableTd Width="50px" Color="fff">
         {index}
       </TableTd>
-      <TableTd Width="110px" Color="fff">
+      <TableTd Width="60px" Color="fff">
         {Category}
       </TableTd>
-      <TableTd Width="540px" Color="fff" style={{ paddingLeft: "30px" }}>
+      <TableTds Width="450px" Color="fff">
         <span onClick={handleEditPost}>{Title}</span>
         {/* 누적댓글수 */}
         <PostCount>[{CommentCt}]</PostCount>
         {/* 포스트 작성한지 10분이 지날때면 스타일을 주기 */}
-        {newPost ? <PostNew>{newPost}</PostNew> : ""}
-      </TableTd>
+        {newPost ? <PostNew>N</PostNew> : ""}
+      </TableTds>
       <TableTd Width="130px" Color="#A7A9AC">
         {Name}
       </TableTd>
-      <TableTd Width="90px" Color="#A7A9AC">
+      <TableTd Width="80px" Color="#A7A9AC">
         {dayMinuteCounter}
       </TableTd>
-      <TableTd Width="50px" Color="#A7A9AC">
+      <TableTd Width="65px" Color="#A7A9AC">
         {PostViewCount}
       </TableTd>
     </CommentWrap>
@@ -126,27 +126,23 @@ const PostCount = styled.div`
   font-size: 11px;
   color: #00b8c8;
   margin-left: 8px;
+  margin-top: 2px;
 `;
 const PostNew = styled.div`
   font-size: 11px;
   margin-left: 5px;
   width: 14px;
   height: 14px;
-  border-radius: 10px;
   background-color: #f05656;
-  display: flex;
-  justify-content: center;
-  align-items: center;
   color: #fff;
-  line-height: 10px;
+  line-height: 14px;
   text-align: center;
-  margin-bottom: 1px;
+  border-radius: 10px;
 `;
 const CommentWrap = styled.div`
   width: 100%;
   height: 50px;
   display: flex;
-  justify-content: center;
   align-items: center;
   flex-direction: row;
   border-bottom: 1px solid #eee;
@@ -158,6 +154,25 @@ const TableTd = styled.td<TableTdProps>`
   display: flex;
   align-items: center;
   justify-content: center;
+  height: 50px;
+  font-weight: 400;
+  font-size: 13px;
+
+  span {
+    margin-left: 20px;
+  }
+  span:hover {
+    text-decoration: underline;
+    cursor: pointer;
+  }
+`;
+
+const TableTds = styled.td<TableTdProps>`
+  color: ${(props) => props.Color};
+  width: ${(props) => props.Width};
+  display: flex;
+  align-items: center;
+
   height: 50px;
   font-weight: 400;
   font-size: 13px;

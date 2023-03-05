@@ -87,7 +87,14 @@ function Comment({ PostId }: any) {
     }
   );
   const DeleteOnClick = (id: any) => {
-    DeleteMutation.mutate(id);
+    if (window.confirm("정말 삭제하겠습니까?")) {
+      DeleteMutation.mutate(id);
+      return;
+    } else {
+      // 취소 버튼을 누른 경우 실행될 코드
+      console.log("취소 버튼을 눌렀습니다.");
+      return;
+    }
   };
   //댓글수정
   const EditMutation = useMutation(
@@ -164,7 +171,7 @@ function Comment({ PostId }: any) {
                 <CommentDate>{i.date}</CommentDate>
               </div>
             </div>
-            <div>
+            <div style={{ marginLeft: "auto" }}>
               {editOn === i.id ? (
                 <>
                   <CommentEdit onClick={() => EditCommentButton(i.id)}>
@@ -204,16 +211,15 @@ function Comment({ PostId }: any) {
 
 export default Comment;
 const CommentWrap = styled.div`
-  width: 100%;
+  width: 836px;
   margin: 0 auto;
 `;
 const CommentForm = styled.form`
-  width: 100%;
   height: 40px;
   margin-bottom: 10px;
 `;
 const CommentInput = styled.input`
-  width: 95%;
+  width: 760px;
   height: 40px;
   background: transparent;
   background-color: #404b5e;
@@ -226,9 +232,11 @@ const CommentInput = styled.input`
   border: none;
 `;
 const CommentFormButton = styled.button`
-  width: 5%;
-  height: 40px;
-  background-color: #000;
+  margin-left: 12px;
+  width: 64px;
+  height: 36px;
+  background: #00b8c8;
+  border-radius: 8px;
   color: #fff;
   &:hover {
     background: #00b8c8;
@@ -236,6 +244,7 @@ const CommentFormButton = styled.button`
 `;
 const CommentContents = styled.div`
   display: flex;
+  flex-direction: row;
   min-height: 60px;
   align-items: center;
   justify-content: space-between;
@@ -254,9 +263,10 @@ const CommentName = styled.h2`
 const EditInput = styled.input`
   color: #fff;
   border: none;
+  width: 700px;
   background: transparent;
   background-color: #404b5e;
-  width: 100%;
+
   padding: 0px 5px;
   box-shadow: inset 0px 4px 8px rgba(0, 0, 0, 0.25);
   border-radius: 10px;
@@ -264,12 +274,13 @@ const EditInput = styled.input`
   margin-bottom: 10px;
   height: 100%;
   text-indent: 3px;
+  font-size: 13px;
 `;
 const CommentText = styled.p`
   font-size: 14px;
   margin: 10px 0px;
   word-break: break-all;
-  width: 850px;
+  /* width: 850px; */
   font-weight: 400;
 `;
 const CommentDate = styled.p`
