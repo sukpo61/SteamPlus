@@ -57,7 +57,7 @@ function MainPage() {
   //top10 game 정보
   const Top10Game = async () => {
     const response = await axios.get(
-      "https://store.steampowered.com/api/featuredcategories/",
+      "https://store.steampowered.com/api/featured/",
       {
         params: {
           f: "games",
@@ -70,6 +70,7 @@ function MainPage() {
     return response?.data?.top_sellers.items;
   };
   const { data: TopGame }: any = useQuery("Top10Game", Top10Game);
+  console.log("TopGame", TopGame);
 
   const getChannelInfo = async (channelid: any, count: any) => {
     const response = await axios.get(
