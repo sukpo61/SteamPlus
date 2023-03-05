@@ -38,7 +38,7 @@ const RequestPopup = styled.div`
   border-radius: 10px;
 `;
 
-const RequestStatement = styled.div`
+const RequestStatement = styled.p`
   font-family: "Noto Sans";
   font-style: normal;
   font-weight: 500;

@@ -247,7 +247,7 @@ const GameSearchInput = styled.input`
 //   height: 100vh;
 // `;
 
-const BeforeSearch = styled.div`
+const BeforeSearch = styled.p`
   display: flex;
   justify-content: center;
   align-items: center;
@@ -270,7 +270,7 @@ const AfterSearch = styled.div`
   margin-top: 72px;
 `;
 
-const SearchCount = styled.div`
+const SearchCount = styled.p`
   margin-top: 40px;
   margin-bottom: 40px;
   font-family: Inter;

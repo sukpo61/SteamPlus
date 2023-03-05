@@ -9,6 +9,7 @@ import {
   currentGameIdRecoil,
   friendroominfoRecoil,
   LayoutButton,
+  countRecoil,
 } from "../../recoil/atom";
 import { FriendProps } from "./Friend";
 import socket from "../../socket";
@@ -26,6 +27,8 @@ function FriendContextMenu({ xPos, yPos, id, onClose }: any) {
     useRecoilState(friendroominfoRecoil);
 
   const [layoutMenu, setLayoutMenu] = useRecoilState<String>(LayoutButton);
+
+  const [count, setCount] = useRecoilState(countRecoil);
 
   const navigate = useNavigate();
 
@@ -68,7 +71,9 @@ function FriendContextMenu({ xPos, yPos, id, onClose }: any) {
           roomtitle: roomname.split("/")[1],
           channelId: roomname.split("/")[0],
         });
+        setCount((e: number) => e + 1);
         navigate(`/Teamchat/:${roomname.split("/")[0]}`, {
+          replace: true,
           state: {
             gameid: roomname.split("/")[0].toString(),
           },

@@ -19,7 +19,7 @@ import { CommunityAddPost } from "../components/communitypage/CommunityAddPost";
 import { CommunityDetail } from "../components/communitypage/CommunityDetail";
 import { CommunityEditPost } from "../components/communitypage/CommunityEditPost";
 import Footer from "../components/common/Footer";
-import IntroPage from "../pages/IntroPage";
+import LandingPage from "../pages/LandingPage";
 
 const Router = () => {
   // 메뉴 상태 recoil
@@ -57,7 +57,7 @@ const Router = () => {
           <Route path="testtext" element={<Testtext />} />
           <Route path="testchat" element={<TestChat />} />
           <Route path="testscroll" element={<SteamGameSearch />} />
-          <Route path="intro" element={<IntroPage />} />
+          <Route path="landing" element={<LandingPage />} />
         </Routes>
       </RouteFloat>
     </BrowserRouter>
