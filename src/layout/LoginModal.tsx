@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import styled from "styled-components";
+import { IoCloseCircleSharp } from "react-icons/io5";
 
 interface Props {
   setLoginModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
@@ -18,6 +19,18 @@ function LoginModal({ setLoginModalOpen }: Props) {
   return (
     <ModalArea>
       <ModalWindow>
+        <IoCloseCircleSharp
+          style={{
+            color: "#777D87",
+            width: 17,
+            height: 17,
+            position: "absolute",
+            right: 8,
+            top: 8,
+            cursor: "pointer",
+          }}
+          onClick={handleLoginModalClose}
+        />
         <ModalIntro>
           로그인하여 Steam+의
           <br />
@@ -30,27 +43,24 @@ function LoginModal({ setLoginModalOpen }: Props) {
           </LoginBtnText>
         </LoginBtn>
       </ModalWindow>
-      <ModalClose onClick={handleLoginModalClose}>닫기</ModalClose>
+      {/* <ModalClose onClick={handleLoginModalClose}>닫기</ModalClose> */}
     </ModalArea>
   );
 }
 
 const ModalArea = styled.div`
   position: fixed;
-  display: flex;
-  flex-direction: row;
   /* left: 50%; */
   /* transform: translate(-50%, 0); */
   margin-left: 120px;
+  margin-top: 28px;
   z-index: 9999;
 `;
 
 const ModalWindow = styled.div`
+  position: relative;
   width: 240px;
   height: 120px;
-  left: 800px;
-  top: 28px;
-  margin-top: 32px;
 
   background: rgba(38, 50, 69, 0.8);
   box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.25);
@@ -73,7 +83,7 @@ const ModalClose = styled.button`
   padding: 10px;
 `;
 
-const ModalIntro = styled.div`
+const ModalIntro = styled.p`
   height: 32px;
   left: 47px;
   top: 20px;
@@ -113,7 +123,7 @@ const LoginBtnSteamLogo = styled.img`
   width: 24px;
 `;
 
-const LoginBtnText = styled.div`
+const LoginBtnText = styled.p`
   height: 17px;
   left: 48px;
   top: 11px;

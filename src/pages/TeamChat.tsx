@@ -10,6 +10,8 @@ import {
   currentRoomRecoil,
   currentGameIdRecoil,
   LayoutButton,
+  videoRoomExitRecoil,
+  countRecoil,
 } from "../recoil/atom";
 import { useLocation } from "react-router";
 import axios from "axios";
@@ -33,6 +35,10 @@ const TeamChat = () => {
   const [channelId, setchannelId] = useRecoilState(currentGameIdRecoil);
 
   const [layoutMenu, setLayoutMenu] = useRecoilState<String>(LayoutButton);
+
+  const [videoRoomExit, setVideoRoomExit] = useRecoilState(videoRoomExitRecoil);
+
+  const [count, setCount] = useRecoilState(countRecoil);
 
   const [background, setBackground] = useState<any>("");
 
@@ -62,6 +68,7 @@ const TeamChat = () => {
   //입력 input
   const [textInput, setTextInput] = useState<any>("");
   //입력 input
+
   const chatInputOnChange = (e: any) => {
     setTextInput(e.target.value);
   };
@@ -117,19 +124,22 @@ const TeamChat = () => {
     if (channelId) {
       socket.emit("requestrooms", channelId);
     }
-    return () => {
-      socket.off("requestrooms");
-    };
   }, [channelId]);
 
   useEffect(() => {
+    if (channelId) {
+      if (channelId !== gameid) {
+        socket.emit("channelleave", channelId);
+        setVideoRoomExit((e: any) => !e);
+      }
+    }
     Gamedata();
-    Aos.init();
     setLayoutMenu("voicetalk");
+    Aos.init();
   }, []);
 
   return (
-    <ChatPageDiv>
+    <ChatPageDiv key={count}>
       <Background src={background}></Background>
       <ChatPageHeaderDiv>{currentRoom}</ChatPageHeaderDiv>
       <ChatContentsDiv ref={chatContainerRef}>

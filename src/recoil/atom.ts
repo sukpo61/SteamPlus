@@ -61,6 +61,18 @@ export const friendroominfoRecoil = atom<any>({
   key: "friendroominfoRecoil",
   default: "",
 });
+export const activechannelsRecoil = atom<any>({
+  key: "activechannelsRecoil",
+  default: "",
+});
+export const activechannelsinfoRecoil = atom<any>({
+  key: "activechannelsinfoRecoil",
+  default: [],
+});
+export const countRecoil = atom<any>({
+  key: "count",
+  default: 0,
+});
 
 // export const FriendNoticeAll = atom({
 //   key: "FriendNoticeAll",
@@ -74,6 +86,20 @@ export const newFriendAdd = selector({
     const friendAddAll = get(getFriend);
     const completed = friendAddAll.filter((i: any) => i.friendId === myId);
     return [completed];
+  },
+});
+export const popularchannelsRecoil = selector({
+  key: "popularchannels",
+  get: ({ get }) => {
+    const activechannels = get(activechannelsinfoRecoil);
+
+    const activechannelsarray = [...activechannels];
+
+    const sortedArr = activechannelsarray?.sort(
+      (a: any, b: any) => b.usercount - a.usercount
+    );
+
+    return sortedArr;
   },
 });
 

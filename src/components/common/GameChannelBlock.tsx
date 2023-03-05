@@ -13,7 +13,7 @@ interface Props {
   game: any;
 }
 
-function GameChannelBlock({ game }: any) {
+function GameChannelBlock({ game, count }: any) {
   const navigate = useNavigate();
 
   return (
@@ -28,9 +28,9 @@ function GameChannelBlock({ game }: any) {
           </TitleLinear>
           <GameChannelInfo>
             <GameChannelCategory>
-              {game.genres ? game?.genres[0]?.description : null}&nbsp;
-              {game.genres ? game?.genres[1]?.description : null}&nbsp;
-              {game.genres ? game?.genres[2]?.description : null}
+              {game?.genres.map((e: any) => {
+                return `${e.description} `;
+              })}
             </GameChannelCategory>
 
             <NumberOfPlayer>
@@ -42,7 +42,7 @@ function GameChannelBlock({ game }: any) {
                   background: "#23DE79",
                 }}
               ></div>
-              {/* {`${}`} */}명
+              {count}명
             </NumberOfPlayer>
           </GameChannelInfo>
         </div>
@@ -141,7 +141,7 @@ const GameChannelCategory = styled.div`
   letter-spacing: -0.03em;
 `;
 
-const NumberOfPlayer = styled.div`
+const NumberOfPlayer = styled.p`
   color: white;
   font-size: 14px;
   display: flex;

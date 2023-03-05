@@ -5,6 +5,7 @@ import { Navigate, useNavigate, useParams } from "react-router-dom";
 import styled from "styled-components";
 import { useRef } from "react";
 import Comment from "./Comment";
+
 export const CommunityDetail = () => {
   const navigate = useNavigate();
 
@@ -23,7 +24,13 @@ export const CommunityDetail = () => {
   const PostContent = post?.content;
   const PostId = post?.id;
   const PostSteamid = post?.steamid;
+  const PostCount = post?.count;
   const Steamid = sessionStorage.getItem("steamid");
+  console.log("post", post);
+
+  // 현재시간 - PostDate = 몇분이 지났는지
+  const newDate: any = new Date();
+  const nowDate: any = newDate - PostDate;
 
   //삭제 하기
   const PostBoxRef = useRef<any>();
@@ -42,116 +49,207 @@ export const CommunityDetail = () => {
       return;
     }
   };
-
+  //커뮤니티로 이동
+  const gotoCommunity = () => {
+    navigate("/Community");
+  };
   return (
-    <PostsWrap>
-      <PostpageWrap>
-        <PostButtonWrap>
-          {/* 세션의 저장된 스팀아이디랑 디비의 스팀아이디가 같았을때만 수정 삭제 버튼이 보이게만듬 */}
-          {PostSteamid === Steamid ? (
-            <PostEditDelBox ref={PostBoxRef}>
-              <button onClick={handleDelete}>삭제</button>
-              <button
-                onClick={() => {
-                  navigate(`/CommunityEditPost/${PostId}`);
-                }}
-              >
-                수정
-              </button>
-            </PostEditDelBox>
-          ) : (
-            ""
-          )}
-
-          <button
-            onClick={() => {
-              navigate("/Community");
+    <div style={{ display: "flex", justifyContent: "center" }}>
+      <Postslayout>
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <div
+            style={{
+              height: "390px",
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "center",
+              alignContent: "center",
+              width: "100%",
             }}
           >
-            목록
-          </button>
-        </PostButtonWrap>
-        <TableHeader>
-          <PostTitle>{PostTitles}</PostTitle>
-          <PostInfoContainer>
-            <span>작성일 : {PostDate}</span>
-            <PostInfo></PostInfo>
-            <span>작성자 : {PostName}</span>
-            <PostInfo></PostInfo>
-          </PostInfoContainer>
-        </TableHeader>
-        <ContentWrap>{PostContent}</ContentWrap>
+            <CommunityTitle onClick={gotoCommunity}> 커뮤니티</CommunityTitle>
+            <CommunityComment>
+              게임채널에 함께할 구성원을 모집하거나 자유롭게 의견을 나누는
+              공간입니다.
+            </CommunityComment>
+          </div>
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              width: "100%",
+              marginBottom: "10px",
+            }}
+          >
+            <Communitytitle2>게시글</Communitytitle2>
+            <div>
+              {PostSteamid === Steamid ? (
+                <PostEditDelBox ref={PostBoxRef}>
+                  <AddPostBtn
+                    onClick={() => {
+                      navigate(`/CommunityEditPost/${PostId}`);
+                    }}
+                  >
+                    수정
+                  </AddPostBtn>
+                  <AddPostBtn onClick={handleDelete}>삭제</AddPostBtn>
+                </PostEditDelBox>
+              ) : (
+                ""
+              )}
+            </div>
+          </div>
+          <PostpageWrap>
+            <TableHeader />
+            <CommunityTable>
+              {/* 테이블 크기나누기 */}
+              <colgroup>
+                <col style={{ width: "7%" }} />
+                <col style={{ width: "48%" }} />
+                <col style={{ width: "10%" }} />
+                <col style={{ width: "20%" }} />
+                <col style={{ width: "10%" }} />
+                <col style={{ width: "5%" }} />
+              </colgroup>
+              {/* 테이블 나누기 */}
+              <tr>
+                <td>제목</td>
+                <td>{PostTitles}</td>
+              </tr>
+              <tr>
+                <td>닉네임</td> <td> {PostName}</td>
+                <td> 작성시간 </td>
+                <td>{PostDate}</td>
+                <td>조회수</td>
+                <td>{PostCount}</td>
+              </tr>
+            </CommunityTable>
+            <PostContents>{PostContent}</PostContents>
 
-        {/* 댓글 */}
-        <Comment PostId={PostId} />
-      </PostpageWrap>
-    </PostsWrap>
+            {/* 댓글 */}
+            <Comment PostId={PostId} />
+          </PostpageWrap>
+        </div>
+      </Postslayout>
+    </div>
   );
 };
+//테이블 컴포넌트
+
+const CommunityTable = styled.table`
+  width: 100%;
+  border: 1px solid #777d87;
+  border-collapse: collapse;
+  border-left: none;
+  border-right: none;
+  td {
+    border: 1px solid #777d87;
+    height: 40px;
+    line-height: 40px;
+    text-align: center;
+    font-size: 14px;
+  }
+  //테이블기준 첫번째 녀석꺼만 조절
+  td:first-child {
+    border-left: 0;
+  }
+  //테이블기준 마지막 녀석꺼만 조절
+  td:last-child {
+    border-right: 0;
+  }
+  //가로기준 두번재칸만 조절하기
+  td:nth-child(2) {
+    text-align: left;
+    padding-left: 10px;
+  }
+  .Td {
+    min-height: 300px;
+  }
+`;
+
+const AddPostBtn = styled.span`
+  cursor: pointer;
+  padding: 4px 8px;
+  gap: 10px;
+  font-weight: 600;
+  font-size: 13px;
+  line-height: 25px;
+  text-align: center;
+  width: 40px;
+  height: 26px;
+  background: #404b5e;
+  border-radius: 8px;
+  margin-right: 10px;
+  &:hover {
+    background: #00b8c8;
+  }
+`;
+const Communitytitle2 = styled.div`
+  color: whitr;
+  font-weight: 400;
+  font-size: 20px;
+`;
+const CommunityComment = styled.div`
+  font-size: 13;
+  color: #a7a9ac;
+  margin-top: 20px;
+  margin-bottom: 70px;
+  display: flex;
+  justify-content: center;
+`;
+const CommunityTitle = styled.div`
+  cursor: pointer;
+  width: 100%;
+  position: relative;
+  margin: 0 auto;
+  font-family: "Noto Sans KR", sans-serif;
+  font-style: normal;
+  font-weight: 400;
+  font-size: 40px;
+  line-height: 54px;
+  display: flex;
+  justify-content: center;
+`;
+
 const PostEditDelBox = styled.div`
   color: white;
 `;
-const PostsWrap = styled.div`
+const Postslayout = styled.div`
   display: flex;
   flex-direction: column;
+  justify-content: center;
+  align-items: center;
   width: 100%;
   color: white;
-  background-color: gray;
 `;
 const PostpageWrap = styled.div`
   color: white;
   display: flex;
   flex-direction: column;
-`;
-const PostButtonWrap = styled.div`
-  color: white;
   width: 100%;
-  display: flex;
-  justify-content: space-between;
-  padding-bottom: 15px;
 `;
+
 const TableHeader = styled.div`
-  height: 100px;
-  width: 100%;
+  width: 980px;
   display: flex;
   flex-direction: column;
-  border-top: 1px solid #fff;
-  border-bottom: 1px solid #fff;
+  border-top: 2px solid #00b8c8;
 `;
-const PostTitle = styled.div`
-  padding: 16px 20px 0 20px;
-  height: 60px;
-  display: flex;
-  flex-direction: row;
-  span {
-    font-style: normal;
-    font-weight: 400;
-    font-size: 24px;
-    color: #fff;
-  }
-`;
-const PostInfoContainer = styled.div`
-  height: 40px;
-  display: flex;
-  flex-direction: row;
-  padding: 0 20px 16px 20px;
-  font-weight: 400;
+const PostContents = styled.div`
+  padding: 0px 10px;
+  min-height: 180px;
+  color: #fff;
   font-size: 14px;
-  span {
-    margin-right: 15px;
-    font-style: normal;
-    color: #fff;
-  }
-`;
-const PostInfo = styled.div`
-  margin-right: 20px;
-  font-style: normal;
-  color: #a5a5a5;
-`;
-const ContentWrap = styled.div`
-  padding: 30px 20px;
-  min-height: 200px;
-  white-space: pre-line;
-  display: flex;
-  gap: 20px;
+  padding-top: 20px;
+  word-break: break-all;
+  width: 980px;
+  padding-bottom: 40px;
+  border-bottom: 1px solid #777d87;
 `;
