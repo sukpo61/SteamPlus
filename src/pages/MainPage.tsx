@@ -60,16 +60,18 @@ function MainPage() {
       "https://store.steampowered.com/api/featuredcategories/",
       {
         params: {
-          f: "games",
-          type: "new",
           format: "json",
         },
       }
     );
 
-    return response?.data?.top_sellers.items;
+    // return response?.data?.top_sellers.items;
+    return response?.data;
   };
+
   const { data: TopGame }: any = useQuery("Top10Game", Top10Game);
+
+  console.log(TopGame);
 
   const getChannelInfo = async (channelid: any, count: any) => {
     const response = await axios.get(
@@ -133,7 +135,7 @@ function MainPage() {
         <PoularChannel />
         {/* 현재활성화된 채널 */}
         <ActivateChannel gamedata={activeChannelsInfo} />
-        <Top10 TopGames={TopGame} />
+        {/* <Top10 TopGames={TopGame} /> */}
       </MainWrap>
     </MainLayout>
   );
