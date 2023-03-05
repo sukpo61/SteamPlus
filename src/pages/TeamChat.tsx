@@ -13,7 +13,7 @@ import {
   videoRoomExitRecoil,
   countRecoil,
 } from "../recoil/atom";
-import { useLocation } from "react-router";
+import { useLocation, useParams } from "react-router";
 import axios from "axios";
 import Aos from "aos";
 import "aos/dist/aos.css";
@@ -44,7 +44,13 @@ const TeamChat = () => {
 
   const { state: gameinfo } = useLocation();
 
+  const params: any = useParams();
+
+  // const gameid = params.id.replace(":", "");
+
   const gameid = gameinfo?.gameid;
+
+  console.log("parmas", gameid);
 
   const Gamedata = async () => {
     const response = await axios.get(
@@ -126,6 +132,18 @@ const TeamChat = () => {
     }
   }, [channelId]);
 
+  // 개선해야됨.
+  useEffect(() => {
+    if (channelId) {
+      if (channelId !== gameid) {
+        socket.emit("channelleave", channelId);
+      }
+    }
+    Gamedata();
+    setLayoutMenu("voicetalk");
+    Aos.init();
+  }, [params.id]);
+
   useEffect(() => {
     if (channelId) {
       if (channelId !== gameid) {
@@ -139,7 +157,7 @@ const TeamChat = () => {
   }, []);
 
   return (
-    <ChatPageDiv key={count}>
+    <ChatPageDiv>
       <Background src={background}></Background>
       <ChatPageHeaderDiv>{currentRoom}</ChatPageHeaderDiv>
       <ChatContentsDiv ref={chatContainerRef}>
