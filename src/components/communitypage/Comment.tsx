@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useRef } from "react";
 import styled from "styled-components";
 import { useState } from "react";
 import axios from "axios";
@@ -8,6 +8,9 @@ import { useQuery } from "react-query";
 import { useQueryClient } from "react-query";
 
 function Comment({ PostId }: any) {
+  //Ref존
+  const CommentRef = useRef<any>();
+  const CommentsRef = useRef<any>();
   const queryClient = useQueryClient();
 
   const myId = sessionStorage.getItem("steamid");
@@ -17,13 +20,16 @@ function Comment({ PostId }: any) {
   const [commentInput, setCommentInput] = useState<string>("");
   const [editOn, setEditOn] = useState<string>("");
   const [editInput, setEditInput] = useState<string>("");
-
+  //날짜만들기
   const newDate = new Date();
   const year = newDate.getFullYear();
   const month = newDate.getMonth() + 1;
   const day = newDate.getDate();
-  const date = `${year}.${month}.${day}`;
-
+  const Hour = newDate.getHours();
+  const Minute = newDate.getMinutes();
+  const date = `${year}/${month}/${day} ${Hour}:${Minute}`;
+  //스팀아이디
+  const steamID = sessionStorage.getItem("steamid");
   const getComment = async () => {
     const response = await axios.get("http://localhost:3001/comment");
     return response;
@@ -33,7 +39,7 @@ function Comment({ PostId }: any) {
   const commentFilter = comment?.filter((i: any) => {
     return i.postId === PostId;
   });
-
+  //댓글등록
   const postMutation = useMutation(
     (newComment: object) =>
       axios.post("http://localhost:3001/comment", newComment),
@@ -43,7 +49,35 @@ function Comment({ PostId }: any) {
       },
     }
   );
-
+  //댓글등록 onChange
+  const CommentInputOnChange = (e: any) => {
+    setCommentInput(e.target.value);
+  };
+  //댓글등록 핸들러
+  const CommentFormonSubmit = (e: any) => {
+    e.preventDefault();
+    if (!steamID) {
+      alert("로그인이 필요합니다");
+      return;
+    }
+    if (commentInput === "") {
+      alert("댓글을 입력하세요");
+      CommentRef.current!.focus();
+      return;
+    }
+    const newComment = {
+      id: uuidv4(),
+      postId: PostId,
+      myId: myId,
+      name: myNickName,
+      date: date,
+      profileImg: ProfileImgUrl,
+      contents: commentInput,
+    };
+    postMutation.mutate(newComment);
+    setCommentInput("");
+  };
+  //댓글삭제
   const DeleteMutation = useMutation(
     (id) => axios.delete(`http://localhost:3001/comment/${id}`),
     {
@@ -52,7 +86,10 @@ function Comment({ PostId }: any) {
       },
     }
   );
-
+  const DeleteOnClick = (id: any) => {
+    DeleteMutation.mutate(id);
+  };
+  //댓글수정
   const EditMutation = useMutation(
     (editComment: any) =>
       axios.put(`http://localhost:3001/comment/${editComment.id}`, editComment),
@@ -63,43 +100,14 @@ function Comment({ PostId }: any) {
     }
   );
 
-  const CommentInputOnChange = (e: any) => {
-    setCommentInput(e.target.value);
-  };
-
-  const CommentFormonSubmit = (e: any) => {
-    e.preventDefault();
-    if (commentInput === "") {
-      alert("빈칸은 안됨");
-      return;
-    }
-
-    const newComment = {
-      id: uuidv4(),
-      postId: PostId,
-      myId: myId,
-      name: myNickName,
-      date: date,
-      profileImg: ProfileImgUrl,
-      contents: commentInput,
-    };
-
-    postMutation.mutate(newComment);
-
-    setCommentInput("");
-  };
-
-  const DeleteOnClick = (id: any) => {
-    DeleteMutation.mutate(id);
-  };
-
   const EditInputOnChange = (e: any) => {
     setEditInput(e.target.value);
   };
 
   const EditCommentButton = (id: any) => {
     if (editInput === "") {
-      alert("빈칸은 안됨");
+      alert("수정된 댓글을 입력해주세요");
+      CommentsRef.current!.focus();
       return;
     } else {
       const editComment = {
@@ -108,7 +116,6 @@ function Comment({ PostId }: any) {
         contents: editInput,
       };
       EditMutation.mutate(editComment);
-
       setEditInput("");
       setEditOn("");
     }
@@ -116,58 +123,78 @@ function Comment({ PostId }: any) {
 
   return (
     <CommentWrap>
-      <h1>댓글</h1>
+      <h1 style={{ padding: "15px 10px" }}>댓글</h1>
       {/* 댓글 입력칸 */}
       <CommentForm onSubmit={CommentFormonSubmit}>
-        <CommentInput value={commentInput} onChange={CommentInputOnChange} />
+        <CommentInput
+          ref={CommentRef}
+          placeholder="댓글을 입력하세요"
+          value={commentInput}
+          onChange={CommentInputOnChange}
+        />
+
         <CommentFormButton>등록</CommentFormButton>
       </CommentForm>
       {/* 댓글 창 */}
+
       {commentFilter?.map((i: any) => {
         return (
           <CommentContents>
-            <CommentImg src={i.profileImg} />
-            <CommentName>{i.name}</CommentName>
-            {editOn === i.id ? (
-              <EditInput
-                placeholder={i.contents}
-                value={editInput}
-                onChange={EditInputOnChange}
-              />
-            ) : (
-              <CommentText>{i.contents}</CommentText>
-            )}
-            <CommentDate>{i.date}</CommentDate>
-
-            {editOn === i.id ? (
+            <div style={{ display: "flex" }}>
               <>
-                <CommentEdit onClick={() => EditCommentButton(i.id)}>
-                  완료
-                </CommentEdit>
-                <CommentDelete onClick={() => setEditOn("")}>
-                  취소
-                </CommentDelete>
+                <CommentImg src={i.profileImg} />
               </>
-            ) : (
-              <>
-                {i.myId === myId ? (
-                  <>
-                    <CommentEdit
-                      onClick={() => {
-                        setEditOn(i.id);
-                      }}
-                    >
-                      수정
-                    </CommentEdit>
-                    <CommentDelete onClick={() => DeleteOnClick(i.id)}>
-                      삭제
-                    </CommentDelete>
-                  </>
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  marginLeft: "10px",
+                }}
+              >
+                <CommentName>{i.name}</CommentName>
+                {editOn === i.id ? (
+                  <EditInput
+                    defaultValue={i.contents}
+                    onChange={EditInputOnChange}
+                    ref={CommentsRef}
+                  />
                 ) : (
-                  ""
+                  <CommentText>{i.contents}</CommentText>
                 )}
-              </>
-            )}
+                <CommentDate>{i.date}</CommentDate>
+              </div>
+            </div>
+            <div>
+              {editOn === i.id ? (
+                <>
+                  <CommentEdit onClick={() => EditCommentButton(i.id)}>
+                    완료
+                  </CommentEdit>
+                  <CommentDelete onClick={() => setEditOn("")}>
+                    취소
+                  </CommentDelete>
+                </>
+              ) : (
+                <>
+                  {i.myId === myId ? (
+                    <>
+                      <CommentEdit
+                        onClick={() => {
+                          setEditOn(i.id);
+                        }}
+                      >
+                        수정
+                      </CommentEdit>
+                      <CommentDelete onClick={() => DeleteOnClick(i.id)}>
+                        삭제
+                      </CommentDelete>
+                    </>
+                  ) : (
+                    ""
+                  )}
+                </>
+              )}
+            </div>
           </CommentContents>
         );
       })}
@@ -177,30 +204,42 @@ function Comment({ PostId }: any) {
 
 export default Comment;
 const CommentWrap = styled.div`
-  width: 80%;
+  width: 100%;
   margin: 0 auto;
 `;
 const CommentForm = styled.form`
-  margin-top: 20px;
-  margin-bottom: 50px;
   width: 100%;
   height: 40px;
+  margin-bottom: 10px;
 `;
 const CommentInput = styled.input`
   width: 95%;
   height: 40px;
+  background: transparent;
+  background-color: #404b5e;
+  box-shadow: inset 0px 4px 8px rgba(0, 0, 0, 0.25);
+  border-radius: 10px;
+  color: #fff;
+  line-height: 40px;
+  text-align: start;
+  padding-left: 10px;
+  border: none;
 `;
 const CommentFormButton = styled.button`
   width: 5%;
   height: 40px;
   background-color: #000;
   color: #fff;
+  &:hover {
+    background: #00b8c8;
+  }
 `;
 const CommentContents = styled.div`
-  border-top: 1px solid #000;
   display: flex;
-  height: 60px;
+  min-height: 60px;
   align-items: center;
+  justify-content: space-between;
+  margin-top: 20px;
 `;
 const CommentImg = styled.img`
   width: 40px;
@@ -208,26 +247,51 @@ const CommentImg = styled.img`
   border-radius: 50%;
 `;
 const CommentName = styled.h2`
-  margin: 10px 0 auto 10px;
+  font-size: 16px;
+  font-weight: 600;
+  font-size: #fff;
 `;
 const EditInput = styled.input`
-  margin: auto 0 15px 50px;
+  color: #fff;
+  border: none;
+  background: transparent;
+  background-color: #404b5e;
+  width: 100%;
+  padding: 0px 5px;
+  box-shadow: inset 0px 4px 8px rgba(0, 0, 0, 0.25);
+  border-radius: 10px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  height: 100%;
+  text-indent: 3px;
 `;
 const CommentText = styled.p`
-  margin: auto 0 15px 50px;
+  font-size: 14px;
+  margin: 10px 0px;
+  word-break: break-all;
+  width: 850px;
+  font-weight: 400;
 `;
 const CommentDate = styled.p`
-  margin: auto 0 15px auto;
+  font-size: 11px;
+  color: #777d87;
+  font-weight: 500;
 `;
 const CommentEdit = styled.button`
   margin-left: 10px;
   margin-bottom: auto;
-  font-size: 16px;
-  color: blue;
+  font-size: 12px;
+  color: #a7a9ac;
+  &:hover {
+    color: #00b8c8;
+  }
 `;
 const CommentDelete = styled.button`
   margin-bottom: auto;
   margin-left: 10px;
-  font-size: 16px;
-  color: blue;
+  font-size: 12px;
+  color: #a7a9ac;
+  &:hover {
+    color: #00b8c8;
+  }
 `;
