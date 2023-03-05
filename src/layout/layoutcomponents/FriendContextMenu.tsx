@@ -109,7 +109,7 @@ function FriendContextMenu({ xPos, yPos, id, onClose }: any) {
     console.log(roomName);
 
     socket.emit("friendChat", clickId, roomName);
-    navigate(`/testchat/:${roomName}`);
+    navigate(`/testchat/:${roomName}`, { state: clickId.split("/")[0] });
 
     const chatNoticeClear = chatTextNotice.filter((i: any) => {
       if (i.id === id) {
@@ -134,7 +134,7 @@ function FriendContextMenu({ xPos, yPos, id, onClose }: any) {
   const friendLoggin = friendAllRecoil.find((i: any) => {
     return i.id === id;
   });
-  console.log(friendLoggin);
+  // console.log(friendLoggin);
 
   //친구 온라인 상태확인
   const isFriendOnline = (lastLogin: string): boolean => {
