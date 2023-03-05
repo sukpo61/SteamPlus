@@ -73,15 +73,17 @@ function FriendContextMenu({ xPos, yPos, id, onClose }: any) {
     socket.once("friendchannel", (roomname, frienduserid) => {
       if (frienduserid === userid && roomname) {
         console.log("frjoin", roomname);
-        setFriendRoomInfo({
-          roomtitle: roomname.split("/")[1],
-          channelId: roomname.split("/")[0],
-        });
         navigate(`/Teamchat/:${roomname.split("/")[0]}`, {
+          replace: true,
           state: {
             gameid: roomname.split("/")[0].toString(),
           },
         });
+        setFriendRoomInfo({
+          roomtitle: roomname.split("/")[1],
+          channelId: roomname.split("/")[0],
+        });
+        setLayoutMenu("voicetalk");
       }
     });
   };
@@ -105,7 +107,7 @@ function FriendContextMenu({ xPos, yPos, id, onClose }: any) {
       return i.split("/")[0] === id;
     });
     //선택한 아이디와 내아이디 더하기 (방이름)
-    const roomName = parseInt(clickId.split("/")[0]) + parseInt(myId);
+    const roomName = parseInt(clickId?.split("/")[0]) + parseInt(myId);
     console.log(roomName);
 
     socket.emit("friendChat", clickId, roomName);
@@ -127,6 +129,7 @@ function FriendContextMenu({ xPos, yPos, id, onClose }: any) {
   // });
 
   useEffect(() => {
+    console.log(socket.id);
     socket.emit("nickName", myId, socket.id);
   }, []);
 

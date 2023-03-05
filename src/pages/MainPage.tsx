@@ -1,12 +1,22 @@
 import axios from "axios";
 import styled from "styled-components";
 import { ActivateChannel } from "../components/ActivateChannel";
-import { PoularChannel } from "../components/PoularChannel";
+import PoularChannel from "../components/PoularChannel";
 import { CurrentGame } from "../components/CurrentGame";
 import { useQuery } from "react-query";
+import { useEffect, useState } from "react";
 import socket from "../socket";
+import { activechannelsRecoil, activechannelsinfoRecoil } from "../recoil/atom";
+import { useRecoilState } from "recoil";
+import { Top10 } from "../components/mainpage/Top10";
 
 function MainPage() {
+  const [activechannels, setActiveChannels] =
+    useRecoilState(activechannelsRecoil);
+  const [activeChannelsInfo, setActiveChannelsInfo] = useRecoilState(
+    activechannelsinfoRecoil
+  );
+
   const GameId: any = sessionStorage.getItem("gameid");
   const GameIds: any =
     GameId === "undefined" || GameId === null
@@ -44,30 +54,89 @@ function MainPage() {
   };
   const { data }: any = useQuery("Gamedata", Gamedata);
 
-  ///인기게임 데이터 api
-  const getFeaturedGames = async () => {
+  //top10 game 정보
+  const Top10Game = async () => {
     const response = await axios.get(
-      "https://cors-anywhere.herokuapp.com/https://store.steampowered.com/api/featured"
+      "https://store.steampowered.com/api/featuredcategories/",
+      {
+        params: {
+          format: "json",
+        },
+      }
     );
 
-    const FeaturedGames: any = {
-      game1: response?.data?.featured_win[0],
-      game2: response?.data?.featured_win[1],
-      game3: response?.data?.featured_win[2],
-    };
-    return FeaturedGames;
+    // return response?.data?.top_sellers.items;
+    return response?.data;
   };
 
-  const { data: dataa }: any = useQuery("getFeaturedGames", getFeaturedGames);
+  const { data: TopGame }: any = useQuery("Top10Game", Top10Game);
+
+  console.log(TopGame);
+
+  const getChannelInfo = async (channelid: any, count: any) => {
+    const response = await axios.get(
+      `https://cors-anywhere.herokuapp.com/http://store.steampowered.com/api/appdetails/`,
+      {
+        params: {
+          appids: channelid, // 해당 게임의 id값'
+        },
+      }
+    );
+    setActiveChannelsInfo((e: any) => [
+      ...e,
+      {
+        info: response?.data[channelid].data,
+        usercount: count,
+      },
+    ]);
+  };
+
+  useEffect(() => {
+    if (activechannels) {
+      activechannels.map((channel: any) => {
+        getChannelInfo(channel.channelid, channel.usercount);
+      });
+    }
+  }, [activechannels]);
+
+  useEffect(() => {
+    socket.emit("getactivechannels");
+    socket.once("getactivechannels", (channelsinfo) => {
+      setActiveChannels(channelsinfo);
+    });
+    return () => {
+      setActiveChannels([]);
+      setActiveChannelsInfo([]);
+    };
+  }, []);
+
+  ///인기게임 데이터 api
+  // const getFeaturedGames = async () => {
+  //   const response = await axios.get(
+  //     "https://cors-anywhere.herokuapp.com/https://store.steampowered.com/api/featured"
+  //   );
+
+  //   const FeaturedGames: any = {
+  //     game1: response?.data?.featured_win[0],
+  //     game2: response?.data?.featured_win[1],
+  //     game3: response?.data?.featured_win[2],
+  //   };
+  //   return FeaturedGames;
+  // };
+
+  // const { data: dataa }: any = useQuery("getFeaturedGames", getFeaturedGames);
 
   return (
     <MainLayout>
       {/* 메인게임 이미지 */}
-      <CurrentGame game={data} />
-      {/* 인기채널 */}
-      <PoularChannel game={data} data2={dataa} />
-      {/* 현재활성화된 채널 */}
-      <ActivateChannel game={data} data2={dataa} />
+      <CurrentGame game={data} />{" "}
+      <MainWrap>
+        {/* 인기채널 */}
+        <PoularChannel />
+        {/* 현재활성화된 채널 */}
+        <ActivateChannel gamedata={activeChannelsInfo} />
+        {/* <Top10 TopGames={TopGame} /> */}
+      </MainWrap>
     </MainLayout>
   );
 }
@@ -75,6 +144,12 @@ function MainPage() {
 const MainLayout = styled.div`
   width: 100%;
   height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+`;
+const MainWrap = styled.div`
+  width: 900px;
   display: flex;
   flex-direction: column;
 `;

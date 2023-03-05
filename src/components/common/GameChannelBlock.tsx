@@ -13,8 +13,19 @@ interface Props {
   game: any;
 }
 
-function GameChannelBlock({ game }: any) {
+function GameChannelBlock({ game, count }: any) {
   const navigate = useNavigate();
+
+  const Genres: any = (genres: any) => {
+    if (genres) {
+      {
+        genres.map((e: any) => {
+          return `${e.description} `;
+        });
+      }
+    }
+    return;
+  };
 
   return (
     <GameListBlock>
@@ -28,11 +39,10 @@ function GameChannelBlock({ game }: any) {
           </TitleLinear>
           <GameChannelInfo>
             <GameChannelCategory>
-              {game.genres ? game?.genres[0]?.description : null}&nbsp;
-              {game.genres ? game?.genres[1]?.description : null}&nbsp;
-              {game.genres ? game?.genres[2]?.description : null}
-            </GameChannelCategory>
-
+              {game?.genres.map((e: any) => {
+                return `${e.description} `;
+              })}
+            </GameChannelCategory>{" "}
             <NumberOfPlayer>
               <div
                 style={{
@@ -42,7 +52,7 @@ function GameChannelBlock({ game }: any) {
                   background: "#23DE79",
                 }}
               ></div>
-              {/* {`${}`} */}명
+              {count}명
             </NumberOfPlayer>
           </GameChannelInfo>
         </div>
@@ -69,6 +79,10 @@ const GameListBlock = styled.div`
   height: 100px;
   border-radius: 10px;
   overflow: hidden;
+  &:hover {
+    box-shadow: 0px 0px 15px 0px #fff;
+  }
+  transition: 0.5s ease;
 `;
 
 const GameChannelImgArea = styled.div`
@@ -137,7 +151,7 @@ const GameChannelCategory = styled.div`
   letter-spacing: -0.03em;
 `;
 
-const NumberOfPlayer = styled.div`
+const NumberOfPlayer = styled.p`
   color: white;
   font-size: 14px;
   display: flex;

@@ -93,7 +93,6 @@ function Profile() {
     const result = await axios.get(
       `http://localhost:3001/auth/${ProfleSteamId}`
     );
-
     return result;
   };
 
@@ -123,7 +122,6 @@ function Profile() {
         },
       }
     );
-
     sessionStorage.setItem("gameid", result?.data.response.players[0].gameid);
     sessionStorage.setItem("steamid", result.config.params.steamids);
     sessionStorage.setItem(

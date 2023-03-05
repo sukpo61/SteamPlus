@@ -10,8 +10,10 @@ import {
   currentRoomRecoil,
   currentGameIdRecoil,
   LayoutButton,
+  videoRoomExitRecoil,
+  countRecoil,
 } from "../recoil/atom";
-import { useLocation } from "react-router";
+import { useLocation, useParams } from "react-router";
 import axios from "axios";
 import Aos from "aos";
 import "aos/dist/aos.css";
@@ -34,11 +36,21 @@ const TeamChat = () => {
 
   const [layoutMenu, setLayoutMenu] = useRecoilState<String>(LayoutButton);
 
+  const [videoRoomExit, setVideoRoomExit] = useRecoilState(videoRoomExitRecoil);
+
+  const [count, setCount] = useRecoilState(countRecoil);
+
   const [background, setBackground] = useState<any>("");
 
   const { state: gameinfo } = useLocation();
 
+  const params: any = useParams();
+
+  // const gameid = params.id.replace(":", "");
+
   const gameid = gameinfo?.gameid;
+
+  console.log("parmas", gameid);
 
   const Gamedata = async () => {
     const response = await axios.get(
@@ -62,6 +74,7 @@ const TeamChat = () => {
   //입력 input
   const [textInput, setTextInput] = useState<any>("");
   //입력 input
+
   const chatInputOnChange = (e: any) => {
     setTextInput(e.target.value);
   };
@@ -117,15 +130,30 @@ const TeamChat = () => {
     if (channelId) {
       socket.emit("requestrooms", channelId);
     }
-    return () => {
-      socket.off("requestrooms");
-    };
   }, [channelId]);
 
+  // 개선해야됨.
   useEffect(() => {
+    if (channelId) {
+      if (channelId !== gameid) {
+        socket.emit("channelleave", channelId);
+      }
+    }
     Gamedata();
-    Aos.init();
     setLayoutMenu("voicetalk");
+    Aos.init();
+  }, [params.id]);
+
+  useEffect(() => {
+    if (channelId) {
+      if (channelId !== gameid) {
+        socket.emit("channelleave", channelId);
+        setVideoRoomExit((e: any) => !e);
+      }
+    }
+    Gamedata();
+    setLayoutMenu("voicetalk");
+    Aos.init();
   }, []);
 
   return (
@@ -134,19 +162,19 @@ const TeamChat = () => {
       <ChatPageHeaderDiv>{currentRoom}</ChatPageHeaderDiv>
       <ChatContentsDiv ref={chatContainerRef}>
         <ChatContentsMarginDiv>
-          {chatText.map((chat: any) => {
+          {chatText.map((chat: any, index: number) => {
             if (chat.type === "alarm") {
-              return <Testtext chat={chat} />;
+              return <Testtext chat={chat} key={index} />;
             } else if (chat.id === myId) {
               return (
                 <div data-aos="fade-left">
-                  <Testtext chat={chat} />
+                  <Testtext chat={chat} key={index} />
                 </div>
               );
             } else {
               return (
                 <div data-aos="fade-right">
-                  <Testtext chat={chat} />
+                  <Testtext chat={chat} key={index} />
                 </div>
               );
             }

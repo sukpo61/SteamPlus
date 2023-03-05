@@ -13,12 +13,15 @@ import {
   AboutPagesState,
   friendChat,
   friendChatNotice,
+  currentRoomRecoil,
+  currentGameIdRecoil,
 } from "../recoil/atom";
 import Profile from "./layoutcomponents/Profile";
 import GameSearch from "./layoutcomponents/GameSearch";
 import Friend from "./layoutcomponents/Friend";
 import FriendSearch from "./layoutcomponents/FriendSearch";
 import VoiceTalk from "./layoutcomponents/VoiceTalk";
+import EmptyVoiceTalk from "./layoutcomponents/EmptyVoiceTalk";
 import FriendAdd from "./layoutcomponents/FriendAdd";
 import { useQuery } from "react-query";
 import axios from "axios";
@@ -27,6 +30,7 @@ import { FriendSearchProps } from "../layout/layoutcomponents/FriendSearch";
 
 import { AiFillHome } from "react-icons/ai";
 import { FaKeyboard } from "react-icons/fa";
+import { MdDynamicFeed } from "react-icons/md";
 import { AiOutlineSearch } from "react-icons/ai";
 import { FaUserFriends } from "react-icons/fa";
 import { MdVoiceChat } from "react-icons/md";
@@ -36,6 +40,8 @@ import { MdExitToApp } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 import { useParams } from "react-router-dom";
+
+import LoginModal from "./LoginModal";
 
 import socket from "../socket";
 import AboutPages from "./layoutcomponents/AboutPages";
@@ -52,8 +58,6 @@ function Layout() {
   //설명페이지 온오프
   const [aboutPagesOnOff, setAboutPagesOnOff] =
     useRecoilState<String>(AboutPagesState);
-  console.log(aboutPagesOnOff);
-
   // //친구 알림 내역
   const [bothFriendAll, setBothFriendAll] = useRecoilState(BothFriend);
 
@@ -74,6 +78,12 @@ function Layout() {
   const [AllStreams, setAllStreams] = useRecoilState(AllStreamsRecoil);
 
   const [videoRoomExit, setVideoRoomExit] = useRecoilState(videoRoomExitRecoil);
+
+  const [loginModalOpen, setLoginModalOpen] = useState<boolean>(true); // 로그인 모달
+
+  const [currentRoom, setCurrentRoom] = useRecoilState(currentRoomRecoil);
+
+  const [channelId, setchannelId] = useRecoilState(currentGameIdRecoil);
 
   //메뉴 탭눌렀을때 (친구제외)
   const LayoutButtonOnClick = (i: string) => {
@@ -164,7 +174,11 @@ function Layout() {
 
     return (
       <VideoWrap key={data.userid}>
-        <Streamvideo ref={remotehandleVideoRef} autoPlay playsInline muted />
+        {data.userid === myId ? (
+          <Streamvideo ref={remotehandleVideoRef} autoPlay playsInline muted />
+        ) : (
+          <Streamvideo ref={remotehandleVideoRef} autoPlay playsInline />
+        )}
         <Usernickname>
           <span>{info?.nickname}</span>
         </Usernickname>
@@ -173,58 +187,67 @@ function Layout() {
   });
 
   return (
-    <div onContextMenu={(e: any) => e.preventDefault()}>
-      <SideBarDiv>
-        {/* 프로필 */}
-        <Profilebutton onClick={() => LayoutButtonOnClick("profile")}>
-          {/* 로그인이 되어있지않다면과 로그인이 되어있다면의 정보*/}
-          {ProfileImgUrl === null ? (
-            <div>profile</div>
-          ) : (
-            <ProfileImg src={`${ProfileImgUrl}`} />
-          )}
-        </Profilebutton>
-        {/* 홈 */}
-        <Homebutton
-          locationName={locationName}
-          onClick={() => {
-            FriendButtonOnClick("close");
-            navigate("/");
-            window.scrollTo({ top: 0, behavior: "smooth" });
-          }}
-        >
-          <AiFillHome className="homeIcon" />
-          <p>홈</p>
-        </Homebutton>
-        {/* 게임검색 */}
-        <GameSearchbutton
-          locationName={locationName}
-          onClick={() => {
-            FriendButtonOnClick("close");
-            navigate("/Channelsearchpage");
-            window.scrollTo({ top: 0, behavior: "smooth" });
-          }}
-        >
-          <AiOutlineSearch className="searchIcon" />
-          <p>게임검색</p>
-        </GameSearchbutton>
-        {/* 커뮤니티 */}
+    <>
+      <LoginModalPosition>
+        {/* 로그인 모달 */}
+        {ProfileImgUrl === null
+          ? loginModalOpen && (
+              <LoginModal setLoginModalOpen={setLoginModalOpen} />
+            )
+          : ""}
+      </LoginModalPosition>
 
-        <Communitybutton
-          locationName={locationName}
-          onClick={() => {
-            FriendButtonOnClick("close");
-            navigate("Community");
-            window.scrollTo({ top: 0, behavior: "smooth" });
-          }}
-        >
-          <FaKeyboard className="communityIcon" />
-          <p>커뮤니티</p>
-        </Communitybutton>
+      <div onContextMenu={(e: any) => e.preventDefault()}>
+        <SideBarDiv>
+          {/* 프로필 */}
+          <Profilebutton onClick={() => LayoutButtonOnClick("profile")}>
+            {/* 로그인이 되어있지않다면과 로그인이 되어있다면의 정보*/}
+            {ProfileImgUrl === null ? (
+              <div>profile</div>
+            ) : (
+              <ProfileImg src={`${ProfileImgUrl}`} />
+            )}
+          </Profilebutton>
+          {/* 홈 */}
+          <Homebutton
+            locationName={locationName}
+            onClick={() => {
+              FriendButtonOnClick("close");
+              navigate("/");
+              window.scrollTo({ top: 0, behavior: "smooth" });
+            }}
+          >
+            <AiFillHome className="homeIcon" />
+            <p>홈</p>
+          </Homebutton>
+          {/* 게임검색 */}
+          <GameSearchbutton
+            locationName={locationName}
+            onClick={() => {
+              FriendButtonOnClick("close");
+              navigate("/Channelsearchpage");
+              window.scrollTo({ top: 0, behavior: "smooth" });
+            }}
+          >
+            <AiOutlineSearch className="searchIcon" />
+            <p>게임검색</p>
+          </GameSearchbutton>
+          {/* 커뮤니티 */}
+
+          <Communitybutton
+            locationName={locationName}
+            onClick={() => {
+              FriendButtonOnClick("close");
+              navigate("Community");
+              window.scrollTo({ top: 0, behavior: "smooth" });
+            }}
+          >
+            <FaKeyboard className="communityIcon" />
+            <p>커뮤니티</p>
+          </Communitybutton>
 
         {/* 메뉴 구분선 */}
         <SideLine />
-
         {/* 친구 */}
         {myId === null ? (
           <Friendbutton
@@ -268,13 +291,16 @@ function Layout() {
             <p>음성채팅</p>
           </VoiceTalkbutton>
         ) : (
-          <VoiceTalkbutton
-            onClick={() => LayoutButtonOnClick("voicetalk")}
-            layoutMenu={layoutMenu}
-          >
-            <MdVoiceChat className="chatIcon" />
-            <p>음성채팅</p>
-          </VoiceTalkbutton>
+          <VoiceTalkbuttonWrap>
+            {currentRoom && <VoiceTalkON></VoiceTalkON>}
+            <VoiceTalkbutton
+              onClick={() => LayoutButtonOnClick("voicetalk")}
+              layoutMenu={layoutMenu}
+            >
+              <MdVoiceChat className="chatIcon" />
+              <p>음성채팅</p>
+            </VoiceTalkbutton>
+          </VoiceTalkbuttonWrap>
         )}
         <AboutPagesDiv onClick={AboutPagesOnClick}>?</AboutPagesDiv>
       </SideBarDiv>
@@ -285,7 +311,8 @@ function Layout() {
         <GameSearch />
         <Friend />
         <FriendSearch />
-        <VoiceTalk />
+        {channelId ? <VoiceTalk /> : <EmptyVoiceTalk />}
+
         <FriendAdd />
         <AboutPages />
       </MenuOpenDiv>
@@ -320,10 +347,16 @@ function Layout() {
         </VideoPosition>
       </VideosWrap>
     </div>
+      </>
   );
 }
 
 export default Layout;
+
+const LoginModalPosition = styled.div`
+  width: 100%;
+  height: 100%;
+`;
 
 const Profileimg = styled.div``;
 
@@ -570,17 +603,28 @@ const VoiceTalkbutton = styled.div<{ layoutMenu: String }>`
     margin-bottom: 5px;
   }
 `;
+const VoiceTalkbuttonWrap = styled.div`
+  position: relative;
+`;
+const VoiceTalkON = styled.div`
+  width: 8px;
+  height: 8px;
+  right: 10px;
+  bottom: 48px;
+  border-radius: 4px;
+  background: #f05656;
+  position: absolute;
+`;
 const AboutPagesDiv = styled.div`
   width: 30px;
   height: 30px;
   border-radius: 50%;
   text-align: center;
   line-height: 27px;
-  border: 2px solid #777d87;
+  border: 1px solid #777d87;
   color: #777d87;
   margin-top: auto;
   margin-bottom: 30px;
-  font-weight: 500;
   cursor: pointer;
 `;
 // json에 친구서버에 id, nickname, 프로필이미지
