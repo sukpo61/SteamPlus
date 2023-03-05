@@ -6,6 +6,8 @@ import socket from "../socket";
 import { useRecoilState } from "recoil";
 import { friendAllState, friendChat, friendChatNotice } from "../recoil/atom";
 import { FriendSearchProps } from "../layout/layoutcomponents/FriendSearch";
+import Aos from "aos";
+import "aos/dist/aos.css";
 
 function TestChat() {
   //내 아이디
@@ -38,7 +40,7 @@ function TestChat() {
   const chatInputOnSubmit = (e: any) => {
     e.preventDefault();
     //빈칸 예외 처리
-    if (textInput === "") {
+    if (textInput.trim() === "") {
       return;
     }
     //채팅으로 보낼 시간
@@ -75,6 +77,9 @@ function TestChat() {
     }
   }, [chatText]);
 
+  useEffect(() => {
+    Aos.init();
+  }, []);
   //friend컴포넌트로 이사
   // useEffect(() => {
   //   socket.on("friendNew_message", (newChat) => {
@@ -98,14 +103,26 @@ function TestChat() {
         <ChatContentsMarginDiv>
           {chatText.map((chat: any) => {
             if (chat.roomId === roomId) {
-              return <Testtext chat={chat} key={roomId} />;
+              if (chat.id === myId) {
+                return (
+                  <div data-aos="fade-left">
+                    <Testtext chat={chat} key={roomId} />
+                  </div>
+                );
+              } else {
+                return (
+                  <div data-aos="fade-right">
+                    <Testtext chat={chat} key={roomId} />
+                  </div>
+                );
+              }
             }
           })}
         </ChatContentsMarginDiv>
       </ChatContentsDiv>
       <ChatInputForm onSubmit={chatInputOnSubmit}>
         <ChatInput
-          placeholder="#채팅방_1에 보낼 메세지를 입력하세요."
+          placeholder={`${friendChatTitle?.nickname}에게 보낼 메세지를 입력하세요.`}
           onChange={chatInputOnChange}
           value={textInput}
         />

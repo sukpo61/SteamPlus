@@ -119,7 +119,6 @@ function FriendContextMenu({ xPos, yPos, id, onClose }: any) {
       }
     });
     setChatTextNotice(chatNoticeClear);
-
     setLayoutMenu("close");
   };
 
