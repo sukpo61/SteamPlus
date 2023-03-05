@@ -36,6 +36,8 @@ import { useNavigate } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 import { useParams } from "react-router-dom";
 
+import LoginModal from "./LoginModal";
+
 import socket from "../socket";
 import AboutPages from "./layoutcomponents/AboutPages";
 
@@ -68,6 +70,8 @@ function Layout() {
   const [AllStreams, setAllStreams] = useRecoilState(AllStreamsRecoil);
 
   const [videoRoomExit, setVideoRoomExit] = useRecoilState(videoRoomExitRecoil);
+
+  const [loginModalOpen, setLoginModalOpen] = useState<boolean>(true); // 로그인 모달
 
   //메뉴 탭눌렀을때 (친구제외)
   const LayoutButtonOnClick = (i: string) => {
@@ -167,149 +171,166 @@ function Layout() {
   });
 
   return (
-    <div onContextMenu={(e: any) => e.preventDefault()}>
-      <SideBarDiv>
-        {/* 프로필 */}
-        <Profilebutton onClick={() => LayoutButtonOnClick("profile")}>
-          {/* 로그인이 되어있지않다면과 로그인이 되어있다면의 정보*/}
-          {ProfileImgUrl === null ? (
-            <div>profile</div>
+    <>
+      <LoginModalPosition>
+        {/* 로그인 모달 */}
+        {ProfileImgUrl === null
+          ? loginModalOpen && (
+              <LoginModal setLoginModalOpen={setLoginModalOpen} />
+            )
+          : ""}
+      </LoginModalPosition>
+
+      <div onContextMenu={(e: any) => e.preventDefault()}>
+        <SideBarDiv>
+          {/* 프로필 */}
+          <Profilebutton onClick={() => LayoutButtonOnClick("profile")}>
+            {/* 로그인이 되어있지않다면과 로그인이 되어있다면의 정보*/}
+            {ProfileImgUrl === null ? (
+              <div>profile</div>
+            ) : (
+              <ProfileImg src={`${ProfileImgUrl}`} />
+            )}
+          </Profilebutton>
+          {/* 홈 */}
+          <Homebutton
+            locationName={locationName}
+            onClick={() => {
+              FriendButtonOnClick("close");
+              navigate("/");
+              window.scrollTo({ top: 0, behavior: "smooth" });
+            }}
+          >
+            <AiFillHome className="homeIcon" />
+            <p>홈</p>
+          </Homebutton>
+          {/* 게임검색 */}
+          <GameSearchbutton
+            locationName={locationName}
+            onClick={() => {
+              FriendButtonOnClick("close");
+              navigate("/Channelsearchpage");
+              window.scrollTo({ top: 0, behavior: "smooth" });
+            }}
+          >
+            <AiOutlineSearch className="searchIcon" />
+            <p>게임검색</p>
+          </GameSearchbutton>
+          {/* 커뮤니티 */}
+
+          <Communitybutton
+            locationName={locationName}
+            onClick={() => {
+              FriendButtonOnClick("close");
+              navigate("Community");
+              window.scrollTo({ top: 0, behavior: "smooth" });
+            }}
+          >
+            <FaKeyboard className="communityIcon" />
+            <p>커뮤니티</p>
+          </Communitybutton>
+
+          {/* 메뉴 구분선 */}
+          <SideLine />
+          {/* 친구 */}
+          {myId === null ? (
+            <Friendbutton
+              onClick={() => {
+                alert("로그인 후 사용 가능 합니다.");
+                FriendButtonOnClick("profile");
+              }}
+              layoutMenu={layoutMenu}
+            >
+              <FaUserFriends className="friendIcon" />
+              <p>친구</p>
+            </Friendbutton>
           ) : (
-            <ProfileImg src={`${ProfileImgUrl}`} />
+            <Friendbutton
+              onClick={() => {
+                //맨위로 스크롤이동
+                // window.scrollTo({ top: 0, behavior: "smooth" });
+                FriendButtonOnClick("friend");
+              }}
+              layoutMenu={layoutMenu}
+            >
+              <FaUserFriends className="friendIcon" />
+              <p>친구</p>
+              {friendAddCome.length === 0 ? "" : <FriendNotice />}
+            </Friendbutton>
           )}
-        </Profilebutton>
-        {/* 홈 */}
-        <Homebutton
-          locationName={locationName}
-          onClick={() => {
-            FriendButtonOnClick("close");
-            navigate("/");
-            window.scrollTo({ top: 0, behavior: "smooth" });
-          }}
-        >
-          <AiFillHome className="homeIcon" />
-          <p>홈</p>
-        </Homebutton>
-        {/* 게임검색 */}
-        <GameSearchbutton
-          locationName={locationName}
-          onClick={() => {
-            FriendButtonOnClick("close");
-            navigate("/Channelsearchpage");
-            window.scrollTo({ top: 0, behavior: "smooth" });
-          }}
-        >
-          <AiOutlineSearch className="searchIcon" />
-          <p>게임검색</p>
-        </GameSearchbutton>
-        {/* 커뮤니티 */}
-        <Communitybutton
-          locationName={locationName}
-          onClick={() => {
-            FriendButtonOnClick("close");
-            navigate("Community");
-            window.scrollTo({ top: 0, behavior: "smooth" });
-          }}
-        >
-          <MdDynamicFeed className="communityIcon" />
-          <p>커뮤니티</p>
-        </Communitybutton>
+          {/* 음성채팅 */}
+          {myId === null ? (
+            <VoiceTalkbutton
+              onClick={() => {
+                alert("로그인 후 사용 가능 합니다.");
+                LayoutButtonOnClick("profile");
+              }}
+              layoutMenu={layoutMenu}
+            >
+              <MdVoiceChat className="chatIcon" />
+              <p>음성채팅</p>
+            </VoiceTalkbutton>
+          ) : (
+            <VoiceTalkbutton
+              onClick={() => LayoutButtonOnClick("voicetalk")}
+              layoutMenu={layoutMenu}
+            >
+              <MdVoiceChat className="chatIcon" />
+              <p>음성채팅</p>
+            </VoiceTalkbutton>
+          )}
+        </SideBarDiv>
 
-        {/* 메뉴 구분선 */}
-        <SideLine />
-        {/* 친구 */}
-        {myId === null ? (
-          <Friendbutton
-            onClick={() => {
-              alert("로그인 후 사용 가능 합니다.");
-              FriendButtonOnClick("profile");
-            }}
-            layoutMenu={layoutMenu}
-          >
-            <FaUserFriends className="friendIcon" />
-            <p>친구</p>
-          </Friendbutton>
-        ) : (
-          <Friendbutton
-            onClick={() => {
-              //맨위로 스크롤이동
-              // window.scrollTo({ top: 0, behavior: "smooth" });
-              FriendButtonOnClick("friend");
-            }}
-            layoutMenu={layoutMenu}
-          >
-            <FaUserFriends className="friendIcon" />
-            <p>친구</p>
-            {friendAddCome.length === 0 ? "" : <FriendNotice />}
-          </Friendbutton>
-        )}
-        {/* 음성채팅 */}
-        {myId === null ? (
-          <VoiceTalkbutton
-            onClick={() => {
-              alert("로그인 후 사용 가능 합니다.");
-              LayoutButtonOnClick("profile");
-            }}
-            layoutMenu={layoutMenu}
-          >
-            <MdVoiceChat className="chatIcon" />
-            <p>음성채팅</p>
-          </VoiceTalkbutton>
-        ) : (
-          <VoiceTalkbutton
-            onClick={() => LayoutButtonOnClick("voicetalk")}
-            layoutMenu={layoutMenu}
-          >
-            <MdVoiceChat className="chatIcon" />
-            <p>음성채팅</p>
-          </VoiceTalkbutton>
-        )}
-      </SideBarDiv>
-
-      {/* 메뉴 컴포넌트 */}
-      <MenuOpenDiv layoutMenu={layoutMenu}>
-        <Profile />
-        <GameSearch />
-        <Friend />
-        <FriendSearch />
-        <VoiceTalk />
-        <FriendAdd />
-      </MenuOpenDiv>
-      <VideosWrap
-        toggle={videoDisplay}
-        widthprop={layoutMenu}
-        layout={layoutMenu}
-      >
-        <VideoPosition>
-          <VideosList>{StreamList}</VideosList>
-          <VideoControl>
-            <ControlButtons>
-              <ControlButtonWrap
-                iconcolor="#192030"
-                backcolor="#D4D4D4"
-                onClick={() => {
-                  setvideoDisplay(false);
-                }}
-              >
-                <MdVideocamOff size={24}></MdVideocamOff>
-              </ControlButtonWrap>
-              <ControlButtonWrap
-                backcolor="#F05656"
-                onClick={() => {
-                  setVideoRoomExit((e: any) => !e);
-                }}
-              >
-                <MdExitToApp size={24}></MdExitToApp>
-              </ControlButtonWrap>
-            </ControlButtons>
-          </VideoControl>
-        </VideoPosition>
-      </VideosWrap>
-    </div>
+        {/* 메뉴 컴포넌트 */}
+        <MenuOpenDiv layoutMenu={layoutMenu}>
+          <Profile />
+          <GameSearch />
+          <Friend />
+          <FriendSearch />
+          <VoiceTalk />
+          <FriendAdd />
+        </MenuOpenDiv>
+        <VideosWrap
+          toggle={videoDisplay}
+          widthprop={layoutMenu}
+          layout={layoutMenu}
+        >
+          <VideoPosition>
+            <VideosList>{StreamList}</VideosList>
+            <VideoControl>
+              <ControlButtons>
+                <ControlButtonWrap
+                  iconcolor="#192030"
+                  backcolor="#D4D4D4"
+                  onClick={() => {
+                    setvideoDisplay(false);
+                  }}
+                >
+                  <MdVideocamOff size={24}></MdVideocamOff>
+                </ControlButtonWrap>
+                <ControlButtonWrap
+                  backcolor="#F05656"
+                  onClick={() => {
+                    setVideoRoomExit((e: any) => !e);
+                  }}
+                >
+                  <MdExitToApp size={24}></MdExitToApp>
+                </ControlButtonWrap>
+              </ControlButtons>
+            </VideoControl>
+          </VideoPosition>
+        </VideosWrap>
+      </div>
+    </>
   );
 }
 
 export default Layout;
+
+const LoginModalPosition = styled.div`
+  width: 100%;
+  height: 100%;
+`;
 
 const Profileimg = styled.div``;
 

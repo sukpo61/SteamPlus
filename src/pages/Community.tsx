@@ -281,6 +281,7 @@ const CommunityLayout = styled.div`
   align-items: center;
   width: 100%;
   color: white;
+  height: 100%;
 `;
 const CommunityTitle = styled.div`
   cursor: pointer;
