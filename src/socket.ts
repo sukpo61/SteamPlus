@@ -9,7 +9,7 @@ export const userinfo = {
 };
 
 // const socket = io("https://full-bees-try-183-109-20-88.loca.lt");
-const socket = io("http://localhost:4500");
+const socket = io("https://guttural-flashy-narwhal.glitch.me");
 
 socket.on("connect", () => {
   console.log("Connected to server!");
