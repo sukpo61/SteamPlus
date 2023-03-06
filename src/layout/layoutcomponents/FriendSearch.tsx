@@ -166,7 +166,7 @@ function FriendSearch() {
       {/* 친구 목록 박스 */}
       {alreadyFriend?.map((i: FriendSearchProps) => {
         return (
-          <FriendBoxDiv>
+          <FriendBoxDiv key={i.id}>
             <FriendBoxNameImg src={i.profileimg} />
             <FriendBoxNameH2>{i.nickname}</FriendBoxNameH2>
 
@@ -176,7 +176,7 @@ function FriendSearch() {
       })}
       {friendSearch?.map((i: FriendSearchProps) => {
         return (
-          <FriendBoxDiv>
+          <FriendBoxDiv key={i.id}>
             <FriendBoxNameImg src={i.profileimg} />
             <FriendBoxNameH2>{i.nickname}</FriendBoxNameH2>
 

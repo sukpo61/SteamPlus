@@ -1,5 +1,5 @@
-import React, { useEffect, useState, CSSProperties } from "react";
-import { LayoutButton } from "../../recoil/atom";
+import React, { useEffect, useState } from "react";
+import { getFriend, LayoutButton } from "../../recoil/atom";
 import styled from "styled-components";
 import { useRecoilValue } from "recoil";
 import socket from "../../socket";
@@ -9,6 +9,8 @@ import { useRecoilState } from "recoil";
 import { useNavigate } from "react-router";
 import { FriendSearchProps } from "./FriendSearch";
 import PulseLoader from "react-spinners/PulseLoader";
+import { useMutation, useQueryClient } from "react-query";
+import { v4 as uuidv4 } from "uuid";
 
 import {
   chatTextRecoil,
@@ -32,18 +34,29 @@ import { BsFillMicFill } from "react-icons/bs";
 import { MdVideocam } from "react-icons/md";
 import { AiOutlineBorder } from "react-icons/ai";
 import { AiOutlineCheckSquare } from "react-icons/ai";
+import { MdLockOutline } from "react-icons/md";
+import { BiSearchAlt2 } from "react-icons/bi";
 
 import Checkbox from "@mui/material/Checkbox";
+import Box from "@mui/material/Box";
+import Slider from "@mui/material/Slider";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
+import axios from "axios";
 
 function VoiceTalk() {
   const layoutMenu = useRecoilValue(LayoutButton);
-  const [createDisplay, setCreateDisplay] = useState(false);
+
+  const [createDisplay, setCreateDisplay] = useState("hide");
+
   const [roomsInfo, setRoomsInfo] = useState([]);
+
+  const [roomsresult, setRoomsResult] = useState([]);
+
   const myuserid = sessionStorage.getItem("steamid");
+  const myNickName = sessionStorage.getItem("nickName");
 
   const [localStream, setLocalStream] = useState(null);
 
@@ -51,11 +64,19 @@ function VoiceTalk() {
 
   const [checked, setChecked] = useState(false);
 
+  const [settingon, setSettingOn] = useState(false);
+
   const [RtcPeerConnectionMap, setRtcPeerConnectionMap] = useState(new Map());
 
   const [password, setPassword] = useState("");
 
+  const [pwsubmit, setPwSubmit] = useState(false);
+
+  const [pwroominfo, setPwRoomInfo] = useState("");
+
   const [isValid, setIsValid] = useState(true);
+
+  const [volumepercent, setVolumePercent] = useState(50);
 
   const [DataChannelMap, setDataChannelMap] =
     useRecoilState(DataChannelMapRecoil);
@@ -79,10 +100,24 @@ function VoiceTalk() {
   const [friendroominfo, setFriendRoomInfo] =
     useRecoilState(friendroominfoRecoil);
 
+  const [getFriendAuth, setGetFriendAuth] = useRecoilState(getFriend);
+
   const {
     value: roomtitle,
     setinputValue: setRoomTitle,
     reset: resetTitle,
+  } = useInput("");
+
+  const {
+    value: sbpassword,
+    setinputValue: setSbPassword,
+    reset: resetSbPassword,
+  } = useInput("");
+
+  const {
+    value: searchvalue,
+    setinputValue: setSearchValue,
+    reset: resetSearchValue,
   } = useInput("");
 
   const navigate = useNavigate();
@@ -157,7 +192,7 @@ function VoiceTalk() {
         channel.close();
       });
 
-      // localStream.getTracks().forEach((track) => track.stop())
+      localStream.getTracks().forEach((track) => track.stop());
 
       setRtcPeerConnectionMap(() => new Map());
       setDataChannelMap(() => new Map());
@@ -204,18 +239,71 @@ function VoiceTalk() {
     }
     handleJoin(NewData);
     resetTitle();
-    setCreateDisplay(false);
+    setCreateDisplay("hide");
     setPassword("");
     setChecked(false);
     setIsValid(true);
   };
 
   const RoomCancel = () => {
-    setCreateDisplay(false);
+    setCreateDisplay("hide");
     resetTitle();
     setChecked(false);
     setIsValid(true);
   };
+
+  const SubmitPassword = () => {
+    if (sbpassword === pwroominfo.password) {
+      handleJoin(pwroominfo);
+      setCreateDisplay("hide");
+      setPwRoomInfo("");
+      resetSbPassword();
+    } else {
+      window.alert("틀림");
+    }
+  };
+  const SubmitCancle = () => {
+    setCreateDisplay("hide");
+    setPwRoomInfo("");
+    resetSbPassword();
+  };
+
+  //친구 추가
+  const queryClient = useQueryClient();
+
+  const postMutation = useMutation(
+    (friendAdd) => axios.post("http://localhost:3001/friend", friendAdd),
+    {
+      onSuccess: () => {
+        // 쿼리 무효화
+        queryClient.invalidateQueries(["friend"]);
+        queryClient.invalidateQueries(["friendsearch"]);
+      },
+    }
+  );
+
+  const FriendAdd = async (friendId, friendNickName) => {
+    let friendAdd = {
+      id: uuidv4(),
+      myId: myuserid,
+      friendId: friendId,
+      myNickName: myNickName,
+      friendNickName: friendNickName,
+    };
+    postMutation.mutate(friendAdd);
+  };
+
+  const alreadyFriend = friendAllRecoil?.filter((i) => {
+    for (let t = 0; t < getFriendAuth.length; t++) {
+      if (
+        getFriendAuth[t].friendId === i.id &&
+        getFriendAuth[t].myId === myuserid
+      ) {
+        return true;
+      }
+    }
+    return false;
+  });
 
   const RoomList = roomsInfo.map((room) => {
     return (
@@ -229,18 +317,39 @@ function VoiceTalk() {
               window.alert("방 인원이 다찼어요.");
               return;
             }
-            setCurrentRoom(room.name);
-            handleJoin({
-              roomtitle: room.name,
-              channelId,
-              usercount: room.usercount,
-            });
+            if (!room.password) {
+              setCurrentRoom(room.name);
+              handleJoin({
+                roomtitle: room.name,
+                channelId,
+                usercount: room.usercount,
+                password: room.password,
+              });
+            } else {
+              setPwSubmit(true);
+              setCreateDisplay("pwsubmit");
+              setPwRoomInfo({
+                roomtitle: room.name,
+                channelId,
+                usercount: room.usercount,
+                password: room.password,
+              });
+            }
           }}
         >
-          <span>#{room.name}</span>
+          <RoomTitle>
+            <span># {room.name}</span>
+            {room.password && (
+              <div>
+                <MdLockOutline></MdLockOutline>
+              </div>
+            )}
+          </RoomTitle>
           <UserCountWrap>
-            <TotalUser>{room.usercount}</TotalUser>
             <CurrentUser>{room.userinfo.length}</CurrentUser>
+            <TotalUser>
+              <span>{room.usercount}</span>
+            </TotalUser>
           </UserCountWrap>
         </RoomTitleWrap>
         <RoomUserList>
@@ -250,6 +359,26 @@ function VoiceTalk() {
               <RoomUserWrap key={info?.id}>
                 <img src={info?.profileimg}></img>
                 <span>{info?.nickname}</span>
+                {/* 친구는 예외 처리 */}
+                {/* {console.log(alreadyFriend)} */}
+                {info?.id === myuserid ||
+                alreadyFriend?.find((i) => {
+                  if (i.id === info?.id) {
+                    return true;
+                  } else {
+                    return false;
+                  }
+                }) ? (
+                  ""
+                ) : (
+                  <FriendAddButton
+                    onClick={() => {
+                      FriendAdd(user?.userid, info?.nickname);
+                    }}
+                  >
+                    +
+                  </FriendAddButton>
+                )}
               </RoomUserWrap>
             );
           })}
@@ -331,6 +460,10 @@ function VoiceTalk() {
     setDataChannelMap((e) => e.set(offerid, channel));
 
     return channel;
+  };
+
+  const VolumeonChange = (e) => {
+    setVolumePercent(e.target.value);
   };
 
   useEffect(() => {
@@ -426,7 +559,6 @@ function VoiceTalk() {
     });
 
     socket.on("updaterooms", (roomsinfo) => {
-      console.log("roomsinfo", roomsinfo);
       setRoomsInfo(roomsinfo);
     });
   }, []);
@@ -443,6 +575,24 @@ function VoiceTalk() {
     }
   }, [friendroominfo]);
 
+  useEffect(() => {
+    if (!searchvalue) {
+      setRoomsResult(roomsInfo);
+    } else {
+      setRoomsResult(
+        roomsInfo.filter((room) =>
+          room.name?.toLowerCase().includes(searchvalue.toLowerCase())
+        )
+      );
+    }
+  }, [searchvalue]);
+
+  useEffect(() => {
+    if (roomsInfo) {
+      setRoomsResult(roomsInfo);
+    }
+  }, [roomsInfo]);
+
   return (
     <VoiceTalkDiv layoutMenu={layoutMenu}>
       <VoiceTalkWrap>
@@ -454,107 +604,167 @@ function VoiceTalk() {
             </ChannelTitle>
             <CreateRoom
               onClick={() => {
-                setCreateDisplay(true);
+                setPwSubmit(false);
+                setCreateDisplay("roomcreate");
               }}
             >
               + 채팅
             </CreateRoom>
           </VoiceTalkTopbar>
-          <RoomTitleInput></RoomTitleInput>
-        </VoiceTalkTop>
-        <RoomtoggleForm toggle={createDisplay}>
-          <CreateRoomWrap>
-            <CreateTitleInput
-              className="title"
+          <RoomTitleInputWrap>
+            <RoomTitleInput
+              className="search"
               type="text"
-              placeholder="제목을 입력하세요"
-              value={roomtitle}
-              onChange={setRoomTitle}
-            ></CreateTitleInput>
-            <SetPasswordWrap>
-              <PasswordCheck>
-                <Checkbox
-                  checked={checked}
-                  onChange={PasswordChange}
-                ></Checkbox>
-                <span>비밀번호설정</span>
-              </PasswordCheck>
-              <SetPasswordInput
+              placeholder="채팅방 검색"
+              value={searchvalue}
+              onChange={setSearchValue}
+            ></RoomTitleInput>
+            {/* <SearchButtonWrap>
+              <BiSearchAlt2></BiSearchAlt2>
+            </SearchButtonWrap> */}
+          </RoomTitleInputWrap>
+        </VoiceTalkTop>
+        <RoomtoggleForm displaystate={createDisplay}>
+          {pwsubmit ? (
+            <SubbmitPasswordWrap>
+              <SubmitPwInput
+                className="title"
                 type="password"
-                id="password"
-                value={password}
-                onChange={handlePasswordChange}
-                minLength={4}
-                maxLength={4}
-                required
-                disabled={!checked}
-              ></SetPasswordInput>
-            </SetPasswordWrap>
-            <SetCountWrap>
-              <SetCountSelect value={usercount} onChange={userCountChange}>
-                <option value={2}>2명</option>
-                <option value={3}>3명</option>
-                <option value={4}>4명</option>
-              </SetCountSelect>
-              <UserCount>방인원수</UserCount>
-            </SetCountWrap>
-            <CreateRoomBottom>
-              <div>
-                {checked && (
-                  <PasswordAlert isValid={isValid}>
-                    4자리 숫자를 입력하세요.
-                  </PasswordAlert>
-                )}
-              </div>
-              <ConfirmWrap>
-                <TitleCancle onClick={RoomCancel}>취소</TitleCancle>
-                <TitleConfirm onClick={onRoomSubmit}>확인</TitleConfirm>
-              </ConfirmWrap>
-            </CreateRoomBottom>
-          </CreateRoomWrap>
+                placeholder="4자리 숫자 비밀번호"
+                value={sbpassword}
+                onChange={setSbPassword}
+              ></SubmitPwInput>
+              <TitleCancle onClick={SubmitCancle}>취소</TitleCancle>
+              <TitleConfirm onClick={SubmitPassword}>제출</TitleConfirm>
+            </SubbmitPasswordWrap>
+          ) : (
+            <CreateRoomWrap>
+              <CreateTitleInput
+                className="title"
+                type="text"
+                placeholder="제목을 입력하세요"
+                value={roomtitle}
+                onChange={setRoomTitle}
+              ></CreateTitleInput>
+              <SetPasswordWrap>
+                <PasswordCheck>
+                  <Checkbox
+                    checked={checked}
+                    onChange={PasswordChange}
+                  ></Checkbox>
+                  <span>비밀번호설정</span>
+                </PasswordCheck>
+                <SetPasswordInput
+                  type="password"
+                  id="password"
+                  value={password}
+                  onChange={handlePasswordChange}
+                  minLength={4}
+                  maxLength={4}
+                  required
+                  disabled={!checked}
+                ></SetPasswordInput>
+              </SetPasswordWrap>
+              <SetCountWrap>
+                <SetCountSelect value={usercount} onChange={userCountChange}>
+                  <option value={2}>2명</option>
+                  <option value={3}>3명</option>
+                  <option value={4}>4명</option>
+                </SetCountSelect>
+                <UserCount>방인원수</UserCount>
+              </SetCountWrap>
+              <CreateRoomBottom>
+                <div>
+                  {checked && (
+                    <PasswordAlert isValid={isValid}>
+                      4자리 숫자를 입력하세요.
+                    </PasswordAlert>
+                  )}
+                </div>
+                <ConfirmWrap>
+                  <TitleCancle onClick={RoomCancel}>취소</TitleCancle>
+                  <TitleConfirm onClick={onRoomSubmit}>확인</TitleConfirm>
+                </ConfirmWrap>
+              </CreateRoomBottom>
+            </CreateRoomWrap>
+          )}
+
           <RoomListWrap>{RoomList}</RoomListWrap>
         </RoomtoggleForm>
       </VoiceTalkWrap>
-      <Controlbox>
-        <div>
-          <BsFillMicFill></BsFillMicFill>
-          <MdVolumeUp></MdVolumeUp>
-        </div>
-        <div>
-          {location === "Teamchat" && (
-            <MdVideocam
+      <Controlbox settingon={settingon}>
+        <ControlButtons>
+          <div>
+            <BsFillMicFill></BsFillMicFill>
+            <MdVolumeUp></MdVolumeUp>
+          </div>
+          <div>
+            {location === "Teamchat" && currentRoom && (
+              <MdVideocam
+                onClick={() => {
+                  setvideoDisplay((e) => !e);
+                }}
+              ></MdVideocam>
+            )}
+            <MdSettings
               onClick={() => {
-                setvideoDisplay((e) => !e);
+                setSettingOn((e) => !e);
               }}
-            ></MdVideocam>
-          )}
-          <MdSettings></MdSettings>
-        </div>
+            ></MdSettings>
+          </div>
+        </ControlButtons>
+        <ControlSlider>
+          <SliderWrap>
+            <div>음량</div>
+            <Box width={300}>
+              <Slider
+                size="small"
+                defaultValue={50}
+                aria-label="Small"
+                valueLabelDisplay="auto"
+                onChange={VolumeonChange}
+              />
+            </Box>
+          </SliderWrap>
+          <SliderWrap>
+            <div>마이크</div>
+            <Box width={300}>
+              <Slider
+                size="small"
+                defaultValue={50}
+                aria-label="Small"
+                valueLabelDisplay="auto"
+              />
+            </Box>
+          </SliderWrap>
+        </ControlSlider>
+        <ControlRooms>
+          <BacktoChat
+            location={location}
+            currentRoom={currentRoom}
+            onClick={() => {
+              navigate(`/Teamchat/:${channelId}`, {
+                state: {
+                  gameid: channelId.toString(),
+                },
+              });
+            }}
+          >
+            <Chaticon>
+              <PulseLoader color="#ffffff" size={4}></PulseLoader>
+            </Chaticon>
+          </BacktoChat>
+          <ExitRoom
+            currentRoom={currentRoom}
+            onClick={() => {
+              handleLeave(currentRoom);
+            }}
+          >
+            <span>#{currentRoom}</span>
+            <MdExitToApp size={24} color="#F05656"></MdExitToApp>
+          </ExitRoom>
+        </ControlRooms>
       </Controlbox>
-      <BacktoChat
-        location={location}
-        currentRoom={currentRoom}
-        onClick={() => {
-          navigate(`/Teamchat/:${channelId}`, {
-            state: {
-              gameid: channelId.toString(),
-            },
-          });
-        }}
-      >
-        <Chaticon>
-          <PulseLoader color="#ffffff" size={4}></PulseLoader>
-        </Chaticon>
-      </BacktoChat>
-      <ExitRoom
-        currentRoom={currentRoom}
-        onClick={() => {
-          handleLeave(currentRoom);
-        }}
-      >
-        <span>#{currentRoom}</span>
-        <MdExitToApp size={24} color="#F05656"></MdExitToApp>
-      </ExitRoom>
     </VoiceTalkDiv>
   );
 }
@@ -562,6 +772,7 @@ function VoiceTalk() {
 export default VoiceTalk;
 
 const VoiceTalkDiv = styled.div`
+  overflow: hidden;
   display: ${(props) => (props.layoutMenu === "voicetalk" ? "block" : "none")};
 `;
 
@@ -572,6 +783,7 @@ const VoiceTalkWrap = styled.div`
   color: white;
 `;
 const UserCountWrap = styled.div`
+  position: relative;
   font-size: 12px;
   display: flex;
   flex-direction: row;
@@ -583,14 +795,21 @@ const UserCountWrap = styled.div`
   overflow: hidden;
 `;
 const TotalUser = styled.div`
+  position: absolute;
+  right: -4px;
   display: flex;
   flex-direction: row;
-  width: 28px;
+  width: 32px;
   height: 24px;
   justify-content: center;
   align-items: center;
   background-color: #263245;
   color: white;
+  transform: skew(-15deg);
+  span {
+    transform: skew(15deg);
+    margin-right: 4px;
+  }
 `;
 const CurrentUser = styled.div`
   display: flex;
@@ -603,10 +822,9 @@ const CurrentUser = styled.div`
   color: white;
 `;
 const BacktoChat = styled.div`
+  position: relative;
   cursor: pointer;
-  bottom: ${(props) => (props.location !== "Teamchat" ? "72px" : "-60px")};
-  left: 12px;
-  position: absolute;
+  bottom: ${(props) => (props.location !== "Teamchat" ? "196px" : "0px")};
   background: #192030;
   box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.25);
   display: flex;
@@ -616,14 +834,14 @@ const BacktoChat = styled.div`
   justify-content: center;
   align-items: center;
   transition: all 0.5s;
+  z-index: -1;
 `;
 
 const ExitRoom = styled.div`
+  position: relative;
   color: white;
   cursor: pointer;
-  bottom: ${(props) => (props.currentRoom ? "72px" : "-60px")};
-  right: 12px;
-  position: absolute;
+  bottom: ${(props) => (props.currentRoom ? "196px" : "0px")};
   background: #192030;
   box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.25);
   display: flex;
@@ -633,6 +851,8 @@ const ExitRoom = styled.div`
   align-items: center;
   transition: all 0.5s;
   padding: 0 20px;
+  z-index: -1;
+
   &:hover {
     background: #1d2538;
   }
@@ -657,7 +877,17 @@ const Chaticon = styled.div`
 `;
 const RoomtoggleForm = styled.div`
   position: relative;
-  top: ${(props) => (props.toggle ? "0px" : "-224px")};
+  top: ${({ displaystate }) => {
+    if (displaystate === "hide") {
+      return "-224px";
+    }
+    if (displaystate === "roomcreate") {
+      return "0px";
+    }
+    if (displaystate === "pwsubmit") {
+      return "-136px";
+    }
+  }};
   transition: all 0.5s;
   display: flex;
   flex-direction: column;
@@ -690,6 +920,15 @@ const RoomTitleWrap = styled.div`
   }
   span {
     cursor: pointer;
+  }
+`;
+const RoomTitle = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  color: white;
+  div {
+    margin-left: 8px;
   }
 `;
 const Usercount = styled.div`
@@ -768,6 +1007,20 @@ const CreateRoomWrap = styled.div`
   background: #404b5e;
   border-radius: 10px;
 `;
+const SubbmitPasswordWrap = styled.div`
+  margin-top: 136px;
+  margin-bottom: 10px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-around;
+  padding: 24px;
+  color: white;
+  padding: 20px 24px;
+  height: 80px;
+  background: #404b5e;
+  border-radius: 10px;
+`;
 const SetPasswordWrap = styled.div`
   margin-top: 12px;
   display: flex;
@@ -814,6 +1067,15 @@ const CreateTitleInput = styled.input`
   border: 0;
   text-indent: 10px;
 `;
+const SubmitPwInput = styled.input`
+  height: 40px;
+  border-radius: 10px;
+  background: #263245;
+  box-shadow: inset 0px 4px 10px rgba(0, 0, 0, 0.25);
+  color: #fff;
+  border: 0;
+  text-indent: 10px;
+`;
 const SetPasswordInput = styled.input`
   height: 40px;
   width: 160px;
@@ -842,8 +1104,34 @@ const SetCountSelect = styled.select`
 const Controlbox = styled.div`
   font-size: 24px;
   position: absolute;
-  bottom: 0;
+  bottom: ${(props) => (props.settingon ? "-60px" : "-130px")};
   background-color: #131a28;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: white;
+  padding: 0 20px;
+  margin-bottom: 12px;
+  transition: all 0.3s;
+`;
+const ControlButtons = styled.div`
+  font-size: 24px;
+  justify-content: space-between;
+  height: 60px;
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  color: white;
+  div {
+    cursor: pointer;
+    display: flex;
+    gap: 12px;
+  }
+`;
+const ControlRooms = styled.div`
+  font-size: 16px;
   height: 60px;
   width: 100%;
   display: flex;
@@ -851,12 +1139,25 @@ const Controlbox = styled.div`
   flex-direction: row;
   align-items: center;
   color: white;
-  padding: 0 20px;
-  div {
-    cursor: pointer;
-    display: flex;
-    gap: 12px;
-  }
+`;
+const ControlSlider = styled.div`
+  height: 60px;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  flex-direction: column;
+  align-items: center;
+  color: white;
+`;
+const SliderWrap = styled.div`
+  font-size: 12px;
+  height: 60px;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  flex-direction: row;
+  align-items: center;
+  color: white;
 `;
 const RoomListWrap = styled.div`
   display: flex;
@@ -877,6 +1178,19 @@ const VoiceTalkTopbar = styled.div`
   display: flex;
   flex-direction: row;
   justify-content: space-between;
+`;
+const RoomTitleInputWrap = styled.div`
+  display: flex;
+  flex-direction: row;
+  position: relative;
+`;
+const SearchButtonWrap = styled.div`
+  cursor: pointer;
+  font-size: 24px;
+  display: flex;
+  position: absolute;
+  right: 16px;
+  bottom: 8px;
 `;
 const CreateRoom = styled.div`
   cursor: pointer;
@@ -917,4 +1231,10 @@ const RoomTitleInput = styled.input`
   border: 0;
   box-shadow: 2px 4px 10px 0 #000 inset;
   text-indent: 10px;
+`;
+
+const FriendAddButton = styled.button`
+  font-size: 24px;
+  color: #fff;
+  margin-left: auto;
 `;
