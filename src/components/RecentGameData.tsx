@@ -47,8 +47,8 @@ const GameBtn = styled.span`
   transition: 0.5s ease;
 `;
 const CurrentGameBlackImg = styled.div`
-  width: 352px;
-  height: 152px;
+  width: 360px;
+  height: 155px;
   bottom: 0px;
   position: absolute;
   border-radius: 8px;
@@ -108,6 +108,7 @@ const RecentGameDataTime = styled.p`
   transition: 0.5s ease;
 `;
 const RecentGameDataImgBox = styled.div`
+  overflow: hidden;
   width: 100%;
   height: 100%;
   border-radius: 8px;
