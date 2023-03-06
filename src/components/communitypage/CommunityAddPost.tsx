@@ -6,6 +6,8 @@ import styled from "styled-components";
 import { v4 as uuidv4 } from "uuid";
 
 export const CommunityAddPost = () => {
+  const DATABASE_ID: any = process.env.REACT_APP_DATABASE_ID;
+
   const [category, setCategory] = useState("카테고리를 선택하세요");
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
@@ -40,7 +42,7 @@ export const CommunityAddPost = () => {
 
   // useMutation 적용한 addPost
   const addPostMutation = useMutation(
-    (newPost: PostData) => axios.post("http://localhost:3001/post", newPost),
+    (newPost: PostData) => axios.post(`${DATABASE_ID}/post`, newPost),
     {
       onSuccess: () => {
         setTitle("");
