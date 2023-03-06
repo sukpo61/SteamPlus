@@ -4,7 +4,15 @@ import { useMutation } from "react-query";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { v4 as uuidv4 } from "uuid";
-
+import { useRadioGroup } from "@mui/material/RadioGroup";
+import {
+  RadioGroup,
+  FormControlLabel,
+  Radio,
+  FormControl,
+  FormLabel,
+  createMuiTheme,
+} from "@mui/material";
 export const CommunityAddPost = () => {
   const [category, setCategory] = useState("카테고리를 선택하세요");
   const [title, setTitle] = useState("");
@@ -29,14 +37,16 @@ export const CommunityAddPost = () => {
   }
 
   //날짜만들기
-  const date = new Date();
   const newDate = new Date();
   const year = newDate.getFullYear();
   const month = newDate.getMonth() + 1;
+  const month2 = month < 10 ? `0${month}` : month;
   const day = newDate.getDate();
+  const day2 = day < 10 ? `0${day}` : month;
   const Hour = newDate.getHours();
+
   const Minute = newDate.getMinutes();
-  const dates = `${year}/${month}/${day} ${Hour}:${Minute}`;
+  const dates = `${year}.${month2}.${day2} ${Hour}:${Minute}`;
 
   // useMutation 적용한 addPost
   const addPostMutation = useMutation(
@@ -103,40 +113,43 @@ export const CommunityAddPost = () => {
     }
   };
   //카테고리 선택
-  const handleOption1Change = (event: any) => {
+  const handleOption1Change = (event: React.ChangeEvent<HTMLInputElement>) => {
     setCategory(event.target.value);
   };
 
   return (
     <CommunityPostLayout>
-      <div
-        style={{
-          height: "390px",
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "center",
-          alignContent: "center",
-          width: "100%",
-        }}
-      >
+      <CommunityHeader>
         <CommunityTitle onClick={gotoCommunity}> 커뮤니티</CommunityTitle>
         <CommunityComment>
           게임채널에 함께할 구성원을 모집하거나 자유롭게 의견을 나누는
           공간입니다.
         </CommunityComment>
-      </div>
-      <div style={{ display: "flex", flexDirection: "column" }}>
+      </CommunityHeader>
+      <CommunityBody>
         <Communitytitle2>게시글 작성</Communitytitle2>
         <TableHeader />
-
         <AddWrap>
-          <label>
-            <Select id="menu1" value={category} onChange={handleOption1Change}>
-              <Option value="선택">카테고리를 선택하세요</Option>
-              <Option value="자유">자유</Option>
-              <Option value="모집">모집</Option>
-            </Select>
-          </label>
+          <FormControl>
+            <FormLabel
+              style={{ color: "#fff", fontSize: "14px", fontWeight: "600" }}
+            >
+              카테고리
+            </FormLabel>
+            <RadioGroup row value={category} onChange={handleOption1Change}>
+              <FormControlLabel
+                value="자유"
+                label="자유"
+                control={<Radio sx={{ color: "#777D87" }} />}
+              />
+              <FormControlLabel
+                value="모집"
+                control={<Radio sx={{ color: "#777D87" }} />}
+                label="모집"
+              />
+            </RadioGroup>
+          </FormControl>
+
           <p>제목</p>
           <Form onSubmit={AddPostHandler}>
             <TitleInput
@@ -169,11 +182,22 @@ export const CommunityAddPost = () => {
             </PostButtonWrap>
           </Form>
         </AddWrap>
-      </div>
+      </CommunityBody>
     </CommunityPostLayout>
   );
 };
-
+const CommunityBody = styled.div`
+  display: flex;
+  flex-direction: column;
+`;
+const CommunityHeader = styled.div`
+  height: 390px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+`;
 const Select = styled.select`
   border-radius: 10px;
 `;
@@ -217,7 +241,6 @@ const CommunityPostLayout = styled.div`
   align-items: center;
   width: 100%;
   color: white;
-
   height: 100%;
 `;
 const AddWrap = styled.div`

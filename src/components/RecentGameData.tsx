@@ -43,7 +43,8 @@ const GameBtn = styled.span`
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
   border-radius: 10px;
   z-index: 99;
-  display: none;
+  opacity: 0;
+  transition: 0.5s ease;
 `;
 const CurrentGameBlackImg = styled.div`
   width: 352px;
@@ -56,29 +57,24 @@ const CurrentGameBlackImg = styled.div`
     rgba(0, 0, 0, 0) 0%,
     rgba(0, 0, 0, 0.85) 100%
   );
-  /* &:hover {
-    backdrop-filter: blur(2px);
-  } */
-  /* opacity: 0.5; */
+  transition: 0.5s;
 `;
 const RecentGameDataLaout = styled.div`
   width: 352px;
   height: 152px;
   color: white;
   display: flex;
-
   flex-direction: column;
   margin-bottom: 28px;
   position: relative;
   z-index: 9;
   &:hover {
     backdrop-filter: blur(2px);
-    transition: all 2s;
     p {
-      display: none;
+      opacity: 0;
     }
     span {
-      display: block;
+      opacity: 1;
     }
     div {
       backdrop-filter: blur(2px);
@@ -94,6 +90,8 @@ const RecentGameDataTiTle = styled.p`
   justify-content: flex-end;
   word-break: keep-all;
   word-wrap: break-word;
+  opacity: 1;
+  transition: 0.5s ease;
 `;
 const RecentGameDataTime = styled.p`
   font-size: 12px;
@@ -105,7 +103,9 @@ const RecentGameDataTime = styled.p`
   justify-content: flex-end;
   align-items: flex-end;
   text-align: end;
-  position: relative; ;
+  position: relative;
+  opacity: 1;
+  transition: 0.5s ease;
 `;
 const RecentGameDataImgBox = styled.div`
   width: 100%;
@@ -127,6 +127,5 @@ const RecentGameDataBox = styled.div`
   bottom: 0px;
   right: 0px;
   padding: 8px;
-
   border-radius: 8px;
 `;
