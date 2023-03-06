@@ -4,37 +4,34 @@ import { useMutation } from "react-query";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { v4 as uuidv4 } from "uuid";
-import { useRadioGroup } from "@mui/material/RadioGroup";
 import {
   RadioGroup,
   FormControlLabel,
   Radio,
   FormControl,
   FormLabel,
-  createMuiTheme,
 } from "@mui/material";
+interface PostData {
+  id: string;
+  steamid: string;
+  name: string;
+  title: string;
+  content: string;
+  date: string;
+  count: number;
+  category: string;
+}
 export const CommunityAddPost = () => {
-  const [category, setCategory] = useState("카테고리를 선택하세요");
-  const [title, setTitle] = useState("");
-  const [content, setContent] = useState("");
+  const [category, setCategory] = useState<string>("카테고리를 선택하세요");
+  const [title, setTitle] = useState<string>("");
+  const [content, setContent] = useState<string>("");
   const navigate = useNavigate();
   const userId = sessionStorage.getItem("steamid");
   const userName = sessionStorage.getItem("nickName");
 
   //Ref존
-  const TitleRef = useRef<any>();
-  const ContentRef = useRef<any>();
-
-  interface PostData {
-    id: any;
-    steamid: any;
-    name: any;
-    title: any;
-    content: any;
-    date: any;
-    count: number;
-    category: any;
-  }
+  const TitleRef = useRef<HTMLInputElement>(null);
+  const ContentRef = useRef<HTMLTextAreaElement>(null);
 
   //날짜만들기
   const newDate = new Date();
@@ -100,8 +97,8 @@ export const CommunityAddPost = () => {
   const gotoCommunity = () => {
     navigate("/Community");
   };
-  //수정온체인지
-  const handleTitleChange = (event: any) => {
+
+  const handleTitleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setTitle(event.target.value);
     const newTitle = event.target.value;
     if (newTitle.length <= 30) {
@@ -139,13 +136,13 @@ export const CommunityAddPost = () => {
             <RadioGroup row value={category} onChange={handleOption1Change}>
               <FormControlLabel
                 value="자유"
-                label="자유"
+                label={<p style={{ fontSize: "13px" }}>자유</p>}
                 control={<Radio sx={{ color: "#777D87" }} />}
               />
               <FormControlLabel
                 value="모집"
                 control={<Radio sx={{ color: "#777D87" }} />}
-                label="모집"
+                label={<p style={{ fontSize: "13px" }}>모집</p>}
               />
             </RadioGroup>
           </FormControl>
@@ -281,6 +278,7 @@ const ContentInput = styled.textarea`
   margin-top: 10px;
   min-height: 150px;
   height: 100%;
+  outline: 0px none transparent;
 `;
 const PostButtonWrap = styled.div`
   width: 100%;
