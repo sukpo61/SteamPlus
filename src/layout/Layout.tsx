@@ -47,6 +47,8 @@ import socket from "../socket";
 import AboutPages from "./layoutcomponents/AboutPages";
 
 function Layout() {
+  const DATABASE_ID: any = process.env.REACT_APP_DATABASE_ID;
+
   const navigate = useNavigate();
   const location = useLocation();
   const locationName = location.pathname;
@@ -111,7 +113,7 @@ function Layout() {
   };
 
   const getFriendSearch = async () => {
-    const response = await axios.get("http://localhost:3001/auth");
+    const response = await axios.get(`${DATABASE_ID}/auth`);
     setFriendAllRecoil(response?.data);
     return response;
   };
@@ -119,7 +121,7 @@ function Layout() {
 
   const getAllFriend = async () => {
     //비동기함수는 최대한 동기적으로 활용가능하게
-    const response = await axios.get("http://localhost:3001/friend");
+    const response = await axios.get(`${DATABASE_ID}/friend`);
     setGetFriendAuth(response?.data);
 
     return response;
