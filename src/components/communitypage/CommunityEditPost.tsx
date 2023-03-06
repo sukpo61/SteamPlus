@@ -3,6 +3,7 @@ import { useRef, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { useNavigate, useParams } from "react-router-dom";
 import styled from "styled-components";
+
 //수정하기
 export const CommunityEditPost = () => {
   const DATABASE_ID: any = process.env.REACT_APP_DATABASE_ID;
@@ -19,27 +20,32 @@ export const CommunityEditPost = () => {
   const param = useParams();
   const PostData = data?.data;
   const post = PostData?.find((post: any) => post?.id === param?.id);
-  const [postTitles, setPostTitles] = useState(post?.title);
-  const [postContent, setPostContent] = useState(post?.content);
+  const [postTitles, setPostTitles] = useState<string | undefined>(post?.title);
+  const [postContent, setPostContent] = useState<string | undefined>(
+    post?.content
+  );
   const PostId = post?.id;
   const queryClient = useQueryClient();
   //Ref 존
-  const TitleRef = useRef<any>();
-  const ContentRef = useRef<any>();
+  const TitleRef = useRef<HTMLInputElement>(null);
+  const ContentRef = useRef<HTMLTextAreaElement>(null);
 
   //타이틀 체인지 타이틀을 35자로 제한
-  const handleTitleChange = (event: any) => {
+  const handleTitleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setPostTitles(event.target.value);
     const newTitle = event.target.value;
-    if (newTitle.length <= 35) {
+    if (newTitle.length <= 30) {
       setPostTitles(newTitle);
     } else {
-      alert("제목은 35자 이하로 입력해주세요.");
+      alert("제목은 30자 이하로 입력해주세요.");
       TitleRef.current!.focus();
+      return;
     }
   };
   //컨텐츠 체인지
-  const handleContentChange = (event: any) => {
+  const handleContentChange = (
+    event: React.ChangeEvent<HTMLTextAreaElement>
+  ) => {
     setPostContent(event.target.value);
   };
 
@@ -54,7 +60,7 @@ export const CommunityEditPost = () => {
     }
   );
   //댓글수정버튼
-  const handleEditPost = (event: any) => {
+  const handleEditPost = (event: React.FormEvent<HTMLFormElement>) => {
     if (postTitles === "") {
       window.alert("제목을 입력해주세요");
       TitleRef.current!.focus();
@@ -84,26 +90,16 @@ export const CommunityEditPost = () => {
   return (
     <>
       <CommunityPostLayout>
-        <div
-          style={{
-            height: "390px",
-            display: "flex",
-            flexDirection: "column",
-            justifyContent: "center",
-            alignContent: "center",
-            width: "100%",
-          }}
-        >
+        <CommunityHeader>
           <CommunityTitle onClick={gotoCommunity}> 커뮤니티</CommunityTitle>
           <CommunityComment>
             게임채널에 함께할 구성원을 모집하거나 자유롭게 의견을 나누는
             공간입니다.
           </CommunityComment>
-        </div>
-        <div style={{ display: "flex", flexDirection: "column" }}>
+        </CommunityHeader>
+        <CommunityBody>
           <Communitytitle2>게시글 수정</Communitytitle2>
           <TableHeader />
-
           <AddWrap>
             <p>제목</p>
             <Form onSubmit={handleEditPost}>
@@ -121,7 +117,6 @@ export const CommunityEditPost = () => {
                 value={postContent}
                 onChange={handleContentChange}
               />
-
               <PostButtonWrap>
                 <AddBtn
                   onClick={() => {
@@ -134,14 +129,14 @@ export const CommunityEditPost = () => {
               </PostButtonWrap>
             </Form>
           </AddWrap>
-        </div>
+        </CommunityBody>
       </CommunityPostLayout>
     </>
   );
 };
 
 const TableHeader = styled.div`
-  width: 1020px;
+  width: 836px;
   display: flex;
   flex-direction: column;
   border-top: 2px solid #00b8c8;
@@ -180,8 +175,19 @@ const CommunityPostLayout = styled.div`
   align-items: center;
   width: 100%;
   color: white;
-
   height: 100%;
+`;
+const CommunityBody = styled.div`
+  display: flex;
+  flex-direction: column;
+`;
+const CommunityHeader = styled.div`
+  height: 390px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
 `;
 const AddWrap = styled.div`
   position: relative;

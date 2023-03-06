@@ -1,23 +1,31 @@
 import React, { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
-import { useQuery, useQueryClient } from "react-query";
+import { useQuery } from "react-query";
 import Pagination from "react-js-pagination";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { CommunityBox } from "../components/communitypage/CommunityBox";
 import { AiOutlineSearch } from "react-icons/ai";
-interface HeaderThProps {
-  Width: string;
+
+interface PostDataProps {
+  id: number;
+  category: string;
+  title: string;
+  name: string;
+  description: string;
+  img: string;
+  date: string;
 }
+
 export const Community = () => {
   const DATABASE_ID: any = process.env.REACT_APP_DATABASE_ID;
 
   //Ref존
-  const SerchRef = useRef<any>();
-
+  const SerchRef = useRef<HTMLInputElement>(null);
   //스팀아이디
   const steamID = sessionStorage.getItem("steamid");
   const navigate = useNavigate();
+
   //db에있는 post get 해와서 useQuery로 만듥기
   const CommunityPostData = async () => {
     const response = await axios.get(`${DATABASE_ID}/post`);
@@ -31,18 +39,18 @@ export const Community = () => {
   });
 
   //Pagination
-  const [page, setPage] = useState(1);
-  const [items, setItems] = useState(10);
-  const handlePageChange = (page: any) => {
+  const [page, setPage] = useState<number>(1);
+  const [items, setItems] = useState<number>(10);
+  const handlePageChange = (page: number) => {
     setPage(page);
   };
 
   const [PostData, setPostData] = useState<any>();
 
   // 인풋값의 온체인지
-  const [searchText, setSearchText] = useState("");
+  const [searchText, setSearchText] = useState<string>("");
   // 버튼을 눌렸을때 현재 인풋값을 받아서 바꿔줌
-  const [searchTexts, setSearchTexts] = useState("");
+  const [searchTexts, setSearchTexts] = useState<string>("");
   //온체인지 input
   const handleSearchTextChange = (
     event: React.ChangeEvent<HTMLInputElement>
@@ -51,15 +59,17 @@ export const Community = () => {
   };
 
   // 검색 온클릭
-  const btn = () => {
+  const btn = (event: any) => {
+    event.preventDefault(); // 기본 동작 막기
     if (searchText === "") {
       alert("검색어를 입력해주세요");
       SerchRef.current!.focus();
       return;
     } else {
       setSearchTexts(searchText);
+
+      return;
     }
-    return;
   };
 
   //새로고침
@@ -76,20 +86,24 @@ export const Community = () => {
   //카테고리 필터 걸기
   //카테고리 자유 필터
   const categoryFilter = PostData?.filter(
-    (post: any) => post?.category === "자유"
+    (post: PostDataProps) => post?.category === "자유"
   );
+
   //카테고리 모집 필터
   const categoryFilter2 = PostData?.filter(
-    (post: any) => post?.category === "모집"
+    (post: PostDataProps) => post?.category === "모집"
   );
   //카테고리 모집 필터
   const categoryFilter3 = PostData?.filter(
-    (post: any) => post?.category === "자유" || "모집"
+    (post: PostDataProps) => post?.category === "자유" || "모집"
   );
   // 카테고리 state 기본값은 전체다 보이게
   const [toggle, setToggle] = useState(categoryFilter3);
+  console.log();
+
   //카테고리 스타일
   const [categorySt, setCategorySt] = useState("전체");
+
   useEffect(() => {
     if (PostData) {
       setToggle(categoryFilter3);
@@ -99,7 +113,7 @@ export const Community = () => {
   useEffect(() => {
     if (searchTexts) {
       setToggle((e: any) =>
-        e.filter((post: any) =>
+        e.filter((post: PostDataProps) =>
           post.title.toLowerCase().includes(searchTexts.toLowerCase())
         )
       );
@@ -109,16 +123,7 @@ export const Community = () => {
   return (
     <>
       <CommunityLayout>
-        <div
-          style={{
-            height: "390px",
-            display: "flex",
-            flexDirection: "column",
-            justifyContent: "center",
-            alignContent: "center",
-            width: "100%",
-          }}
-        >
+        <CommunityHeader>
           <CommunityTitle onClick={replace}> 커뮤니티</CommunityTitle>
           <CommunityComment>
             게임채널에 함께할 구성원을 모집하거나 자유롭게 의견을 나누는
@@ -150,28 +155,21 @@ export const Community = () => {
               모집
             </CommunitySpan>
           </Communitycategory>
-        </div>
+        </CommunityHeader>
         <CommentsWrap>
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "space-between",
-              width: "100%",
-              marginBottom: "10px",
-            }}
-          >
+          <CommunityAddArea>
             <Communitytitle2>게시판</Communitytitle2>
             <AddPostBtn onClick={addPost}>글쓰기</AddPostBtn>
-          </div>
+          </CommunityAddArea>
           <CommunityeHeader>
-            <HeaderTh Width="100px">번호</HeaderTh>
-            <HeaderTh Width="110px">카테고리</HeaderTh>
-            <HeaderTh Width="540px" style={{ paddingLeft: "50px" }}>
-              제목
+            <HeaderTh style={{ padding: "0px 16px" }}>번호</HeaderTh>
+            <HeaderTh>카테고리</HeaderTh>
+            <HeaderTh style={{ padding: "0px 250px 0px 232px" }}>제목</HeaderTh>
+            <HeaderTh>작성자</HeaderTh>
+            <HeaderTh style={{ padding: "0px 32px 0px 56px" }}>
+              작성시간
             </HeaderTh>
-            <HeaderTh Width="130px">작성자</HeaderTh>
-            <HeaderTh Width="90px">작성시간</HeaderTh>
-            <HeaderTh Width="50px">조회수</HeaderTh>
+            <HeaderTh>조회수</HeaderTh>
           </CommunityeHeader>
           {/* 게시글 조회하기 */}
           {/*reverse()를 넣어서 데이타의 배열을 거꾸로 보여줌*/}
@@ -186,33 +184,64 @@ export const Community = () => {
                 />
               );
             })}
-
-          <CommunitySerchBar>
-            <CommunitySerchinput
-              ref={SerchRef}
-              type="text"
-              placeholder="게시글검색"
-              value={searchText}
-              onChange={handleSearchTextChange}
-            />
-            <AiOutlineSearch className="searchIcon" onClick={btn} />
-          </CommunitySerchBar>
-          {/* 페이지네이션 */}
-          <PaginationBox>
-            <Pagination
-              activePage={page}
-              itemsCountPerPage={items}
-              totalItemsCount={PostData?.length}
-              pageRangeDisplayed={10}
-              onChange={handlePageChange}
-            />
-          </PaginationBox>
+          <CommunityFooter>
+            <CommunitySerchBar onSubmit={btn}>
+              {/* <form onSubmit={btn} style={{ margin: "0px", padding: "0px" }}> */}
+              <CommunitySerchinput
+                ref={SerchRef}
+                type="text"
+                placeholder="게시글검색"
+                value={searchText}
+                onChange={handleSearchTextChange}
+              />
+              <AiOutlineSearch
+                style={{ cursor: "pointer" }}
+                className="searchIcon"
+                onClick={btn}
+              />
+              {/* </form> */}
+            </CommunitySerchBar>
+            {/* 페이지네이션 */}
+            <PaginationBox>
+              <Pagination
+                activePage={page}
+                itemsCountPerPage={items}
+                totalItemsCount={toggle?.length}
+                pageRangeDisplayed={10}
+                onChange={handlePageChange}
+              />
+            </PaginationBox>
+          </CommunityFooter>
         </CommentsWrap>
       </CommunityLayout>
     </>
   );
 };
 
+const CommunityAddArea = styled.div`
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  margin-bottom: 10px;
+`;
+const CommunityHeader = styled.div`
+  margin-top: 155px;
+
+  /* height: 390px; */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-content: center;
+  width: 100%;
+`;
+const CommunityFooter = styled.div`
+  display: flex;
+  /* justify-content: center;
+  align-items: center;
+  flex-direction: column; */
+  align-items: center;
+  margin-top: 30px;
+`;
 const CommunitySpan = styled.span`
   cursor: pointer;
   font-weight: 500;
@@ -223,27 +252,24 @@ const CommunitySerchinput = styled.input`
   border: none;
   background: transparent;
   color: #fff;
-  width: 90%;
+  width: 255px;
+  padding: 0px 10px;
 `;
-const CommunitySerchBar = styled.div`
+const CommunitySerchBar = styled.form`
   display: flex;
-  flex-direction: row;
-  justify-content: space-between;
   align-items: center;
-  padding: 4px 12px;
-  gap: 8px;
-  position: relative;
-  width: 200px;
+  flex-direction: row;
+  width: 280px;
   height: 32px;
   background-color: #404b5e;
   box-shadow: inset 0px 4px 8px rgba(0, 0, 0, 0.25);
   border-radius: 10px;
-  margin-top: 20px;
 `;
 const Communitycategory = styled.div<{ categorySt: string }>`
+  margin-bottom: 67px;
   display: flex;
   justify-content: center;
-  gap: 50px;
+  gap: 40px;
   color: #fff;
   border-bottom: 1pxx solid;
   display: flex;
@@ -284,6 +310,7 @@ const CommunityLayout = styled.div`
   width: 100%;
   color: white;
   height: 100%;
+  padding-bottom: 92px;
 `;
 const CommunityTitle = styled.div`
   cursor: pointer;
@@ -312,9 +339,9 @@ const CommunityeHeader = styled.div`
   border-bottom: 1px solid #a7a9ac;
   display: flex;
   flex-direction: row;
+  width: 836px;
 `;
-const HeaderTh = styled.th<HeaderThProps>`
-  width: ${(props) => props.Width};
+const HeaderTh = styled.th`
   display: flex;
   align-items: center;
   justify-content: center;
@@ -325,8 +352,7 @@ const HeaderTh = styled.th<HeaderThProps>`
 `;
 
 const PaginationBox = styled.div`
-  margin-bottom: 92px; // footer
-  margin-top: 10px;
+  margin-left: 50px;
   .pagination {
     display: flex;
     justify-content: center;

@@ -60,7 +60,7 @@ function MainPage() {
   //top10 game 정보
   const Top10Game = async () => {
     const response = await axios.get(
-      "https://store.steampowered.com/api/featuredcategories/",
+      "https://store.steampowered.com/api/featured/",
       {
         params: {
           format: "json",
@@ -73,6 +73,7 @@ function MainPage() {
   };
 
   const { data: TopGame }: any = useQuery("Top10Game", Top10Game);
+  console.log("TopGame", TopGame);
 
   console.log(TopGame);
 
