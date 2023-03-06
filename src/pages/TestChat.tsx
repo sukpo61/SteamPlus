@@ -68,7 +68,10 @@ function TestChat() {
     socket.emit("friendMessage", newChat, { once: true });
 
     const stringnewChat = JSON.stringify(newChat);
-    setChatText((i: any) => [...i, newChat]);
+    setChatText((i: any) => {
+      console.log("send");
+      return [...i, newChat];
+    });
     setTextInput("");
   };
   //입력시 맨 아래로 스크롤

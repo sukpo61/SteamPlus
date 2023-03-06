@@ -305,7 +305,7 @@ function VoiceTalk() {
     return false;
   });
 
-  const RoomList = roomsInfo.map((room) => {
+  const RoomList = roomsresult.map((room) => {
     return (
       <RoomWrap key={room.name}>
         <RoomTitleWrap
