@@ -53,8 +53,7 @@ function Friend() {
   // 친구 삭제
   const DeleteMutation = useMutation(
     //넘겨받은 id를 삭제
-    (id) =>
-      axios.delete(`https://flat-mangrove-forgery.glitch.me/friend/${id}`),
+    (id) => axios.delete(`http://localhost:3001/friend/${id}`),
     {
       onSuccess: () => {
         // 쿼리 무효화
@@ -77,7 +76,7 @@ function Friend() {
     try {
       //상대와 친구가 돼있는지 검사후 이중 저장 방지
       const response = await axios.get(
-        `https://flat-mangrove-forgery.glitch.me/friend?myId=${myId}&friendId=${i.id}`
+        `http://localhost:3001/friend?myId=${myId}&friendId=${i.id}`
       );
 
       const existingFriend = response.data[0];
