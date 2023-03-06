@@ -230,6 +230,8 @@ const Postslayout = styled.div`
   color: white;
 `;
 const PostpageWrap = styled.div`
+  margin-bottom: 92px; // footer
+
   color: white;
   display: flex;
   flex-direction: column;
