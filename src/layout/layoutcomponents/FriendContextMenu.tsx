@@ -107,7 +107,7 @@ function FriendContextMenu({ xPos, yPos, id, onClose }: any) {
       return i.split("/")[0] === id;
     });
     //선택한 아이디와 내아이디 더하기 (방이름)
-    const roomName = parseInt(clickId.split("/")[0]) + parseInt(myId);
+    const roomName = parseInt(clickId?.split("/")[0]) + parseInt(myId);
     console.log(roomName);
 
     socket.emit("friendChat", clickId, roomName);
@@ -129,8 +129,9 @@ function FriendContextMenu({ xPos, yPos, id, onClose }: any) {
   // });
 
   useEffect(() => {
+    console.log(socket.id);
     socket.emit("nickName", myId, socket.id);
-  }, []);
+  }, [socket.id]);
 
   const friendLoggin = friendAllRecoil.find((i: any) => {
     return i.id === id;
@@ -162,6 +163,8 @@ function FriendContextMenu({ xPos, yPos, id, onClose }: any) {
         ) : (
           ""
         )}
+        {/* 임시 채팅 */}
+        <ContextMenuP onClick={() => ChatOnClick(id)}>1대1 채팅</ContextMenuP>
 
         <ContextMenuP
           onClick={() => {

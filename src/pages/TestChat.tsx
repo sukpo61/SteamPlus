@@ -109,13 +109,13 @@ function TestChat() {
             if (chat.roomId === roomId) {
               if (chat.id === myId) {
                 return (
-                  <div data-aos="fade-left" key={chat.uuid}>
+                  <div data-aos="fade-left">
                     <Testtext chat={chat} />
                   </div>
                 );
               } else {
                 return (
-                  <div data-aos="fade-right" key={chat.uuid}>
+                  <div data-aos="fade-right">
                     <Testtext chat={chat} />
                   </div>
                 );
