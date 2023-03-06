@@ -38,7 +38,7 @@ function Profile() {
   //로그인
   const userDataGet = async () => {
     const result = await axios.get(
-      "https://api.steampowered.com/ISteamUser/GetPlayerSummaries/v2/",
+      "https://enable-cors.glitch.me/https://api.steampowered.com/ISteamUser/GetPlayerSummaries/v2/",
       {
         params: {
           key: APIKEY,
@@ -113,7 +113,7 @@ function Profile() {
   //유저 최신정보 & 타임스탬프
   const timeStamp = async () => {
     const result = await axios.get(
-      "https://api.steampowered.com/ISteamUser/GetPlayerSummaries/v2/",
+      "https://enable-cors.glitch.me/https://api.steampowered.com/ISteamUser/GetPlayerSummaries/v2/",
       {
         params: {
           key: APIKEY,
