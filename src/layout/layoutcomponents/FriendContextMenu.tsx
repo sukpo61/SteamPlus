@@ -109,7 +109,7 @@ function FriendContextMenu({ xPos, yPos, id, onClose }: any) {
     //선택한 아이디와 내아이디 더하기 (방이름)
     const roomName = parseInt(clickId.split("/")[0]) + parseInt(myId);
     console.log(roomName);
-
+    console.log("joined");
     socket.emit("friendChat", clickId, roomName);
     navigate(`/testchat/:${roomName}`, { state: clickId.split("/")[0] });
 
@@ -130,7 +130,7 @@ function FriendContextMenu({ xPos, yPos, id, onClose }: any) {
 
   useEffect(() => {
     socket.emit("nickName", myId, socket.id);
-  }, []);
+  }, [socket.id]);
 
   const friendLoggin = friendAllRecoil.find((i: any) => {
     return i.id === id;

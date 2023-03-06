@@ -103,13 +103,13 @@ export const CommunityBox = ({ post, index }: any) => {
       <TableTd Width="110px" Color="fff">
         {Category}
       </TableTd>
-      <TableTd Width="540px" Color="fff" style={{ paddingLeft: "30px" }}>
+      <TableContentTd Width="540px" Color="fff" style={{ paddingLeft: "30px" }}>
         <span onClick={handleEditPost}>{Title}</span>
         {/* 누적댓글수 */}
         <PostCount>[{CommentCt}]</PostCount>
         {/* 포스트 작성한지 10분이 지날때면 스타일을 주기 */}
         {newPost ? <PostNew>{newPost}</PostNew> : ""}
-      </TableTd>
+      </TableContentTd>
       <TableTd Width="130px" Color="#A7A9AC">
         {Name}
       </TableTd>
@@ -158,6 +158,22 @@ const TableTd = styled.td<TableTdProps>`
   display: flex;
   align-items: center;
   justify-content: center;
+  height: 50px;
+  font-weight: 400;
+  font-size: 13px;
+  span {
+    margin-left: 20px;
+  }
+  span:hover {
+    text-decoration: underline;
+    cursor: pointer;
+  }
+`;
+const TableContentTd = styled.td<TableTdProps>`
+  color: ${(props) => props.Color};
+  width: ${(props) => props.Width};
+  display: flex;
+  align-items: center;
   height: 50px;
   font-weight: 400;
   font-size: 13px;
