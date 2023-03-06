@@ -6,11 +6,31 @@ import { useMutation } from "react-query";
 import { v4 as uuidv4 } from "uuid";
 import { useQuery } from "react-query";
 import { useQueryClient } from "react-query";
+interface CommentProps {
+  PostId: string; // define type for PostId
+}
 
-function Comment({ PostId }: any) {
+interface CommentItem {
+  id: string;
+  postId: string;
+  myId: string | null;
+  name: string | null;
+  date: string;
+  profileImg: string;
+  contents: string;
+}
+interface EditCommentType {
+  id: number;
+  name: string;
+  profileImg: string;
+  contents: string;
+  date: string;
+  myId: number;
+}
+function Comment({ PostId }: CommentProps) {
   //Ref존
-  const CommentRef = useRef<any>();
-  const CommentsRef = useRef<any>();
+  const CommentRef = useRef<HTMLInputElement>(null); // define type for CommentRef
+  const CommentsRef = useRef<HTMLTextAreaElement>(null);
   const queryClient = useQueryClient();
 
   const myId = sessionStorage.getItem("steamid");
@@ -36,9 +56,11 @@ function Comment({ PostId }: any) {
   };
   const { data } = useQuery("comment", getComment);
   const comment = data?.data.slice().reverse();
-  const commentFilter = comment?.filter((i: any) => {
+  const commentFilter = comment?.filter((i: CommentItem) => {
     return i.postId === PostId;
   });
+  console.log("commentFilter", commentFilter);
+
   //댓글등록
   const postMutation = useMutation(
     (newComment: object) =>
@@ -50,11 +72,11 @@ function Comment({ PostId }: any) {
     }
   );
   //댓글등록 onChange
-  const CommentInputOnChange = (e: any) => {
+  const CommentInputOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setCommentInput(e.target.value);
   };
   //댓글등록 핸들러
-  const CommentFormonSubmit = (e: any) => {
+  const CommentFormonSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!steamID) {
       alert("로그인이 필요합니다");
@@ -65,7 +87,7 @@ function Comment({ PostId }: any) {
       CommentRef.current!.focus();
       return;
     }
-    const newComment = {
+    const newComment: CommentItem = {
       id: uuidv4(),
       postId: PostId,
       myId: myId,
@@ -79,14 +101,14 @@ function Comment({ PostId }: any) {
   };
   //댓글삭제
   const DeleteMutation = useMutation(
-    (id) => axios.delete(`http://localhost:3001/comment/${id}`),
+    (id: string) => axios.delete(`http://localhost:3001/comment/${id}`),
     {
       onSuccess: () => {
         queryClient.invalidateQueries("comment");
       },
     }
   );
-  const DeleteOnClick = (id: any) => {
+  const DeleteOnClick = (id: string) => {
     if (window.confirm("정말 삭제하겠습니까?")) {
       DeleteMutation.mutate(id);
       return;
@@ -98,7 +120,7 @@ function Comment({ PostId }: any) {
   };
   //댓글수정
   const EditMutation = useMutation(
-    (editComment: any) =>
+    (editComment: EditCommentType) =>
       axios.put(`http://localhost:3001/comment/${editComment.id}`, editComment),
     {
       onSuccess: () => {
@@ -107,11 +129,11 @@ function Comment({ PostId }: any) {
     }
   );
 
-  const EditInputOnChange = (e: any) => {
+  const EditInputOnChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setEditInput(e.target.value);
   };
 
-  const EditCommentButton = (id: any) => {
+  const EditCommentButton = (id: string) => {
     if (editInput === "") {
       alert("수정된 댓글을 입력해주세요");
       CommentsRef.current!.focus();
@@ -144,7 +166,7 @@ function Comment({ PostId }: any) {
       </CommentForm>
       {/* 댓글 창 */}
 
-      {commentFilter?.map((i: any) => {
+      {commentFilter?.map((i: CommentItem) => {
         return (
           <CommentContents>
             <div style={{ display: "flex" }}>

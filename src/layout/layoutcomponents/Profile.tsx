@@ -6,7 +6,15 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { useQuery } from "react-query";
 import RecentGameData from "../../components/RecentGameData";
-
+interface UserInfo {
+  id: string;
+  profileimg: string;
+  nickname: string;
+  gameid: string;
+  gameextrainfo: string;
+  login: boolean;
+  lastLogin: Date;
+}
 function Profile() {
   // profile 클릭 state
   const layoutMenu = useRecoilValue(LayoutButton);
@@ -31,7 +39,7 @@ function Profile() {
   const steamId = params.get("openid.claimed_id")?.split("/")[5];
   const APIKEY = "234E0113F33D5C7C4D4D5292C6774550";
   const serverUrl = "http://localhost:3001/auth/";
-  const [online, setOnline] = useState(true);
+  const [online, setOnline] = useState<boolean>(true);
 
   //로그인
   const userDataGet = async () => {
@@ -66,7 +74,7 @@ function Profile() {
     );
 
     //steam에서 변경된사항이 있을때 put을 통해 dbjson을 업데이트해줌
-    const userinfo = {
+    const userinfo: UserInfo = {
       id: result.config.params.steamids,
       profileimg: result?.data.response.players[0].avatarfull,
       nickname:
@@ -82,7 +90,6 @@ function Profile() {
 
     axios.put(`http://localhost:3001/auth/${steamId}`, userinfo);
     axios.post(serverUrl, userinfo);
-
     window.location.replace("/");
     return userinfo;
   };

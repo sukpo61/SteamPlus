@@ -1,15 +1,25 @@
 import axios from "axios";
-import React, { useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "react-query";
-import { Navigate, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
-import Moment from "react-moment";
 import moment from "moment";
 interface TableTdProps {
   Color: string;
   Width: string;
 }
-export const CommunityBox = ({ post, index }: any) => {
+interface PostProps {
+  id: number;
+  name: string;
+  title: string;
+  category: string;
+  count: number;
+  date: Date;
+}
+interface CommunityBoxProps {
+  post: PostProps;
+  index: number;
+}
+export const CommunityBox = ({ post, index }: CommunityBoxProps) => {
   const navigate = useNavigate();
   const Name = post?.name;
   // 배틀태그 자른 닉네임
@@ -94,6 +104,7 @@ export const CommunityBox = ({ post, index }: any) => {
     return response;
   };
   const { data }: any = useQuery("comment", getComment);
+
   const comment = data?.data.filter((item: any) => {
     return item?.postId === PodstID;
   });
@@ -176,7 +187,7 @@ const TableTds = styled.td<TableTdProps>`
   width: ${(props) => props.Width};
   display: flex;
   align-items: center;
-
+  padding-left: 20px;
   height: 50px;
   font-weight: 400;
   font-size: 13px;

@@ -1,22 +1,29 @@
 import React, { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
-import { useQuery, useQueryClient } from "react-query";
+import { useQuery } from "react-query";
 import Pagination from "react-js-pagination";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { CommunityBox } from "../components/communitypage/CommunityBox";
 import { AiOutlineSearch } from "react-icons/ai";
-import { padding } from "@mui/system";
-interface HeaderThProps {
-  Width: string;
+
+interface PostDataProps {
+  id: number;
+  category: string;
+  title: string;
+  name: string;
+  description: string;
+  img: string;
+  date: string;
 }
+
 export const Community = () => {
   //Ref존
-  const SerchRef = useRef<any>();
-
+  const SerchRef = useRef<HTMLInputElement>(null);
   //스팀아이디
   const steamID = sessionStorage.getItem("steamid");
   const navigate = useNavigate();
+
   //db에있는 post get 해와서 useQuery로 만듥기
   const CommunityPostData = async () => {
     const response = await axios.get("http://localhost:3001/post");
@@ -30,18 +37,18 @@ export const Community = () => {
   });
 
   //Pagination
-  const [page, setPage] = useState(1);
-  const [items, setItems] = useState(10);
-  const handlePageChange = (page: any) => {
+  const [page, setPage] = useState<number>(1);
+  const [items, setItems] = useState<number>(10);
+  const handlePageChange = (page: number) => {
     setPage(page);
   };
 
   const [PostData, setPostData] = useState<any>();
 
   // 인풋값의 온체인지
-  const [searchText, setSearchText] = useState("");
+  const [searchText, setSearchText] = useState<string>("");
   // 버튼을 눌렸을때 현재 인풋값을 받아서 바꿔줌
-  const [searchTexts, setSearchTexts] = useState("");
+  const [searchTexts, setSearchTexts] = useState<string>("");
   //온체인지 input
   const handleSearchTextChange = (
     event: React.ChangeEvent<HTMLInputElement>
@@ -77,15 +84,16 @@ export const Community = () => {
   //카테고리 필터 걸기
   //카테고리 자유 필터
   const categoryFilter = PostData?.filter(
-    (post: any) => post?.category === "자유"
+    (post: PostDataProps) => post?.category === "자유"
   );
+
   //카테고리 모집 필터
   const categoryFilter2 = PostData?.filter(
-    (post: any) => post?.category === "모집"
+    (post: PostDataProps) => post?.category === "모집"
   );
   //카테고리 모집 필터
   const categoryFilter3 = PostData?.filter(
-    (post: any) => post?.category === "자유" || "모집"
+    (post: PostDataProps) => post?.category === "자유" || "모집"
   );
   // 카테고리 state 기본값은 전체다 보이게
   const [toggle, setToggle] = useState(categoryFilter3);
@@ -100,7 +108,7 @@ export const Community = () => {
   useEffect(() => {
     if (searchTexts) {
       setToggle((e: any) =>
-        e.filter((post: any) =>
+        e.filter((post: PostDataProps) =>
           post.title.toLowerCase().includes(searchTexts.toLowerCase())
         )
       );
@@ -151,9 +159,9 @@ export const Community = () => {
           <CommunityeHeader>
             <HeaderTh style={{ padding: "0px 16px" }}>번호</HeaderTh>
             <HeaderTh>카테고리</HeaderTh>
-            <HeaderTh style={{ padding: "0px 250px 0px 235px" }}>제목</HeaderTh>
+            <HeaderTh style={{ padding: "0px 250px 0px 232px" }}>제목</HeaderTh>
             <HeaderTh>작성자</HeaderTh>
-            <HeaderTh style={{ padding: "0px 34px 0px 56px" }}>
+            <HeaderTh style={{ padding: "0px 32px 0px 56px" }}>
               작성시간
             </HeaderTh>
             <HeaderTh>조회수</HeaderTh>
@@ -212,7 +220,9 @@ const CommunityAddArea = styled.div`
   margin-bottom: 10px;
 `;
 const CommunityHeader = styled.div`
-  height: 390px;
+  margin-top: 155px;
+
+  /* height: 390px; */
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -251,9 +261,10 @@ const CommunitySerchBar = styled.form`
   border-radius: 10px;
 `;
 const Communitycategory = styled.div<{ categorySt: string }>`
+  margin-bottom: 67px;
   display: flex;
   justify-content: center;
-  gap: 50px;
+  gap: 40px;
   color: #fff;
   border-bottom: 1pxx solid;
   display: flex;
@@ -294,6 +305,7 @@ const CommunityLayout = styled.div`
   width: 100%;
   color: white;
   height: 100%;
+  padding-bottom: 92px;
 `;
 const CommunityTitle = styled.div`
   cursor: pointer;

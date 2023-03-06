@@ -11,8 +11,8 @@
       "id": "76561199476963056",
       "profileimg": "https://avatars.akamai.steamstatic.com/6639269e3d4820b31c5ec95bedc5ce0063635f54_full.jpg",
       "nickname": "chacha11 #3056",
-      "login": true,
-      "lastLogin": "2023-03-06T05:27:28.505Z"
+      "login": false,
+      "lastLogin": "2023-03-06T09:16:41.797Z"
     },
     {
       "id": "76561199478670991",
@@ -244,7 +244,7 @@
       "title": "asdfsadfsadf",
       "content": "asdfsadfsadf",
       "date": "2023/3/6 0:50",
-      "count": 6,
+      "count": 7,
       "category": "자유"
     },
     {
@@ -304,7 +304,67 @@
       "title": "ㅋ",
       "content": "ㅋ",
       "date": "2023.03.06 10:56",
+      "count": 5,
+      "category": "모집"
+    },
+    {
+      "id": "3387adc0-7f9e-4a42-854d-1291733727db",
+      "steamid": "76561199476963056",
+      "name": "chacha11 #3056",
+      "title": "ㅁㄴㅇㄹㅁㄴㅇㄹㅇㅁㄴㄹㅁㄴㅇㄹㅁㄴㅇㄹㄴㅁㅇㄹㄴㅁㅇㄹㅁㄴ",
+      "content": "1",
+      "date": "2023.03.06 14:47",
+      "count": 7,
+      "category": "자유"
+    },
+    {
+      "id": "e3fcac69-1608-442f-869c-cc19f3f39a9f",
+      "steamid": "76561199476963056",
+      "name": "chacha11 #3056",
+      "title": "d",
+      "content": "d",
+      "date": "2023.03.06 14:55",
+      "count": 1,
+      "category": "모집"
+    },
+    {
+      "id": "0455b58a-df95-4caf-bc06-b03196905bb9",
+      "steamid": "76561199476963056",
+      "name": "chacha11 #3056",
+      "title": "st",
+      "content": "te",
+      "date": "2023.03.06 16:34",
+      "count": 2,
+      "category": "모집"
+    },
+    {
+      "id": "bfc37d1f-83ad-45cf-b9fc-b3ac02c5abfe",
+      "steamid": "76561199476963056",
+      "name": "chacha11 #3056",
+      "title": "ㅇ",
+      "content": "ㅇ",
+      "date": "2023.03.06 17:24",
       "count": 3,
+      "category": "모집"
+    },
+    {
+      "id": "4a67dc57-c183-4607-8ae0-5aefbd9cf33e",
+      "steamid": "76561199476963056",
+      "name": "chacha11 #3056",
+      "title": "z",
+      "content": "z",
+      "date": "2023.03.06 17:46",
+      "count": 1,
+      "category": "모집"
+    },
+    {
+      "id": "22e7a06a-05b9-4b36-9bdf-0e91ea5bf2b3",
+      "steamid": "76561199476963056",
+      "name": "chacha11 #3056",
+      "title": "z",
+      "content": "z",
+      "date": "2023.03.06 17:48",
+      "count": 1,
       "category": "모집"
     }
   ],
@@ -470,6 +530,60 @@
       "date": "2023/3/6 11:49",
       "profileImg": "https://avatars.akamai.steamstatic.com/6639269e3d4820b31c5ec95bedc5ce0063635f54_full.jpg",
       "contents": "ㅇㅇ"
+    },
+    {
+      "id": "6f318348-9729-4575-9136-a8b295e44826",
+      "postId": "3387adc0-7f9e-4a42-854d-1291733727db",
+      "myId": "76561199476963056",
+      "name": "chacha11 #3056",
+      "date": "2023/3/6 14:52",
+      "profileImg": "https://avatars.akamai.steamstatic.com/6639269e3d4820b31c5ec95bedc5ce0063635f54_full.jpg",
+      "contents": "sdafasdf"
+    },
+    {
+      "id": "da1776ac-e7aa-4fed-b9ea-800d98b7ed4a",
+      "postId": "e3fcac69-1608-442f-869c-cc19f3f39a9f",
+      "myId": "76561199476963056",
+      "name": "chacha11 #3056",
+      "date": "2023/3/6 14:55",
+      "profileImg": "https://avatars.akamai.steamstatic.com/6639269e3d4820b31c5ec95bedc5ce0063635f54_full.jpg",
+      "contents": "d"
+    },
+    {
+      "id": "03afef6e-303c-48ae-a75c-41c4f0012a58",
+      "postId": "e3fcac69-1608-442f-869c-cc19f3f39a9f",
+      "myId": "76561199476963056",
+      "name": "chacha11 #3056",
+      "date": "2023/3/6 14:55",
+      "profileImg": "https://avatars.akamai.steamstatic.com/6639269e3d4820b31c5ec95bedc5ce0063635f54_full.jpg",
+      "contents": "d"
+    },
+    {
+      "id": "b438d5c3-eb7b-4368-b09f-13cf638ab57e",
+      "postId": "0455b58a-df95-4caf-bc06-b03196905bb9",
+      "myId": "76561199476963056",
+      "name": "chacha11 #3056",
+      "date": "2023/3/6 17:8",
+      "profileImg": "https://avatars.akamai.steamstatic.com/6639269e3d4820b31c5ec95bedc5ce0063635f54_full.jpg",
+      "contents": "ㅋㅋㅋㅋㅋ"
+    },
+    {
+      "id": "bff80a9b-a410-4ad4-8ec2-38ac52c8ebad",
+      "postId": "4a67dc57-c183-4607-8ae0-5aefbd9cf33e",
+      "myId": "76561199476963056",
+      "name": "chacha11 #3056",
+      "date": "2023/3/6 17:48",
+      "profileImg": "https://avatars.akamai.steamstatic.com/6639269e3d4820b31c5ec95bedc5ce0063635f54_full.jpg",
+      "contents": "d"
+    },
+    {
+      "id": "2315aad7-6b07-41f7-9078-8b50460ab06f",
+      "postId": "22e7a06a-05b9-4b36-9bdf-0e91ea5bf2b3",
+      "myId": "76561199476963056",
+      "name": "chacha11 #3056",
+      "date": "2023/3/6 17:48",
+      "profileImg": "https://avatars.akamai.steamstatic.com/6639269e3d4820b31c5ec95bedc5ce0063635f54_full.jpg",
+      "contents": "z"
     }
   ]
 }
