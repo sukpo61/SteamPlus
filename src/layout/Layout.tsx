@@ -79,7 +79,7 @@ function Layout() {
 
   const [videoRoomExit, setVideoRoomExit] = useRecoilState(videoRoomExitRecoil);
 
-  const [loginModalOpen, setLoginModalOpen] = useState<boolean>(true); // 로그인 모달
+  const [loginModalOpen, setLoginModalOpen] = useState<boolean>(false); // 로그인 모달
 
   const [currentRoom, setCurrentRoom] = useRecoilState(currentRoomRecoil);
 
@@ -186,15 +186,15 @@ function Layout() {
     );
   });
 
+  const handleLoginModalOpen = () => {
+    setLoginModalOpen(true);
+  };
+
   return (
     <>
       <LoginModalPosition>
         {/* 로그인 모달 */}
-        {ProfileImgUrl === null
-          ? loginModalOpen && (
-              <LoginModal setLoginModalOpen={setLoginModalOpen} />
-            )
-          : ""}
+        {loginModalOpen && <LoginModal setLoginModalOpen={setLoginModalOpen} />}
       </LoginModalPosition>
 
       <div onContextMenu={(e: any) => e.preventDefault()}>
@@ -253,7 +253,8 @@ function Layout() {
             <Friendbutton
               onClick={() => {
                 alert("로그인 후 사용 가능 합니다.");
-                FriendButtonOnClick("profile");
+                // FriendButtonOnClick("profile");
+                handleLoginModalOpen(); // 로그인 모달
               }}
               layoutMenu={layoutMenu}
             >
@@ -283,7 +284,8 @@ function Layout() {
             <VoiceTalkbutton
               onClick={() => {
                 alert("로그인 후 사용 가능 합니다.");
-                LayoutButtonOnClick("profile");
+                // LayoutButtonOnClick("profile");
+                handleLoginModalOpen(); // 로그인 모달
               }}
               layoutMenu={layoutMenu}
             >

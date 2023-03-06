@@ -10,7 +10,7 @@ function LandingPage() {
       <LandingHeader></LandingHeader>
       <LandingImg1Area>
         <LandingImg1Gradient />
-        <LandingImg1 src="/img/LandingImg1-1.png" />
+        <LandingImg1 src="/img/LandingImg1-2.png" />
         <SteamPlusIntro>
           <SteamPlusWhite src="/img/SteamPlusLogo2.png" />
           <IntroText>
@@ -66,7 +66,7 @@ const MainContainer = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: flex-start;
-  background: #192030;
+  background-color: #192030;
 `;
 
 const LandingHeader = styled.div`
@@ -74,38 +74,57 @@ const LandingHeader = styled.div`
   width: 100vw;
   height: 72px;
   top: -100px;
-  background: #080c16;
+  background-color: #080c16;
+`;
+
+const LandingImg1Area = styled.div`
+  position: relative;
+  /* width: 1840px; */
+  display: flex;
+  align-items: center;
+  /* flex-direction: column; */
+  /* justify-content: center; */
+  width: 100%;
+  height: 445px;
+  /* height: 21%; */
+  overflow: hidden;
 `;
 
 const LandingImg1Gradient = styled.div`
   position: absolute;
-  width: 1289px;
+  /* width: 1289px; */
+  width: 70%;
   height: 445px;
   background: linear-gradient(90deg, rgba(18, 3, 81, 0) 0%, #06001d 100%);
   transform: rotate(-180deg);
   z-index: 99;
 `;
 
-const LandingImg1Area = styled.div`
-  position: relative;
-  width: 1840px;
-  height: 445px;
-  overflow: hidden;
-`;
 const LandingImg1 = styled.img`
   position: absolute;
-  top: -228px;
-  width: 1872px;
-  height: auto;
+  /* top: -228px; */
+  /* width: 1872px; */
+  top: 0;
+  left: 0;
+  transform: translate(0, 0); // translateY(6%); // 24% */
+  object-fit: cover;
+  width: 100%;
+  /* min-width: 1200px; */
+  height: 100%;
 `;
 
 const SteamPlusIntro = styled.div`
+  position: absolute;
   display: flex;
   flex-direction: column;
   gap: 32px;
-  position: absolute;
-  margin-top: 251px;
-  margin-left: 346px;
+  /* margin-top: 250px; */
+  /* margin-right: 346px; */
+  padding-right: 400px;
+  transform: translateX(-50%);
+  /* left: 30%; */
+  top: 250px;
+  left: 50%;
   z-index: 100;
 `;
 
@@ -115,6 +134,7 @@ const SteamPlusWhite = styled.img`
 `;
 
 const IntroText = styled.p`
+  width: 560px;
   font-family: "Noto Sans";
   font-weight: 500;
   font-size: 20px;
@@ -130,7 +150,8 @@ const IntroTextArea1 = styled.div`
   flex-direction: column;
   /* justify-content: center; */
   align-items: center;
-  width: 1840px;
+  /* width: 1840px; */
+  width: 100%;
   height: 700px;
   background: #232c42;
 `;
@@ -151,10 +172,12 @@ const IntroAboutChat = styled.p`
   letter-spacing: -0.03em;
   color: #ffffff;
   margin-bottom: 68px;
+  width: 520px;
 `;
 
 const IntroTextWithBtn = styled.p`
   height: 27px;
+  width: 800px;
   font-family: "Noto Sans";
   font-weight: 600;
   font-size: 20px;
@@ -251,7 +274,8 @@ const LandingBottomGradient = styled.div`
   flex-direction: column;
   align-items: center;
 
-  width: 1840px;
+  /* width: 1840px; */
+  width: 100%;
   height: 442px;
   background: linear-gradient(
     rgba(18, 3, 81, 0) 0%,

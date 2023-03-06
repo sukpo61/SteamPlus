@@ -1,8 +1,11 @@
 import React from "react";
 import styled from "styled-components";
 import { Outlet } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 function Footer() {
+  const navigate = useNavigate();
+
   return (
     <>
       <div style={{ minHeight: "100vh", zIndex: "999" }}>
@@ -11,7 +14,10 @@ function Footer() {
       {/* <MainBody></MainBody> */}
 
       <FooterArea>
-        <FooterLogo src="/img/SteamPlusLogo2.png" />
+        <FooterLogo
+          src="/img/SteamPlusLogo2.png"
+          onClick={() => navigate(`/landing`)}
+        />
         <MemberInfo>
           <Position style={{ width: 44 }}>개발자</Position>
           <Member style={{ width: 176 }}>고현석 손유진 신정근 차상현</Member>
@@ -41,6 +47,7 @@ const FooterArea = styled.div`
   align-items: center;
   margin-top: -52px;
   gap: 20px;
+  /* z-index: 9999; */
 `;
 
 const FooterLogo = styled.img`
@@ -49,6 +56,7 @@ const FooterLogo = styled.img`
   /* position: absolute; */
   margin-left: 16px;
   margin-right: 16px;
+  cursor: pointer;
 `;
 
 const MemberInfo = styled.div`

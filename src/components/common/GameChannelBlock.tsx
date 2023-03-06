@@ -37,24 +37,11 @@ function GameChannelBlock({ game, count }: any) {
           <TitleLinear>
             <GameChannelTitle>{`${game?.name}`}</GameChannelTitle>
           </TitleLinear>
-          <GameChannelInfo>
-            <GameChannelCategory>
-              {game?.genres.map((e: any) => {
-                return `${e.description} `;
-              })}
-            </GameChannelCategory>{" "}
-            <NumberOfPlayer>
-              <div
-                style={{
-                  width: 12,
-                  height: 12,
-                  borderRadius: "50%",
-                  background: "#23DE79",
-                }}
-              ></div>
-              {count}명
-            </NumberOfPlayer>
-          </GameChannelInfo>
+          <GameChannelCategory>
+            {game?.genres.map((e: any) => {
+              return `${e.description} `;
+            })}
+          </GameChannelCategory>{" "}
         </div>
         <AdmitButton
           onClick={() =>
@@ -80,9 +67,9 @@ const GameListBlock = styled.div`
   border-radius: 10px;
   overflow: hidden;
   &:hover {
-    box-shadow: 0px 0px 15px 0px #fff;
+    box-shadow: 0px 0px 10px 0px #fff;
   }
-  transition: 0.5s ease;
+  transition: 0.2s ease;
 `;
 
 const GameChannelImgArea = styled.div`
@@ -138,26 +125,12 @@ const GameChannelTitle = styled.div`
   overflow: hidden; // 제목이 길면 잘리게 해놓음!! 마우스 호버시 가로로 스크롤 되게 해야함
 `;
 
-const GameChannelInfo = styled.div`
-  display: flex;
-  flex-direction: row;
-  gap: 16px;
-`;
 const GameChannelCategory = styled.div`
   font-family: "Montserrat", sans-serif;
   font-style: normal;
   font-size: 14px;
   color: #a7a9ac;
   letter-spacing: -0.03em;
-`;
-
-const NumberOfPlayer = styled.p`
-  color: white;
-  font-size: 14px;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  gap: 4px;
 `;
 
 const AdmitButton = styled.button`
