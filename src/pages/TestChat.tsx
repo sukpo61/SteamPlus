@@ -68,7 +68,10 @@ function TestChat() {
     socket.emit("friendMessage", newChat, { once: true });
 
     const stringnewChat = JSON.stringify(newChat);
-    setChatText((i: any) => [...i, newChat]);
+    setChatText((i: any) => {
+      console.log("send");
+      return [...i, newChat];
+    });
     setTextInput("");
   };
   //입력시 맨 아래로 스크롤
@@ -109,13 +112,13 @@ function TestChat() {
             if (chat.roomId === roomId) {
               if (chat.id === myId) {
                 return (
-                  <div data-aos="fade-left" key={chat.uuid}>
+                  <div data-aos="fade-left">
                     <Testtext chat={chat} />
                   </div>
                 );
               } else {
                 return (
-                  <div data-aos="fade-right" key={chat.uuid}>
+                  <div data-aos="fade-right">
                     <Testtext chat={chat} />
                   </div>
                 );

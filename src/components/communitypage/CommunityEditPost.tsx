@@ -6,11 +6,13 @@ import styled from "styled-components";
 
 //수정하기
 export const CommunityEditPost = () => {
+  const DATABASE_ID: any = process.env.REACT_APP_DATABASE_ID;
+
   const navigate = useNavigate();
 
   //포스트 가져오기 쿼리
   const CommunityPostData = async () => {
-    const response = await axios.get("http://localhost:3001/post");
+    const response = await axios.get(`${DATABASE_ID}/post`);
     return response;
   };
   const { data }: any = useQuery("CommunityPostData", CommunityPostData);
@@ -50,7 +52,7 @@ export const CommunityEditPost = () => {
   //댓글수정쿼리
   const EditMutation = useMutation(
     (editComment: any) =>
-      axios.put(`http://localhost:3001/post/${PostId}`, editComment),
+      axios.put(`${DATABASE_ID}/post/${PostId}`, editComment),
     {
       onSuccess: () => {
         queryClient.invalidateQueries("CommunityPostData");

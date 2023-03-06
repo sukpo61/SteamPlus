@@ -1,7 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="d6e282c2-d74a-4b89-b80b-7bbd366e51eb" name="변경" comment="" />
+    <list default="true" id="d6e282c2-d74a-4b89-b80b-7bbd366e51eb" name="변경" comment="">
+      <change beforePath="$PROJECT_DIR$/db.json" beforeDir="false" afterPath="$PROJECT_DIR$/db.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/communitypage/CommunityBox.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/communitypage/CommunityBox.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/layout/Layout.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/layout/Layout.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/layout/layoutcomponents/Friend.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/layout/layoutcomponents/Friend.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/layout/layoutcomponents/FriendContextMenu.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/layout/layoutcomponents/FriendContextMenu.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pages/TestChat.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/TestChat.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/socket.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/socket.ts" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -46,6 +54,7 @@
       <workItem from="1675944866000" duration="538000" />
       <workItem from="1677460275175" duration="614000" />
       <workItem from="1677658289703" duration="607000" />
+      <workItem from="1678071618794" duration="369000" />
     </task>
     <servers />
   </component>
