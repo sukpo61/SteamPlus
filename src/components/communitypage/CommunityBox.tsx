@@ -19,7 +19,10 @@ interface CommunityBoxProps {
   post: PostProps;
   index: number;
 }
+
 export const CommunityBox = ({ post, index }: CommunityBoxProps) => {
+  const DATABASE_ID: any = process.env.REACT_APP_DATABASE_ID;
+
   const navigate = useNavigate();
   const Name = post?.name;
   // 배틀태그 자른 닉네임
@@ -83,7 +86,7 @@ export const CommunityBox = ({ post, index }: CommunityBoxProps) => {
   //게시글 조회수
   const EditMutation = useMutation(
     (editComment: any) =>
-      axios.put(`http://localhost:3001/post/${post.id}`, editComment),
+      axios.put(`${DATABASE_ID}/post/${post.id}`, editComment),
     {
       onSuccess: () => {
         queryClient.invalidateQueries("CommunityPostData");
@@ -100,7 +103,7 @@ export const CommunityBox = ({ post, index }: CommunityBoxProps) => {
 
   //댓글수 카운트
   const getComment = async () => {
-    const response = await axios.get("http://localhost:3001/comment");
+    const response = await axios.get(`${DATABASE_ID}/comment`);
     return response;
   };
   const { data }: any = useQuery("comment", getComment);

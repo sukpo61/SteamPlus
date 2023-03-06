@@ -25,6 +25,8 @@ export const CommunityAddPost = () => {
   const [category, setCategory] = useState<string>("카테고리를 선택하세요");
   const [title, setTitle] = useState<string>("");
   const [content, setContent] = useState<string>("");
+  const DATABASE_ID: any = process.env.REACT_APP_DATABASE_ID;
+
   const navigate = useNavigate();
   const userId = sessionStorage.getItem("steamid");
   const userName = sessionStorage.getItem("nickName");
@@ -47,7 +49,7 @@ export const CommunityAddPost = () => {
 
   // useMutation 적용한 addPost
   const addPostMutation = useMutation(
-    (newPost: PostData) => axios.post("http://localhost:3001/post", newPost),
+    (newPost: PostData) => axios.post(`${DATABASE_ID}/post`, newPost),
     {
       onSuccess: () => {
         setTitle("");

@@ -26,8 +26,6 @@ function AboutPages() {
   const [aboutPagesOnOff, setAboutPagesOnOff] =
     useRecoilState<String>(AboutPagesState);
 
-  console.log(aboutPagesOnOff);
-
   //slider세팅
   const sliderSettings = {
     dots: true,
@@ -53,12 +51,14 @@ function AboutPages() {
 
   return (
     <AboutPagesDiv aboutPagesOnOff={aboutPagesOnOff}>
-      <BiExit
+      <p
         className="exitIcon"
         onClick={() => {
           setAboutPagesOnOff("close");
         }}
-      />
+      >
+        X
+      </p>
       <Slider {...sliderSettings}>
         <InnerSlider>
           <AboutPagesSlider src="./img/about1.jpg"></AboutPagesSlider>
@@ -87,14 +87,16 @@ const AboutPagesDiv = styled.div<{ aboutPagesOnOff: any }>`
   height: 100%;
   overflow-y: hidden;
   background-color: rgba(0, 0, 0, 0.8);
+  z-index: 999999999999999999999999;
+
   .exitIcon {
     position: fixed;
-    top: 20px;
-    right: 30px;
+    top: 30px;
+    right: 40px;
     font-size: 40px;
     color: #fff;
     cursor: pointer;
-    z-index: 9999999999999;
+    z-index: 99999999999999999999999999;
   }
   .slick-dots {
     bottom: 10%;

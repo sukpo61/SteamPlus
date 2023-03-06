@@ -183,6 +183,7 @@ function Friend() {
 
   useEffect(() => {
     socket.on("friendNew_message", (newChat) => {
+      console.log("accept");
       setChatText((i: any) => [...i, newChat]);
       if (window.location.href.split(":")[3] == newChat.roomId) {
         return;

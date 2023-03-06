@@ -27,7 +27,10 @@ interface EditCommentType {
   date: string;
   myId: number;
 }
+
 function Comment({ PostId }: CommentProps) {
+  const DATABASE_ID: any = process.env.REACT_APP_DATABASE_ID;
+
   //Ref존
   const CommentRef = useRef<HTMLInputElement>(null); // define type for CommentRef
   const CommentsRef = useRef<HTMLTextAreaElement>(null);
@@ -51,7 +54,7 @@ function Comment({ PostId }: CommentProps) {
   //스팀아이디
   const steamID = sessionStorage.getItem("steamid");
   const getComment = async () => {
-    const response = await axios.get("http://localhost:3001/comment");
+    const response = await axios.get(`${DATABASE_ID}/comment`);
     return response;
   };
   const { data } = useQuery("comment", getComment);
@@ -63,8 +66,7 @@ function Comment({ PostId }: CommentProps) {
 
   //댓글등록
   const postMutation = useMutation(
-    (newComment: object) =>
-      axios.post("http://localhost:3001/comment", newComment),
+    (newComment: object) => axios.post(`${DATABASE_ID}/comment`, newComment),
     {
       onSuccess: () => {
         queryClient.invalidateQueries("comment");
@@ -101,14 +103,14 @@ function Comment({ PostId }: CommentProps) {
   };
   //댓글삭제
   const DeleteMutation = useMutation(
-    (id: string) => axios.delete(`http://localhost:3001/comment/${id}`),
+    (id) => axios.delete(`${DATABASE_ID}/comment/${id}`),
     {
       onSuccess: () => {
         queryClient.invalidateQueries("comment");
       },
     }
   );
-  const DeleteOnClick = (id: string) => {
+  const DeleteOnClick = (id: any) => {
     if (window.confirm("정말 삭제하겠습니까?")) {
       DeleteMutation.mutate(id);
       return;
@@ -120,8 +122,8 @@ function Comment({ PostId }: CommentProps) {
   };
   //댓글수정
   const EditMutation = useMutation(
-    (editComment: EditCommentType) =>
-      axios.put(`http://localhost:3001/comment/${editComment.id}`, editComment),
+    (editComment: any) =>
+      axios.put(`${DATABASE_ID}/comment/${editComment.id}`, editComment),
     {
       onSuccess: () => {
         queryClient.invalidateQueries("comment");
