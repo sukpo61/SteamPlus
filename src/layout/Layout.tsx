@@ -315,8 +315,7 @@ function Layout() {
           <GameSearch />
           <Friend />
           <FriendSearch />
-          {channelId ? <VoiceTalk /> : <EmptyVoiceTalk />}
-
+          <VoiceTalk />
           <FriendAdd />
           <AboutPages />
         </MenuOpenDiv>
