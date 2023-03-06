@@ -7,11 +7,13 @@ import { useRef } from "react";
 import Comment from "./Comment";
 
 export const CommunityDetail = () => {
+  const DATABASE_ID: any = process.env.REACT_APP_DATABASE_ID;
+
   const navigate = useNavigate();
 
   //db에있는 post get 해와서 useQuery로 만듥기
   const CommunityPostData = async () => {
-    const response = await axios.get("http://localhost:3001/post");
+    const response = await axios.get(`${DATABASE_ID}/post`);
     return response;
   };
   const { data }: any = useQuery("CommunityPostData", CommunityPostData);
@@ -38,7 +40,7 @@ export const CommunityDetail = () => {
     //확인 버튼을 누르면 실행될 코드
     if (window.confirm("정말 삭제하겠습니까?")) {
       try {
-        await axios.delete(`http://localhost:3001/post/${PostId}`);
+        await axios.delete(`${DATABASE_ID}/post/${PostId}`);
         navigate("/Community");
       } catch (error) {
         console.error(error);
