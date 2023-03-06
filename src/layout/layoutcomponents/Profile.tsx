@@ -255,7 +255,6 @@ function Profile() {
               ) : (
                 <>
                   <RecentGame> 최근 활동한 게임</RecentGame>
-
                   {GameData?.slice(0, 3).map((gameData: any) => {
                     return <RecentGameData gameData={gameData} />;
                   })}
