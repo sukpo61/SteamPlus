@@ -50,15 +50,17 @@ export const Community = () => {
   };
 
   // 검색 온클릭
-  const btn = () => {
+  const btn = (event: any) => {
+    event.preventDefault(); // 기본 동작 막기
     if (searchText === "") {
       alert("검색어를 입력해주세요");
       SerchRef.current!.focus();
       return;
     } else {
       setSearchTexts(searchText);
+
+      return;
     }
-    return;
   };
 
   //새로고침
@@ -108,16 +110,7 @@ export const Community = () => {
   return (
     <>
       <CommunityLayout>
-        <div
-          style={{
-            height: "390px",
-            display: "flex",
-            flexDirection: "column",
-            justifyContent: "center",
-            alignContent: "center",
-            width: "100%",
-          }}
-        >
+        <CommunityHeader>
           <CommunityTitle onClick={replace}> 커뮤니티</CommunityTitle>
           <CommunityComment>
             게임채널에 함께할 구성원을 모집하거나 자유롭게 의견을 나누는
@@ -149,19 +142,12 @@ export const Community = () => {
               모집
             </CommunitySpan>
           </Communitycategory>
-        </div>
+        </CommunityHeader>
         <CommentsWrap>
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "space-between",
-              width: "100%",
-              marginBottom: "10px",
-            }}
-          >
+          <CommunityAddArea>
             <Communitytitle2>게시판</Communitytitle2>
             <AddPostBtn onClick={addPost}>글쓰기</AddPostBtn>
-          </div>
+          </CommunityAddArea>
           <CommunityeHeader>
             <HeaderTh style={{ padding: "0px 16px" }}>번호</HeaderTh>
             <HeaderTh>카테고리</HeaderTh>
@@ -185,16 +171,9 @@ export const Community = () => {
                 />
               );
             })}
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-              flexDirection: "column",
-              marginTop: "30px",
-            }}
-          >
-            <CommunitySerchBar>
+          <CommunityFooter>
+            <CommunitySerchBar onSubmit={btn}>
+              {/* <form onSubmit={btn} style={{ margin: "0px", padding: "0px" }}> */}
               <CommunitySerchinput
                 ref={SerchRef}
                 type="text"
@@ -207,6 +186,7 @@ export const Community = () => {
                 className="searchIcon"
                 onClick={btn}
               />
+              {/* </form> */}
             </CommunitySerchBar>
             {/* 페이지네이션 */}
             <PaginationBox>
@@ -218,13 +198,35 @@ export const Community = () => {
                 onChange={handlePageChange}
               />
             </PaginationBox>
-          </div>
+          </CommunityFooter>
         </CommentsWrap>
       </CommunityLayout>
     </>
   );
 };
 
+const CommunityAddArea = styled.div`
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  margin-bottom: 10px;
+`;
+const CommunityHeader = styled.div`
+  height: 390px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-content: center;
+  width: 100%;
+`;
+const CommunityFooter = styled.div`
+  display: flex;
+  /* justify-content: center;
+  align-items: center;
+  flex-direction: column; */
+  align-items: center;
+  margin-top: 30px;
+`;
 const CommunitySpan = styled.span`
   cursor: pointer;
   font-weight: 500;
@@ -235,19 +237,15 @@ const CommunitySerchinput = styled.input`
   border: none;
   background: transparent;
   color: #fff;
-  width: 90%;
+  width: 255px;
+  padding: 0px 10px;
 `;
-const CommunitySerchBar = styled.div`
+const CommunitySerchBar = styled.form`
   display: flex;
-  flex-direction: row;
-  justify-content: space-between;
   align-items: center;
-  padding: 4px 12px;
-  gap: 8px;
-  position: absolute;
+  flex-direction: row;
   width: 280px;
   height: 32px;
-  left: 220px;
   background-color: #404b5e;
   box-shadow: inset 0px 4px 8px rgba(0, 0, 0, 0.25);
   border-radius: 10px;
@@ -336,7 +334,7 @@ const HeaderTh = styled.th`
 `;
 
 const PaginationBox = styled.div`
-  margin-top: 10px;
+  margin-left: 50px;
   .pagination {
     display: flex;
     justify-content: center;

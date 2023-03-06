@@ -171,6 +171,7 @@ function Comment({ PostId }: any) {
                 <CommentDate>{i.date}</CommentDate>
               </div>
             </div>
+
             <div style={{ marginLeft: "auto" }}>
               {editOn === i.id ? (
                 <>
@@ -260,28 +261,33 @@ const CommentName = styled.h2`
   font-weight: 600;
   font-size: #fff;
 `;
-const EditInput = styled.input`
+const EditInput = styled.textarea`
   color: #fff;
   border: none;
   width: 700px;
   background: transparent;
   background-color: #404b5e;
-
   padding: 0px 5px;
   box-shadow: inset 0px 4px 8px rgba(0, 0, 0, 0.25);
   border-radius: 10px;
   margin-top: 10px;
   margin-bottom: 10px;
-  height: 100%;
+  resize: none;
   text-indent: 3px;
   font-size: 13px;
+  min-height: 100px;
+  resize: none;
+  padding: 10px;
+  line-height: 1.5;
+  border-radius: 10px;
+  outline: 0px none transparent;
 `;
 const CommentText = styled.p`
   font-size: 14px;
   margin: 10px 0px;
   word-break: break-all;
-  /* width: 850px; */
   font-weight: 400;
+  width: 700px;
 `;
 const CommentDate = styled.p`
   font-size: 11px;

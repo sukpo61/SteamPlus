@@ -12,6 +12,10 @@ interface TableTdProps {
 export const CommunityBox = ({ post, index }: any) => {
   const navigate = useNavigate();
   const Name = post?.name;
+  // 배틀태그 자른 닉네임
+  const SliceName = Name?.slice(0, -5);
+  //이름뒤에 배틀태그
+  const SliceName2 = Name?.slice(-5);
   const Title = post?.title;
   const Category = post?.category;
   const PodstID = post?.id;
@@ -110,9 +114,10 @@ export const CommunityBox = ({ post, index }: any) => {
         {/* 포스트 작성한지 10분이 지날때면 스타일을 주기 */}
         {newPost ? <PostNew>N</PostNew> : ""}
       </TableTds>
-      <TableTd Width="130px" Color="#A7A9AC">
-        {Name}
-      </TableTd>
+      <TableTdName Width="130px" Color="#A7A9AC">
+        <p>{SliceName} &nbsp;</p>
+        <p> {SliceName2}</p>
+      </TableTdName>
       <TableTd Width="80px" Color="#A7A9AC">
         {dayMinuteCounter}
       </TableTd>
@@ -157,7 +162,6 @@ const TableTd = styled.td<TableTdProps>`
   height: 50px;
   font-weight: 400;
   font-size: 13px;
-
   span {
     margin-left: 20px;
   }
@@ -182,5 +186,28 @@ const TableTds = styled.td<TableTdProps>`
   span:hover {
     text-decoration: underline;
     cursor: pointer;
+  }
+`;
+const TableTdName = styled.td<TableTdProps>`
+  color: ${(props) => props.Color};
+  width: ${(props) => props.Width};
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 50px;
+  font-weight: 400;
+  font-size: 13px;
+  span {
+    margin-left: 20px;
+  }
+  span:hover {
+    text-decoration: underline;
+    cursor: pointer;
+  }
+  p:nth-child(1) {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 60px;
   }
 `;
