@@ -11,12 +11,17 @@ import {
   AllStreamsRecoil,
   videoRoomExitRecoil,
   AboutPagesState,
+  friendChat,
+  friendChatNotice,
+  currentRoomRecoil,
+  currentGameIdRecoil,
 } from "../recoil/atom";
 import Profile from "./layoutcomponents/Profile";
 import GameSearch from "./layoutcomponents/GameSearch";
 import Friend from "./layoutcomponents/Friend";
 import FriendSearch from "./layoutcomponents/FriendSearch";
 import VoiceTalk from "./layoutcomponents/VoiceTalk";
+import EmptyVoiceTalk from "./layoutcomponents/EmptyVoiceTalk";
 import FriendAdd from "./layoutcomponents/FriendAdd";
 import { useQuery } from "react-query";
 import axios from "axios";
@@ -35,6 +40,8 @@ import { MdExitToApp } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 import { useParams } from "react-router-dom";
+
+import LoginModal from "./LoginModal";
 
 import socket from "../socket";
 import AboutPages from "./layoutcomponents/AboutPages";
@@ -62,12 +69,21 @@ function Layout() {
     useRecoilState<FriendSearchProps[]>(friendAllState);
   //친구 요청 온 내역 전체
   const [friendAdd] = useRecoilValue(newFriendAdd);
+  //개인 채팅 알림
+  const [chatTextNotice, setChatTextNotice] =
+    useRecoilState<any>(friendChatNotice);
 
   const [videoDisplay, setvideoDisplay] = useRecoilState(videoDisplayRecoil);
 
   const [AllStreams, setAllStreams] = useRecoilState(AllStreamsRecoil);
 
   const [videoRoomExit, setVideoRoomExit] = useRecoilState(videoRoomExitRecoil);
+
+  const [loginModalOpen, setLoginModalOpen] = useState<boolean>(true); // 로그인 모달
+
+  const [currentRoom, setCurrentRoom] = useRecoilState(currentRoomRecoil);
+
+  const [channelId, setchannelId] = useRecoilState(currentGameIdRecoil);
 
   //메뉴 탭눌렀을때 (친구제외)
   const LayoutButtonOnClick = (i: string) => {
@@ -171,53 +187,64 @@ function Layout() {
   });
 
   return (
-    <div onContextMenu={(e: any) => e.preventDefault()}>
-      <SideBarDiv>
-        {/* 프로필 */}
-        <Profilebutton onClick={() => LayoutButtonOnClick("profile")}>
-          {/* 로그인이 되어있지않다면과 로그인이 되어있다면의 정보*/}
-          {ProfileImgUrl === null ? (
-            <div>profile</div>
-          ) : (
-            <ProfileImg src={`${ProfileImgUrl}`} />
-          )}
-        </Profilebutton>
-        {/* 홈 */}
-        <Homebutton
-          locationName={locationName}
-          onClick={() => {
-            FriendButtonOnClick("close");
-            navigate("/");
-            window.scrollTo({ top: 0, behavior: "smooth" });
-          }}
-        >
-          <AiFillHome className="homeIcon" />
-          <p>홈</p>
-        </Homebutton>
-        {/* 게임검색 */}
-        <GameSearchbutton
-          locationName={locationName}
-          onClick={() => {
-            FriendButtonOnClick("close");
-            navigate("/Channelsearchpage");
-            window.scrollTo({ top: 0, behavior: "smooth" });
-          }}
-        >
-          <AiOutlineSearch className="searchIcon" />
-          <p>게임검색</p>
-        </GameSearchbutton>
-        {/* 커뮤니티 */}
-        <Communitybutton
-          locationName={locationName}
-          onClick={() => {
-            FriendButtonOnClick("close");
-            navigate("Community");
-            window.scrollTo({ top: 0, behavior: "smooth" });
-          }}
-        >
-          <MdDynamicFeed className="communityIcon" />
-          <p>커뮤니티</p>
-        </Communitybutton>
+    <>
+      <LoginModalPosition>
+        {/* 로그인 모달 */}
+        {ProfileImgUrl === null
+          ? loginModalOpen && (
+              <LoginModal setLoginModalOpen={setLoginModalOpen} />
+            )
+          : ""}
+      </LoginModalPosition>
+
+      <div onContextMenu={(e: any) => e.preventDefault()}>
+        <SideBarDiv>
+          {/* 프로필 */}
+          <Profilebutton onClick={() => LayoutButtonOnClick("profile")}>
+            {/* 로그인이 되어있지않다면과 로그인이 되어있다면의 정보*/}
+            {ProfileImgUrl === null ? (
+              <div>profile</div>
+            ) : (
+              <ProfileImg src={`${ProfileImgUrl}`} />
+            )}
+          </Profilebutton>
+          {/* 홈 */}
+          <Homebutton
+            locationName={locationName}
+            onClick={() => {
+              FriendButtonOnClick("close");
+              navigate("/");
+              window.scrollTo({ top: 0, behavior: "smooth" });
+            }}
+          >
+            <AiFillHome className="homeIcon" />
+            <p>홈</p>
+          </Homebutton>
+          {/* 게임검색 */}
+          <GameSearchbutton
+            locationName={locationName}
+            onClick={() => {
+              FriendButtonOnClick("close");
+              navigate("/Channelsearchpage");
+              window.scrollTo({ top: 0, behavior: "smooth" });
+            }}
+          >
+            <AiOutlineSearch className="searchIcon" />
+            <p>게임검색</p>
+          </GameSearchbutton>
+          {/* 커뮤니티 */}
+
+          <Communitybutton
+            locationName={locationName}
+            onClick={() => {
+              FriendButtonOnClick("close");
+              navigate("Community");
+              window.scrollTo({ top: 0, behavior: "smooth" });
+            }}
+          >
+            <FaKeyboard className="communityIcon" />
+            <p>커뮤니티</p>
+          </Communitybutton>
 
         {/* 메뉴 구분선 */}
         <SideLine />
@@ -244,7 +271,11 @@ function Layout() {
           >
             <FaUserFriends className="friendIcon" />
             <p>친구</p>
-            {friendAddCome.length === 0 ? "" : <FriendNotice />}
+            {friendAddCome.length === 0 && chatTextNotice.length === 0 ? (
+              ""
+            ) : (
+              <FriendNotice />
+            )}
           </Friendbutton>
         )}
         {/* 음성채팅 */}
@@ -260,14 +291,18 @@ function Layout() {
             <p>음성채팅</p>
           </VoiceTalkbutton>
         ) : (
-          <VoiceTalkbutton
-            onClick={() => LayoutButtonOnClick("voicetalk")}
-            layoutMenu={layoutMenu}
-          >
-            <MdVoiceChat className="chatIcon" />
-            <p>음성채팅</p>
-          </VoiceTalkbutton>
+          <VoiceTalkbuttonWrap>
+            {currentRoom && <VoiceTalkON></VoiceTalkON>}
+            <VoiceTalkbutton
+              onClick={() => LayoutButtonOnClick("voicetalk")}
+              layoutMenu={layoutMenu}
+            >
+              <MdVoiceChat className="chatIcon" />
+              <p>음성채팅</p>
+            </VoiceTalkbutton>
+          </VoiceTalkbuttonWrap>
         )}
+        <AboutPagesDiv onClick={AboutPagesOnClick}>?</AboutPagesDiv>
       </SideBarDiv>
 
       {/* 메뉴 컴포넌트 */}
@@ -276,8 +311,10 @@ function Layout() {
         <GameSearch />
         <Friend />
         <FriendSearch />
-        <VoiceTalk />
+        {channelId ? <VoiceTalk /> : <EmptyVoiceTalk />}
+
         <FriendAdd />
+        <AboutPages />
       </MenuOpenDiv>
       <VideosWrap
         toggle={videoDisplay}
@@ -310,10 +347,16 @@ function Layout() {
         </VideoPosition>
       </VideosWrap>
     </div>
+      </>
   );
 }
 
 export default Layout;
+
+const LoginModalPosition = styled.div`
+  width: 100%;
+  height: 100%;
+`;
 
 const Profileimg = styled.div``;
 
@@ -559,6 +602,18 @@ const VoiceTalkbutton = styled.div<{ layoutMenu: String }>`
     font-size: 30px;
     margin-bottom: 5px;
   }
+`;
+const VoiceTalkbuttonWrap = styled.div`
+  position: relative;
+`;
+const VoiceTalkON = styled.div`
+  width: 8px;
+  height: 8px;
+  right: 10px;
+  bottom: 48px;
+  border-radius: 4px;
+  background: #f05656;
+  position: absolute;
 `;
 const AboutPagesDiv = styled.div`
   width: 30px;
