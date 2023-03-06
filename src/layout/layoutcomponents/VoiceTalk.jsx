@@ -47,6 +47,8 @@ import FormControl from "@mui/material/FormControl";
 import axios from "axios";
 
 function VoiceTalk() {
+  const DATABASE_ID = process.env.REACT_APP_DATABASE_ID;
+
   const layoutMenu = useRecoilValue(LayoutButton);
 
   const [createDisplay, setCreateDisplay] = useState("hide");
@@ -272,7 +274,7 @@ function VoiceTalk() {
   const queryClient = useQueryClient();
 
   const postMutation = useMutation(
-    (friendAdd) => axios.post("http://localhost:3001/friend", friendAdd),
+    (friendAdd) => axios.post(`${DATABASE_ID}/friend`, friendAdd),
     {
       onSuccess: () => {
         // 쿼리 무효화

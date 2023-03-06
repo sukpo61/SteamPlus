@@ -10,6 +10,8 @@ interface TableTdProps {
   Color: string;
 }
 export const CommunityBox = ({ post, index }: any) => {
+  const DATABASE_ID: any = process.env.REACT_APP_DATABASE_ID;
+
   const navigate = useNavigate();
   const Name = post?.name;
   const Title = post?.title;
@@ -69,7 +71,7 @@ export const CommunityBox = ({ post, index }: any) => {
   //게시글 조회수
   const EditMutation = useMutation(
     (editComment: any) =>
-      axios.put(`http://localhost:3001/post/${post.id}`, editComment),
+      axios.put(`${DATABASE_ID}/post/${post.id}`, editComment),
     {
       onSuccess: () => {
         queryClient.invalidateQueries("CommunityPostData");
@@ -86,7 +88,7 @@ export const CommunityBox = ({ post, index }: any) => {
 
   //댓글수 카운트
   const getComment = async () => {
-    const response = await axios.get("http://localhost:3001/comment");
+    const response = await axios.get(`${DATABASE_ID}/comment`);
     return response;
   };
   const { data }: any = useQuery("comment", getComment);

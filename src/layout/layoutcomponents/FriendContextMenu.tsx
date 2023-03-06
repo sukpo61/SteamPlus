@@ -19,6 +19,8 @@ import { useNavigate } from "react-router-dom";
 import { v4 as uuidv4 } from "uuid";
 
 function FriendContextMenu({ xPos, yPos, id, onClose }: any) {
+  const DATABASE_ID: any = process.env.REACT_APP_DATABASE_ID;
+
   const myId: any = sessionStorage.getItem("steamid");
   const myNickName = sessionStorage.getItem("nickName");
   const queryClient = useQueryClient();
@@ -45,7 +47,7 @@ function FriendContextMenu({ xPos, yPos, id, onClose }: any) {
   // 친구 삭제
   const DeleteMutation = useMutation(
     //넘겨받은 id를 삭제
-    (id) => axios.delete(`http://localhost:3001/friend/${id}`),
+    (id) => axios.delete(`${DATABASE_ID}/friend/${id}`),
     {
       onSuccess: () => {
         // 쿼리 무효화

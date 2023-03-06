@@ -1,14 +1,16 @@
 import { io } from "socket.io-client";
 
+const BACKEND_ID: any = process.env.REACT_APP_BACKEND_ID;
+
 const userid = sessionStorage.getItem("steamid");
 
-console.log(userid);
+console.log(BACKEND_ID);
 
 export const userinfo = {
   id: userid,
 };
 
-const socket = io("https://guttural-flashy-narwhal.glitch.me");
+const socket = io(BACKEND_ID);
 // const socket = io("http://localhost:4500");
 
 socket.on("connect", () => {
