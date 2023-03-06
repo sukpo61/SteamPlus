@@ -90,7 +90,7 @@ function Profile() {
       login: online,
       lastLogin: new Date(),
     };
-
+    console.log(DATABASE_ID);
     axios.put(`${DATABASE_ID}/auth/${steamId}`, userinfo);
     axios.post(serverUrl, userinfo);
     window.location.replace("/");
@@ -109,7 +109,7 @@ function Profile() {
   //최근 게임활동 정보가져오기
   const getRecentGameData = async () => {
     const recentGame = await axios.get(
-      `http://api.steampowered.com/IPlayerService/GetRecentlyPlayedGames/v0001/?key=${APIKEY}&steamid=${ProfleSteamId}&format=json`
+      `https://enable-cors.glitch.me/http://api.steampowered.com/IPlayerService/GetRecentlyPlayedGames/v0001/?key=${APIKEY}&steamid=${ProfleSteamId}&format=json`
     );
     // sessionStorage.setItem("recentGame", recentGame.data.response.games);
     return recentGame;
