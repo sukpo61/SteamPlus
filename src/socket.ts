@@ -46,6 +46,4 @@ export default socket;
           width: ${(props) =>
     props.videoratio() ? null : `calc(100% / ${props.videocount})`};
     */
-        
 }
-

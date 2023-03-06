@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
 import { IoCloseCircleSharp } from "react-icons/io5";
 
 interface Props {
@@ -48,13 +48,25 @@ function LoginModal({ setLoginModalOpen }: Props) {
   );
 }
 
+const moveLoginModal = keyframes`
+0% {
+    transform: translateX(0px);
+    opacity:0%;
+  }
+  100% {
+    transform: translateX(120px);
+    opacity: 100%;
+  }`;
+
 const ModalArea = styled.div`
   position: fixed;
-  /* left: 50%; */
-  /* transform: translate(-50%, 0); */
-  margin-left: 120px;
   margin-top: 28px;
+  /* left: 50%; */
+  transform: translate(120px, 0);
+  /* margin-left: 120px; */
+  /* margin-top: 28px; */
   z-index: 9999;
+  animation: ${moveLoginModal} 0.5s ease;
 `;
 
 const ModalWindow = styled.div`

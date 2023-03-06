@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import axios from "axios";
 import { log } from "console";
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
 import { useInfiniteQuery } from "react-query";
 import Loader from "../components/common/Loader";
 import { useNavigate } from "react-router-dom";
@@ -134,11 +134,18 @@ const ChannelSearchPage: any = () => {
           }}
         />
         <GameSearchInputArea>
-          <GameSearchInput
-            type="text"
-            value={searchValue}
-            onChange={handleSearch}
-          />
+          <form
+            onSubmit={(e) => {
+              e.preventDefault(); // 새로고침 방지
+              handleTermResult();
+            }}
+          >
+            <GameSearchInput
+              type="text"
+              value={searchValue}
+              onChange={handleSearch}
+            />
+          </form>
           <BiSearchAlt2
             className="searchIcon"
             onClick={() => {
