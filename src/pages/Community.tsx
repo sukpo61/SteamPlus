@@ -97,8 +97,11 @@ export const Community = () => {
   );
   // 카테고리 state 기본값은 전체다 보이게
   const [toggle, setToggle] = useState(categoryFilter3);
+  console.log();
+
   //카테고리 스타일
   const [categorySt, setCategorySt] = useState("전체");
+
   useEffect(() => {
     if (PostData) {
       setToggle(categoryFilter3);
@@ -201,7 +204,7 @@ export const Community = () => {
               <Pagination
                 activePage={page}
                 itemsCountPerPage={items}
-                totalItemsCount={PostData?.length}
+                totalItemsCount={toggle?.length}
                 pageRangeDisplayed={10}
                 onChange={handlePageChange}
               />
