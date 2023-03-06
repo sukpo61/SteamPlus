@@ -244,7 +244,7 @@ function Layout() {
               window.scrollTo({ top: 0, behavior: "smooth" });
             }}
           >
-            <FaKeyboard className="communityIcon" />
+            <MdDynamicFeed className="communityIcon" />
             <p>커뮤니티</p>
           </Communitybutton>
 

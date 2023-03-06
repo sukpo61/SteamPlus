@@ -73,6 +73,7 @@ function MainPage() {
   };
 
   const { data: TopGame }: any = useQuery("Top10Game", Top10Game);
+  console.log("TopGame", TopGame);
 
   console.log(TopGame);
 
