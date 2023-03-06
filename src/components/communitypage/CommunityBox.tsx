@@ -10,6 +10,8 @@ interface TableTdProps {
   Color: string;
 }
 export const CommunityBox = ({ post, index }: any) => {
+  const DATABASE_ID: any = process.env.REACT_APP_DATABASE_ID;
+
   const navigate = useNavigate();
   const Name = post?.name;
   const Title = post?.title;
@@ -69,7 +71,7 @@ export const CommunityBox = ({ post, index }: any) => {
   //게시글 조회수
   const EditMutation = useMutation(
     (editComment: any) =>
-      axios.put(`http://localhost:3001/post/${post.id}`, editComment),
+      axios.put(`${DATABASE_ID}/post/${post.id}`, editComment),
     {
       onSuccess: () => {
         queryClient.invalidateQueries("CommunityPostData");
@@ -86,7 +88,7 @@ export const CommunityBox = ({ post, index }: any) => {
 
   //댓글수 카운트
   const getComment = async () => {
-    const response = await axios.get("http://localhost:3001/comment");
+    const response = await axios.get(`${DATABASE_ID}/comment`);
     return response;
   };
   const { data }: any = useQuery("comment", getComment);
@@ -103,13 +105,13 @@ export const CommunityBox = ({ post, index }: any) => {
       <TableTd Width="110px" Color="fff">
         {Category}
       </TableTd>
-      <TableTd Width="540px" Color="fff" style={{ paddingLeft: "30px" }}>
+      <TableContentTd Width="540px" Color="fff" style={{ paddingLeft: "30px" }}>
         <span onClick={handleEditPost}>{Title}</span>
         {/* 누적댓글수 */}
         <PostCount>[{CommentCt}]</PostCount>
         {/* 포스트 작성한지 10분이 지날때면 스타일을 주기 */}
         {newPost ? <PostNew>{newPost}</PostNew> : ""}
-      </TableTd>
+      </TableContentTd>
       <TableTd Width="130px" Color="#A7A9AC">
         {Name}
       </TableTd>
@@ -158,6 +160,22 @@ const TableTd = styled.td<TableTdProps>`
   display: flex;
   align-items: center;
   justify-content: center;
+  height: 50px;
+  font-weight: 400;
+  font-size: 13px;
+  span {
+    margin-left: 20px;
+  }
+  span:hover {
+    text-decoration: underline;
+    cursor: pointer;
+  }
+`;
+const TableContentTd = styled.td<TableTdProps>`
+  color: ${(props) => props.Color};
+  width: ${(props) => props.Width};
+  display: flex;
+  align-items: center;
   height: 50px;
   font-weight: 400;
   font-size: 13px;

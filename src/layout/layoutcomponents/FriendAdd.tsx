@@ -17,6 +17,8 @@ import { v4 as uuidv4 } from "uuid";
 import { FriendSearchProps } from "./FriendSearch";
 
 function Friend() {
+  const DATABASE_ID: any = process.env.REACT_APP_DATABASE_ID;
+
   const queryClient = useQueryClient();
 
   const myId = sessionStorage.getItem("steamid");
@@ -39,8 +41,7 @@ function Friend() {
 
   //친구 수락
   const postMutation = useMutation(
-    (friendAdd: object) =>
-      axios.post("https://flat-mangrove-forgery.glitch.me/friend", friendAdd),
+    (friendAdd: object) => axios.post(`${DATABASE_ID}/friend`, friendAdd),
     {
       onSuccess: () => {
         // 쿼리 무효화
@@ -53,8 +54,7 @@ function Friend() {
   // 친구 삭제
   const DeleteMutation = useMutation(
     //넘겨받은 id를 삭제
-    (id) =>
-      axios.delete(`https://flat-mangrove-forgery.glitch.me/friend/${id}`),
+    (id) => axios.delete(`${DATABASE_ID}/friend/${id}`),
     {
       onSuccess: () => {
         // 쿼리 무효화
@@ -77,7 +77,7 @@ function Friend() {
     try {
       //상대와 친구가 돼있는지 검사후 이중 저장 방지
       const response = await axios.get(
-        `https://flat-mangrove-forgery.glitch.me/friend?myId=${myId}&friendId=${i.id}`
+        `${DATABASE_ID}/friend?myId=${myId}&friendId=${i.id}`
       );
 
       const existingFriend = response.data[0];

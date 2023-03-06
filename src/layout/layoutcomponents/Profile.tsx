@@ -30,7 +30,8 @@ function Profile() {
   const params: any = new URLSearchParams(window.location.search);
   const steamId = params.get("openid.claimed_id")?.split("/")[5];
   const APIKEY = "234E0113F33D5C7C4D4D5292C6774550";
-  const serverUrl = "http://localhost:3001/auth/";
+  const DATABASE_ID: any = process.env.REACT_APP_DATABASE_ID;
+  const serverUrl = `${DATABASE_ID}/auth/`;
   const [online, setOnline] = useState(true);
 
   //로그인
@@ -80,7 +81,7 @@ function Profile() {
       lastLogin: new Date(),
     };
 
-    axios.put(`http://localhost:3001/auth/${steamId}`, userinfo);
+    axios.put(`${DATABASE_ID}/auth/${steamId}`, userinfo);
     axios.post(serverUrl, userinfo);
 
     window.location.replace("/");
@@ -90,9 +91,7 @@ function Profile() {
 
   //유저 db정보 가져오기
   const getLoginData = async () => {
-    const result = await axios.get(
-      `http://localhost:3001/auth/${ProfleSteamId}`
-    );
+    const result = await axios.get(`${DATABASE_ID}/auth/${ProfleSteamId}`);
     return result;
   };
 
@@ -139,7 +138,7 @@ function Profile() {
       "gameextrainfo",
       result?.data.response.players[0].gameextrainfo
     );
-    await axios.put(`http://localhost:3001/auth/${ProfleSteamId}`, {
+    await axios.put(`${DATABASE_ID}/auth/${ProfleSteamId}`, {
       id: result.config.params.steamids,
       profileimg: result?.data.response.players[0].avatarfull,
       nickname:
@@ -158,7 +157,7 @@ function Profile() {
 
   //로그아웃 버튼
   const logout = async () => {
-    await axios.put(`http://localhost:3001/auth/${ProfleSteamId}`, {
+    await axios.put(`${DATABASE_ID}/auth/${ProfleSteamId}`, {
       ...loginInformation?.data,
       login: false,
     });
@@ -171,7 +170,7 @@ function Profile() {
     const onlineOnOff = ProfileLogin === "true" ? "false" : "true";
     sessionStorage.setItem("login", onlineOnOff);
     setOnline(!online);
-    await axios.put(`http://localhost:3001/auth/${ProfleSteamId}`, {
+    await axios.put(`${DATABASE_ID}/auth/${ProfleSteamId}`, {
       ...loginInformation?.data,
       login: !online,
     });

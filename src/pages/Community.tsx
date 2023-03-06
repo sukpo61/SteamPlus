@@ -10,6 +10,8 @@ interface HeaderThProps {
   Width: string;
 }
 export const Community = () => {
+  const DATABASE_ID: any = process.env.REACT_APP_DATABASE_ID;
+
   //Ref존
   const SerchRef = useRef<any>();
 
@@ -18,7 +20,7 @@ export const Community = () => {
   const navigate = useNavigate();
   //db에있는 post get 해와서 useQuery로 만듥기
   const CommunityPostData = async () => {
-    const response = await axios.get("http://localhost:3001/post");
+    const response = await axios.get(`${DATABASE_ID}/post`);
     return response;
   };
 
