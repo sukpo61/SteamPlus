@@ -4,10 +4,11 @@ import reset from "styled-reset";
 const GlobalStyles = createGlobalStyle` 
   ${reset} // styled-reset이라는 패키지를 설치해야한다. 몇가지만 reset해 줄 경우 사용하지 않아도 무방하다.
   /* 나중에 배경화면 전역 사용가능 */
+   /* Set font for Hangul characters */
+
   body{
     background-color:#192030;
-    font-family: 'Noto Sans KR', sans-serif;
-    font-family: 'Montserrat', sans-serif;
+    font-family: 'Montserrat', 'Noto Sans KR', sans-serif;
   }
     a{
         text-decoration: none;
