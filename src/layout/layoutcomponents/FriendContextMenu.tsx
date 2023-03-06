@@ -131,7 +131,7 @@ function FriendContextMenu({ xPos, yPos, id, onClose }: any) {
   useEffect(() => {
     console.log(socket.id);
     socket.emit("nickName", myId, socket.id);
-  }, []);
+  }, [socket.id]);
 
   const friendLoggin = friendAllRecoil.find((i: any) => {
     return i.id === id;
@@ -163,6 +163,8 @@ function FriendContextMenu({ xPos, yPos, id, onClose }: any) {
         ) : (
           ""
         )}
+        {/* 임시 채팅 */}
+        <ContextMenuP onClick={() => ChatOnClick(id)}>1대1 채팅</ContextMenuP>
 
         <ContextMenuP
           onClick={() => {

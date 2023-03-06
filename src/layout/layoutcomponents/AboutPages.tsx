@@ -51,12 +51,14 @@ function AboutPages() {
 
   return (
     <AboutPagesDiv aboutPagesOnOff={aboutPagesOnOff}>
-      <BiExit
+      <p
         className="exitIcon"
         onClick={() => {
           setAboutPagesOnOff("close");
         }}
-      />
+      >
+        X
+      </p>
       <Slider {...sliderSettings}>
         <InnerSlider>
           <AboutPagesSlider src="./img/about1.jpg"></AboutPagesSlider>
@@ -89,8 +91,8 @@ const AboutPagesDiv = styled.div<{ aboutPagesOnOff: any }>`
 
   .exitIcon {
     position: fixed;
-    top: 20px;
-    right: 30px;
+    top: 30px;
+    right: 40px;
     font-size: 40px;
     color: #fff;
     cursor: pointer;
