@@ -6,7 +6,15 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { useQuery } from "react-query";
 import RecentGameData from "../../components/RecentGameData";
-
+interface UserInfo {
+  id: string;
+  profileimg: string;
+  nickname: string;
+  gameid: string;
+  gameextrainfo: string;
+  login: boolean;
+  lastLogin: Date;
+}
 function Profile() {
   const FRONTEND_URL: any = process.env.REACT_APP_FRONTEND_URL;
   // profile 클릭 state
@@ -31,9 +39,10 @@ function Profile() {
   const params: any = new URLSearchParams(window.location.search);
   const steamId = params.get("openid.claimed_id")?.split("/")[5];
   const APIKEY = "234E0113F33D5C7C4D4D5292C6774550";
+
+  const [online, setOnline] = useState<boolean>(true);
   const DATABASE_ID: any = process.env.REACT_APP_DATABASE_ID;
   const serverUrl = `${DATABASE_ID}/auth/`;
-  const [online, setOnline] = useState(true);
 
   //로그인
   const userDataGet = async () => {
@@ -68,7 +77,7 @@ function Profile() {
     );
 
     //steam에서 변경된사항이 있을때 put을 통해 dbjson을 업데이트해줌
-    const userinfo = {
+    const userinfo: UserInfo = {
       id: result.config.params.steamids,
       profileimg: result?.data.response.players[0].avatarfull,
       nickname:
@@ -84,7 +93,6 @@ function Profile() {
 
     axios.put(`${DATABASE_ID}/auth/${steamId}`, userinfo);
     axios.post(serverUrl, userinfo);
-
     window.location.replace("/");
     return userinfo;
   };
@@ -195,9 +203,7 @@ function Profile() {
           ""
         ) : (
           <>
-            <ProfileLogout onClick={logout}>로그아웃</ProfileLogout>
             <ProfileImgBox>
-              {" "}
               <ProfileImg src={`${ProfileImgUrl}`} />{" "}
             </ProfileImgBox>
           </>
@@ -250,12 +256,12 @@ function Profile() {
               ) : (
                 <>
                   <RecentGame> 최근 활동한 게임</RecentGame>
-
                   {GameData?.slice(0, 3).map((gameData: any) => {
                     return <RecentGameData gameData={gameData} />;
                   })}
                 </>
               )}
+              <ProfileLogout onClick={logout}>로그아웃</ProfileLogout>
             </>
           )}
         </ProfileBox>
@@ -266,40 +272,11 @@ function Profile() {
 
 export default Profile;
 
-const moveUpAndDown = keyframes`
-  0% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(-400px);
-  }
-  100% {
-    transform: translateY(0);
-  }
-`;
-
-const ScrollContainer = styled.div`
-  width: 800px;
-  height: 200px;
-  overflow: hidden;
-`;
-
-const ScrollContent = styled.div`
-  display: flex;
-  flex-direction: column;
-  animation: ${moveUpAndDown} 7s linear infinite;
-`;
-
-const ScrollItem = styled.div`
-  height: 100px;
-  background-color: #ccc;
-  margin-bottom: 20px;
-`;
 const ChangeToggle = styled.span`
   display: flex;
   font-size: 14px;
   justify-content: center;
-  margin: 15px 0;
+  margin-top: 12px;
   color: white;
   cursor: pointer;
 `;
@@ -317,15 +294,15 @@ const ChannelOn = styled.div`
   background: #23de79;
   margin-right: 5px;
 `;
-const ProfileLogout = styled.span`
-  color: #ccc;
-  font-size: 13px;
+const ProfileLogout = styled.p`
+  color: #d4d4d4;
+  font-size: 16px;
   cursor: pointer;
   position: absolute;
-  right: 20px;
+  right: 24px;
+  bottom: 20px;
 `;
 const ProfileDiv = styled.div<{ layoutMenu: String }>`
-  padding-top: 20px;
   height: 100%;
 
   display: ${(props) => (props.layoutMenu === "profile" ? "block" : "none")};
@@ -338,7 +315,10 @@ const ProfileImgBox = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  margin: 0px auto 0;
+  position: relative;
+  left: 115px;
+  top: 68px;
+  /* margin: 68px auto 0; */
 `;
 const ProfileImg = styled.img`
   width: 173px;
@@ -346,23 +326,23 @@ const ProfileImg = styled.img`
   background-color: green;
 `;
 const ProfileInfoBox = styled.div`
+  margin-top: 110px;
   color: white;
-  margin-top: 20px;
   display: flex;
   justify-content: center;
   align-items: center;
   flex-direction: column;
   justify-content: center;
 `;
-const ProfileNickName = styled.div`
-  font-size: 20px;
+const ProfileNickName = styled.p`
+  font-size: 24px;
 `;
 
 const ProfileBox = styled.div<{ ProfileNicName: String | null }>`
   width: 352px;
   height: ${(props) => (props.ProfileNicName === null ? "950px" : "650px")};
   /* background-color: #192030; */
-  margin: ${(props) => (props.ProfileNicName === null ? "" : "20px auto 0")};
+  margin: ${(props) => (props.ProfileNicName === null ? "" : "60px auto 0")};
   position: ${(props) => (props.ProfileNicName !== null ? "" : "absolute")};
   top: ${(props) => (props.ProfileNicName !== null ? "" : "50%")};
   left: ${(props) => (props.ProfileNicName !== null ? "" : "50%")};
@@ -371,16 +351,15 @@ const ProfileBox = styled.div<{ ProfileNicName: String | null }>`
   display: flex;
   flex-direction: column;
   align-items: center;
-  border-radius: 10px;
   justify-content: center;
 `;
 
-const RecentGame = styled.div`
+const RecentGame = styled.p`
   color: #d4d4d4;
   font-size: 14px;
-  margin-bottom: 10px;
+  margin-bottom: 24px;
   display: flex;
-  width: 86%;
+  width: 100%;
 `;
 const ProfileGameComments = styled.div`
   color: gray;
