@@ -8,6 +8,7 @@ import { useQuery } from "react-query";
 import RecentGameData from "../../components/RecentGameData";
 
 function Profile() {
+  const FRONTEND_URL: any = process.env.REACT_APP_FRONTEND_URL;
   // profile 클릭 state
   const layoutMenu = useRecoilValue(LayoutButton);
   //로컬 프로필이미지
@@ -22,7 +23,7 @@ function Profile() {
   const ProfleSteamId = sessionStorage.getItem("steamid");
 
   // 어스아이디
-  const STEAM_OPENID_ENDPOINT = `https://steamcommunity.com/openid/login?openid.ns=http://specs.openid.net/auth/2.0&openid.mode=checkid_setup&openid.return_to=http://localhost:3000/login/&openid.realm=http://localhost:3000/login&openid.identity=http://specs.openid.net/auth/2.0/identifier_select&openid.claimed_id=http://specs.openid.net/auth/2.0/identifier_select`;
+  const STEAM_OPENID_ENDPOINT = `https://steamcommunity.com/openid/login?openid.ns=http://specs.openid.net/auth/2.0&openid.mode=checkid_setup&openid.return_to=${FRONTEND_URL}/login/&openid.realm=${FRONTEND_URL}/login&openid.identity=http://specs.openid.net/auth/2.0/identifier_select&openid.claimed_id=http://specs.openid.net/auth/2.0/identifier_select`;
   const SteamLogin = () => {
     window.location.href = STEAM_OPENID_ENDPOINT;
   };
