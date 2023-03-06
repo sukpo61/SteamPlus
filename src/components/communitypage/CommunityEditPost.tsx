@@ -1,0 +1,245 @@
+import axios from "axios";
+import { useRef, useState } from "react";
+import { useMutation, useQuery, useQueryClient } from "react-query";
+import { useNavigate, useParams } from "react-router-dom";
+import styled from "styled-components";
+//수정하기
+export const CommunityEditPost = () => {
+  const DATABASE_ID: any = process.env.REACT_APP_DATABASE_ID;
+
+  const navigate = useNavigate();
+
+  //포스트 가져오기 쿼리
+  const CommunityPostData = async () => {
+    const response = await axios.get(`${DATABASE_ID}/post`);
+    return response;
+  };
+  const { data }: any = useQuery("CommunityPostData", CommunityPostData);
+
+  const param = useParams();
+  const PostData = data?.data;
+  const post = PostData?.find((post: any) => post?.id === param?.id);
+  const [postTitles, setPostTitles] = useState(post?.title);
+  const [postContent, setPostContent] = useState(post?.content);
+  const PostId = post?.id;
+  const queryClient = useQueryClient();
+  //Ref 존
+  const TitleRef = useRef<any>();
+  const ContentRef = useRef<any>();
+
+  //타이틀 체인지 타이틀을 35자로 제한
+  const handleTitleChange = (event: any) => {
+    setPostTitles(event.target.value);
+    const newTitle = event.target.value;
+    if (newTitle.length <= 35) {
+      setPostTitles(newTitle);
+    } else {
+      alert("제목은 35자 이하로 입력해주세요.");
+      TitleRef.current!.focus();
+    }
+  };
+  //컨텐츠 체인지
+  const handleContentChange = (event: any) => {
+    setPostContent(event.target.value);
+  };
+
+  //댓글수정쿼리
+  const EditMutation = useMutation(
+    (editComment: any) =>
+      axios.put(`${DATABASE_ID}/post/${PostId}`, editComment),
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries("CommunityPostData");
+      },
+    }
+  );
+  //댓글수정버튼
+  const handleEditPost = (event: any) => {
+    if (postTitles === "") {
+      window.alert("제목을 입력해주세요");
+      TitleRef.current!.focus();
+      event.preventDefault();
+      return;
+    } else if (postContent === "") {
+      window.alert("내용을 입력해주세요");
+      ContentRef.current!.focus();
+      event.preventDefault();
+      return;
+    }
+    if (window.confirm("정말 수정하시겠습니까?")) {
+      const editedPost = { ...post, title: postTitles, content: postContent };
+      EditMutation.mutate(editedPost);
+      navigate(`/Community/${PostId}`);
+      return;
+    } else {
+      navigate(`/Community/${PostId}`);
+      return;
+    }
+  };
+
+  //커뮤니티로 이동
+  const gotoCommunity = () => {
+    navigate("/Community");
+  };
+  return (
+    <>
+      <CommunityPostLayout>
+        <div
+          style={{
+            height: "390px",
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "center",
+            alignContent: "center",
+            width: "100%",
+          }}
+        >
+          <CommunityTitle onClick={gotoCommunity}> 커뮤니티</CommunityTitle>
+          <CommunityComment>
+            게임채널에 함께할 구성원을 모집하거나 자유롭게 의견을 나누는
+            공간입니다.
+          </CommunityComment>
+        </div>
+        <div style={{ display: "flex", flexDirection: "column" }}>
+          <Communitytitle2>게시글 수정</Communitytitle2>
+          <TableHeader />
+
+          <AddWrap>
+            <p>제목</p>
+            <Form onSubmit={handleEditPost}>
+              <TitleInput
+                ref={TitleRef}
+                placeholder="제목을 입력하세요"
+                value={postTitles}
+                onChange={handleTitleChange}
+                maxLength={35}
+              />
+              <p>내용</p>
+              <ContentInput
+                ref={ContentRef}
+                placeholder="내용을 입력하세요"
+                value={postContent}
+                onChange={handleContentChange}
+              />
+
+              <PostButtonWrap>
+                <AddBtn
+                  onClick={() => {
+                    navigate(`/Community/${PostId}`);
+                  }}
+                >
+                  취소
+                </AddBtn>
+                <AddBtn>완료</AddBtn>
+              </PostButtonWrap>
+            </Form>
+          </AddWrap>
+        </div>
+      </CommunityPostLayout>
+    </>
+  );
+};
+
+const TableHeader = styled.div`
+  width: 1020px;
+  display: flex;
+  flex-direction: column;
+  border-top: 2px solid #00b8c8;
+  margin: 20px 0px;
+`;
+
+const Communitytitle2 = styled.div`
+  color: whitr;
+  font-weight: 400;
+  font-size: 20px;
+`;
+const CommunityComment = styled.div`
+  font-size: 13;
+  color: #a7a9ac;
+  margin-top: 20px;
+  margin-bottom: 70px;
+  display: flex;
+  justify-content: center;
+`;
+const CommunityTitle = styled.div`
+  width: 100%;
+  position: relative;
+  margin: 0 auto;
+  font-family: "Noto Sans KR", sans-serif;
+  font-style: normal;
+  font-weight: 400;
+  font-size: 40px;
+  line-height: 54px;
+  display: flex;
+  justify-content: center;
+`;
+const CommunityPostLayout = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  color: white;
+
+  height: 100%;
+`;
+const AddWrap = styled.div`
+  position: relative;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+`;
+
+const Form = styled.form`
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+`;
+
+const TitleInput = styled.input`
+  border: none;
+  background: transparent;
+  background-color: #404b5e;
+  width: 100%;
+  height: 30px;
+  padding: 10px 12px;
+  box-shadow: inset 0px 4px 8px rgba(0, 0, 0, 0.25);
+  border-radius: 10px;
+  margin: 15px 0px;
+  color: #fff;
+`;
+const ContentInput = styled.textarea`
+  color: #fff;
+  border: none;
+  background: transparent;
+  background-color: #404b5e;
+  width: 100%;
+  padding: 10px 12px;
+  box-shadow: inset 0px 4px 8px rgba(0, 0, 0, 0.25);
+  border-radius: 10px;
+  margin-top: 10px;
+  min-height: 150px;
+  height: 100%;
+`;
+const PostButtonWrap = styled.div`
+  width: 100%;
+  display: flex;
+  flex-direction: row-reverse;
+  margin-top: 15px;
+`;
+const AddBtn = styled.button`
+  color: white;
+  font-weight: 600;
+  font-size: 13px;
+  line-height: 25px;
+  text-align: center;
+  width: 40px;
+  height: 25px;
+  background: #404b5e;
+  border-radius: 8px;
+  margin-right: 10px;
+  &:hover {
+    background: #00b8c8;
+  }
+`;
