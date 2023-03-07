@@ -20,6 +20,7 @@ function Profile() {
   const navigate = useNavigate();
 
   const FRONTEND_URL: any = process.env.REACT_APP_FRONTEND_URL;
+  const PROXY_ID: any = process.env.REACT_APP_PROXY_ID;
   // profile 클릭 state
   const layoutMenu = useRecoilValue(LayoutButton);
   //로컬 프로필이미지
@@ -53,7 +54,7 @@ function Profile() {
   //로그인
   const userDataGet = async () => {
     const result = await axios.get(
-      "https://enable-cors.glitch.me/https://api.steampowered.com/ISteamUser/GetPlayerSummaries/v2/",
+      `${PROXY_ID}/https://api.steampowered.com/ISteamUser/GetPlayerSummaries/v2/`,
       {
         params: {
           key: APIKEY,
@@ -83,31 +84,35 @@ function Profile() {
     );
 
     //steam에서 변경된사항이 있을때 put을 통해 dbjson을 업데이트해줌
+    const userinfo: UserInfo = {
+      id: result.config.params.steamids,
+      profileimg: result?.data.response.players[0].avatarfull,
+      nickname:
+        result?.data.response.players[0].personaname +
+        " " +
+        "#" +
+        result?.config.params.steamids.slice(13, 18),
+      gameid: result?.data.response.players[0].gameid,
+      gameextrainfo: result?.data.response.players[0].gameextrainfo,
+      login: online,
+      lastLogin: new Date(),
+    };
+    console.log();
     if (
       !friendAllRecoil
         .map((e: any) => e.id)
         .includes(result.config.params.steamids)
     ) {
-      const userinfo: UserInfo = {
-        id: result.config.params.steamids,
-        profileimg: result?.data.response.players[0].avatarfull,
-        nickname:
-          result?.data.response.players[0].personaname +
-          " " +
-          "#" +
-          result?.config.params.steamids.slice(13, 18),
-        gameid: result?.data.response.players[0].gameid,
-        gameextrainfo: result?.data.response.players[0].gameextrainfo,
-        login: online,
-        lastLogin: new Date(),
-      };
-      await axios.put(`${DATABASE_ID}/auth/${steamId}`, userinfo);
       await axios.post(serverUrl, userinfo);
+      window.location.replace("/");
+    } else {
+      await axios.put(`${DATABASE_ID}/auth/${steamId}`, userinfo);
+      window.location.replace("/");
     }
     // navigate("/");
-    window.location.replace("/");
     // return userinfo;
   };
+
   const { data } = useQuery("userData", userDataGet);
 
   //유저 db정보 가져오기
@@ -121,7 +126,7 @@ function Profile() {
   //최근 게임활동 정보가져오기
   const getRecentGameData = async () => {
     const recentGame = await axios.get(
-      `https://enable-cors.glitch.me/http://api.steampowered.com/IPlayerService/GetRecentlyPlayedGames/v0001/?key=${APIKEY}&steamid=${ProfleSteamId}&format=json`
+      `${PROXY_ID}/http://api.steampowered.com/IPlayerService/GetRecentlyPlayedGames/v0001/?key=${APIKEY}&steamid=${ProfleSteamId}&format=json`
     );
     // sessionStorage.setItem("recentGame", recentGame.data.response.games);
     return recentGame;
@@ -133,7 +138,7 @@ function Profile() {
   //유저 최신정보 & 타임스탬프
   const timeStamp = async () => {
     const result = await axios.get(
-      "https://enable-cors.glitch.me/https://api.steampowered.com/ISteamUser/GetPlayerSummaries/v2/",
+      `${PROXY_ID}/https://api.steampowered.com/ISteamUser/GetPlayerSummaries/v2/`,
       {
         params: {
           key: APIKEY,
@@ -198,6 +203,7 @@ function Profile() {
   };
 
   useEffect(() => {
+    console.log("friendAllRecoil", friendAllRecoil);
     let polling = setInterval(() => {
       timeStamp();
     }, 30000);
