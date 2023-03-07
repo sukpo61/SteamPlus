@@ -1,26 +1,55 @@
-import React from "react";
-import styled from "styled-components";
+import React, { useEffect } from "react";
+import AOS from "aos";
+import styled, { keyframes } from "styled-components";
 import { useNavigate } from "react-router-dom";
+import "aos/dist/aos.css";
 
 function LandingPage() {
   const navigate = useNavigate();
 
+  useEffect(() => {
+    AOS.init({ once: true }); // once:true 한번 실행된건 재실행x
+  });
+  // react-scroll-delay-action
+  // 1237404145
+
+  //lazy load
   return (
     <MainContainer>
       <LandingHeader></LandingHeader>
       <LandingImg1Area>
         <LandingImg1Gradient />
-        <LandingImg1 src="/img/LandingImg1-2.png" />
+        <LandingImg1
+          src="/img/LandingImg1-2.png"
+          data-aos="fade-up"
+          // data-aos-duration="2000"
+        />
         <SteamPlusIntro>
-          <SteamPlusWhite src="/img/SteamPlusLogo2.png" />
-          <IntroText>
+          <SteamPlusWhite
+            src="/img/SteamPlusLogo2.png"
+            data-aos="fade-right"
+            data-aos-duration="2000"
+          />
+          <IntroText data-aos="fade-right" data-aos-duration="2000">
             여러분의 게임을 더욱 즐겁게 만들어줄 SteamPlus를 소개합니다!
           </IntroText>
         </SteamPlusIntro>
       </LandingImg1Area>
       <IntroTextArea1>
-        <SteamplusColabo src="/img/SteamplusColabo.png" />
-        <IntroAboutChat>
+        <SteamplusCollabo
+          src="/img/SteamplusColabo.png"
+          data-aos="fade-up"
+          data-aos-duration="1000"
+        />
+        {/* <CollaboWrap data-aos="zoom-in">
+          <CollaboSteam src="/img/CollaboSteam.png" data-aos="fade-right" />
+          <CollaboRing src="/img/CollaboRing.png" data-aos="zoom-out" />
+          <CollaboSteamPlus
+            src="/img/CollaboSteamPlus.png"
+            data-aos="fade-left"
+          />
+        </CollaboWrap> */}
+        <IntroAboutChat data-aos="fade-up" data-aos-duration="1000">
           SteamPlus는 Steam 게임 기반의 웹서비스로, Steam 유저들이 실시간으로
           <br />
           함께 게임을 즐길 수 있는 화상음성채팅 기능을 제공하고 있습니다.
@@ -36,22 +65,35 @@ function LandingPage() {
       </IntroTextArea1>
 
       <LandingImgWrap>
-        <LandingImg2 src="/img/LandingImg2.png" />
-        <LandingImg3 src="/img/LandingImg3.png" />
+        <LandingImg2 src="/img/LandingImg2.png" data-aos="fade-down" />
+        <LandingImg3 src="/img/LandingImg3.png" data-aos="fade-up" />
       </LandingImgWrap>
 
       <LandingBottomGradient>
         <LogoOpacity src="/img/LogoNoPlusIntroImg.png" />
         <IntroAboutFriendWrap>
-          <IntroAboutFriend>
+          <IntroAboutFriend
+            data-aos="fade-up"
+            data-aos-duration="2000"
+            data-aos-offset="10"
+          >
             SteamPlus를 통해 원하는 게임을 같이 즐길 수 있는 다른 사용자들을
             쉽게 만나볼 수 있습니다.
           </IntroAboutFriend>
-          <IntroAboutFriend>
+          <IntroAboutFriend
+            data-aos="fade-zoom-in"
+            data-aos-easing="ease-in-back"
+            data-aos-delay="300"
+            data-aos-offset="0"
+          >
             또한 함께 게임을 즐긴 사용자를 새로운 친구로 추가하여 이후에도
             함께할 수 있습니다.
           </IntroAboutFriend>
-          <IntroAboutFriend>
+          <IntroAboutFriend
+            data-aos="fade-down"
+            data-aos-duration="2000"
+            data-aos-offset="10"
+          >
             Steam 유저의 게임 정보를 가져와 같은 게임을 즐기는 사용자들을 찾을
             수도 있습니다.
           </IntroAboutFriend>
@@ -76,6 +118,14 @@ const LandingHeader = styled.div`
   top: -100px;
   background-color: #080c16;
 `;
+
+const LandingAnimation = keyframes`
+0% {
+    opacity:0%;
+  }
+  100% {
+    opacity: 100%;
+  }`;
 
 const LandingImg1Area = styled.div`
   position: relative;
@@ -106,11 +156,13 @@ const LandingImg1 = styled.img`
   /* width: 1872px; */
   top: 0;
   left: 0;
-  transform: translate(0, 0); // translateY(6%); // 24% */
+  transform: translate(0, 0); // translateY(6%); // 24%
   object-fit: cover;
   width: 100%;
   /* min-width: 1200px; */
   height: 100%;
+
+  animation: ${LandingAnimation} 2s ease-in-out;
 `;
 
 const SteamPlusIntro = styled.div`
@@ -118,8 +170,6 @@ const SteamPlusIntro = styled.div`
   display: flex;
   flex-direction: column;
   gap: 32px;
-  /* margin-top: 250px; */
-  /* margin-right: 346px; */
   padding-right: 400px;
   transform: translateX(-50%);
   /* left: 30%; */
@@ -131,16 +181,20 @@ const SteamPlusIntro = styled.div`
 const SteamPlusWhite = styled.img`
   width: 282px;
   height: 99px;
+
+  animation: ${LandingAnimation} 0.5s ease-in-out;
 `;
 
 const IntroText = styled.p`
   width: 560px;
-  font-family: "Noto Sans";
+  font-style: normal;
   font-weight: 500;
   font-size: 20px;
   line-height: 27px;
   letter-spacing: -0.03em;
   color: #ffffff;
+
+  animation: ${LandingAnimation} 0.5s ease-in-out;
 `;
 
 const IntroTextArea1 = styled.div`
@@ -156,15 +210,37 @@ const IntroTextArea1 = styled.div`
   background: #232c42;
 `;
 
-const SteamplusColabo = styled.img`
+const SteamplusCollabo = styled.img`
   height: 296px;
   width: auto;
   margin-bottom: 36px;
 `;
 
+// const CollaboWrap = styled.div`
+//   margin-bottom: 36px;
+//   display: flex;
+//   flex-direction: row;
+//   align-items: center;
+//   /* position: relative; */
+// `;
+
+// const CollaboSteam = styled.img`
+//   /* position: absolute; */
+//   height: 110px;
+//   transform: translateX(75%);
+// `;
+// const CollaboRing = styled.img`
+//   height: 295px;
+// `;
+// const CollaboSteamPlus = styled.img`
+//   /* position: absolute; */
+//   height: 110px;
+//   transform: translateX(-75%);
+// `;
+
 const IntroAboutChat = styled.p`
   /* width: 480px; */
-  font-family: "Noto Sans";
+  font-style: normal;
   font-weight: 400;
   font-size: 16px;
   line-height: 140%;
@@ -178,7 +254,7 @@ const IntroAboutChat = styled.p`
 const IntroTextWithBtn = styled.p`
   height: 27px;
   width: 800px;
-  font-family: "Noto Sans";
+  font-style: normal;
   font-weight: 600;
   font-size: 20px;
   line-height: 27px;
@@ -215,7 +291,7 @@ const ButtonLogo = styled.img`
 `;
 
 const ButtonText = styled.p`
-  font-family: "Noto Sans";
+  font-style: normal;
   font-weight: 600;
   font-size: 20px;
   line-height: 27px;
@@ -259,7 +335,7 @@ const IntroAboutFriendWrap = styled.div`
   z-index: 999;
 `;
 const IntroAboutFriend = styled.p`
-  font-family: "Noto Sans";
+  font-style: normal;
   font-weight: 400;
   font-size: 18px;
   line-height: 25px;

@@ -160,7 +160,6 @@ const CommunityTitle = styled.div`
   width: 100%;
   position: relative;
   margin: 0 auto;
-  font-family: "Noto Sans KR", sans-serif;
   font-style: normal;
   font-weight: 400;
   font-size: 40px;
@@ -195,6 +194,7 @@ const AddWrap = styled.div`
   display: flex;
   flex-direction: column;
   width: 100%;
+  margin-bottom: 170px; // footer
 `;
 
 const Form = styled.form`
@@ -227,6 +227,7 @@ const ContentInput = styled.textarea`
   margin-top: 10px;
   min-height: 150px;
   height: 100%;
+  resize: none; // textarea 사이즈조절 방지
 `;
 const PostButtonWrap = styled.div`
   width: 100%;
