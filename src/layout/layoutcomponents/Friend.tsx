@@ -6,6 +6,7 @@ import {
   newFriendAdd,
   friendChat,
   friendChatNotice,
+  userAllSocketId,
 } from "../../recoil/atom";
 import styled from "styled-components";
 import { useRecoilState, useRecoilValue } from "recoil";
@@ -78,6 +79,8 @@ function Friend() {
   //개인 채팅 알림
   const [chatTextNotice, setChatTextNotice] =
     useRecoilState<any>(friendChatNotice);
+  //소켓id
+  const [userId, setUserId] = useRecoilState<any>(userAllSocketId);
 
   // const friendChatNotice = chatText.filter((i:any) => {
   //   return i
@@ -178,6 +181,16 @@ function Friend() {
     const diffInSec = Math.round(diffInMs / 1000);
     return diffInSec < TEN_MINUTES / 1000;
   };
+
+  useEffect(() => {
+    socket.emit("nickName", myId, socket.id);
+  }, [socket.id]);
+
+  socket.on("userId", (id) => {
+    // console.log(id);
+    setUserId(id);
+  });
+
   useEffect(() => {
     setCurrentLocation(location.pathname.split(":")[1]);
   }, [location]);
