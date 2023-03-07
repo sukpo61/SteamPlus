@@ -12,6 +12,8 @@ import { Top10 } from "../components/mainpage/Top10";
 import { useNavigate } from "react-router-dom";
 
 function MainPage() {
+  const PROXY_ID: any = process.env.REACT_APP_PROXY_ID;
+
   const navigate = useNavigate();
 
   const [activechannels, setActiveChannels] =
@@ -28,7 +30,7 @@ function MainPage() {
   //게임이미지 불러오기
   const Gamedata = async () => {
     const response = await axios.get(
-      `https://enable-cors.glitch.me/http://store.steampowered.com/api/appdetails/`,
+      `${PROXY_ID}/http://store.steampowered.com/api/appdetails/`,
       {
         params: {
           appids: GameIds, // 해당 게임의 id값'
@@ -60,7 +62,7 @@ function MainPage() {
   //top10 game 정보
   const Top10Game = async () => {
     const response = await axios.get(
-      "https://enable-cors.glitch.me/https://store.steampowered.com/api/featuredcategories/",
+      `${PROXY_ID}/https://store.steampowered.com/api/featuredcategories/`,
       {
         params: {
           format: "json",
@@ -76,7 +78,7 @@ function MainPage() {
 
   const getChannelInfo = async (channelid: any, count: any) => {
     const response = await axios.get(
-      `https://enable-cors.glitch.me/http://store.steampowered.com/api/appdetails/`,
+      `${PROXY_ID}/http://store.steampowered.com/api/appdetails/`,
       {
         params: {
           appids: channelid, // 해당 게임의 id값'
