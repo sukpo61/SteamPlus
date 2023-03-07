@@ -6,8 +6,10 @@ export const Top10Card = ({ game }: any) => {
   const GameIds = game?.id;
 
   const Gamedata = async () => {
+    const PROXY_ID: any = process.env.REACT_APP_PROXY_ID;
+
     const response = await axios.get(
-      `https://enable-cors.glitch.me/http://store.steampowered.com/api/appdetails/`,
+      `${PROXY_ID}/http://store.steampowered.com/api/appdetails/`,
       {
         params: {
           appids: GameIds, // 해당 게임의 id값'

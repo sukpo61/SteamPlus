@@ -32,6 +32,8 @@ export interface FriendProps {
 }
 
 function Friend() {
+  const PROXY_ID: any = process.env.REACT_APP_PROXY_ID;
+
   const queryClient = useQueryClient();
   const location = useLocation();
 
@@ -125,7 +127,7 @@ function Friend() {
 
   const Gamedata = async (frienduserid: any, gameid: any) => {
     const response = await axios.get(
-      `https://enable-cors.glitch.me/http://store.steampowered.com/api/appdetails/`,
+      `${PROXY_ID}/http://store.steampowered.com/api/appdetails/`,
       {
         params: {
           appids: gameid, // 해당 게임의 id값'
