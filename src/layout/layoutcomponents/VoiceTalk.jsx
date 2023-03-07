@@ -525,9 +525,9 @@ function VoiceTalk() {
       });
 
       socket.on("ice", (ice, targetid) => {
-        if (RtcPeerConnectionMap.get(targetid)) {
+        setTimeout(() => {
           RtcPeerConnectionMap.get(targetid).addIceCandidate(ice);
-        }
+        }, 100);
       });
       //sdfsdfd
       socket.on("leave", (targetid) => {
