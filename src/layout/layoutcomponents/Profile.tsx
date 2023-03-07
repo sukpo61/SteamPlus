@@ -56,7 +56,7 @@ function Profile() {
       {
         params: {
           key: APIKEY,
-          //스팀로그인
+          //스팀로그인ㅇ
           steamids: steamId,
         },
       }
