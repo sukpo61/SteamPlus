@@ -83,6 +83,14 @@ export const countRecoil = atom<any>({
   key: "count",
   default: 0,
 });
+export const recommandGameRecoil = atom<any>({
+  key: "recommandGameRecoil",
+  default: [],
+});
+export const loginModalOpenRecoil = atom<any>({
+  key: "loginModalOpenRecoil",
+  default: false,
+});
 
 // export const FriendNoticeAll = atom({
 //   key: "FriendNoticeAll",
