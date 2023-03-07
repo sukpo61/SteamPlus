@@ -222,7 +222,7 @@ function Profile() {
         ) : (
           <>
             <ProfileImgBox>
-              <ProfileImg src={`${ProfileImgUrl}`} />{" "}
+              <ProfileImg src={`${ProfileImgUrl}`} />
             </ProfileImgBox>
           </>
         )}

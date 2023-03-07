@@ -60,7 +60,7 @@ const moveLoginModal = keyframes`
 
 const ModalArea = styled.div`
   position: fixed;
-  margin-top: 28px;
+  margin-top: 90px; // 28px;
   /* left: 50%; */
   transform: translate(120px, 0);
   /* margin-left: 120px; */
@@ -86,22 +86,13 @@ const ModalWindow = styled.div`
   gap: 8px;
 `;
 
-const ModalClose = styled.button`
-  font-family: "Noto Sans";
-  font-weight: 500;
-  font-size: 12px;
-  color: white;
-  width: 50px;
-  padding: 10px;
-`;
-
 const ModalIntro = styled.p`
   height: 32px;
   left: 47px;
   top: 20px;
 
-  font-family: "Noto Sans";
   font-weight: 500;
+  font-style: normal;
   font-size: 12px;
   line-height: 16px;
   text-align: center;
@@ -141,6 +132,7 @@ const LoginBtnText = styled.p`
   top: 11px;
 
   font-family: "Inter";
+  font-style: normal;
   font-weight: 600;
   font-size: 14px;
   line-height: 17px;

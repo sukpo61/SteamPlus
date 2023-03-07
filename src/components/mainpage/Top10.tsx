@@ -96,7 +96,6 @@ const TitleLinear = styled.div`
 `;
 
 const GameChannelTitle = styled.div`
-  font-family: "Montserrat", sans-serif;
   font-style: normal;
   color: white;
   letter-spacing: -0.03em;
