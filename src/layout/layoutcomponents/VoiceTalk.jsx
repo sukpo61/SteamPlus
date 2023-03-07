@@ -312,6 +312,7 @@ function VoiceTalk() {
       <RoomWrap key={room.name}>
         <RoomTitleWrap
           onClick={() => {
+            socket.emit("checkusers");
             if (currentRoom === room.name) {
               return;
             }
@@ -499,8 +500,9 @@ function VoiceTalk() {
         socket.emit("offer", offer, myuserid, answerid);
       });
       //ddd
+
       socket.on("offer", async (offer, offerid, answerid) => {
-        console.log("offered");
+        console.log("offered", offerid);
         const MyPeerConnection = await createRTCPeerConnection(offerid);
 
         MyPeerConnection.ondatachannel = (e) => {
@@ -528,14 +530,15 @@ function VoiceTalk() {
       });
 
       socket.on("ice", (ice, targetid) => {
-        // console.log(targetid, RtcPeerConnectionMap);
-        //리모트 디스크립션이 있는 상태에서 받아야 함.
+        console.log(targetid, RtcPeerConnectionMap);
+        //리모트 디스크립션이 있는 상태에서 받아야 함.ㅇ
         setTimeout(() => {
           RtcPeerConnectionMap.get(targetid).addIceCandidate(ice);
         }, 100);
       });
       //sdfsdfd
       socket.on("leave", (targetid) => {
+        console.log(RtcPeerConnectionMap);
         RtcPeerConnectionMap.get(targetid).close();
         setRtcPeerConnectionMap((e) => {
           e.delete(targetid);
