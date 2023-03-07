@@ -4,6 +4,7 @@ import {
   getFriend,
   friendAllState,
   newFriendAdd,
+  userAllSocketId,
 } from "../../recoil/atom";
 import styled from "styled-components";
 import { useRecoilState, useRecoilValue } from "recoil";
@@ -15,6 +16,7 @@ import FriendTab from "./FriendTab";
 import { FriendProps } from "./Friend";
 import { v4 as uuidv4 } from "uuid";
 import { FriendSearchProps } from "./FriendSearch";
+import socket from "../../socket";
 
 function Friend() {
   const DATABASE_ID: any = process.env.REACT_APP_DATABASE_ID;
@@ -23,7 +25,8 @@ function Friend() {
 
   const myId = sessionStorage.getItem("steamid");
   const myNickName = sessionStorage.getItem("nickName");
-
+  //소켓 id
+  const [userId, setUserId] = useRecoilState<any>(userAllSocketId);
   const [layoutMenu, setLayoutMenu] = useRecoilState<String>(LayoutButton);
   //친구검색 input
   const [frendSearchInput, setfrendSearchInput] = useState("");
@@ -88,6 +91,11 @@ function Friend() {
         return;
       }
       postMutation.mutate(friendAdd);
+
+      const clickId = userId.find((id: any) => {
+        return id.split("/")[0] === i.id;
+      });
+      socket.emit("friendMount", clickId);
     } catch (error) {
       console.error(error);
     }
@@ -102,6 +110,10 @@ function Friend() {
     });
 
     DeleteMutation.mutate(friendDelete[0].id);
+    const clickId = userId.find((i: any) => {
+      return i.split("/")[0] === id;
+    });
+    socket.emit("friendMount", clickId);
   };
 
   //양쪽 다 친구 내역
