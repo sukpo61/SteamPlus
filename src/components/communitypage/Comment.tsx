@@ -19,20 +19,12 @@ interface CommentItem {
   profileImg: string;
   contents: string;
 }
-interface EditCommentType {
-  id: number;
-  name: string;
-  profileImg: string;
-  contents: string;
-  date: string;
-  myId: number;
-}
 
 function Comment({ PostId }: CommentProps) {
   const DATABASE_ID: any = process.env.REACT_APP_DATABASE_ID;
 
   //Ref존
-  const CommentRef = useRef<HTMLInputElement>(null); // define type for CommentRef
+  const CommentRef = useRef<HTMLInputElement>(null);
   const CommentsRef = useRef<HTMLTextAreaElement>(null);
   const queryClient = useQueryClient();
 
@@ -62,7 +54,6 @@ function Comment({ PostId }: CommentProps) {
   const commentFilter = comment?.filter((i: CommentItem) => {
     return i.postId === PostId;
   });
-  console.log("commentFilter", commentFilter);
 
   //댓글등록
   const postMutation = useMutation(

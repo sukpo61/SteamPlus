@@ -47,7 +47,7 @@ const GameBtn = styled.span`
   transition: 0.5s ease;
 `;
 const CurrentGameBlackImg = styled.div`
-  width: 360px;
+  width: 100%;
   height: 155px;
   bottom: 0px;
   position: absolute;

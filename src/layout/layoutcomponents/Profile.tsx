@@ -17,8 +17,6 @@ interface UserInfo {
   lastLogin: Date;
 }
 function Profile() {
-  const navigate = useNavigate();
-
   const FRONTEND_URL: any = process.env.REACT_APP_FRONTEND_URL;
   const PROXY_ID: any = process.env.REACT_APP_PROXY_ID;
   // profile 클릭 state
@@ -82,6 +80,7 @@ function Profile() {
       "gameextrainfo",
       result?.data.response.players[0].gameextrainfo
     );
+    console.log("result", result?.data);
 
     //steam에서 변경된사항이 있을때 put을 통해 dbjson을 업데이트해줌
     const userinfo: UserInfo = {
@@ -97,7 +96,7 @@ function Profile() {
       login: online,
       lastLogin: new Date(),
     };
-    console.log();
+
     if (
       !friendAllRecoil
         .map((e: any) => e.id)
@@ -109,8 +108,6 @@ function Profile() {
       await axios.put(`${DATABASE_ID}/auth/${steamId}`, userinfo);
       window.location.replace("/");
     }
-    // navigate("/");
-    // return userinfo;
   };
 
   const { data } = useQuery("userData", userDataGet);
@@ -128,7 +125,8 @@ function Profile() {
     const recentGame = await axios.get(
       `${PROXY_ID}/http://api.steampowered.com/IPlayerService/GetRecentlyPlayedGames/v0001/?key=${APIKEY}&steamid=${ProfleSteamId}&format=json`
     );
-    // sessionStorage.setItem("recentGame", recentGame.data.response.games);
+    console.log("recentGame", recentGame);
+
     return recentGame;
   };
 
@@ -224,6 +222,7 @@ function Profile() {
             <ProfileImgBox>
               <ProfileImg src={`${ProfileImgUrl}`} />
             </ProfileImgBox>
+            <ProfileLogout onClick={logout}>로그아웃</ProfileLogout>
           </>
         )}
         {/* 로그인을 안했다면*/}
@@ -268,9 +267,14 @@ function Profile() {
             <>
               {/* 최근홢동한게임이 없다면 */}
               {GameData === undefined ? (
-                <RecentGame>
-                  <div>최근 활동한 게임이 없습니다.</div>
-                </RecentGame>
+                <>
+                  <RecentGame>
+                    <div>최근 활동한 게임이 없습니다.</div>
+                  </RecentGame>
+                  {GameData?.slice(0, 3).map((gameData: any) => {
+                    return <RecentGameData gameData={gameData} />;
+                  })}
+                </>
               ) : (
                 <>
                   <RecentGame> 최근 활동한 게임</RecentGame>
@@ -279,7 +283,6 @@ function Profile() {
                   })}
                 </>
               )}
-              <ProfileLogout onClick={logout}>로그아웃</ProfileLogout>
             </>
           )}
         </ProfileBox>
@@ -317,8 +320,8 @@ const ProfileLogout = styled.p`
   font-size: 16px;
   cursor: pointer;
   position: absolute;
-  right: 24px;
-  bottom: 20px;
+  top: 20px;
+  right: 20px;
 `;
 const ProfileDiv = styled.div<{ layoutMenu: String }>`
   height: 100%;
@@ -358,9 +361,10 @@ const ProfileNickName = styled.p`
 
 const ProfileBox = styled.div<{ ProfileNicName: String | null }>`
   width: 352px;
-  height: ${(props) => (props.ProfileNicName === null ? "950px" : "650px")};
+  /* height: ${(props) =>
+    props.ProfileNicName === null ? "550px" : "550px"}; */
   /* background-color: #192030; */
-  margin: ${(props) => (props.ProfileNicName === null ? "" : "60px auto 0")};
+  margin: ${(props) => (props.ProfileNicName === null ? "" : "0px auto 0")};
   position: ${(props) => (props.ProfileNicName !== null ? "" : "absolute")};
   top: ${(props) => (props.ProfileNicName !== null ? "" : "50%")};
   left: ${(props) => (props.ProfileNicName !== null ? "" : "50%")};
@@ -369,7 +373,9 @@ const ProfileBox = styled.div<{ ProfileNicName: String | null }>`
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
+  /* background-color: red; */
+  padding-top: 40px;
 `;
 
 const RecentGame = styled.p`
@@ -377,6 +383,7 @@ const RecentGame = styled.p`
   font-size: 14px;
   margin-bottom: 24px;
   display: flex;
+  justify-content: center;
   width: 100%;
 `;
 const ProfileGameComments = styled.div`
