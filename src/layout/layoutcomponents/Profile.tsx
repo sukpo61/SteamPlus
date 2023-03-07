@@ -273,7 +273,6 @@ function Profile() {
                   })}
                 </>
               )}
-              <ProfileLogout onClick={logout}>로그아웃</ProfileLogout>
             </>
           )}
         </ProfileBox>
