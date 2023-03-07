@@ -350,6 +350,8 @@ const HeaderTh = styled.th`
 `;
 
 const PaginationBox = styled.div`
+  margin-bottom: 170px; //92px; // footer
+  margin-top: 10px;
   margin-left: 50px;
   .pagination {
     display: flex;

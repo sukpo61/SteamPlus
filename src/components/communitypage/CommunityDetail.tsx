@@ -194,7 +194,6 @@ const CommunityTitle = styled.div`
   width: 100%;
   position: relative;
   margin: 0 auto;
-  font-family: "Noto Sans KR", sans-serif;
   font-style: normal;
   font-weight: 400;
   font-size: 40px;
@@ -215,7 +214,7 @@ const Postslayout = styled.div`
   color: white;
 `;
 const PostpageWrap = styled.div`
-  margin-bottom: 92px; // footer
+  margin-bottom: 170px; //92px; // footer
 
   color: white;
   display: flex;

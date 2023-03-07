@@ -220,7 +220,7 @@ function Profile() {
         ) : (
           <>
             <ProfileImgBox>
-              <ProfileImg src={`${ProfileImgUrl}`} />{" "}
+              <ProfileImg src={`${ProfileImgUrl}`} />
             </ProfileImgBox>
             <ProfileLogout onClick={logout}>로그아웃</ProfileLogout>
           </>
