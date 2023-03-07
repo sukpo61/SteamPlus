@@ -32,6 +32,8 @@ export interface FriendProps {
 }
 
 function Friend() {
+  const PROXY_ID: any = process.env.REACT_APP_PROXY_ID;
+
   const queryClient = useQueryClient();
   const location = useLocation();
 
@@ -125,7 +127,7 @@ function Friend() {
 
   const Gamedata = async (frienduserid: any, gameid: any) => {
     const response = await axios.get(
-      `https://cors-anywhere.herokuapp.com/http://store.steampowered.com/api/appdetails/`,
+      `${PROXY_ID}/http://store.steampowered.com/api/appdetails/`,
       {
         params: {
           appids: gameid, // 해당 게임의 id값'
@@ -179,11 +181,10 @@ function Friend() {
   useEffect(() => {
     setCurrentLocation(location.pathname.split(":")[1]);
   }, [location]);
-  //주소확인
-  console.log("loooocatin", currentLocation);
 
   useEffect(() => {
     socket.on("friendNew_message", (newChat) => {
+      console.log("accept");
       setChatText((i: any) => [...i, newChat]);
 
       if (window.location.href.split(":")[2] == newChat.roomId) {

@@ -23,6 +23,8 @@ export interface FriendSearchProps {
 }
 
 function FriendSearch() {
+  const DATABASE_ID: any = process.env.REACT_APP_DATABASE_ID;
+
   const queryClient = useQueryClient();
   const myId = sessionStorage.getItem("steamid");
   const myNickName = sessionStorage.getItem("nickName");
@@ -44,8 +46,7 @@ function FriendSearch() {
 
   //친구 추가
   const postMutation = useMutation(
-    (friendAdd: object) =>
-      axios.post("http://localhost:3001/friend", friendAdd),
+    (friendAdd: object) => axios.post(`${DATABASE_ID}/friend`, friendAdd),
     {
       onSuccess: () => {
         // 쿼리 무효화
@@ -88,7 +89,7 @@ function FriendSearch() {
       // );
       //상대와 친구가 돼있는지 검사후 이중 저장 방지
       const response = await axios.get(
-        `http://localhost:3001/friend?myId=${myId}&friendId=${i.id}`
+        `${DATABASE_ID}/friend?myId=${myId}&friendId=${i.id}`
       );
 
       const existingFriend = response.data[0];

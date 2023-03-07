@@ -1,20 +1,22 @@
 import axios from "axios";
-import React, { useState } from "react";
 import { useQuery } from "react-query";
-import { Navigate, useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import styled from "styled-components";
 import { useRef } from "react";
 import Comment from "./Comment";
 
 export const CommunityDetail = () => {
+  const DATABASE_ID: any = process.env.REACT_APP_DATABASE_ID;
+
   const navigate = useNavigate();
 
   //db에있는 post get 해와서 useQuery로 만듥기
   const CommunityPostData = async () => {
-    const response = await axios.get("http://localhost:3001/post");
+    const response = await axios.get(`${DATABASE_ID}/post`);
     return response;
   };
   const { data }: any = useQuery("CommunityPostData", CommunityPostData);
+
   const param = useParams();
   const PostData = data?.data;
   const post = PostData?.find((post: any) => post?.id === param?.id);
@@ -26,19 +28,14 @@ export const CommunityDetail = () => {
   const PostSteamid = post?.steamid;
   const PostCount = post?.count;
   const Steamid = sessionStorage.getItem("steamid");
-  console.log("post", post);
-
-  // 현재시간 - PostDate = 몇분이 지났는지
-  const newDate: any = new Date();
-  const nowDate: any = newDate - PostDate;
 
   //삭제 하기
-  const PostBoxRef = useRef<any>();
+  const PostBoxRef = useRef<HTMLDivElement>(null);
   const handleDelete = async () => {
     //확인 버튼을 누르면 실행될 코드
     if (window.confirm("정말 삭제하겠습니까?")) {
       try {
-        await axios.delete(`http://localhost:3001/post/${PostId}`);
+        await axios.delete(`${DATABASE_ID}/post/${PostId}`);
         navigate("/Community");
       } catch (error) {
         console.error(error);
@@ -56,93 +53,84 @@ export const CommunityDetail = () => {
   return (
     <div style={{ display: "flex", justifyContent: "center" }}>
       <Postslayout>
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            justifyContent: "center",
-            alignItems: "center",
-          }}
-        >
-          <div
-            style={{
-              height: "390px",
-              display: "flex",
-              flexDirection: "column",
-              justifyContent: "center",
-              alignContent: "center",
-              width: "100%",
-            }}
-          >
-            <CommunityTitle onClick={gotoCommunity}> 커뮤니티</CommunityTitle>
-            <CommunityComment>
-              게임채널에 함께할 구성원을 모집하거나 자유롭게 의견을 나누는
-              공간입니다.
-            </CommunityComment>
+        <CommuntyHeader>
+          <CommunityTitle onClick={gotoCommunity}> 커뮤니티</CommunityTitle>
+          <CommunityComment>
+            게임채널에 함께할 구성원을 모집하거나 자유롭게 의견을 나누는
+            공간입니다.
+          </CommunityComment>
+        </CommuntyHeader>
+        <CommunityArea>
+          <Communitytitle2>게시글</Communitytitle2>
+          <div>
+            {PostSteamid === Steamid ? (
+              <PostEditDelBox ref={PostBoxRef}>
+                <AddPostBtn
+                  onClick={() => {
+                    navigate(`/CommunityEditPost/${PostId}`);
+                  }}
+                >
+                  수정
+                </AddPostBtn>
+                <AddPostBtn onClick={handleDelete}>삭제</AddPostBtn>
+              </PostEditDelBox>
+            ) : (
+              ""
+            )}
           </div>
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "space-between",
-              width: "100%",
-              marginBottom: "10px",
-            }}
-          >
-            <Communitytitle2>게시글</Communitytitle2>
-            <div>
-              {PostSteamid === Steamid ? (
-                <PostEditDelBox ref={PostBoxRef}>
-                  <AddPostBtn
-                    onClick={() => {
-                      navigate(`/CommunityEditPost/${PostId}`);
-                    }}
-                  >
-                    수정
-                  </AddPostBtn>
-                  <AddPostBtn onClick={handleDelete}>삭제</AddPostBtn>
-                </PostEditDelBox>
-              ) : (
-                ""
-              )}
-            </div>
-          </div>
-          <PostpageWrap>
-            <TableHeader />
-            <CommunityTable>
-              {/* 테이블 크기나누기 */}
-              <colgroup>
-                <col style={{ width: "7%" }} />
-                <col style={{ width: "48%" }} />
-                <col style={{ width: "10%" }} />
-                <col style={{ width: "20%" }} />
-                <col style={{ width: "10%" }} />
-                <col style={{ width: "5%" }} />
-              </colgroup>
-              {/* 테이블 나누기 */}
-              <tr>
-                <td>제목</td>
-                <td>{PostTitles}</td>
-              </tr>
-              <tr>
-                <td>닉네임</td> <td> {PostName}</td>
-                <td> 작성시간 </td>
-                <td>{PostDate}</td>
-                <td>조회수</td>
-                <td>{PostCount}</td>
-              </tr>
-            </CommunityTable>
-            <PostContents>{PostContent}</PostContents>
+        </CommunityArea>
+        <PostpageWrap>
+          <TableHeader />
+          <CommunityTable>
+            {/* 테이블 크기나누기 */}
+            <colgroup>
+              <col style={{ width: "7%" }} />
+              <col style={{ width: "48%" }} />
+              <col style={{ width: "10%" }} />
+              <col style={{ width: "20%" }} />
+              <col style={{ width: "10%" }} />
+              <col style={{ width: "5%" }} />
+            </colgroup>
+            {/* 테이블 나누기 */}
+            <CommunityTr>
+              <CommunityTd>제목</CommunityTd>
+              <CommunityTd>{PostTitles}</CommunityTd>
+            </CommunityTr>
+            <CommunityTr>
+              <CommunityTd>닉네임</CommunityTd>{" "}
+              <CommunityTd> {PostName}</CommunityTd>
+              <CommunityTd> 작성시간 </CommunityTd>
+              <CommunityTd>{PostDate}</CommunityTd>
+              <CommunityTd>조회수</CommunityTd>
+              <CommunityTd>{PostCount}</CommunityTd>
+            </CommunityTr>
+          </CommunityTable>
+          <PostContents>{PostContent}</PostContents>
 
-            {/* 댓글 */}
-            <Comment PostId={PostId} />
-          </PostpageWrap>
-        </div>
+          {/* 댓글 */}
+          <Comment PostId={PostId} />
+        </PostpageWrap>
       </Postslayout>
     </div>
   );
 };
+const CommunityTr = styled.tr``;
+const CommunityTd = styled.td``;
+const CommunityArea = styled.div`
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  margin-bottom: 10px;
+`;
+const CommuntyHeader = styled.div`
+  height: 390px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+`;
 //테이블 컴포넌트
-
 const CommunityTable = styled.table`
   width: 100%;
   border: 1px solid #777d87;
@@ -191,12 +179,12 @@ const AddPostBtn = styled.span`
     background: #00b8c8;
   }
 `;
-const Communitytitle2 = styled.div`
+const Communitytitle2 = styled.p`
   color: white;
   font-weight: 400;
   font-size: 20px;
 `;
-const CommunityComment = styled.div`
+const CommunityComment = styled.p`
   font-size: 13;
   color: #a7a9ac;
   margin-top: 20px;
@@ -226,18 +214,20 @@ const Postslayout = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  width: 100%;
+  width: 836px;
   color: white;
 `;
 const PostpageWrap = styled.div`
+  margin-bottom: 92px; // footer
+
   color: white;
   display: flex;
   flex-direction: column;
-  width: 100%;
+  width: 836px;
 `;
 
 const TableHeader = styled.div`
-  width: 1020px;
+  width: 836px;
   display: flex;
   flex-direction: column;
   border-top: 2px solid #00b8c8;
@@ -249,7 +239,7 @@ const PostContents = styled.div`
   font-size: 14px;
   padding-top: 20px;
   word-break: break-all;
-  width: 980px;
+  width: 836px;
   padding-bottom: 40px;
   border-bottom: 1px solid #777d87;
 `;
