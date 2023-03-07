@@ -4,6 +4,7 @@ import { useMutation } from "react-query";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { v4 as uuidv4 } from "uuid";
+
 import {
   RadioGroup,
   FormControlLabel,
@@ -11,6 +12,7 @@ import {
   FormControl,
   FormLabel,
 } from "@mui/material";
+
 interface PostData {
   id: string;
   steamid: string;
@@ -22,11 +24,11 @@ interface PostData {
   category: string;
 }
 export const CommunityAddPost = () => {
+  const [count, setCount] = useState(0);
   const [category, setCategory] = useState<string>("카테고리를 선택하세요");
   const [title, setTitle] = useState<string>("");
   const [content, setContent] = useState<string>("");
   const DATABASE_ID: any = process.env.REACT_APP_DATABASE_ID;
-
   const navigate = useNavigate();
   const userId = sessionStorage.getItem("steamid");
   const userName = sessionStorage.getItem("nickName");
@@ -87,8 +89,13 @@ export const CommunityAddPost = () => {
         category,
       };
       addPostMutation.mutate(newPost);
-      //등록하면 등록한 자신의 post를 볼수있게
+      //등록된 포스트로 이동후
       navigate(`/Community/${newPost.id}`);
+      //0.3초후 새로고침되게함
+      setTimeout(() => {
+        window.location.reload();
+      }, 300);
+      return;
     } else {
       //취소버튼 클릭시 새로고침을 방지해서 작성한 타이틀과 컨텐츠를 유지시켜줌
       event.preventDefault();
