@@ -11,6 +11,7 @@ import {
   LayoutButton,
   friendAllState,
   friendChatNotice,
+  userAllSocketId,
 } from "../../recoil/atom";
 import { FriendProps } from "./Friend";
 import { FriendSearchProps } from "./FriendSearch";
@@ -37,7 +38,8 @@ function FriendContextMenu({ xPos, yPos, id, onClose }: any) {
     useRecoilState(friendroominfoRecoil);
 
   const [layoutMenu, setLayoutMenu] = useRecoilState<String>(LayoutButton);
-
+  //socket id
+  const [userId, setUserId] = useRecoilState<any>(userAllSocketId);
   const navigate = useNavigate();
 
   const handleClick = () => {
@@ -68,6 +70,11 @@ function FriendContextMenu({ xPos, yPos, id, onClose }: any) {
 
     DeleteMutation.mutate(friendDelete[0].id);
     DeleteMutation.mutate(friendDelete[1].id);
+
+    const clickId = userId.find((i: any) => {
+      return i.split("/")[0] === id;
+    });
+    socket.emit("friendMount", clickId);
   };
 
   const joinFriendRoom = (userid: any) => {
@@ -96,12 +103,13 @@ function FriendContextMenu({ xPos, yPos, id, onClose }: any) {
   //   socket.emit("nickName", myId);
   // });
   // let userSocketId: any = [];
-  const [userId, setUserId] = useState<any>([]);
-  socket.on("userId", (id) => {
-    // console.log(id);
-    setUserId(id);
-    // console.log(userId);
-  });
+
+  // friend로 이사감
+  // socket.on("userId", (id) => {
+  //   // console.log(id);
+  //   setUserId(id);
+  //   console.log("유저소켓", userId);
+  // });
 
   const ChatOnClick = (id: any) => {
     //선택한 아이디 불러오기
@@ -130,10 +138,10 @@ function FriendContextMenu({ xPos, yPos, id, onClose }: any) {
   //   console.log(rooms);
   // });
 
-  useEffect(() => {
-    console.log(socket.id);
-    socket.emit("nickName", myId, socket.id);
-  }, [socket.id]);
+  // useEffect(() => {
+  //   console.log(socket.id);
+  //   socket.emit("nickName", myId, socket.id);
+  // }, [socket.id]);
 
   const friendLoggin = friendAllRecoil.find((i: any) => {
     return i.id === id;
@@ -165,9 +173,6 @@ function FriendContextMenu({ xPos, yPos, id, onClose }: any) {
         ) : (
           ""
         )}
-        {/* 임시 채팅 */}
-        <ContextMenuP onClick={() => ChatOnClick(id)}>1대1 채팅</ContextMenuP>
-
         <ContextMenuP
           onClick={() => {
             friendDeleteOnClick(id);
