@@ -57,14 +57,14 @@ const ChannelSearchPage: any = () => {
     console.log("termResult", termResult);
 
     const gameSummary = await axios.get(
-      `https://store.steampowered.com/api/storesearch/?cc=us&l=en&term="${termResult}"` // &pagesize=20
+      `https://enable-cors.glitch.me/https://store.steampowered.com/api/storesearch/?cc=us&l=en&term="${termResult}"` // &pagesize=20
     ); // 게임 Id만 가져오기!!!
 
     const gameList = [];
 
     for (let i = 0; i < gameSummary?.data.items.length; i++) {
       const gameCategoryData2 = await axios.get(
-        `https://store.steampowered.com/api/appdetails/?appids=${gameSummary?.data.items[i].id}`
+        `https://enable-cors.glitch.me/https://store.steampowered.com/api/appdetails/?appids=${gameSummary?.data.items[i].id}`
       );
       //썸네일, 제목, 장르
       gameList.push(

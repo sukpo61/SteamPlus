@@ -15,7 +15,7 @@ export const Top10 = ({ TopGames }: any) => {
           <ChannelTitle> GAME TOP 10</ChannelTitle>
           <ActivateChannel1st>
             {TopGames?.map((games: any) => {
-              return <Top10Card game={games} key={games.id} />;
+              return <Top10Card game={games} key={games?.id} />;
             })}
           </ActivateChannel1st>
         </div>

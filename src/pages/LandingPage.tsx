@@ -22,7 +22,7 @@ function LandingPage() {
         <LandingImg1
           src="/img/LandingImg1-2.png"
           data-aos="fade-up"
-          data-aos-duration="2000"
+          // data-aos-duration="2000"
         />
         <SteamPlusIntro>
           <SteamPlusWhite
@@ -75,7 +75,7 @@ function LandingPage() {
           <IntroAboutFriend
             data-aos="fade-up"
             data-aos-duration="2000"
-            data-aos-offset="20"
+            data-aos-offset="10"
           >
             SteamPlus를 통해 원하는 게임을 같이 즐길 수 있는 다른 사용자들을
             쉽게 만나볼 수 있습니다.
@@ -92,7 +92,7 @@ function LandingPage() {
           <IntroAboutFriend
             data-aos="fade-down"
             data-aos-duration="2000"
-            data-aos-offset="20"
+            data-aos-offset="10"
           >
             Steam 유저의 게임 정보를 가져와 같은 게임을 즐기는 사용자들을 찾을
             수도 있습니다.
@@ -156,13 +156,13 @@ const LandingImg1 = styled.img`
   /* width: 1872px; */
   top: 0;
   left: 0;
-  transform: translate(0, 0); // translateY(6%); // 24% */
+  transform: translate(0, 0); // translateY(6%); // 24%
   object-fit: cover;
   width: 100%;
   /* min-width: 1200px; */
   height: 100%;
 
-  animation: ${LandingAnimation} 1s ease-in-out;
+  animation: ${LandingAnimation} 2s ease-in-out;
 `;
 
 const SteamPlusIntro = styled.div`

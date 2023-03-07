@@ -15,6 +15,7 @@ import {
   friendChatNotice,
   currentRoomRecoil,
   currentGameIdRecoil,
+  userAllSocketId,
 } from "../recoil/atom";
 import Profile from "./layoutcomponents/Profile";
 import GameSearch from "./layoutcomponents/GameSearch";
@@ -86,6 +87,8 @@ function Layout() {
   const [currentRoom, setCurrentRoom] = useRecoilState(currentRoomRecoil);
 
   const [channelId, setchannelId] = useRecoilState(currentGameIdRecoil);
+  //소켓id
+  const [userId, setUserId] = useRecoilState<any>(userAllSocketId);
 
   //메뉴 탭눌렀을때 (친구제외)
   const LayoutButtonOnClick = (i: string) => {
@@ -117,7 +120,7 @@ function Layout() {
     setFriendAllRecoil(response?.data);
     return response;
   };
-  const { data: friendSearch } = useQuery("friendsearch", getFriendSearch);
+  const { data: friendSearch } = useQuery(["friendsearch"], getFriendSearch);
 
   const getAllFriend = async () => {
     //비동기함수는 최대한 동기적으로 활용가능하게
@@ -126,7 +129,10 @@ function Layout() {
 
     return response;
   };
-  const { isLoading, isError, data, error } = useQuery("friend", getAllFriend);
+  const { isLoading, isError, data, error } = useQuery(
+    ["friend"],
+    getAllFriend
+  );
 
   if (isLoading) {
     return <p>로딩중</p>;
@@ -250,7 +256,7 @@ function Layout() {
               window.scrollTo({ top: 0, behavior: "smooth" });
             }}
           >
-            <FaKeyboard className="communityIcon" />
+            <MdDynamicFeed className="communityIcon" />
             <p>커뮤니티</p>
           </Communitybutton>
 
@@ -260,7 +266,6 @@ function Layout() {
           {myId === null ? (
             <Friendbutton
               onClick={() => {
-                alert("로그인 후 사용 가능 합니다.");
                 // FriendButtonOnClick("profile");
                 handleLoginModalOpen(); // 로그인 모달
               }}
@@ -291,7 +296,6 @@ function Layout() {
           {myId === null ? (
             <VoiceTalkbutton
               onClick={() => {
-                alert("로그인 후 사용 가능 합니다.");
                 // LayoutButtonOnClick("profile");
                 handleLoginModalOpen(); // 로그인 모달
               }}
@@ -321,8 +325,7 @@ function Layout() {
           <GameSearch />
           <Friend />
           <FriendSearch />
-          {channelId ? <VoiceTalk /> : <EmptyVoiceTalk />}
-
+          <VoiceTalk />
           <FriendAdd />
           <AboutPages />
         </MenuOpenDiv>

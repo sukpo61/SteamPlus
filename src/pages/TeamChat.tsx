@@ -19,6 +19,8 @@ import Aos from "aos";
 import "aos/dist/aos.css";
 
 const TeamChat = () => {
+  const PROXY_ID: any = process.env.REACT_APP_PROXY_ID;
+
   const [DataChannelMap, setDataChannelMap] =
     useRecoilState(DataChannelMapRecoil);
   //내 아이디
@@ -54,7 +56,7 @@ const TeamChat = () => {
 
   const Gamedata = async () => {
     const response = await axios.get(
-      `https://cors-anywhere.herokuapp.com/http://store.steampowered.com/api/appdetails/`,
+      `${PROXY_ID}/http://store.steampowered.com/api/appdetails/`,
       {
         params: {
           appids: gameid, // 해당 게임의 id값'

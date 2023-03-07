@@ -1,9 +1,10 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   LayoutButton,
   getFriend,
   friendAllState,
   newFriendAdd,
+  userAllSocketId,
 } from "../../recoil/atom";
 import styled from "styled-components";
 import { useRecoilState, useRecoilValue } from "recoil";
@@ -14,6 +15,8 @@ import { useMutation } from "react-query";
 import { v4 as uuidv4 } from "uuid";
 import FriendTab from "./FriendTab";
 import { FriendProps } from "./Friend";
+import socket from "../../socket";
+
 export interface FriendSearchProps {
   id: string;
   profileimg: string;
@@ -38,6 +41,9 @@ function FriendSearch() {
   const [friendAllRecoil, setFriendAllRecoil] = useRecoilState(friendAllState);
   //친구 요청 온 내역 전체
   const [friendAdd] = useRecoilValue(newFriendAdd);
+  //소켓 id
+  const [userId, setUserId] = useRecoilState<any>(userAllSocketId);
+
   // //아이디
   // const [myId] = useRecoilValue(myIds);
   // const [myNickName] = useRecoilValue(myNickNames);
@@ -100,10 +106,34 @@ function FriendSearch() {
         return;
       }
       postMutation.mutate(friendAdd);
+
+      const clickId = userId.find((id: any) => {
+        return id.split("/")[0] === i.id;
+      });
+      socket.emit("friendMount", clickId);
+      //클릭한 아이디를 소켓이랑 보냄
+      //보내고 서버에서 받은후 해당아이디 에게 보내서 마운트??
     } catch (error) {
       console.error(error);
     }
   };
+  //서버쪽
+  // socket.on("friendMount", (clickId) => {
+  //   socket.emit("friendMount", clickId)
+  // })
+  //다시 프론트
+  socket.on("friendMount", (clickId) => {
+    console.log("오고있니", clickId);
+    if (clickId.split("/")[0] == myId) {
+      setTimeout(() => {
+        queryClient.refetchQueries(["friendsearch"]);
+        queryClient.refetchQueries(["friend"]);
+      }, 2000);
+
+      // setFriendQueryMount(uuidv4());
+      console.log("실행되니");
+    }
+  });
 
   //이미 친구인 목록
   // 계정목록과 친구목록을 불러온 후 친구목록중 내 친구목록인 것 구한다.

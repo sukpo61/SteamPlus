@@ -6,6 +6,7 @@ import {
   newFriendAdd,
   friendChat,
   friendChatNotice,
+  userAllSocketId,
 } from "../../recoil/atom";
 import styled from "styled-components";
 import { useRecoilState, useRecoilValue } from "recoil";
@@ -32,6 +33,8 @@ export interface FriendProps {
 }
 
 function Friend() {
+  const PROXY_ID: any = process.env.REACT_APP_PROXY_ID;
+
   const queryClient = useQueryClient();
   const location = useLocation();
 
@@ -76,6 +79,8 @@ function Friend() {
   //개인 채팅 알림
   const [chatTextNotice, setChatTextNotice] =
     useRecoilState<any>(friendChatNotice);
+  //소켓id
+  const [userId, setUserId] = useRecoilState<any>(userAllSocketId);
 
   // const friendChatNotice = chatText.filter((i:any) => {
   //   return i
@@ -125,7 +130,7 @@ function Friend() {
 
   const Gamedata = async (frienduserid: any, gameid: any) => {
     const response = await axios.get(
-      `https://cors-anywhere.herokuapp.com/http://store.steampowered.com/api/appdetails/`,
+      `${PROXY_ID}/http://store.steampowered.com/api/appdetails/`,
       {
         params: {
           appids: gameid, // 해당 게임의 id값'
@@ -176,16 +181,26 @@ function Friend() {
     const diffInSec = Math.round(diffInMs / 1000);
     return diffInSec < TEN_MINUTES / 1000;
   };
+
+  useEffect(() => {
+    socket.emit("nickName", myId, socket.id);
+  }, [socket.id]);
+
+  socket.on("userId", (id) => {
+    // console.log(id);
+    setUserId(id);
+  });
+
   useEffect(() => {
     setCurrentLocation(location.pathname.split(":")[1]);
   }, [location]);
-  console.log("loooocatin", currentLocation);
 
   useEffect(() => {
     socket.on("friendNew_message", (newChat) => {
       console.log("accept");
       setChatText((i: any) => [...i, newChat]);
-      if (window.location.href.split(":")[3] == newChat.roomId) {
+
+      if (window.location.href.split(":")[2] == newChat.roomId) {
         return;
       } else {
         return setChatTextNotice((i: any) => [...i, newChat]);

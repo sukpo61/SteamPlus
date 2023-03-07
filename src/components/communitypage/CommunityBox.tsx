@@ -1,24 +1,47 @@
 import axios from "axios";
-import React, { useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "react-query";
-import { Navigate, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
-import Moment from "react-moment";
 import moment from "moment";
 interface TableTdProps {
-  Width: string;
   Color: string;
+  Width: string;
 }
-export const CommunityBox = ({ post, index }: any) => {
+interface PostProps {
+  id: number;
+  name: string;
+  title: string;
+  category: string;
+  count: number;
+  date: Date;
+}
+interface CommunityBoxProps {
+  post: PostProps;
+  index: number;
+}
+
+export const CommunityBox = ({ post, index }: CommunityBoxProps) => {
   const DATABASE_ID: any = process.env.REACT_APP_DATABASE_ID;
 
   const navigate = useNavigate();
   const Name = post?.name;
+  // 배틀태그 자른 닉네임
+  const SliceName = Name?.slice(0, -5);
+  //이름뒤에 배틀태그
+  const SliceName2 = Name?.slice(-5);
   const Title = post?.title;
   const Category = post?.category;
   const PodstID = post?.id;
   const PostViewCount = post?.count;
 
+  //포스트 작성한 날짜
+  const newDate = new Date();
+  const year = newDate.getFullYear();
+  const month = newDate.getMonth() + 1;
+  const month2 = month < 10 ? `0${month}` : month;
+  const day = newDate.getDate();
+  const day2 = day < 10 ? `0${day}` : month;
+  const dates = `${year}.${month2}.${day2} `;
   //작성시간 몇분전인지 확인 monents.js 사용함
   const getDayMinuteCounter = (Date: any) => {
     if (!Date) {
@@ -30,7 +53,6 @@ export const CommunityBox = ({ post, index }: any) => {
     const dayDiff = postingDate.diff(today, "days");
     const hourDiff = postingDate.diff(today, "hours");
     const minutesDiff = postingDate.diff(today, "minutes");
-
     if (dayDiff === 0 && hourDiff === 0 && minutesDiff === 0) {
       // 작성한지 1분도 안지났을때
       return "방금전";
@@ -45,7 +67,7 @@ export const CommunityBox = ({ post, index }: any) => {
       const hour = Math.ceil(-hourDiff);
       return hour + "시간 전"; // '시간'으로 표시
     }
-    return -dayDiff + "일 전"; // '일'로 표시
+    return dates; // '일'로 표시
   };
   //만들어준 함수를 변수에 할당하여서 사용함
   const dayMinuteCounter = getDayMinuteCounter(new Date("2023-03-02T12:00:00"));
@@ -59,8 +81,8 @@ export const CommunityBox = ({ post, index }: any) => {
     //포스트 작성한시간
     const postingDate = moment(post?.date);
     const minutesDiff = postingDate.diff(today, "minutes");
-    // 작성한지 10분이 안된 포스트에는 N이 보이게해줌
-    if (minutesDiff > -11) {
+    // 작성한지 30분이 안된 포스트에는 N이 보이게해줌
+    if (minutesDiff > -31) {
       return "N";
     }
   };
@@ -92,6 +114,7 @@ export const CommunityBox = ({ post, index }: any) => {
     return response;
   };
   const { data }: any = useQuery("comment", getComment);
+
   const comment = data?.data.filter((item: any) => {
     return item?.postId === PodstID;
   });
@@ -99,26 +122,27 @@ export const CommunityBox = ({ post, index }: any) => {
 
   return (
     <CommentWrap>
-      <TableTd Width="100px" Color="fff">
+      <TableTd Width="50px" Color="fff">
         {index}
       </TableTd>
-      <TableTd Width="110px" Color="fff">
+      <TableTd Width="60px" Color="fff">
         {Category}
       </TableTd>
-      <TableContentTd Width="540px" Color="fff" style={{ paddingLeft: "30px" }}>
+      <TableTds Width="450px" Color="fff">
         <span onClick={handleEditPost}>{Title}</span>
         {/* 누적댓글수 */}
         <PostCount>[{CommentCt}]</PostCount>
         {/* 포스트 작성한지 10분이 지날때면 스타일을 주기 */}
-        {newPost ? <PostNew>{newPost}</PostNew> : ""}
-      </TableContentTd>
-      <TableTd Width="130px" Color="#A7A9AC">
-        {Name}
-      </TableTd>
-      <TableTd Width="90px" Color="#A7A9AC">
+        {newPost ? <PostNew>N</PostNew> : ""}
+      </TableTds>
+      <TableTdName Width="130px" Color="#A7A9AC">
+        <p>{SliceName} &nbsp;</p>
+        <p> {SliceName2}</p>
+      </TableTdName>
+      <TableTd Width="80px" Color="#A7A9AC">
         {dayMinuteCounter}
       </TableTd>
-      <TableTd Width="50px" Color="#A7A9AC">
+      <TableTd Width="65px" Color="#A7A9AC">
         {PostViewCount}
       </TableTd>
     </CommentWrap>
@@ -128,27 +152,23 @@ const PostCount = styled.div`
   font-size: 11px;
   color: #00b8c8;
   margin-left: 8px;
+  margin-top: 2px;
 `;
 const PostNew = styled.div`
   font-size: 11px;
   margin-left: 5px;
   width: 14px;
   height: 14px;
-  border-radius: 10px;
   background-color: #f05656;
-  display: flex;
-  justify-content: center;
-  align-items: center;
   color: #fff;
-  line-height: 10px;
+  line-height: 14px;
   text-align: center;
-  margin-bottom: 1px;
+  border-radius: 10px;
 `;
 const CommentWrap = styled.div`
   width: 100%;
   height: 50px;
   display: flex;
-  justify-content: center;
   align-items: center;
   flex-direction: row;
   border-bottom: 1px solid #eee;
@@ -171,11 +191,13 @@ const TableTd = styled.td<TableTdProps>`
     cursor: pointer;
   }
 `;
-const TableContentTd = styled.td<TableTdProps>`
+
+const TableTds = styled.td<TableTdProps>`
   color: ${(props) => props.Color};
   width: ${(props) => props.Width};
   display: flex;
   align-items: center;
+  padding-left: 20px;
   height: 50px;
   font-weight: 400;
   font-size: 13px;
@@ -185,5 +207,28 @@ const TableContentTd = styled.td<TableTdProps>`
   span:hover {
     text-decoration: underline;
     cursor: pointer;
+  }
+`;
+const TableTdName = styled.td<TableTdProps>`
+  color: ${(props) => props.Color};
+  width: ${(props) => props.Width};
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 50px;
+  font-weight: 400;
+  font-size: 13px;
+  span {
+    margin-left: 20px;
+  }
+  span:hover {
+    text-decoration: underline;
+    cursor: pointer;
+  }
+  p:nth-child(1) {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 60px;
   }
 `;
