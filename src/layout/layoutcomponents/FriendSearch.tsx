@@ -58,6 +58,12 @@ function FriendSearch() {
         // 쿼리 무효화
         queryClient.invalidateQueries(["friend"]);
         queryClient.invalidateQueries(["friendsearch"]);
+        setTimeout(() => {
+          const newLoading = isLoading.filter((id: any) => {
+            return id === friendAdd.id;
+          });
+          setIsLoading(newLoading);
+        }, 2000);
       },
     }
   );
@@ -80,8 +86,10 @@ function FriendSearch() {
 
   //   postMutation.mutate(friendAdd);
   // };
-
+  const [isLoading, setIsLoading] = useState<any>([]);
   const friendAddOnClick = async (i: FriendSearchProps) => {
+    setIsLoading([...isLoading, i.id]);
+
     let friendAdd = {
       id: uuidv4(),
       myId,
@@ -90,9 +98,6 @@ function FriendSearch() {
       friendNickName: i.nickname,
     };
     try {
-      // const response = getFriendAuth.filter(
-      //   (item) => item.myId === myId && item.friendId === i.id
-      // );
       //상대와 친구가 돼있는지 검사후 이중 저장 방지
       const response = await axios.get(
         `${DATABASE_ID}/friend?myId=${myId}&friendId=${i.id}`
@@ -115,12 +120,12 @@ function FriendSearch() {
       //보내고 서버에서 받은후 해당아이디 에게 보내서 마운트??
     } catch (error) {
       console.error(error);
+      const newLoading = isLoading.filter((id: any) => {
+        return id === i.id;
+      });
+      setIsLoading(newLoading);
     }
   };
-  //서버쪽
-  // socket.on("friendMount", (clickId) => {
-  //   socket.emit("friendMount", clickId)
-  // })
   //다시 프론트
   socket.on("friendMount", (clickId) => {
     console.log("오고있니", clickId);
@@ -211,9 +216,19 @@ function FriendSearch() {
             <FriendBoxNameImg src={i.profileimg} />
             <FriendBoxNameH2>{i.nickname}</FriendBoxNameH2>
 
-            <FriendBoxNameP onClick={() => friendAddOnClick(i)}>
-              +
-            </FriendBoxNameP>
+            {isLoading.find((id: any) => {
+              if (i.id === id) {
+                return true;
+              } else {
+                return false;
+              }
+            }) ? (
+              <FriendBoxNameP></FriendBoxNameP>
+            ) : (
+              <FriendBoxNameP onClick={() => friendAddOnClick(i)}>
+                +
+              </FriendBoxNameP>
+            )}
           </FriendBoxDiv>
         );
       })}
