@@ -36,7 +36,7 @@ function Profile() {
     useRecoilState<any>(friendAllState);
 
   // 어스아이디
-  const STEAM_OPENID_ENDPOINT = `https://steamcommunity.com/openid/login?openid.ns=http://specs.openid.net/auth/2.0&openid.mode=checkid_setup&openid.return_to=${FRONTEND_URL}/login/&openid.realm=${FRONTEND_URL}/login&openid.identity=http://specs.openid.net/auth/2.0/identifier_select&openid.claimed_id=http://specs.openid.net/auth/2.0/identifier_select`;
+  const STEAM_OPENID_ENDPOINT = `https://steamcommunity.com/openid/login?openid.ns=http://specs.openid.net/auth/2.0&openid.mode=checkid_setup&openid.return_to=https://steam-plus-theta.vercel.app/login/&openid.realm=https://steam-plus-theta.vercel.app/login&openid.identity=http://specs.openid.net/auth/2.0/identifier_select&openid.claimed_id=http://specs.openid.net/auth/2.0/identifier_select`;
   const SteamLogin = () => {
     window.location.href = STEAM_OPENID_ENDPOINT;
   };
