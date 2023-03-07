@@ -179,7 +179,7 @@ function Layout() {
         {data.userid === myId ? (
           <Streamvideo ref={remotehandleVideoRef} autoPlay playsInline muted />
         ) : (
-          <Streamvideo ref={remotehandleVideoRef} autoPlay playsInline />
+          <Streamvideo ref={remotehandleVideoRef} autoPlay playsInline muted />
         )}
         <Usernickname>
           <span>{info?.nickname}</span>
