@@ -155,7 +155,7 @@ const TeamChat = () => {
     }
     Gamedata();
     setLayoutMenu("voicetalk");
-    Aos.init();
+    Aos.init({ once: true });
   }, []);
 
   return (
