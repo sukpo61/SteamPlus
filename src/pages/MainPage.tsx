@@ -9,8 +9,13 @@ import socket from "../socket";
 import { activechannelsRecoil, activechannelsinfoRecoil } from "../recoil/atom";
 import { useRecoilState } from "recoil";
 import { Top10 } from "../components/mainpage/Top10";
+import { useNavigate } from "react-router-dom";
 
 function MainPage() {
+  const PROXY_ID: any = process.env.REACT_APP_PROXY_ID;
+
+  const navigate = useNavigate();
+
   const [activechannels, setActiveChannels] =
     useRecoilState(activechannelsRecoil);
   const [activeChannelsInfo, setActiveChannelsInfo] = useRecoilState(
@@ -25,7 +30,7 @@ function MainPage() {
   //게임이미지 불러오기
   const Gamedata = async () => {
     const response = await axios.get(
-      `https://enable-cors.glitch.me/http://store.steampowered.com/api/appdetails/`,
+      `${PROXY_ID}/http://store.steampowered.com/api/appdetails/`,
       {
         params: {
           appids: GameIds, // 해당 게임의 id값'
@@ -57,7 +62,7 @@ function MainPage() {
   //top10 game 정보
   const Top10Game = async () => {
     const response = await axios.get(
-      "https://store.steampowered.com/api/featuredcategories/",
+      `${PROXY_ID}/https://store.steampowered.com/api/featuredcategories/`,
       {
         params: {
           format: "json",
@@ -71,11 +76,9 @@ function MainPage() {
 
   const { data: TopGame }: any = useQuery("Top10Game", Top10Game);
 
-  console.log(TopGame);
-
   const getChannelInfo = async (channelid: any, count: any) => {
     const response = await axios.get(
-      `https://cors-anywhere.herokuapp.com/http://store.steampowered.com/api/appdetails/`,
+      `${PROXY_ID}/http://store.steampowered.com/api/appdetails/`,
       {
         params: {
           appids: channelid, // 해당 게임의 id값'
@@ -127,17 +130,23 @@ function MainPage() {
   // const { data: dataa }: any = useQuery("getFeaturedGames", getFeaturedGames);
 
   return (
-    <MainLayout>
-      {/* 메인게임 이미지 */}
-      <CurrentGame game={data} />{" "}
-      <MainWrap>
-        {/* 인기채널 */}
-        <PoularChannel />
-        {/* 현재활성화된 채널 */}
-        <ActivateChannel gamedata={activeChannelsInfo} />
-        {/* <Top10 TopGames={TopGame} /> */}
-      </MainWrap>
-    </MainLayout>
+    <div style={{ position: "relative" }}>
+      <Logo
+        src="/img/SteamPlusLogo2.png"
+        onClick={() => navigate(`/landing`)}
+      />
+      <MainLayout>
+        {/* 메인게임 이미지 */}
+        <CurrentGame game={data} />{" "}
+        <MainWrap>
+          {/* 인기채널 */}
+          <PoularChannel />
+          {/* 현재활성화된 채널 */}
+          <ActivateChannel gamedata={activeChannelsInfo} />
+          {/* <Top10 TopGames={TopGame} /> */}
+        </MainWrap>
+      </MainLayout>
+    </div>
   );
 }
 
@@ -148,6 +157,18 @@ const MainLayout = styled.div`
   flex-direction: column;
   align-items: center;
 `;
+
+const Logo = styled.img`
+  position: absolute;
+  margin-left: 32px;
+  margin-top: 32px;
+  width: 112px;
+  height: auto;
+  z-index: 999;
+  cursor: pointer;
+  /* box-shadow: 0px 0px 10px 0px #fff; */
+`;
+
 const MainWrap = styled.div`
   width: 900px;
   display: flex;

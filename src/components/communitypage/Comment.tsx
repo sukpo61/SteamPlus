@@ -6,11 +6,34 @@ import { useMutation } from "react-query";
 import { v4 as uuidv4 } from "uuid";
 import { useQuery } from "react-query";
 import { useQueryClient } from "react-query";
+interface CommentProps {
+  PostId: string; // define type for PostId
+}
 
-function Comment({ PostId }: any) {
+interface CommentItem {
+  id: string;
+  postId: string;
+  myId: string | null;
+  name: string | null;
+  date: string;
+  profileImg: string;
+  contents: string;
+}
+interface EditCommentType {
+  id: number;
+  name: string;
+  profileImg: string;
+  contents: string;
+  date: string;
+  myId: number;
+}
+
+function Comment({ PostId }: CommentProps) {
+  const DATABASE_ID: any = process.env.REACT_APP_DATABASE_ID;
+
   //Ref존
-  const CommentRef = useRef<any>();
-  const CommentsRef = useRef<any>();
+  const CommentRef = useRef<HTMLInputElement>(null); // define type for CommentRef
+  const CommentsRef = useRef<HTMLTextAreaElement>(null);
   const queryClient = useQueryClient();
 
   const myId = sessionStorage.getItem("steamid");
@@ -31,18 +54,19 @@ function Comment({ PostId }: any) {
   //스팀아이디
   const steamID = sessionStorage.getItem("steamid");
   const getComment = async () => {
-    const response = await axios.get("http://localhost:3001/comment");
+    const response = await axios.get(`${DATABASE_ID}/comment`);
     return response;
   };
   const { data } = useQuery("comment", getComment);
   const comment = data?.data.slice().reverse();
-  const commentFilter = comment?.filter((i: any) => {
+  const commentFilter = comment?.filter((i: CommentItem) => {
     return i.postId === PostId;
   });
+  console.log("commentFilter", commentFilter);
+
   //댓글등록
   const postMutation = useMutation(
-    (newComment: object) =>
-      axios.post("http://localhost:3001/comment", newComment),
+    (newComment: object) => axios.post(`${DATABASE_ID}/comment`, newComment),
     {
       onSuccess: () => {
         queryClient.invalidateQueries("comment");
@@ -50,11 +74,11 @@ function Comment({ PostId }: any) {
     }
   );
   //댓글등록 onChange
-  const CommentInputOnChange = (e: any) => {
+  const CommentInputOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setCommentInput(e.target.value);
   };
   //댓글등록 핸들러
-  const CommentFormonSubmit = (e: any) => {
+  const CommentFormonSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!steamID) {
       alert("로그인이 필요합니다");
@@ -65,7 +89,7 @@ function Comment({ PostId }: any) {
       CommentRef.current!.focus();
       return;
     }
-    const newComment = {
+    const newComment: CommentItem = {
       id: uuidv4(),
       postId: PostId,
       myId: myId,
@@ -79,7 +103,7 @@ function Comment({ PostId }: any) {
   };
   //댓글삭제
   const DeleteMutation = useMutation(
-    (id) => axios.delete(`http://localhost:3001/comment/${id}`),
+    (id) => axios.delete(`${DATABASE_ID}/comment/${id}`),
     {
       onSuccess: () => {
         queryClient.invalidateQueries("comment");
@@ -87,12 +111,19 @@ function Comment({ PostId }: any) {
     }
   );
   const DeleteOnClick = (id: any) => {
-    DeleteMutation.mutate(id);
+    if (window.confirm("정말 삭제하겠습니까?")) {
+      DeleteMutation.mutate(id);
+      return;
+    } else {
+      // 취소 버튼을 누른 경우 실행될 코드
+      console.log("취소 버튼을 눌렀습니다.");
+      return;
+    }
   };
   //댓글수정
   const EditMutation = useMutation(
     (editComment: any) =>
-      axios.put(`http://localhost:3001/comment/${editComment.id}`, editComment),
+      axios.put(`${DATABASE_ID}/comment/${editComment.id}`, editComment),
     {
       onSuccess: () => {
         queryClient.invalidateQueries("comment");
@@ -100,11 +131,11 @@ function Comment({ PostId }: any) {
     }
   );
 
-  const EditInputOnChange = (e: any) => {
+  const EditInputOnChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setEditInput(e.target.value);
   };
 
-  const EditCommentButton = (id: any) => {
+  const EditCommentButton = (id: string) => {
     if (editInput === "") {
       alert("수정된 댓글을 입력해주세요");
       CommentsRef.current!.focus();
@@ -137,7 +168,7 @@ function Comment({ PostId }: any) {
       </CommentForm>
       {/* 댓글 창 */}
 
-      {commentFilter?.map((i: any) => {
+      {commentFilter?.map((i: CommentItem) => {
         return (
           <CommentContents>
             <div style={{ display: "flex" }}>
@@ -164,7 +195,8 @@ function Comment({ PostId }: any) {
                 <CommentDate>{i.date}</CommentDate>
               </div>
             </div>
-            <div>
+
+            <div style={{ marginLeft: "auto" }}>
               {editOn === i.id ? (
                 <>
                   <CommentEdit onClick={() => EditCommentButton(i.id)}>
@@ -204,16 +236,15 @@ function Comment({ PostId }: any) {
 
 export default Comment;
 const CommentWrap = styled.div`
-  width: 100%;
+  width: 836px;
   margin: 0 auto;
 `;
 const CommentForm = styled.form`
-  width: 100%;
   height: 40px;
   margin-bottom: 10px;
 `;
 const CommentInput = styled.input`
-  width: 95%;
+  width: 760px;
   height: 40px;
   background: transparent;
   background-color: #404b5e;
@@ -226,9 +257,11 @@ const CommentInput = styled.input`
   border: none;
 `;
 const CommentFormButton = styled.button`
-  width: 5%;
-  height: 40px;
-  background-color: #000;
+  margin-left: 12px;
+  width: 64px;
+  height: 36px;
+  background: #00b8c8;
+  border-radius: 8px;
   color: #fff;
   &:hover {
     background: #00b8c8;
@@ -236,6 +269,7 @@ const CommentFormButton = styled.button`
 `;
 const CommentContents = styled.div`
   display: flex;
+  flex-direction: row;
   min-height: 60px;
   align-items: center;
   justify-content: space-between;
@@ -251,26 +285,33 @@ const CommentName = styled.h2`
   font-weight: 600;
   font-size: #fff;
 `;
-const EditInput = styled.input`
+const EditInput = styled.textarea`
   color: #fff;
   border: none;
+  width: 700px;
   background: transparent;
   background-color: #404b5e;
-  width: 100%;
   padding: 0px 5px;
   box-shadow: inset 0px 4px 8px rgba(0, 0, 0, 0.25);
   border-radius: 10px;
   margin-top: 10px;
   margin-bottom: 10px;
-  height: 100%;
+  resize: none;
   text-indent: 3px;
+  font-size: 13px;
+  min-height: 100px;
+  resize: none;
+  padding: 10px;
+  line-height: 1.5;
+  border-radius: 10px;
+  outline: 0px none transparent;
 `;
 const CommentText = styled.p`
   font-size: 14px;
   margin: 10px 0px;
   word-break: break-all;
-  width: 850px;
   font-weight: 400;
+  width: 700px;
 `;
 const CommentDate = styled.p`
   font-size: 11px;

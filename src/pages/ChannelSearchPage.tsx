@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import axios from "axios";
 import { log } from "console";
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
 import { useInfiniteQuery } from "react-query";
 import Loader from "../components/common/Loader";
 import { useNavigate } from "react-router-dom";
@@ -57,14 +57,14 @@ const ChannelSearchPage: any = () => {
     console.log("termResult", termResult);
 
     const gameSummary = await axios.get(
-      `https://store.steampowered.com/api/storesearch/?cc=us&l=en&term="${termResult}"` // &pagesize=20
+      `https://enable-cors.glitch.me/https://store.steampowered.com/api/storesearch/?cc=us&l=en&term="${termResult}"` // &pagesize=20
     ); // 게임 Id만 가져오기!!!
 
     const gameList = [];
 
     for (let i = 0; i < gameSummary?.data.items.length; i++) {
       const gameCategoryData2 = await axios.get(
-        `https://store.steampowered.com/api/appdetails/?appids=${gameSummary?.data.items[i].id}`
+        `https://enable-cors.glitch.me/https://store.steampowered.com/api/appdetails/?appids=${gameSummary?.data.items[i].id}`
       );
       //썸네일, 제목, 장르
       gameList.push(
@@ -134,11 +134,18 @@ const ChannelSearchPage: any = () => {
           }}
         />
         <GameSearchInputArea>
-          <GameSearchInput
-            type="text"
-            value={searchValue}
-            onChange={handleSearch}
-          />
+          <form
+            onSubmit={(e) => {
+              e.preventDefault(); // 새로고침 방지
+              handleTermResult();
+            }}
+          >
+            <GameSearchInput
+              type="text"
+              value={searchValue}
+              onChange={handleSearch}
+            />
+          </form>
           <BiSearchAlt2
             className="searchIcon"
             onClick={() => {
