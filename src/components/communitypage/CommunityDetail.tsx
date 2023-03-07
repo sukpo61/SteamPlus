@@ -1,5 +1,5 @@
 import axios from "axios";
-import { useQuery, useQueryClient } from "react-query";
+import { useQuery } from "react-query";
 import { useNavigate, useParams } from "react-router-dom";
 import styled from "styled-components";
 import { useRef } from "react";

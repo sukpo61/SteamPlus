@@ -1,8 +1,4 @@
-import axios from "axios";
-import React, { useState } from "react";
-import { useQuery } from "react-query";
 import styled from "styled-components";
-import { useRecoilState } from "recoil";
 import { popularchannelsRecoil } from "../recoil/atom";
 import { useRecoilValue } from "recoil";
 import { useNavigate } from "react-router-dom";
@@ -243,15 +239,6 @@ const PoPularChannelCategory = styled.div`
   align-items: center;
   letter-spacing: -0.03em;
   color: #a7a9ac;
-`;
-const PoPularChannelCategory2 = styled.div`
-  font-weight: 400;
-  font-size: 12px;
-  display: flex;
-  align-items: center;
-  letter-spacing: -0.03em;
-  color: #a7a9ac;
-  width: 100%;
 `;
 
 const PoPularChannelActivate = styled.div`
