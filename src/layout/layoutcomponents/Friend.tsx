@@ -179,12 +179,14 @@ function Friend() {
   useEffect(() => {
     setCurrentLocation(location.pathname.split(":")[1]);
   }, [location]);
+  //주소확인
   console.log("loooocatin", currentLocation);
 
   useEffect(() => {
     socket.on("friendNew_message", (newChat) => {
       setChatText((i: any) => [...i, newChat]);
-      if (window.location.href.split(":")[3] == newChat.roomId) {
+
+      if (window.location.href.split(":")[2] == newChat.roomId) {
         return;
       } else {
         return setChatTextNotice((i: any) => [...i, newChat]);
