@@ -325,7 +325,7 @@ const HeaderTh = styled.th<HeaderThProps>`
 `;
 
 const PaginationBox = styled.div`
-  margin-bottom: 92px; // footer
+  margin-bottom: 170px; //92px; // footer
   margin-top: 10px;
   .pagination {
     display: flex;

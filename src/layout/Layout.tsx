@@ -202,7 +202,13 @@ function Layout() {
       <div onContextMenu={(e: any) => e.preventDefault()}>
         <SideBarDiv>
           {/* 프로필 */}
-          <Profilebutton onClick={() => LayoutButtonOnClick("profile")}>
+          <Profilebutton
+            onClick={() => {
+              ProfileImgUrl === null
+                ? handleLoginModalOpen()
+                : LayoutButtonOnClick("profile");
+            }}
+          >
             {/* 로그인이 되어있지않다면과 로그인이 되어있다면의 정보*/}
             {ProfileImgUrl === null ? (
               <div>profile</div>

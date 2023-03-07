@@ -170,7 +170,6 @@ const PopularChannel1st2 = styled.div`
 `;
 const PopularChannel1st2empty = styled.div`
   position: relative;
-  font-family: "Noto Sans";
   overflow: hidden;
   color: white;
   width: 232px;
@@ -223,7 +222,6 @@ const PoPularChannelImg = styled.img`
 `;
 const PoPularChannelTitle = styled.div`
   margin-bottom: 4px;
-  font-family: "Noto Sans";
   font-weight: 600;
   font-size: 20px;
   letter-spacing: -0.02em;
@@ -231,7 +229,6 @@ const PoPularChannelTitle = styled.div`
 `;
 const ChannelTitle1st2 = styled.div`
   display: flex;
-  font-family: "Noto Sans";
   font-weight: 500;
   font-size: 13px;
   overflow: hidden;
@@ -240,7 +237,6 @@ const ChannelTitle1st2 = styled.div`
   color: #ffffff;
 `;
 const PoPularChannelCategory = styled.div`
-  font-family: "Noto Sans";
   font-weight: 400;
   font-size: 16px;
   display: flex;
@@ -249,7 +245,6 @@ const PoPularChannelCategory = styled.div`
   color: #a7a9ac;
 `;
 const PoPularChannelCategory2 = styled.div`
-  font-family: "Noto Sans";
   font-weight: 400;
   font-size: 12px;
   display: flex;
@@ -275,7 +270,6 @@ const ChannelOnOff = styled.div`
 `;
 
 const ChannelPlayerCount1st = styled.div`
-  font-family: "Noto Sans";
   font-weight: 300;
   font-size: 14px;
   display: flex;
@@ -285,7 +279,6 @@ const ChannelPlayerCount1st = styled.div`
   color: #ffffff;
 `;
 const ChannelPlayerCount1st2 = styled.div`
-  font-family: "Noto Sans";
   font-weight: 300;
   font-size: 12px;
   display: flex;
