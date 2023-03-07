@@ -181,13 +181,13 @@ function Friend() {
   useEffect(() => {
     setCurrentLocation(location.pathname.split(":")[1]);
   }, [location]);
-  console.log("loooocatin", currentLocation);
 
   useEffect(() => {
     socket.on("friendNew_message", (newChat) => {
       console.log("accept");
       setChatText((i: any) => [...i, newChat]);
-      if (window.location.href.split(":")[3] == newChat.roomId) {
+
+      if (window.location.href.split(":")[2] == newChat.roomId) {
         return;
       } else {
         return setChatTextNotice((i: any) => [...i, newChat]);
