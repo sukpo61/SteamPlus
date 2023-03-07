@@ -34,6 +34,14 @@ export const CommunityBox = ({ post, index }: CommunityBoxProps) => {
   const PodstID = post?.id;
   const PostViewCount = post?.count;
 
+  //포스트 작성한 날짜
+  const newDate = new Date();
+  const year = newDate.getFullYear();
+  const month = newDate.getMonth() + 1;
+  const month2 = month < 10 ? `0${month}` : month;
+  const day = newDate.getDate();
+  const day2 = day < 10 ? `0${day}` : month;
+  const dates = `${year}.${month2}.${day2} `;
   //작성시간 몇분전인지 확인 monents.js 사용함
   const getDayMinuteCounter = (Date: any) => {
     if (!Date) {
@@ -45,7 +53,6 @@ export const CommunityBox = ({ post, index }: CommunityBoxProps) => {
     const dayDiff = postingDate.diff(today, "days");
     const hourDiff = postingDate.diff(today, "hours");
     const minutesDiff = postingDate.diff(today, "minutes");
-
     if (dayDiff === 0 && hourDiff === 0 && minutesDiff === 0) {
       // 작성한지 1분도 안지났을때
       return "방금전";
@@ -60,7 +67,7 @@ export const CommunityBox = ({ post, index }: CommunityBoxProps) => {
       const hour = Math.ceil(-hourDiff);
       return hour + "시간 전"; // '시간'으로 표시
     }
-    return -dayDiff + "일 전"; // '일'로 표시
+    return dates; // '일'로 표시
   };
   //만들어준 함수를 변수에 할당하여서 사용함
   const dayMinuteCounter = getDayMinuteCounter(new Date("2023-03-02T12:00:00"));
