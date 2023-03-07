@@ -1,4 +1,3 @@
-import React from "react";
 import styled from "styled-components";
 import { Outlet } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
@@ -11,8 +10,6 @@ function Footer() {
       <div style={{ minHeight: "100vh", zIndex: "999" }}>
         <Outlet />
       </div>
-      {/* <MainBody></MainBody> */}
-
       <FooterArea>
         <Copyright>
           <FooterLogo
@@ -45,14 +42,6 @@ function Footer() {
   );
 }
 
-//
-
-// const MainBody = styled.div`
-//   position: relative;
-//   min-height: 100%;
-//   padding-bottom: 52px;
-// `;
-
 const FooterArea = styled.div`
   background-color: #263245;
   width: 100%;
@@ -63,7 +52,6 @@ const FooterArea = styled.div`
   align-items: center;
   margin-top: -100px; // -52px; // footer
   gap: 420px;
-  /* z-index: 9999; */
 `;
 
 const Copyright = styled.div`
@@ -74,8 +62,6 @@ const Copyright = styled.div`
 
 const FooterLogo = styled.img`
   width: 80px;
-
-  /* position: absolute; */
   cursor: pointer;
 `;
 
@@ -85,9 +71,7 @@ const CopyrightText = styled.p`
   font-size: 14px;
   line-height: 19px;
   font-style: normal;
-
   letter-spacing: -0.03em;
-
   color: #a7a9ac;
 `;
 

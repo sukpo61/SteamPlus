@@ -25,7 +25,6 @@ interface PostData {
 }
 export const CommunityAddPost = () => {
   const queryClient = useQueryClient();
-  const [count, setCount] = useState(0);
   const [category, setCategory] = useState<string>("카테고리를 선택하세요");
   const [title, setTitle] = useState<string>("");
   const [content, setContent] = useState<string>("");
@@ -46,7 +45,6 @@ export const CommunityAddPost = () => {
   const day = newDate.getDate();
   const day2 = day < 10 ? `0${day}` : month;
   const Hour = newDate.getHours();
-
   const Minute = newDate.getMinutes();
   const dates = `${year}.${month2}.${day2} ${Hour}:${Minute}`;
 
@@ -222,10 +220,7 @@ const CommunityHeader = styled.div`
   align-content: center;
   width: 100%;
 `;
-const Select = styled.select`
-  border-radius: 10px;
-`;
-const Option = styled.option``;
+
 const TableHeader = styled.div`
   width: 836px;
   display: flex;

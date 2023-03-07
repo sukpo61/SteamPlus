@@ -121,72 +121,69 @@ export const Community = () => {
   }, [searchTexts]);
 
   return (
-    <>
-      <CommunityLayout>
-        <CommunityHeader>
-          <CommunityTitle onClick={replace}> 커뮤니티</CommunityTitle>
-          <CommunityComment>
-            게임채널에 함께할 구성원을 모집하거나 자유롭게 의견을 나누는
-            공간입니다.
-          </CommunityComment>
-          <Communitycategory categorySt={categorySt}>
-            <CommunitySpan
-              onClick={() => {
-                setToggle(categoryFilter3);
-                setCategorySt("전체");
-              }}
-            >
-              전체
-            </CommunitySpan>
-            <CommunitySpan
-              onClick={() => {
-                setToggle(categoryFilter);
-                setCategorySt("자유");
-              }}
-            >
-              자유
-            </CommunitySpan>
-            <CommunitySpan
-              onClick={() => {
-                setToggle(categoryFilter2);
-                setCategorySt("모집");
-              }}
-            >
-              모집
-            </CommunitySpan>
-          </Communitycategory>
-        </CommunityHeader>
-        <CommentsWrap>
-          <CommunityAddArea>
-            <Communitytitle2>게시판</Communitytitle2>
-            <AddPostBtn onClick={addPost}>글쓰기</AddPostBtn>
-          </CommunityAddArea>
-          <CommunityeHeader>
-            <HeaderTh style={{ padding: "0px 16px" }}>번호</HeaderTh>
-            <HeaderTh>카테고리</HeaderTh>
-            <HeaderTh style={{ padding: "0px 250px 0px 232px" }}>제목</HeaderTh>
-            <HeaderTh>작성자</HeaderTh>
-            <HeaderTh style={{ padding: "0px 32px 0px 49px" }}>
-              작성시간
-            </HeaderTh>
-            <HeaderTh>조회수</HeaderTh>
-          </CommunityeHeader>
-          {/* 게시글 조회하기 */}
-          {/*reverse()를 넣어서 데이타의 배열을 거꾸로 보여줌*/}
-          {toggle
-            ?.slice(items * (page - 1), items * (page - 1) + items)
-            .map((post: any, index: any) => {
-              return (
-                <CommunityBox
-                  key={post.id}
-                  post={post}
-                  index={(page - 1) * 10 + index + 1}
-                />
-              );
-            })}
-          <CommunityFooter>
+    <CommunityLayout>
+      <CommunityHeader>
+        <CommunityTitle onClick={replace}> 커뮤니티</CommunityTitle>
+        <CommunityComment>
+          게임채널에 함께할 구성원을 모집하거나 자유롭게 의견을 나누는
+          공간입니다.
+        </CommunityComment>
+        <Communitycategory categorySt={categorySt}>
+          <CommunitySpan
+            onClick={() => {
+              setToggle(categoryFilter3);
+              setCategorySt("전체");
+            }}
+          >
+            전체
+          </CommunitySpan>
+          <CommunitySpan
+            onClick={() => {
+              setToggle(categoryFilter);
+              setCategorySt("자유");
+            }}
+          >
+            자유
+          </CommunitySpan>
+          <CommunitySpan
+            onClick={() => {
+              setToggle(categoryFilter2);
+              setCategorySt("모집");
+            }}
+          >
+            모집
+          </CommunitySpan>
+        </Communitycategory>
+      </CommunityHeader>
+      <CommentsWrap>
+        <CommunityAddArea>
+          <Communitytitle2>게시판</Communitytitle2>
+          <AddPostBtn onClick={addPost}>글쓰기</AddPostBtn>
+        </CommunityAddArea>
+        <CommunityeHeader>
+          <HeaderTh style={{ padding: "0px 16px" }}>번호</HeaderTh>
+          <HeaderTh>카테고리</HeaderTh>
+          <HeaderTh style={{ padding: "0px 250px 0px 232px" }}>제목</HeaderTh>
+          <HeaderTh>작성자</HeaderTh>
+          <HeaderTh style={{ padding: "0px 32px 0px 49px" }}>작성시간</HeaderTh>
+          <HeaderTh>조회수</HeaderTh>
+        </CommunityeHeader>
+        {/* 게시글 조회하기 */}
+        {/*reverse()를 넣어서 데이타의 배열을 거꾸로 보여줌*/}
+        {toggle
+          ?.slice(items * (page - 1), items * (page - 1) + items)
+          .map((post: any, index: any) => {
+            return (
+              <CommunityBox
+                key={post.id}
+                post={post}
+                index={(page - 1) * 10 + index + 1}
+              />
+            );
+          })}
+        <CommunityFooter>
+          <>
             <CommunitySerchBar onSubmit={btn}>
-              {/* <form onSubmit={btn} style={{ margin: "0px", padding: "0px" }}> */}
               <CommunitySerchinput
                 ref={SerchRef}
                 type="text"
@@ -199,22 +196,21 @@ export const Community = () => {
                 className="searchIcon"
                 onClick={btn}
               />
-              {/* </form> */}
             </CommunitySerchBar>
-            {/* 페이지네이션 */}
-            <PaginationBox>
-              <Pagination
-                activePage={page}
-                itemsCountPerPage={items}
-                totalItemsCount={toggle?.length}
-                pageRangeDisplayed={5}
-                onChange={handlePageChange}
-              />
-            </PaginationBox>
-          </CommunityFooter>
-        </CommentsWrap>
-      </CommunityLayout>
-    </>
+          </>
+          {/* 페이지네이션 */}
+          <PaginationBox>
+            <Pagination
+              activePage={page}
+              itemsCountPerPage={items}
+              totalItemsCount={toggle?.length}
+              pageRangeDisplayed={5}
+              onChange={handlePageChange}
+            />
+          </PaginationBox>
+        </CommunityFooter>
+      </CommentsWrap>
+    </CommunityLayout>
   );
 };
 
@@ -233,12 +229,9 @@ const CommunityHeader = styled.div`
   width: 100%;
 `;
 const CommunityFooter = styled.div`
+  margin-bottom: 170px; //92px; // footer
   display: flex;
-  /* justify-content: center;
-  align-items: center;
-  flex-direction: column; */
-  align-items: center;
-  margin-top: 30px;
+  margin-top: 20px;
 `;
 const CommunitySpan = styled.span`
   cursor: pointer;
@@ -350,9 +343,7 @@ const HeaderTh = styled.th`
 `;
 
 const PaginationBox = styled.div`
-  margin-bottom: 170px; //92px; // footer
-  margin-top: 10px;
-  margin-left: 50px;
+  width: 300px;
   .pagination {
     display: flex;
     justify-content: center;
