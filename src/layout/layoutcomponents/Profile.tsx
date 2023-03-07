@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { LayoutButton } from "../../recoil/atom";
+import { LayoutButton, friendAllState } from "../../recoil/atom";
 import styled, { keyframes } from "styled-components";
 import { useRecoilValue } from "recoil";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { useQuery } from "react-query";
 import RecentGameData from "../../components/RecentGameData";
+import { useRecoilState } from "recoil";
 interface UserInfo {
   id: string;
   profileimg: string;
@@ -16,6 +17,9 @@ interface UserInfo {
   lastLogin: Date;
 }
 function Profile() {
+  const navigate = useNavigate();
+
+  const FRONTEND_URL: any = process.env.REACT_APP_FRONTEND_URL;
   // profile 클릭 state
   const layoutMenu = useRecoilValue(LayoutButton);
   //로컬 프로필이미지
@@ -29,8 +33,11 @@ function Profile() {
   //로컬 스팀아이디
   const ProfleSteamId = sessionStorage.getItem("steamid");
 
+  const [friendAllRecoil, setFriendAllRecoil] =
+    useRecoilState<any>(friendAllState);
+
   // 어스아이디
-  const STEAM_OPENID_ENDPOINT = `https://steamcommunity.com/openid/login?openid.ns=http://specs.openid.net/auth/2.0&openid.mode=checkid_setup&openid.return_to=http://localhost:3000/login/&openid.realm=http://localhost:3000/login&openid.identity=http://specs.openid.net/auth/2.0/identifier_select&openid.claimed_id=http://specs.openid.net/auth/2.0/identifier_select`;
+  const STEAM_OPENID_ENDPOINT = `https://steamcommunity.com/openid/login?openid.ns=http://specs.openid.net/auth/2.0&openid.mode=checkid_setup&openid.return_to=${FRONTEND_URL}/login/&openid.realm=${FRONTEND_URL}/login&openid.identity=http://specs.openid.net/auth/2.0/identifier_select&openid.claimed_id=http://specs.openid.net/auth/2.0/identifier_select`;
   const SteamLogin = () => {
     window.location.href = STEAM_OPENID_ENDPOINT;
   };
@@ -41,12 +48,12 @@ function Profile() {
 
   const [online, setOnline] = useState<boolean>(true);
   const DATABASE_ID: any = process.env.REACT_APP_DATABASE_ID;
-  const serverUrl = `${DATABASE_ID}/auth/`;
+  const serverUrl = `${DATABASE_ID}/auth`;
 
   //로그인
   const userDataGet = async () => {
     const result = await axios.get(
-      "https://api.steampowered.com/ISteamUser/GetPlayerSummaries/v2/",
+      "https://enable-cors.glitch.me/https://api.steampowered.com/ISteamUser/GetPlayerSummaries/v2/",
       {
         params: {
           key: APIKEY,
@@ -76,23 +83,30 @@ function Profile() {
     );
 
     //steam에서 변경된사항이 있을때 put을 통해 dbjson을 업데이트해줌
-    const userinfo: UserInfo = {
-      id: result.config.params.steamids,
-      profileimg: result?.data.response.players[0].avatarfull,
-      nickname:
-        result?.data.response.players[0].personaname +
-        " " +
-        "#" +
-        result?.config.params.steamids.slice(13, 18),
-      gameid: result?.data.response.players[0].gameid,
-      gameextrainfo: result?.data.response.players[0].gameextrainfo,
-      login: online,
-      lastLogin: new Date(),
-    };
-    axios.put(`${DATABASE_ID}/auth/${steamId}`, userinfo);
-    axios.post(serverUrl, userinfo);
+    if (
+      !friendAllRecoil
+        .map((e: any) => e.id)
+        .includes(result.config.params.steamids)
+    ) {
+      const userinfo: UserInfo = {
+        id: result.config.params.steamids,
+        profileimg: result?.data.response.players[0].avatarfull,
+        nickname:
+          result?.data.response.players[0].personaname +
+          " " +
+          "#" +
+          result?.config.params.steamids.slice(13, 18),
+        gameid: result?.data.response.players[0].gameid,
+        gameextrainfo: result?.data.response.players[0].gameextrainfo,
+        login: online,
+        lastLogin: new Date(),
+      };
+      await axios.put(`${DATABASE_ID}/auth/${steamId}`, userinfo);
+      await axios.post(serverUrl, userinfo);
+    }
+    // navigate("/");
     window.location.replace("/");
-    return userinfo;
+    // return userinfo;
   };
   const { data } = useQuery("userData", userDataGet);
 
@@ -107,7 +121,7 @@ function Profile() {
   //최근 게임활동 정보가져오기
   const getRecentGameData = async () => {
     const recentGame = await axios.get(
-      `http://api.steampowered.com/IPlayerService/GetRecentlyPlayedGames/v0001/?key=${APIKEY}&steamid=${ProfleSteamId}&format=json`
+      `https://enable-cors.glitch.me/http://api.steampowered.com/IPlayerService/GetRecentlyPlayedGames/v0001/?key=${APIKEY}&steamid=${ProfleSteamId}&format=json`
     );
     // sessionStorage.setItem("recentGame", recentGame.data.response.games);
     return recentGame;
@@ -119,7 +133,7 @@ function Profile() {
   //유저 최신정보 & 타임스탬프
   const timeStamp = async () => {
     const result = await axios.get(
-      "https://api.steampowered.com/ISteamUser/GetPlayerSummaries/v2/",
+      "https://enable-cors.glitch.me/https://api.steampowered.com/ISteamUser/GetPlayerSummaries/v2/",
       {
         params: {
           key: APIKEY,
