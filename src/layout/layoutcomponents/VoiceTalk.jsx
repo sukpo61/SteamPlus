@@ -22,6 +22,7 @@ import {
   currentGameIdRecoil,
   friendroominfoRecoil,
   channelNameRecoil,
+  loginModalOpenRecoil,
 } from "../../recoil/atom";
 
 import TeamChat from "../../pages/TeamChat";
@@ -101,6 +102,9 @@ function VoiceTalk() {
 
   const [friendroominfo, setFriendRoomInfo] =
     useRecoilState(friendroominfoRecoil);
+
+  const [loginModalOpen, setLoginModalOpen] =
+    useRecoilState(loginModalOpenRecoil);
 
   const [getFriendAuth, setGetFriendAuth] = useRecoilState(getFriend);
 
@@ -312,6 +316,10 @@ function VoiceTalk() {
       <RoomWrap key={room.name}>
         <RoomTitleWrap
           onClick={() => {
+            if (!myuserid) {
+              setLoginModalOpen(true);
+              return;
+            }
             socket.emit("checkusers");
             if (currentRoom === room.name) {
               return;
@@ -536,6 +544,7 @@ function VoiceTalk() {
           RtcPeerConnectionMap.get(targetid).addIceCandidate(ice);
         }, 100);
       });
+
       //sdfsdfd
       socket.on("leave", (targetid) => {
         console.log(RtcPeerConnectionMap);
@@ -614,8 +623,12 @@ function VoiceTalk() {
             </ChannelTitle>
             <CreateRoom
               onClick={() => {
-                setPwSubmit(false);
-                setCreateDisplay("roomcreate");
+                if (myuserid) {
+                  setPwSubmit(false);
+                  setCreateDisplay("roomcreate");
+                } else {
+                  setLoginModalOpen(true);
+                }
               }}
             >
               + 채팅

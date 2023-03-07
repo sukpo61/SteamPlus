@@ -15,6 +15,7 @@ import {
   friendChatNotice,
   currentRoomRecoil,
   currentGameIdRecoil,
+  loginModalOpenRecoil,
 } from "../recoil/atom";
 import Profile from "./layoutcomponents/Profile";
 import GameSearch from "./layoutcomponents/GameSearch";
@@ -81,7 +82,8 @@ function Layout() {
 
   const [videoRoomExit, setVideoRoomExit] = useRecoilState(videoRoomExitRecoil);
 
-  const [loginModalOpen, setLoginModalOpen] = useState<boolean>(false); // 로그인 모달
+  const [loginModalOpen, setLoginModalOpen] =
+    useRecoilState<boolean>(loginModalOpenRecoil); // 로그인 모달
 
   const [currentRoom, setCurrentRoom] = useRecoilState(currentRoomRecoil);
 
@@ -254,7 +256,6 @@ function Layout() {
           {myId === null ? (
             <Friendbutton
               onClick={() => {
-                alert("로그인 후 사용 가능 합니다.");
                 // FriendButtonOnClick("profile");
                 handleLoginModalOpen(); // 로그인 모달
               }}
@@ -285,7 +286,6 @@ function Layout() {
           {myId === null ? (
             <VoiceTalkbutton
               onClick={() => {
-                alert("로그인 후 사용 가능 합니다.");
                 // LayoutButtonOnClick("profile");
                 handleLoginModalOpen(); // 로그인 모달
               }}
@@ -494,7 +494,7 @@ const MenuOpenDiv = styled.div<{ layoutMenu: String }>`
   top: 0;
   bottom: 0;
   transition: 0.5s ease-in-out;
-  z-index: 99999;
+  z-index: 500;
   box-shadow: 2px 4px 15px 0 #000;
 
   /* border-top-right-radius: 30px; */

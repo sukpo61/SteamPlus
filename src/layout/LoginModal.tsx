@@ -59,13 +59,13 @@ const moveLoginModal = keyframes`
   }`;
 
 const ModalArea = styled.div`
-  position: fixed;
+  position: absolute;
   margin-top: 28px;
   /* left: 50%; */
   transform: translate(120px, 0);
   /* margin-left: 120px; */
   /* margin-top: 28px; */
-  z-index: 9999;
+  z-index: 9999999;
   animation: ${moveLoginModal} 0.5s ease;
 `;
 
