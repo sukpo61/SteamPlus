@@ -125,7 +125,7 @@ function Friend() {
 
   const Gamedata = async (frienduserid: any, gameid: any) => {
     const response = await axios.get(
-      `https://cors-anywhere.herokuapp.com/http://store.steampowered.com/api/appdetails/`,
+      `https://enable-cors.glitch.me/http://store.steampowered.com/api/appdetails/`,
       {
         params: {
           appids: gameid, // 해당 게임의 id값'
