@@ -4,18 +4,14 @@ import { ActivateChannel } from "../components/ActivateChannel";
 import PoularChannel from "../components/PoularChannel";
 import { CurrentGame } from "../components/CurrentGame";
 import { useQuery } from "react-query";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import socket from "../socket";
 import { activechannelsRecoil, activechannelsinfoRecoil } from "../recoil/atom";
 import { useRecoilState } from "recoil";
-import { Top10 } from "../components/mainpage/Top10";
 import { useNavigate } from "react-router-dom";
-
 function MainPage() {
   const PROXY_ID: any = process.env.REACT_APP_PROXY_ID;
-
   const navigate = useNavigate();
-
   const [activechannels, setActiveChannels] =
     useRecoilState(activechannelsRecoil);
   const [activeChannelsInfo, setActiveChannelsInfo] = useRecoilState(
@@ -27,6 +23,7 @@ function MainPage() {
     GameId === "undefined" || GameId === null
       ? 945360
       : sessionStorage.getItem("gameid");
+
   //게임이미지 불러오기
   const Gamedata = async () => {
     const response = await axios.get(
@@ -37,7 +34,6 @@ function MainPage() {
         },
       }
     );
-
     const aaa: any = {
       gameid: GameIds,
       gamesdescription: response?.data[GameIds].data.short_description,
@@ -58,23 +54,6 @@ function MainPage() {
     return aaa;
   };
   const { data }: any = useQuery("Gamedata", Gamedata);
-
-  //top10 game 정보
-  const Top10Game = async () => {
-    const response = await axios.get(
-      `${PROXY_ID}/https://store.steampowered.com/api/featuredcategories/`,
-      {
-        params: {
-          format: "json",
-        },
-      }
-    );
-
-    // return response?.data?.top_sellers.items;
-    return response?.data;
-  };
-
-  const { data: TopGame }: any = useQuery("Top10Game", Top10Game);
 
   const getChannelInfo = async (channelid: any, count: any) => {
     const response = await axios.get(
@@ -112,22 +91,6 @@ function MainPage() {
       setActiveChannelsInfo([]);
     };
   }, []);
-
-  ///인기게임 데이터 api
-  // const getFeaturedGames = async () => {
-  //   const response = await axios.get(
-  //     "https://cors-anywhere.herokuapp.com/https://store.steampowered.com/api/featured"
-  //   );
-
-  //   const FeaturedGames: any = {
-  //     game1: response?.data?.featured_win[0],
-  //     game2: response?.data?.featured_win[1],
-  //     game3: response?.data?.featured_win[2],
-  //   };
-  //   return FeaturedGames;
-  // };
-
-  // const { data: dataa }: any = useQuery("getFeaturedGames", getFeaturedGames);
 
   return (
     <div style={{ position: "relative" }}>

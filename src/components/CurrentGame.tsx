@@ -4,14 +4,12 @@ import { useNavigate } from "react-router-dom";
 
 export const CurrentGame = ({ game }: any) => {
   const navigate = useNavigate();
-
   const Video = game?.gamevideo === null ? game?.gameMainImg : game?.gamevideo;
   const Title = game?.gametitle;
 
   return (
     <CurrentGameLayout>
-      {/* 게임이미지 */}
-      {/* <CurrentGameImg src={game?.gameMainImg} /> */}
+      {/* 게임비디오 */}
       <GameVideo src={Video} controls autoPlay muted loop />
       <CurrentGameBlackImg />
       <CurrentGameBox>
@@ -55,13 +53,7 @@ const CurrentGameBox = styled.div`
   top: 60px;
   right: 100px;
 `;
-const CurrentGameImg = styled.img`
-  width: 100%;
-  height: 700px;
-  object-fit: cover;
-  position: fixed;
-  top: 0;
-`;
+
 const CurrentGameBlackImg = styled.div`
   position: fixed;
   width: 100%;
@@ -73,7 +65,6 @@ const CurrentGameBlackImg = styled.div`
     rgba(25, 32, 48, 0) 0%,
     rgba(25, 32, 48, 1) 100%
   );
-  /* opacity: 0.5; */
 `;
 
 const CurrentGameTitle = styled.span`

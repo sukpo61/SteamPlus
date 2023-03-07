@@ -3,20 +3,16 @@ import { useRef, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { useNavigate, useParams } from "react-router-dom";
 import styled from "styled-components";
-
 //수정하기
 export const CommunityEditPost = () => {
   const DATABASE_ID: any = process.env.REACT_APP_DATABASE_ID;
-
   const navigate = useNavigate();
-
   //포스트 가져오기 쿼리
   const CommunityPostData = async () => {
     const response = await axios.get(`${DATABASE_ID}/post`);
     return response;
   };
   const { data }: any = useQuery("CommunityPostData", CommunityPostData);
-
   const param = useParams();
   const PostData = data?.data;
   const post = PostData?.find((post: any) => post?.id === param?.id);
@@ -181,11 +177,11 @@ const CommunityBody = styled.div`
   flex-direction: column;
 `;
 const CommunityHeader = styled.div`
-  height: 390px;
+  margin-top: 70px;
   display: flex;
   flex-direction: column;
   justify-content: center;
-  align-items: center;
+  align-content: center;
   width: 100%;
 `;
 const AddWrap = styled.div`
