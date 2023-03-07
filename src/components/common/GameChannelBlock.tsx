@@ -112,7 +112,6 @@ const TitleLinear = styled.div`
 `;
 
 const GameChannelTitle = styled.div`
-  font-family: "Montserrat", sans-serif;
   font-style: normal;
   color: white;
   letter-spacing: -0.03em;
@@ -126,7 +125,6 @@ const GameChannelTitle = styled.div`
 `;
 
 const GameChannelCategory = styled.div`
-  font-family: "Montserrat", sans-serif;
   font-style: normal;
   font-size: 14px;
   color: #a7a9ac;
@@ -138,9 +136,8 @@ const AdmitButton = styled.button`
   height: 42px;
   background: #00b8c8;
   border-radius: 8px;
-
-  font-family: "Noto Sans";
   font-style: normal;
+
   font-weight: 600;
   font-size: 16px;
   line-height: 22px;

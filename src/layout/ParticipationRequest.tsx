@@ -39,7 +39,6 @@ const RequestPopup = styled.div`
 `;
 
 const RequestStatement = styled.p`
-  font-family: "Noto Sans";
   font-style: normal;
   font-weight: 500;
   font-size: 13px;
@@ -62,7 +61,7 @@ const AcceptAndRefuse = styled.button`
   box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.25);
   border-radius: 10px;
 
-  font-family: "Noto Sans";
+  font-style: normal;
   font-weight: 600;
   font-size: 13px;
   line-height: 18px;
