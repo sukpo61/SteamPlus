@@ -1,6 +1,6 @@
 import axios from "axios";
 import React, { useRef, useState } from "react";
-import { useMutation } from "react-query";
+import { useMutation, useQueryClient } from "react-query";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { v4 as uuidv4 } from "uuid";
@@ -24,6 +24,7 @@ interface PostData {
   category: string;
 }
 export const CommunityAddPost = () => {
+  const queryClient = useQueryClient();
   const [count, setCount] = useState(0);
   const [category, setCategory] = useState<string>("카테고리를 선택하세요");
   const [title, setTitle] = useState<string>("");
@@ -56,7 +57,6 @@ export const CommunityAddPost = () => {
       onSuccess: () => {
         setTitle("");
         setContent("");
-        // navigate(`/Community/`);
       },
     }
   );
@@ -91,10 +91,10 @@ export const CommunityAddPost = () => {
       addPostMutation.mutate(newPost);
       //등록된 포스트로 이동후
       navigate(`/Community/${newPost.id}`);
-      //0.3초후 새로고침되게함
+      // 쿼리무효화 = 저장되어있는 쿼리를 초기화 하여 데이터를 다시불러옴
       setTimeout(() => {
-        window.location.reload();
-      }, 300);
+        queryClient.invalidateQueries(["CommunityPostData"]);
+      }, 500);
       return;
     } else {
       //취소버튼 클릭시 새로고침을 방지해서 작성한 타이틀과 컨텐츠를 유지시켜줌
@@ -215,11 +215,11 @@ const CommunityBody = styled.div`
   flex-direction: column;
 `;
 const CommunityHeader = styled.div`
-  height: 390px;
+  margin-top: 70px;
   display: flex;
   flex-direction: column;
   justify-content: center;
-  align-items: center;
+  align-content: center;
   width: 100%;
 `;
 const Select = styled.select`
