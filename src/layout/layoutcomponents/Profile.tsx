@@ -89,7 +89,6 @@ function Profile() {
       login: online,
       lastLogin: new Date(),
     };
-
     axios.put(`${DATABASE_ID}/auth/${steamId}`, userinfo);
     axios.post(serverUrl, userinfo);
     window.location.replace("/");
