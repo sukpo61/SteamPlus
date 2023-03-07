@@ -10,12 +10,9 @@ import { activechannelsRecoil, activechannelsinfoRecoil } from "../recoil/atom";
 import { useRecoilState } from "recoil";
 import { Top10 } from "../components/mainpage/Top10";
 import { useNavigate } from "react-router-dom";
-
 function MainPage() {
   const PROXY_ID: any = process.env.REACT_APP_PROXY_ID;
-
   const navigate = useNavigate();
-
   const [activechannels, setActiveChannels] =
     useRecoilState(activechannelsRecoil);
   const [activeChannelsInfo, setActiveChannelsInfo] = useRecoilState(
@@ -27,6 +24,7 @@ function MainPage() {
     GameId === "undefined" || GameId === null
       ? 945360
       : sessionStorage.getItem("gameid");
+
   //게임이미지 불러오기
   const Gamedata = async () => {
     const response = await axios.get(
@@ -60,21 +58,6 @@ function MainPage() {
   const { data }: any = useQuery("Gamedata", Gamedata);
 
   //top10 game 정보
-  const Top10Game = async () => {
-    const response = await axios.get(
-      `${PROXY_ID}/https://store.steampowered.com/api/featuredcategories/`,
-      {
-        params: {
-          format: "json",
-        },
-      }
-    );
-
-    // return response?.data?.top_sellers.items;
-    return response?.data;
-  };
-
-  const { data: TopGame }: any = useQuery("Top10Game", Top10Game);
 
   const getChannelInfo = async (channelid: any, count: any) => {
     const response = await axios.get(
@@ -113,28 +96,12 @@ function MainPage() {
     };
   }, []);
 
-  ///인기게임 데이터 api
-  // const getFeaturedGames = async () => {
-  //   const response = await axios.get(
-  //     "https://cors-anywhere.herokuapp.com/https://store.steampowered.com/api/featured"
-  //   );
-
-  //   const FeaturedGames: any = {
-  //     game1: response?.data?.featured_win[0],
-  //     game2: response?.data?.featured_win[1],
-  //     game3: response?.data?.featured_win[2],
-  //   };
-  //   return FeaturedGames;
-  // };
-
-  // const { data: dataa }: any = useQuery("getFeaturedGames", getFeaturedGames);
-
   return (
     <div style={{ position: "relative" }}>
-      <Logo
-        src="/img/SteamPlusLogo2.png"
-        onClick={() => navigate(`/landing`)}
-      />
+      <Logo onClick={() => navigate(`/landing`)}>
+        <LogoIcon src="/img/SteamPlusLogoIconSH.svg" />
+        <LogoText src="/img/SteamPlusLogoTextSH.svg" />
+      </Logo>
       <MainLayout>
         {/* 메인게임 이미지 */}
         <CurrentGame game={data} />{" "}
@@ -143,7 +110,7 @@ function MainPage() {
           <PoularChannel />
           {/* 현재활성화된 채널 */}
           <ActivateChannel gamedata={activeChannelsInfo} />
-          {/* <Top10 TopGames={TopGame} /> */}
+          <Top10 />
         </MainWrap>
       </MainLayout>
     </div>
@@ -157,16 +124,23 @@ const MainLayout = styled.div`
   flex-direction: column;
   align-items: center;
 `;
-
-const Logo = styled.img`
+const Logo = styled.div`
   position: absolute;
+  display: flex;
+  align-items: center;
   margin-left: 32px;
   margin-top: 32px;
-  width: 112px;
-  height: auto;
+
   z-index: 999;
   cursor: pointer;
-  /* box-shadow: 0px 0px 10px 0px #fff; */
+`;
+
+const LogoIcon = styled.img`
+  height: 46px;
+`;
+
+const LogoText = styled.img`
+  height: 43px;
 `;
 
 const MainWrap = styled.div`
