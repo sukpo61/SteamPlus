@@ -73,9 +73,6 @@ function MainPage() {
   };
 
   const { data: TopGame }: any = useQuery("Top10Game", Top10Game);
-  console.log("TopGame", TopGame);
-
-  console.log(TopGame);
 
   const getChannelInfo = async (channelid: any, count: any) => {
     const response = await axios.get(
