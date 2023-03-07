@@ -181,7 +181,6 @@ function Friend() {
   useEffect(() => {
     setCurrentLocation(location.pathname.split(":")[1]);
   }, [location]);
-  console.log("loooocatin", currentLocation);
 
   useEffect(() => {
     socket.on("friendNew_message", (newChat) => {
