@@ -139,11 +139,29 @@ export const CommunityAddPost = () => {
               <FormControlLabel
                 value="자유"
                 label={<p style={{ fontSize: "13px" }}>자유</p>}
-                control={<Radio sx={{ color: "#777D87" }} />}
+                control={
+                  <Radio
+                    sx={{
+                      color: "#777D87",
+                      "&.Mui-checked": {
+                        color: " #00b8c8",
+                      },
+                    }}
+                  />
+                }
               />
               <FormControlLabel
                 value="모집"
-                control={<Radio sx={{ color: "#777D87" }} />}
+                control={
+                  <Radio
+                    sx={{
+                      color: "#777D87",
+                      "&.Mui-checked": {
+                        color: " #00b8c8",
+                      },
+                    }}
+                  />
+                }
                 label={<p style={{ fontSize: "13px" }}>모집</p>}
               />
             </RadioGroup>
