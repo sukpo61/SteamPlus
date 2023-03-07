@@ -166,7 +166,7 @@ export const Community = () => {
             <HeaderTh>카테고리</HeaderTh>
             <HeaderTh style={{ padding: "0px 250px 0px 232px" }}>제목</HeaderTh>
             <HeaderTh>작성자</HeaderTh>
-            <HeaderTh style={{ padding: "0px 32px 0px 56px" }}>
+            <HeaderTh style={{ padding: "0px 32px 0px 49px" }}>
               작성시간
             </HeaderTh>
             <HeaderTh>조회수</HeaderTh>
@@ -225,9 +225,7 @@ const CommunityAddArea = styled.div`
   margin-bottom: 10px;
 `;
 const CommunityHeader = styled.div`
-  margin-top: 155px;
-
-  /* height: 390px; */
+  margin-top: 70px;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -266,7 +264,7 @@ const CommunitySerchBar = styled.form`
   border-radius: 10px;
 `;
 const Communitycategory = styled.div<{ categorySt: string }>`
-  margin-bottom: 67px;
+  margin-bottom: 57px;
   display: flex;
   justify-content: center;
   gap: 40px;
@@ -299,7 +297,7 @@ const CommunityComment = styled.div`
   font-size: 13;
   color: #a7a9ac;
   margin-top: 20px;
-  margin-bottom: 70px;
+  margin-bottom: 60px;
   display: flex;
   justify-content: center;
 `;

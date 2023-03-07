@@ -55,6 +55,7 @@ function MainPage() {
       gameMainImg: response?.data[GameIds].data.screenshots[1].path_full,
       gameSubimg: response?.data[GameIds].data.header_image,
     };
+
     return aaa;
   };
   const { data }: any = useQuery("Gamedata", Gamedata);
@@ -113,7 +114,7 @@ function MainPage() {
     };
   }, []);
 
-  ///인기게임 데이터 api
+  // /인기게임 데이터 api
   // const getFeaturedGames = async () => {
   //   const response = await axios.get(
   //     "https://cors-anywhere.herokuapp.com/https://store.steampowered.com/api/featured"
