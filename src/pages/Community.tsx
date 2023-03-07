@@ -207,7 +207,7 @@ export const Community = () => {
                 activePage={page}
                 itemsCountPerPage={items}
                 totalItemsCount={toggle?.length}
-                pageRangeDisplayed={10}
+                pageRangeDisplayed={5}
                 onChange={handlePageChange}
               />
             </PaginationBox>

@@ -182,11 +182,11 @@ const CommunityBody = styled.div`
   flex-direction: column;
 `;
 const CommunityHeader = styled.div`
-  height: 390px;
+  margin-top: 70px;
   display: flex;
   flex-direction: column;
   justify-content: center;
-  align-items: center;
+  align-content: center;
   width: 100%;
 `;
 const AddWrap = styled.div`

@@ -1,5 +1,5 @@
 import axios from "axios";
-import { useQuery } from "react-query";
+import { useQuery, useQueryClient } from "react-query";
 import { useNavigate, useParams } from "react-router-dom";
 import styled from "styled-components";
 import { useRef } from "react";
@@ -7,16 +7,13 @@ import Comment from "./Comment";
 
 export const CommunityDetail = () => {
   const DATABASE_ID: any = process.env.REACT_APP_DATABASE_ID;
-
   const navigate = useNavigate();
-
   //db에있는 post get 해와서 useQuery로 만듥기
   const CommunityPostData = async () => {
     const response = await axios.get(`${DATABASE_ID}/post`);
     return response;
   };
   const { data }: any = useQuery("CommunityPostData", CommunityPostData);
-
   const param = useParams();
   const PostData = data?.data;
   const post = PostData?.find((post: any) => post?.id === param?.id);
@@ -123,11 +120,11 @@ const CommunityArea = styled.div`
   margin-bottom: 10px;
 `;
 const CommuntyHeader = styled.div`
-  height: 390px;
+  margin-top: 70px;
   display: flex;
   flex-direction: column;
   justify-content: center;
-  align-items: center;
+  align-content: center;
   width: 100%;
 `;
 //테이블 컴포넌트
