@@ -5,6 +5,11 @@ import { FriendSearchProps } from "../layout/layoutcomponents/FriendSearch";
 const myId = sessionStorage.getItem("steamid");
 const myNickName = sessionStorage.getItem("nickName");
 
+export const userAllSocketId = atom<any>({
+  key: "userAllSocketId",
+  default: [],
+});
+
 export const friendChatNotice = atom<any>({
   key: "friendChatNotice",
   default: [],
@@ -82,6 +87,14 @@ export const activechannelsinfoRecoil = atom<any>({
 export const countRecoil = atom<any>({
   key: "count",
   default: 0,
+});
+export const recommandGameRecoil = atom<any>({
+  key: "recommandGameRecoil",
+  default: [],
+});
+export const loginModalOpenRecoil = atom<any>({
+  key: "loginModalOpenRecoil",
+  default: false,
 });
 
 // export const FriendNoticeAll = atom({

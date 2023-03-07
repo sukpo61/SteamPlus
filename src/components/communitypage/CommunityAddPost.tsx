@@ -1,9 +1,10 @@
 import axios from "axios";
 import React, { useRef, useState } from "react";
-import { useMutation } from "react-query";
+import { useMutation, useQueryClient } from "react-query";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { v4 as uuidv4 } from "uuid";
+
 import {
   RadioGroup,
   FormControlLabel,
@@ -11,6 +12,7 @@ import {
   FormControl,
   FormLabel,
 } from "@mui/material";
+
 interface PostData {
   id: string;
   steamid: string;
@@ -22,11 +24,11 @@ interface PostData {
   category: string;
 }
 export const CommunityAddPost = () => {
+  const queryClient = useQueryClient();
   const [category, setCategory] = useState<string>("카테고리를 선택하세요");
   const [title, setTitle] = useState<string>("");
   const [content, setContent] = useState<string>("");
   const DATABASE_ID: any = process.env.REACT_APP_DATABASE_ID;
-
   const navigate = useNavigate();
   const userId = sessionStorage.getItem("steamid");
   const userName = sessionStorage.getItem("nickName");
@@ -43,7 +45,6 @@ export const CommunityAddPost = () => {
   const day = newDate.getDate();
   const day2 = day < 10 ? `0${day}` : month;
   const Hour = newDate.getHours();
-
   const Minute = newDate.getMinutes();
   const dates = `${year}.${month2}.${day2} ${Hour}:${Minute}`;
 
@@ -54,7 +55,6 @@ export const CommunityAddPost = () => {
       onSuccess: () => {
         setTitle("");
         setContent("");
-        // navigate(`/Community/`);
       },
     }
   );
@@ -87,8 +87,13 @@ export const CommunityAddPost = () => {
         category,
       };
       addPostMutation.mutate(newPost);
-      //등록하면 등록한 자신의 post를 볼수있게
+      //등록된 포스트로 이동후
       navigate(`/Community/${newPost.id}`);
+      // 쿼리무효화 = 저장되어있는 쿼리를 초기화 하여 데이터를 다시불러옴
+      setTimeout(() => {
+        queryClient.invalidateQueries(["CommunityPostData"]);
+      }, 500);
+      return;
     } else {
       //취소버튼 클릭시 새로고침을 방지해서 작성한 타이틀과 컨텐츠를 유지시켜줌
       event.preventDefault();
@@ -208,17 +213,14 @@ const CommunityBody = styled.div`
   flex-direction: column;
 `;
 const CommunityHeader = styled.div`
-  height: 390px;
+  margin-top: 70px;
   display: flex;
   flex-direction: column;
   justify-content: center;
-  align-items: center;
+  align-content: center;
   width: 100%;
 `;
-const Select = styled.select`
-  border-radius: 10px;
-`;
-const Option = styled.option``;
+
 const TableHeader = styled.div`
   width: 836px;
   display: flex;
@@ -243,7 +245,6 @@ const CommunityTitle = styled.div`
   width: 100%;
   position: relative;
   margin: 0 auto;
-  font-family: "Noto Sans KR", sans-serif;
   font-style: normal;
   font-weight: 400;
   font-size: 40px;
@@ -266,6 +267,7 @@ const AddWrap = styled.div`
   display: flex;
   flex-direction: column;
   width: 100%;
+  margin-bottom: 170px; // footer
 `;
 
 const Form = styled.form`
@@ -298,6 +300,7 @@ const ContentInput = styled.textarea`
   margin-top: 10px;
   min-height: 150px;
   height: 100%;
+  resize: none; // textarea 사이즈조절 방지
   outline: 0px none transparent;
 `;
 const PostButtonWrap = styled.div`

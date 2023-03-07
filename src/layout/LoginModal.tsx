@@ -43,7 +43,6 @@ function LoginModal({ setLoginModalOpen }: Props) {
           </LoginBtnText>
         </LoginBtn>
       </ModalWindow>
-      {/* <ModalClose onClick={handleLoginModalClose}>닫기</ModalClose> */}
     </ModalArea>
   );
 }
@@ -61,10 +60,7 @@ const moveLoginModal = keyframes`
 const ModalArea = styled.div`
   position: fixed;
   margin-top: 28px;
-  /* left: 50%; */
-  transform: translate(120px, 0);
-  /* margin-left: 120px; */
-  /* margin-top: 28px; */
+  transform: translate(110px, 0);
   z-index: 9999;
   animation: ${moveLoginModal} 0.5s ease;
 `;
@@ -86,27 +82,16 @@ const ModalWindow = styled.div`
   gap: 8px;
 `;
 
-const ModalClose = styled.button`
-  font-family: "Noto Sans";
-  font-weight: 500;
-  font-size: 12px;
-  color: white;
-  width: 50px;
-  padding: 10px;
-`;
-
 const ModalIntro = styled.p`
   height: 32px;
   left: 47px;
   top: 20px;
-
-  font-family: "Noto Sans";
   font-weight: 500;
+  font-style: normal;
   font-size: 12px;
   line-height: 16px;
   text-align: center;
   letter-spacing: -0.03em;
-
   color: #ffffff;
 `;
 
@@ -123,7 +108,6 @@ const LoginBtn = styled.button`
   );
   box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.25);
   border-radius: 10px;
-
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -139,8 +123,8 @@ const LoginBtnText = styled.p`
   height: 17px;
   left: 48px;
   top: 11px;
-
   font-family: "Inter";
+  font-style: normal;
   font-weight: 600;
   font-size: 14px;
   line-height: 17px;
