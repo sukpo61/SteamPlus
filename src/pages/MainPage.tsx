@@ -131,10 +131,10 @@ function MainPage() {
 
   return (
     <div style={{ position: "relative" }}>
-      <Logo
-        src="/img/SteamPlusLogo2.png"
-        onClick={() => navigate(`/landing`)}
-      />
+      <Logo onClick={() => navigate(`/landing`)}>
+        <LogoIcon src="/img/SteamPlusLogoIconSH.svg" />
+        <LogoText src="/img/SteamPlusLogoTextSH.svg" />
+      </Logo>
       <MainLayout>
         {/* 메인게임 이미지 */}
         <CurrentGame game={data} />{" "}
@@ -150,6 +150,10 @@ function MainPage() {
   );
 }
 
+//cors 모듈 설치
+//domain 목록에 쓸 도메인 추가
+//express면 cors 바로쓸 수 잇ㅇ므
+
 const MainLayout = styled.div`
   width: 100%;
   height: 100%;
@@ -157,19 +161,27 @@ const MainLayout = styled.div`
   flex-direction: column;
   align-items: center;
 `;
-
-const Logo = styled.img`
+const Logo = styled.div`
   position: absolute;
+  display: flex;
+  align-items: center;
   margin-left: 32px;
   margin-top: 32px;
-  width: 112px;
-  height: auto;
+
   z-index: 999;
   cursor: pointer;
-  /* box-shadow: 0px 0px 10px 0px #fff; */
+`;
+
+const LogoIcon = styled.img`
+  height: 46px;
+`;
+
+const LogoText = styled.img`
+  height: 43px;
 `;
 
 const MainWrap = styled.div`
+  margin-bottom: 170px; // footer
   width: 900px;
   display: flex;
   flex-direction: column;
