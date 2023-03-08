@@ -7,6 +7,7 @@ import axios from "axios";
 import { Top10Card } from "./Top10Card";
 import { recommandGameRecoil } from "../../recoil/atom";
 import { useRecoilState } from "recoil";
+import Skeleton from "../common/Skeleton";
 
 export const Top10 = () => {
   const PROXY_ID: any = process.env.REACT_APP_PROXY_ID;
@@ -52,7 +53,7 @@ export const Top10 = () => {
       TopGameid();
     }
   }, []);
-
+  const array = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
   return (
     <>
       <ActivateChannelLayout>
@@ -60,18 +61,26 @@ export const Top10 = () => {
           <ChannelTitle>추천게임</ChannelTitle>
 
           <ActivateChannel1st>
-            {recommandGame &&
+            {recommandGame.length !== 0 ? (
               recommandGame?.map((game: any, index: number) => {
-                if (game === undefined) {
-                  return <div></div>;
-                }
                 // console.log("game", game);
                 return (
                   <GameChannelBlockView key={index}>
                     <GameChannelBlock game={game} />
                   </GameChannelBlockView>
                 );
-              })}
+              })
+            ) : (
+              <GameChannelBlockView>
+                {array.map(() => {
+                  return (
+                    <>
+                      <Skeleton />
+                    </>
+                  );
+                })}
+              </GameChannelBlockView>
+            )}
           </ActivateChannel1st>
         </div>
       </ActivateChannelLayout>
