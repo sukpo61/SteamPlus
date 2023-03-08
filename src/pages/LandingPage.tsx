@@ -16,7 +16,7 @@ function LandingPage() {
   //lazy load
   return (
     <MainContainer>
-      <LandingHeader></LandingHeader>
+      {/* <LandingHeader></LandingHeader> */}
       <LandingImg1Area>
         <LandingImg1Gradient />
         <LandingImg1
@@ -27,10 +27,14 @@ function LandingPage() {
         <SteamPlusIntro>
           <SteamPlusWhite
             src="/img/SteamPlusLogo2.png"
-            data-aos="fade-right"
-            data-aos-duration="2000"
+            data-aos="fade-left"
+            data-aos-duration="1500"
           />
-          <IntroText data-aos="fade-right" data-aos-duration="2000">
+          <IntroText
+            data-aos="fade-left"
+            data-aos-duration="2000"
+            // data-aos-easing="linear"
+          >
             여러분의 게임을 더욱 즐겁게 만들어줄 SteamPlus를 소개합니다!
           </IntroText>
         </SteamPlusIntro>
@@ -38,8 +42,9 @@ function LandingPage() {
       <IntroTextArea1>
         <SteamplusCollabo
           src="/img/SteamplusColabo.png"
-          data-aos="fade-up"
-          data-aos-duration="1000"
+          data-aos="fade-in"
+          data-aos-duration="3000"
+          data-aos-easing="linear"
         />
         {/* <CollaboWrap data-aos="zoom-in">
           <CollaboSteam src="/img/CollaboSteam.png" data-aos="fade-right" />
@@ -49,24 +54,36 @@ function LandingPage() {
             data-aos="fade-left"
           />
         </CollaboWrap> */}
-        <IntroAboutChat data-aos="fade-up" data-aos-duration="1000">
+        <IntroAboutChat data-aos="fade-in" data-aos-duration="1000">
           SteamPlus는 Steam 게임 기반의 웹서비스로, Steam 유저들이 실시간으로
           <br />
           함께 게임을 즐길 수 있는 화상음성채팅 기능을 제공하고 있습니다.
         </IntroAboutChat>
-        <IntroTextWithBtn>
+        <IntroTextWithBtn data-aos="fade-in" data-aos-duration="1000">
           Steam 게임을 더욱 효율적으로 즐길 수 있는 SteamPlus와 함께 게임
           동료들을 만나보세요!
         </IntroTextWithBtn>
-        <SteamPlusBtn onClick={() => navigate(`/`)}>
+        <SteamPlusBtn
+          data-aos="fade-in"
+          data-aos-duration="1000"
+          onClick={() => navigate(`/`)}
+        >
           <ButtonLogo src="/img/LogoWhite.png" />
           <ButtonText>Steamplus 시작하기</ButtonText>
         </SteamPlusBtn>
       </IntroTextArea1>
 
       <LandingImgWrap>
-        <LandingImg2 src="/img/LandingImg2.png" data-aos="fade-down" />
-        <LandingImg3 src="/img/LandingImg3.png" data-aos="fade-up" />
+        <LandingImg2
+          src="/img/LandingImg2.png"
+          data-aos="fade-right"
+          data-aos-duration="2000"
+        />
+        <LandingImg3
+          src="/img/LandingImg3.png"
+          data-aos="fade-left"
+          data-aos-duration="2000"
+        />
       </LandingImgWrap>
 
       <LandingBottomGradient>
@@ -74,25 +91,30 @@ function LandingPage() {
         <IntroAboutFriendWrap>
           <IntroAboutFriend
             data-aos="fade-up"
-            data-aos-duration="2000"
-            data-aos-offset="10"
+            data-aos-duration="3000"
+            // data-aos-delay="500"
+            // data-aos-offset="10"
           >
             SteamPlus를 통해 원하는 게임을 같이 즐길 수 있는 다른 사용자들을
             쉽게 만나볼 수 있습니다.
           </IntroAboutFriend>
           <IntroAboutFriend
-            data-aos="fade-zoom-in"
-            data-aos-easing="ease-in-back"
-            data-aos-delay="300"
-            data-aos-offset="0"
+            data-aos="fade-in"
+            // data-aos-easing="ease-in-back"
+            data-aos-duration="2000"
+            data-aos-delay="700"
+            // data-aos-offset="0"
           >
             또한 함께 게임을 즐긴 사용자를 새로운 친구로 추가하여 이후에도
             함께할 수 있습니다.
           </IntroAboutFriend>
           <IntroAboutFriend
             data-aos="fade-down"
-            data-aos-duration="2000"
-            data-aos-offset="10"
+            data-aos-duration="3000"
+            // data-aos-delay="500"
+
+            // data-aos-duration="3000"
+            // data-aos-offset="10"
           >
             Steam 유저의 게임 정보를 가져와 같은 게임을 즐기는 사용자들을 찾을
             수도 있습니다.
