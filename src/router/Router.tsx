@@ -19,6 +19,7 @@ import { CommunityAddPost } from "../components/communitypage/CommunityAddPost";
 import { CommunityDetail } from "../components/communitypage/CommunityDetail";
 import { CommunityEditPost } from "../components/communitypage/CommunityEditPost";
 import Footer from "../components/common/Footer";
+
 import LandingPage from "../pages/LandingPage";
 
 const Router = () => {
