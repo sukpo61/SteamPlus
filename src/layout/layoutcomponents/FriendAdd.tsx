@@ -42,14 +42,22 @@ function Friend() {
   //계정 내역 전체 불러오기
   const [friendAllRecoil, setFriendAllRecoil] = useRecoilState(friendAllState);
 
+  const [isLoading, setIsLoading] = useState<any>([]);
+  // const [deleteIsLoading, deleteSetAddIsLoading] = useState<any>([]);
   //친구 수락
   const postMutation = useMutation(
-    (friendAdd: object) => axios.post(`${DATABASE_ID}/friend`, friendAdd),
+    (Add: object) => axios.post(`${DATABASE_ID}/friend`, Add),
     {
-      onSuccess: () => {
+      onSuccess: (Add: any) => {
         // 쿼리 무효화
         queryClient.invalidateQueries("friend");
         queryClient.invalidateQueries("friendsearch");
+        setTimeout(() => {
+          const newLoading = isLoading.filter((id: any) => {
+            return id === Add.id;
+          });
+          setIsLoading(newLoading);
+        }, 2000);
       },
     }
   );
@@ -59,16 +67,26 @@ function Friend() {
     //넘겨받은 id를 삭제
     (id) => axios.delete(`${DATABASE_ID}/friend/${id}`),
     {
-      onSuccess: () => {
+      onSuccess: (id) => {
         // 쿼리 무효화
         queryClient.invalidateQueries("friend");
         queryClient.invalidateQueries("friendsearch");
+        console.log(id);
+
+        setTimeout(() => {
+          const newLoading = isLoading.filter((i: any) => {
+            return i == id;
+          });
+          setIsLoading(newLoading);
+        }, 2000);
       },
     }
   );
 
   //친구 수락
   const friendAddOnClick = async (i: FriendSearchProps) => {
+    setIsLoading([...isLoading, i.id]);
+
     let friendAdd = {
       id: uuidv4(),
       myId: myId,
@@ -98,10 +116,16 @@ function Friend() {
       socket.emit("friendMount", clickId);
     } catch (error) {
       console.error(error);
+      const newLoading = isLoading.filter((id: any) => {
+        return id === i.id;
+      });
+      setIsLoading([]);
     }
   };
   //찾아온 친구 id 를이용해 두개다 삭제
   const friendDeleteOnClick = (id: any) => {
+    setIsLoading([...isLoading, id]);
+
     const friendDelete = getFriendAuth.filter((i) => {
       return (
         (id === i.friendId && myId === i.myId) ||
@@ -189,27 +213,39 @@ function Friend() {
       {friendCome.length === 0 ? "" : <FriendAddH2>수락 대기 중</FriendAddH2>}
       {friendCome?.map((i: FriendSearchProps) => {
         return (
-          <FriendBoxDiv key={i.id}>
-            <FriendBoxNameDiv>
-              <FriendBoxNameImg src={i.profileimg} />
-              <FriendBoxNameH2>{i.nickname}</FriendBoxNameH2>
+          <>
+            {isLoading.find((id: any) => {
+              if (id === i.id) {
+                return true;
+              } else {
+                return false;
+              }
+            }) ? (
+              ""
+            ) : (
+              <FriendBoxDiv key={i.id}>
+                <FriendBoxNameDiv>
+                  <FriendBoxNameImg src={i.profileimg} />
+                  <FriendBoxNameH2>{i.nickname}</FriendBoxNameH2>
 
-              <FriendBoxNameH3
-                onClick={() => {
-                  friendAddOnClick(i);
-                }}
-              >
-                수락
-              </FriendBoxNameH3>
-              <FriendBoxNameP
-                onClick={() => {
-                  friendDeleteOnClick(i.id);
-                }}
-              >
-                거절
-              </FriendBoxNameP>
-            </FriendBoxNameDiv>
-          </FriendBoxDiv>
+                  <FriendBoxNameH3
+                    onClick={() => {
+                      friendAddOnClick(i);
+                    }}
+                  >
+                    수락
+                  </FriendBoxNameH3>
+                  <FriendBoxNameP
+                    onClick={() => {
+                      friendDeleteOnClick(i.id);
+                    }}
+                  >
+                    거절
+                  </FriendBoxNameP>
+                </FriendBoxNameDiv>
+              </FriendBoxDiv>
+            )}
+          </>
         );
       })}
       {friendSend.length === 0 ? (
@@ -219,20 +255,32 @@ function Friend() {
       )}
       {friendSend?.map((i: FriendSearchProps) => {
         return (
-          <FriendBoxDiv key={i.id}>
-            <FriendBoxNameDiv>
-              <FriendBoxNameImg src={i.profileimg} />
-              <FriendBoxNameH2>{i.nickname}</FriendBoxNameH2>
+          <>
+            {isLoading.find((id: any) => {
+              if (id === i.id) {
+                return true;
+              } else {
+                return false;
+              }
+            }) ? (
+              ""
+            ) : (
+              <FriendBoxDiv key={i.id}>
+                <FriendBoxNameDiv>
+                  <FriendBoxNameImg src={i.profileimg} />
+                  <FriendBoxNameH2>{i.nickname}</FriendBoxNameH2>
 
-              <FriendBoxCancelP
-                onClick={() => {
-                  friendDeleteOnClick(i.id);
-                }}
-              >
-                취소
-              </FriendBoxCancelP>
-            </FriendBoxNameDiv>
-          </FriendBoxDiv>
+                  <FriendBoxCancelP
+                    onClick={() => {
+                      friendDeleteOnClick(i.id);
+                    }}
+                  >
+                    취소
+                  </FriendBoxCancelP>
+                </FriendBoxNameDiv>
+              </FriendBoxDiv>
+            )}
+          </>
         );
       })}
     </FriendDiv>
