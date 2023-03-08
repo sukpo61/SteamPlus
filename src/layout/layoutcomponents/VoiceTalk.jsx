@@ -47,7 +47,7 @@ import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import axios from "axios";
 
-function VoiceTalk() {
+function VoiceTalk({ myId, handleLoginModalOpen }) {
   const DATABASE_ID = process.env.REACT_APP_DATABASE_ID;
 
   const layoutMenu = useRecoilValue(LayoutButton);
@@ -619,7 +619,8 @@ function VoiceTalk() {
                   setPwSubmit(false);
                   setCreateDisplay("roomcreate");
                 } else {
-                  setLoginModalOpen(true);
+                  // setLoginModalOpen(true);
+                  handleLoginModalOpen();
                 }
               }}
             >
@@ -772,7 +773,11 @@ function VoiceTalk() {
           <ExitRoom
             currentRoom={currentRoom}
             onClick={() => {
-              handleLeave(currentRoom);
+              if (myuserid) {
+                handleLeave(currentRoom);
+              } else {
+                handleLoginModalOpen();
+              }
             }}
           >
             <span>#{currentRoom}</span>
