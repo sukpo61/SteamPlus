@@ -4,7 +4,7 @@ import styled, { keyframes } from "styled-components";
 import { useRecoilValue } from "recoil";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import { useQuery } from "react-query";
+import { useQuery, useQueryClient } from "react-query";
 import RecentGameData from "../../components/RecentGameData";
 import { useRecoilState } from "recoil";
 interface UserInfo {
@@ -103,14 +103,17 @@ function Profile() {
         .includes(result.config.params.steamids)
     ) {
       await axios.post(serverUrl, userinfo);
-      window.location.replace("/");
     } else {
       await axios.put(`${DATABASE_ID}/auth/${steamId}`, userinfo);
-      window.location.replace("/");
     }
+    window.location.replace("/");
   };
 
-  const { data } = useQuery("userData", userDataGet);
+  useEffect(() => {
+    if (!sessionStorage.getItem("steamid")) {
+      userDataGet();
+    }
+  }, [friendAllRecoil]);
 
   //유저 db정보 가져오기
   const getLoginData = async () => {
