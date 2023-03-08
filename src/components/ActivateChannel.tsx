@@ -14,7 +14,7 @@ export const ActivateChannel = ({ gamedata }: any) => {
               if (game === undefined) {
                 return <div></div>;
               }
-              // console.log("game", game);
+
               return (
                 <GameChannelBlockView>
                   <GameChannelBlock game={game.info} count={game.usercount} />

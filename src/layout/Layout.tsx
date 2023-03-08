@@ -16,6 +16,7 @@ import {
   currentRoomRecoil,
   currentGameIdRecoil,
   userAllSocketId,
+  loginModalOpenRecoil,
 } from "../recoil/atom";
 import Profile from "./layoutcomponents/Profile";
 import GameSearch from "./layoutcomponents/GameSearch";
@@ -82,7 +83,8 @@ function Layout() {
 
   const [videoRoomExit, setVideoRoomExit] = useRecoilState(videoRoomExitRecoil);
 
-  const [loginModalOpen, setLoginModalOpen] = useState<boolean>(false); // 로그인 모달
+  const [loginModalOpen, setLoginModalOpen] =
+    useRecoilState<boolean>(loginModalOpenRecoil); // 로그인 모달
 
   const [currentRoom, setCurrentRoom] = useRecoilState(currentRoomRecoil);
 
@@ -208,7 +210,13 @@ function Layout() {
       <div onContextMenu={(e: any) => e.preventDefault()}>
         <SideBarDiv>
           {/* 프로필 */}
-          <Profilebutton onClick={() => LayoutButtonOnClick("profile")}>
+          <Profilebutton
+            onClick={() => {
+              ProfileImgUrl === null
+                ? handleLoginModalOpen()
+                : LayoutButtonOnClick("profile");
+            }}
+          >
             {/* 로그인이 되어있지않다면과 로그인이 되어있다면의 정보*/}
             {ProfileImgUrl === null ? (
               <div>profile</div>
@@ -260,7 +268,6 @@ function Layout() {
           {myId === null ? (
             <Friendbutton
               onClick={() => {
-                alert("로그인 후 사용 가능 합니다.");
                 // FriendButtonOnClick("profile");
                 handleLoginModalOpen(); // 로그인 모달
               }}
@@ -291,7 +298,6 @@ function Layout() {
           {myId === null ? (
             <VoiceTalkbutton
               onClick={() => {
-                alert("로그인 후 사용 가능 합니다.");
                 // LayoutButtonOnClick("profile");
                 handleLoginModalOpen(); // 로그인 모달
               }}

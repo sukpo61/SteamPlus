@@ -1,28 +1,85 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import GameChannelBlock from "../common/GameChannelBlock";
 import { useQuery } from "react-query";
 import axios from "axios";
 import { Top10Card } from "./Top10Card";
+import { recommandGameRecoil } from "../../recoil/atom";
+import { useRecoilState } from "recoil";
 
-export const Top10 = ({ TopGames }: any) => {
+export const Top10 = () => {
+  const PROXY_ID: any = process.env.REACT_APP_PROXY_ID;
+  const APIKEY = "234E0113F33D5C7C4D4D5292C6774550";
+
+  const [recommandGame, setrecommandGame] = useRecoilState(recommandGameRecoil);
+
   const [IDS, setIDS] = useState();
+  const [response, setResponse] = useState();
+
+  const TopGame = async (gameid: any) => {
+    const response = await axios.get(
+      `${PROXY_ID}/http://store.steampowered.com/api/appdetails/`,
+      {
+        params: {
+          appids: gameid, // 해당 게임의 id값'
+        },
+      }
+    );
+    return response?.data[gameid].data;
+  };
+  const TopGameid = async () => {
+    let gameinfo = [];
+
+    const response = await axios.get(
+      `${PROXY_ID}/https://api.steampowered.com/ISteamChartsService/GetTopReleasesPages/v1/`
+    );
+    let data = await response?.data.response.pages[0].item_ids
+      .map((e: any) => e.appid)
+      .slice(0, 9);
+    for (let gameid of data) {
+      const gamedata = await TopGame(gameid);
+      if (gamedata.type === "game") {
+        gameinfo.push(gamedata);
+      }
+    }
+    // setrecommandGame((e: any) => [...e, gamedata]);
+    setrecommandGame(gameinfo);
+  };
+
+  useEffect(() => {
+    if (recommandGame.length === 0) {
+      TopGameid();
+    }
+  }, []);
+
   return (
     <>
       <ActivateChannelLayout>
         <div style={{ display: "flex", flexDirection: "column" }}>
-          <ChannelTitle> GAME TOP 10</ChannelTitle>
+          <ChannelTitle>추천게임</ChannelTitle>
+
           <ActivateChannel1st>
-            {TopGames?.map((games: any) => {
-              return <Top10Card game={games} key={games?.id} />;
-            })}
+            {recommandGame &&
+              recommandGame?.map((game: any, index: number) => {
+                if (game === undefined) {
+                  return <div></div>;
+                }
+                // console.log("game", game);
+                return (
+                  <GameChannelBlockView key={index}>
+                    <GameChannelBlock game={game} />
+                  </GameChannelBlockView>
+                );
+              })}
           </ActivateChannel1st>
         </div>
       </ActivateChannelLayout>
     </>
   );
 };
+
+const GameChannelBlockView = styled.div``;
 const ActivateChannel1st = styled.div`
   width: 900px;
   display: flex;
@@ -35,7 +92,7 @@ const ActivateChannelLayout = styled.div`
   display: flex;
   justify-content: center;
   margin-top: 80px;
-  margin-bottom: 80px;
+  margin-bottom: 150px;
   position: relative;
   z-index: 999;
 `;
@@ -96,7 +153,6 @@ const TitleLinear = styled.div`
 `;
 
 const GameChannelTitle = styled.div`
-  font-family: "Montserrat", sans-serif;
   font-style: normal;
   color: white;
   letter-spacing: -0.03em;

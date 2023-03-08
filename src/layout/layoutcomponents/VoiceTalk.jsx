@@ -22,6 +22,7 @@ import {
   currentGameIdRecoil,
   friendroominfoRecoil,
   channelNameRecoil,
+  loginModalOpenRecoil,
 } from "../../recoil/atom";
 
 import TeamChat from "../../pages/TeamChat";
@@ -101,6 +102,9 @@ function VoiceTalk() {
 
   const [friendroominfo, setFriendRoomInfo] =
     useRecoilState(friendroominfoRecoil);
+
+  const [loginModalOpen, setLoginModalOpen] =
+    useRecoilState(loginModalOpenRecoil);
 
   const [getFriendAuth, setGetFriendAuth] = useRecoilState(getFriend);
 
@@ -312,6 +316,11 @@ function VoiceTalk() {
       <RoomWrap key={room.name}>
         <RoomTitleWrap
           onClick={() => {
+            if (!myuserid) {
+              setLoginModalOpen(true);
+              return;
+            }
+            socket.emit("checkusers");
             if (currentRoom === room.name) {
               return;
             }
@@ -493,14 +502,15 @@ function VoiceTalk() {
         };
 
         const offer = await MyPeerConnection.createOffer();
-
+        // 상대에게 아이스 캔디데이트 발송.
         MyPeerConnection.setLocalDescription(offer);
 
         socket.emit("offer", offer, myuserid, answerid);
       });
       //ddd
+
       socket.on("offer", async (offer, offerid, answerid) => {
-        console.log("offered");
+        console.log("offered", offerid);
         const MyPeerConnection = await createRTCPeerConnection(offerid);
 
         MyPeerConnection.ondatachannel = (e) => {
@@ -511,10 +521,13 @@ function VoiceTalk() {
             setChatText((e) => [...e, data]);
           };
         };
+
+        // 로컬을 먼저 받고  피어 커넥션이 늦어짐
         MyPeerConnection.setRemoteDescription(offer);
 
         const answer = await MyPeerConnection.createAnswer();
 
+        // 캔디데이트 발생.
         MyPeerConnection.setLocalDescription(answer);
 
         socket.emit("answer", answer, offerid, answerid);
@@ -525,12 +538,16 @@ function VoiceTalk() {
       });
 
       socket.on("ice", (ice, targetid) => {
-        if (RtcPeerConnectionMap.get(targetid)) {
+        console.log(targetid, RtcPeerConnectionMap);
+        //리모트 디스크립션이 있는 상태에서 받아야 함.ㅇ
+        setTimeout(() => {
           RtcPeerConnectionMap.get(targetid).addIceCandidate(ice);
-        }
+        }, 100);
       });
+
       //sdfsdfd
       socket.on("leave", (targetid) => {
+        console.log(RtcPeerConnectionMap);
         RtcPeerConnectionMap.get(targetid).close();
         setRtcPeerConnectionMap((e) => {
           e.delete(targetid);
@@ -606,8 +623,12 @@ function VoiceTalk() {
             </ChannelTitle>
             <CreateRoom
               onClick={() => {
-                setPwSubmit(false);
-                setCreateDisplay("roomcreate");
+                if (myuserid) {
+                  setPwSubmit(false);
+                  setCreateDisplay("roomcreate");
+                } else {
+                  setLoginModalOpen(true);
+                }
               }}
             >
               + 채팅
