@@ -88,6 +88,7 @@ function FriendSearch() {
   // };
   const [isLoading, setIsLoading] = useState<any>([]);
   const friendAddOnClick = async (i: FriendSearchProps) => {
+    //클릭시 안보이게
     setIsLoading([...isLoading, i.id]);
 
     let friendAdd = {
@@ -111,13 +112,11 @@ function FriendSearch() {
         return;
       }
       postMutation.mutate(friendAdd);
-
+      //클릭하면 상대의 아이디를 socket.io로 넘겨주기
       const clickId = userId.find((id: any) => {
         return id.split("/")[0] === i.id;
       });
       socket.emit("friendMount", clickId);
-      //클릭한 아이디를 소켓이랑 보냄
-      //보내고 서버에서 받은후 해당아이디 에게 보내서 마운트??
     } catch (error) {
       console.error(error);
       const newLoading = isLoading.filter((id: any) => {
@@ -126,16 +125,13 @@ function FriendSearch() {
       setIsLoading(newLoading);
     }
   };
-  //다시 프론트
+  //친구요청이 오면 받아서 쿼리 무효화.
   socket.on("friendMount", (clickId) => {
     if (clickId.split("/")[0] == myId) {
       setTimeout(() => {
         queryClient.refetchQueries(["friendsearch"]);
         queryClient.refetchQueries(["friend"]);
       }, 2000);
-
-      // setFriendQueryMount(uuidv4());
-      console.log("실행되니");
     }
   });
 

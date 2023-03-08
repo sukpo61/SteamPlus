@@ -204,7 +204,12 @@ function Layout() {
     <>
       <LoginModalPosition>
         {/* 로그인 모달 */}
-        {loginModalOpen && <LoginModal setLoginModalOpen={setLoginModalOpen} />}
+        {loginModalOpen && (
+          <LoginModal
+            layoutMenu={layoutMenu}
+            setLoginModalOpen={setLoginModalOpen}
+          />
+        )}
       </LoginModalPosition>
 
       <div onContextMenu={(e: any) => e.preventDefault()}>
