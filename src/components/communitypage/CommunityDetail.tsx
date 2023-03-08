@@ -7,16 +7,13 @@ import Comment from "./Comment";
 
 export const CommunityDetail = () => {
   const DATABASE_ID: any = process.env.REACT_APP_DATABASE_ID;
-
   const navigate = useNavigate();
-
   //db에있는 post get 해와서 useQuery로 만듥기
   const CommunityPostData = async () => {
     const response = await axios.get(`${DATABASE_ID}/post`);
     return response;
   };
   const { data }: any = useQuery("CommunityPostData", CommunityPostData);
-
   const param = useParams();
   const PostData = data?.data;
   const post = PostData?.find((post: any) => post?.id === param?.id);
@@ -123,11 +120,11 @@ const CommunityArea = styled.div`
   margin-bottom: 10px;
 `;
 const CommuntyHeader = styled.div`
-  height: 390px;
+  margin-top: 70px;
   display: flex;
   flex-direction: column;
   justify-content: center;
-  align-items: center;
+  align-content: center;
   width: 100%;
 `;
 //테이블 컴포넌트
@@ -197,7 +194,6 @@ const CommunityTitle = styled.div`
   width: 100%;
   position: relative;
   margin: 0 auto;
-  font-family: "Noto Sans KR", sans-serif;
   font-style: normal;
   font-weight: 400;
   font-size: 40px;
@@ -218,7 +214,7 @@ const Postslayout = styled.div`
   color: white;
 `;
 const PostpageWrap = styled.div`
-  margin-bottom: 92px; // footer
+  margin-bottom: 170px; //92px; // footer
 
   color: white;
   display: flex;

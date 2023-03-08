@@ -232,7 +232,6 @@ const GameSearchInputArea = styled.div`
 
 const GameSearchInput = styled.input`
   width: 520px;
-  font-family: "Noto Sans";
   font-style: normal;
   font-weight: 400;
   font-size: 16px;
@@ -263,7 +262,7 @@ const BeforeSearch = styled.p`
   /* width: 100vw; */
   /* height: 100vh; */
 
-  font-family: "Noto Sans";
+  font-style: normal;
   font-weight: 500;
   font-size: 20px;
   line-height: 27px;
@@ -293,7 +292,7 @@ const GameSearchList = styled.div`
   display: flex;
   flex-direction: column;
   gap: 10px;
-  margin-bottom: 92px;
+  margin-bottom: 170px; //92px; // footer
 `;
 
 const GameChannelBlockView = styled.div``;
