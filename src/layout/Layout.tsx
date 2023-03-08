@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
 import { useRecoilState, useRecoilValue } from "recoil";
 import {
   LayoutButton,
@@ -206,8 +206,8 @@ function Layout() {
         {/* 로그인 모달 */}
         {loginModalOpen && (
           <LoginModal
-            layoutMenu={layoutMenu}
             setLoginModalOpen={setLoginModalOpen}
+            layoutMenu={layoutMenu}
           />
         )}
       </LoginModalPosition>
@@ -332,10 +332,11 @@ function Layout() {
           <GameSearch />
           <Friend />
           <FriendSearch />
-          <VoiceTalk />
+          <VoiceTalk myId={myId} handleLoginModalOpen={handleLoginModalOpen} />
           <FriendAdd />
           <AboutPages />
         </MenuOpenDiv>
+
         <VideosWrap
           toggle={videoDisplay}
           widthprop={layoutMenu}
@@ -374,6 +375,9 @@ function Layout() {
 export default Layout;
 
 const LoginModalPosition = styled.div`
+  /* display: flex; */
+  /* flex-direction: row; */
+  /* position: absolute; */
   width: 100%;
   height: 100%;
 `;
