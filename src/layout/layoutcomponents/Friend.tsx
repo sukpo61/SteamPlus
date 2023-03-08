@@ -82,10 +82,6 @@ function Friend() {
   //소켓id
   const [userId, setUserId] = useRecoilState<any>(userAllSocketId);
 
-  // const friendChatNotice = chatText.filter((i:any) => {
-  //   return i
-  // })
-
   //양쪽 다 친구 내역
   const allFriendList = getFriendAuth?.filter((i: FriendProps) => {
     for (let t = 0; t < friendAdd.length; t++) {
