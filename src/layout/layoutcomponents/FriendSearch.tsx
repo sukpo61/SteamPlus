@@ -128,7 +128,6 @@ function FriendSearch() {
   };
   //다시 프론트
   socket.on("friendMount", (clickId) => {
-    console.log("오고있니", clickId);
     if (clickId.split("/")[0] == myId) {
       setTimeout(() => {
         queryClient.refetchQueries(["friendsearch"]);
