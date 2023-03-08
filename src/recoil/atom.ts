@@ -5,6 +5,11 @@ import { FriendSearchProps } from "../layout/layoutcomponents/FriendSearch";
 const myId = sessionStorage.getItem("steamid");
 const myNickName = sessionStorage.getItem("nickName");
 
+export const firstTime = atom<boolean>({
+  key: "firstTime",
+  default: true,
+});
+
 export const userAllSocketId = atom<any>({
   key: "userAllSocketId",
   default: [],
