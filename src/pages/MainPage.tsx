@@ -4,10 +4,11 @@ import { ActivateChannel } from "../components/ActivateChannel";
 import PoularChannel from "../components/PoularChannel";
 import { CurrentGame } from "../components/CurrentGame";
 import { useQuery } from "react-query";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import socket from "../socket";
 import { activechannelsRecoil, activechannelsinfoRecoil } from "../recoil/atom";
 import { useRecoilState } from "recoil";
+import { Top10 } from "../components/mainpage/Top10";
 import { useNavigate } from "react-router-dom";
 function MainPage() {
   const PROXY_ID: any = process.env.REACT_APP_PROXY_ID;
@@ -34,6 +35,7 @@ function MainPage() {
         },
       }
     );
+
     const aaa: any = {
       gameid: GameIds,
       gamesdescription: response?.data[GameIds].data.short_description,
@@ -54,6 +56,8 @@ function MainPage() {
     return aaa;
   };
   const { data }: any = useQuery("Gamedata", Gamedata);
+
+  //top10 game 정보
 
   const getChannelInfo = async (channelid: any, count: any) => {
     const response = await axios.get(
@@ -106,16 +110,12 @@ function MainPage() {
           <PoularChannel />
           {/* 현재활성화된 채널 */}
           <ActivateChannel gamedata={activeChannelsInfo} />
-          {/* <Top10 TopGames={TopGame} /> */}
+          <Top10 />
         </MainWrap>
       </MainLayout>
     </div>
   );
 }
-
-//cors 모듈 설치
-//domain 목록에 쓸 도메인 추가
-//express면 cors 바로쓸 수 잇ㅇ므
 
 const MainLayout = styled.div`
   width: 100%;
@@ -144,7 +144,6 @@ const LogoText = styled.img`
 `;
 
 const MainWrap = styled.div`
-  margin-bottom: 170px; // footer
   width: 900px;
   display: flex;
   flex-direction: column;

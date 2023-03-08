@@ -60,7 +60,7 @@ const moveLoginModal = keyframes`
 
 const ModalArea = styled.div<{ layoutMenu: any }>`
   margin-left: ${(props) => (props.layoutMenu === "close" ? "0px" : "400px")};
-  position: absolute;
+  position: fixed;
   margin-top: 28px;
   transform: translateX(110px);
   z-index: 9999;
@@ -71,10 +71,12 @@ const ModalWindow = styled.div`
   position: relative;
   width: 240px;
   height: 120px;
+
   background: rgba(38, 50, 69, 0.8);
   box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.25);
   backdrop-filter: blur(2px);
   border-radius: 20px;
+
   display: flex;
   flex-direction: column;
   justify-content: center;

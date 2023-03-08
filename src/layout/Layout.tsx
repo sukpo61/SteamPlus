@@ -16,6 +16,7 @@ import {
   currentRoomRecoil,
   currentGameIdRecoil,
   userAllSocketId,
+  loginModalOpenRecoil,
 } from "../recoil/atom";
 import Profile from "./layoutcomponents/Profile";
 import GameSearch from "./layoutcomponents/GameSearch";
@@ -82,7 +83,8 @@ function Layout() {
 
   const [videoRoomExit, setVideoRoomExit] = useRecoilState(videoRoomExitRecoil);
 
-  const [loginModalOpen, setLoginModalOpen] = useState<boolean>(false); // 로그인 모달
+  const [loginModalOpen, setLoginModalOpen] =
+    useRecoilState<boolean>(loginModalOpenRecoil); // 로그인 모달
 
   const [currentRoom, setCurrentRoom] = useRecoilState(currentRoomRecoil);
 
@@ -301,7 +303,8 @@ function Layout() {
           {myId === null ? (
             <VoiceTalkbutton
               onClick={() => {
-                LayoutButtonOnClick("profile");
+                // LayoutButtonOnClick("profile");
+                handleLoginModalOpen(); // 로그인 모달
               }}
               layoutMenu={layoutMenu}
             >
@@ -329,7 +332,7 @@ function Layout() {
           <GameSearch />
           <Friend />
           <FriendSearch />
-          <VoiceTalk />
+          <VoiceTalk myId={myId} handleLoginModalOpen={handleLoginModalOpen} />
           <FriendAdd />
           <AboutPages />
         </MenuOpenDiv>
