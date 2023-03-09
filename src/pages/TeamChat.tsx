@@ -12,11 +12,14 @@ import {
   LayoutButton,
   videoRoomExitRecoil,
   countRecoil,
+  videoDisplayRecoil,
 } from "../recoil/atom";
 import { useLocation, useParams } from "react-router";
 import axios from "axios";
 import Aos from "aos";
 import "aos/dist/aos.css";
+
+import { MdOutlineKeyboardArrowDown } from "react-icons/md";
 
 const TeamChat = () => {
   const PROXY_ID: any = process.env.REACT_APP_PROXY_ID;
@@ -40,6 +43,8 @@ const TeamChat = () => {
 
   const [videoRoomExit, setVideoRoomExit] = useRecoilState(videoRoomExitRecoil);
 
+  const [videoDisplay, setvideoDisplay] = useRecoilState(videoDisplayRecoil);
+
   const [count, setCount] = useRecoilState(countRecoil);
 
   const [background, setBackground] = useState<any>("");
@@ -51,8 +56,6 @@ const TeamChat = () => {
   // const gameid = params.id.replace(":", "");
 
   const gameid = gameinfo?.gameid;
-
-  console.log("parmas", gameid);
 
   const Gamedata = async () => {
     const response = await axios.get(
@@ -160,6 +163,16 @@ const TeamChat = () => {
 
   return (
     <ChatPageDiv>
+      <VideoOpen
+        videodisplay={videoDisplay}
+        currentRoom={currentRoom}
+        onClick={() => {
+          setvideoDisplay(true);
+        }}
+      >
+        <span>화상통화</span>
+        <MdOutlineKeyboardArrowDown size={24}></MdOutlineKeyboardArrowDown>
+      </VideoOpen>
       <Background src={background}></Background>
       <ChatPageHeaderDiv>{currentRoom}</ChatPageHeaderDiv>
       <ChatContentsDiv ref={chatContainerRef}>
@@ -201,6 +214,29 @@ const ChatPageDiv = styled.div`
   position: relative;
   overflow: hidden;
 `;
+const VideoOpen = styled.div<any>`
+  cursor: pointer;
+  color: white;
+  font-size: 16px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 999;
+  top: ${(props) =>
+    !props.videodisplay && props.currentRoom ? "100px" : "-100px"};
+  right: calc(50% - 66px);
+  position: absolute;
+  width: 132px;
+  height: 56px;
+  border-radius: 28px;
+  padding: 0 16px 0 24px;
+  background: #263245;
+  box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.25);
+  transition: all 0.5s;
+  span {
+    margin-right: 8px;
+  }
+`;
 const Background = styled.img`
   width: 100%;
   height: 100vh;
@@ -215,7 +251,7 @@ const ChatPageHeaderDiv = styled.div`
   background-color: #404b5e;
   position: absolute;
   top: 0;
-  z-index: 9;
+  z-index: 9999;
   color: #fff;
   padding-left: 20px;
   font-size: 18px;
