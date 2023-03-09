@@ -372,7 +372,8 @@ function VoiceTalk({ myId, handleLoginModalOpen }) {
                 <span>{info?.nickname}</span>
                 {/* 친구는 예외 처리 */}
                 {/* {console.log(alreadyFriend)} */}
-                {info?.id === myuserid ||
+                {!myuserid ||
+                info?.id === myuserid ||
                 alreadyFriend?.find((i) => {
                   if (i.id === info?.id) {
                     return true;
