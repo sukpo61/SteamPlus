@@ -128,12 +128,13 @@ function Profile() {
       `${PROXY_ID}/http://api.steampowered.com/IPlayerService/GetRecentlyPlayedGames/v0001/?key=${APIKEY}&steamid=${ProfleSteamId}&format=json`
     );
 
+    console.log(recentGame);
+
     return recentGame;
   };
-
   const { data: recentGame } = useQuery("getRecentGameData", getRecentGameData);
-  const GameData = recentGame?.data.response.games;
 
+  const GameData = recentGame?.data.response.games;
   //유저 최신정보 & 타임스탬프
   const timeStamp = async () => {
     const result = await axios.get(
@@ -271,9 +272,6 @@ function Profile() {
                   <RecentGame>
                     <div>최근 활동한 게임이 없습니다.</div>
                   </RecentGame>
-                  {GameData?.slice(0, 3).map((gameData: any) => {
-                    return <RecentGameData gameData={gameData} />;
-                  })}
                 </>
               ) : (
                 <>

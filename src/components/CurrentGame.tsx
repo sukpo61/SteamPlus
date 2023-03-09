@@ -1,26 +1,38 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 
 export const CurrentGame = ({ game }: any) => {
   const navigate = useNavigate();
-  const Video = game?.gamevideo === null ? game?.gameMainImg : game?.gamevideo;
-  const Title = game?.gametitle;
+  const [gameAll, setGameAll] = useState({
+    id: "",
+    title: "",
+    video: "",
+  });
+
+  useEffect(() => {
+    console.log("뭔게임", game);
+    setGameAll({
+      id: game?.steam_appid,
+      title: game?.name,
+      video: game?.movies ? game?.movies[0]?.webm?.max : "",
+    });
+  }, [game]);
 
   return (
     <CurrentGameLayout>
       {/* 게임비디오 */}
-      <GameVideo src={Video} controls autoPlay muted loop />
+      <GameVideo src={gameAll.video} autoPlay muted loop />
       <CurrentGameBlackImg />
       <CurrentGameBox>
         {/* 게임타이틀 */}
-        <CurrentGameTitle>{Title}</CurrentGameTitle>
+        <CurrentGameTitle>{gameAll?.title}</CurrentGameTitle>
         {/* 게임채널입장*/}
         <CurrentChannelJoinBtn
           onClick={() => {
-            navigate(`/Teamchat/:${game.gameid}`, {
+            navigate(`/Teamchat/:${gameAll?.id}`, {
               state: {
-                gameid: game.gameid.toString(),
+                gameid: gameAll?.id.toString(),
               },
             });
           }}
