@@ -128,8 +128,6 @@ function Profile() {
       `${PROXY_ID}/http://api.steampowered.com/IPlayerService/GetRecentlyPlayedGames/v0001/?key=${APIKEY}&steamid=${ProfleSteamId}&format=json`
     );
 
-    console.log(recentGame);
-
     return recentGame;
   };
   const { data: recentGame } = useQuery("getRecentGameData", getRecentGameData);
