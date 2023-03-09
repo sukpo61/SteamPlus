@@ -11,6 +11,8 @@ import Skeleton from "../common/Skeleton";
 import Skeletons from "../common/Skeleton";
 
 export const Top10 = () => {
+  //스켈레톤배열
+  const array = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
   const PROXY_ID: any = process.env.REACT_APP_PROXY_ID;
   const APIKEY = "234E0113F33D5C7C4D4D5292C6774550";
 
@@ -31,30 +33,56 @@ export const Top10 = () => {
     return response?.data[gameid].data;
   };
   const TopGameid = async () => {
-    let gameinfo = [];
-
     const response = await axios.get(
       `${PROXY_ID}/https://api.steampowered.com/ISteamChartsService/GetTopReleasesPages/v1/`
     );
-    let data = await response?.data.response.pages[0].item_ids
+    const gameIds = response?.data.response.pages[0].item_ids
       .map((e: any) => e.appid)
       .slice(0, 9);
-    for (let gameid of data) {
-      const gamedata = await TopGame(gameid);
-      if (gamedata.type === "game") {
-        gameinfo.push(gamedata);
-      }
-    }
-    // setrecommandGame((e: any) => [...e, gamedata]);
+
+    const gameDataPromises = gameIds.map((gameId: any) => TopGame(gameId));
+    const gameData = await Promise.all(gameDataPromises);
+
+    const filteredGameData = gameData.filter((data) => data.type === "game");
+    const gameinfo = filteredGameData.map((data) => {
+      console.log("gamedata", data);
+      sessionStorage.setItem("type", data?.type);
+      return data;
+    });
+
     setrecommandGame(gameinfo);
   };
+
+  // const TopGameid = async () => {
+  //   let gameinfo = [];
+
+  //   const response = await axios.get(
+  //     `${PROXY_ID}/https://api.steampowered.com/ISteamChartsService/GetTopReleasesPages/v1/`
+  //   );
+  //   let data = await response?.data.response.pages[0].item_ids
+  //     .map((e: any) => e.appid)
+  //     .slice(0, 9);
+  //   for (let gameid of data) {
+  //     const gamedata = await TopGame(gameid);
+  //     if (gamedata.type === "game") {
+  //       gameinfo.push(gamedata);
+  //       //여기서 gamedata를 가져오는게 느린거임 하나씩 맵을도니까 직렬처리
+  //       console.log("gamedata", gamedata);
+  //     }
+  //     sessionStorage.setItem("type", gamedata?.type);
+  //   }
+  //   // setrecommandGame((e: any) => [...e, gamedata]);
+  //   setrecommandGame(gameinfo);
+  //   // sessionStorage.setItem("1", sessionStorage[0]);
+  // };
 
   useEffect(() => {
     if (recommandGame.length === 0) {
       TopGameid();
     }
   }, []);
-  const array = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+  //캐시데이너
+
   return (
     <>
       <ActivateChannelLayout>

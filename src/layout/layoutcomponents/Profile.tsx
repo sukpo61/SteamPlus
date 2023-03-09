@@ -127,7 +127,6 @@ function Profile() {
     const recentGame = await axios.get(
       `${PROXY_ID}/http://api.steampowered.com/IPlayerService/GetRecentlyPlayedGames/v0001/?key=${APIKEY}&steamid=${ProfleSteamId}&format=json`
     );
-    console.log("recentGame", recentGame);
 
     return recentGame;
   };
@@ -203,7 +202,6 @@ function Profile() {
   };
 
   useEffect(() => {
-    console.log("friendAllRecoil", friendAllRecoil);
     let polling = setInterval(() => {
       timeStamp();
     }, 30000);
