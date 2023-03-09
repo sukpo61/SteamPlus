@@ -373,6 +373,7 @@ function Layout() {
         </MenuOpenDiv>
 
         <VideosWrap
+          currentRoom={currentRoom}
           toggle={videoDisplay}
           widthprop={layoutMenu}
           layout={layoutMenu}
@@ -444,12 +445,21 @@ const Profileimg = styled.div``;
 const VideosWrap = styled.div<any>`
   //나중에 생각하자.
   top: ${(props) => {
+    if (props.currentRoom) {
+      if (props.toggle) {
+        if (props.layout === "voicetalk") {
+          return "70px";
+        } else {
+          return "-70%";
+        }
+      } else {
+        return "-70%";
+      }
+    }
     if (props.layout !== "voicetalk") {
       return "-70%";
     }
-    if (props.toggle) {
-      return "70px";
-    }
+
     return "-70%";
   }};
   transition: all 0.5s;
