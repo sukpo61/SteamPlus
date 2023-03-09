@@ -42,7 +42,8 @@ function FriendContextMenu({ xPos, yPos, id, onClose }: any) {
   const [userId, setUserId] = useRecoilState<any>(userAllSocketId);
   const navigate = useNavigate();
 
-  const handleClick = () => {
+  const handleClick = (e: any) => {
+    e.preventDefault();
     onClose();
   };
 
@@ -60,7 +61,9 @@ function FriendContextMenu({ xPos, yPos, id, onClose }: any) {
   );
 
   //찾아온 친구 id 를이용해 두개다 삭제
-  const friendDeleteOnClick = (id: any) => {
+  const friendDeleteOnClick = (event: any, id: any) => {
+    event.preventDefault();
+
     const friendDelete = getFriendAuth.filter((i) => {
       return (
         (id === i.friendId && i.myId === myId) ||
@@ -174,8 +177,8 @@ function FriendContextMenu({ xPos, yPos, id, onClose }: any) {
           ""
         )}
         <ContextMenuP
-          onClick={() => {
-            friendDeleteOnClick(id);
+          onClick={(event) => {
+            friendDeleteOnClick(event, id);
           }}
         >
           친구삭제
