@@ -9,6 +9,11 @@ import { AiOutlineSearch } from "react-icons/ai";
 import { useRecoilState } from "recoil";
 import { loginModalOpenRecoil } from "../recoil/atom";
 
+interface TableTdProps {
+  Color: string;
+  Width: string;
+}
+
 interface PostDataProps {
   id: number;
   category: string;
@@ -110,7 +115,6 @@ export const Community = () => {
   );
   // 카테고리 state 기본값은 전체다 보이게
   const [toggle, setToggle] = useState(categoryFilter3);
-  console.log();
 
   //카테고리 스타일
   const [categorySt, setCategorySt] = useState("전체");
@@ -144,6 +148,10 @@ export const Community = () => {
             onClick={() => {
               setToggle(categoryFilter3);
               setCategorySt("전체");
+              {
+                /* 카테고리 선택시 페이지 1으로 이동 */
+              }
+              setPage(1);
             }}
           >
             전체
@@ -152,6 +160,10 @@ export const Community = () => {
             onClick={() => {
               setToggle(categoryFilter);
               setCategorySt("자유");
+              {
+                /* 카테고리 선택시 페이지 1으로 이동 */
+              }
+              setPage(1);
             }}
           >
             자유
@@ -160,6 +172,10 @@ export const Community = () => {
             onClick={() => {
               setToggle(categoryFilter2);
               setCategorySt("모집");
+              {
+                /* 카테고리 선택시 페이지 1으로 이동 */
+              }
+              setPage(1);
             }}
           >
             모집
@@ -179,6 +195,7 @@ export const Community = () => {
           <HeaderTh style={{ padding: "0px 32px 0px 49px" }}>작성시간</HeaderTh>
           <HeaderTh>조회수</HeaderTh>
         </CommunityeHeader>
+
         {/* 게시글 조회하기 */}
         {/*reverse()를 넣어서 데이타의 배열을 거꾸로 보여줌*/}
         {toggle
@@ -192,6 +209,7 @@ export const Community = () => {
               />
             );
           })}
+
         <CommunityFooter>
           <>
             <CommunitySerchBar onSubmit={btn}>
