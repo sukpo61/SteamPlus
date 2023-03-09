@@ -16,17 +16,6 @@ interface Props {
 function GameChannelBlock({ game, count }: any) {
   const navigate = useNavigate();
 
-  const Genres: any = (genres: any) => {
-    if (genres) {
-      {
-        genres.map((e: any) => {
-          return `${e.description} `;
-        });
-      }
-    }
-    return;
-  };
-
   return (
     <GameListBlock>
       <GameChannelImgArea>
@@ -37,13 +26,32 @@ function GameChannelBlock({ game, count }: any) {
           <TitleLinear>
             <GameChannelTitle>{`${game?.name}`}</GameChannelTitle>
           </TitleLinear>
-          <GameChannelCategory>
-            {Genres}
-            {/* {game?.genres.map((e: any) => {
-              return `${e.description} `;
-            })} */}
-          </GameChannelCategory>{" "}
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "flex-start",
+              flexDirection: "row",
+            }}
+          >
+            <GameChannelCategory>
+              {/* {Genres} */}
+              {game?.genres.map((e: any) => {
+                return `${e.description} `;
+              })}
+            </GameChannelCategory>{" "}
+            <PoPularChannelActivate>
+              {count ? (
+                <>
+                  <ChannelOnOff />
+                  <ChannelPlayerCount1st2>{count}명</ChannelPlayerCount1st2>
+                </>
+              ) : (
+                ""
+              )}
+            </PoPularChannelActivate>
+          </div>
         </div>
+
         <AdmitButton
           onClick={() =>
             navigate(`/Teamchat/:${game.steam_appid}`, {
@@ -60,6 +68,27 @@ function GameChannelBlock({ game, count }: any) {
     </GameListBlock>
   );
 }
+const ChannelPlayerCount1st2 = styled.div`
+  font-weight: 300;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  text-align: right;
+  color: #ffffff;
+`;
+const ChannelOnOff = styled.div`
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: #23de79;
+`;
+const PoPularChannelActivate = styled.div`
+  display: flex;
+  align-items: center;
+  margin-left: 10px;
+  height: 20px;
+  gap: 8px;
+`;
 const GameListBlock = styled.div`
   display: flex;
   flex-direction: row;
@@ -127,7 +156,7 @@ const GameChannelTitle = styled.div`
 
 const GameChannelCategory = styled.div`
   font-style: normal;
-  font-size: 14px;
+  font-size: 16px;
   color: #a7a9ac;
   letter-spacing: -0.03em;
 `;

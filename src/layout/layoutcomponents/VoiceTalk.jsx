@@ -609,15 +609,20 @@ function VoiceTalk({ myId, handleLoginModalOpen }) {
       setRoomsResult(roomsInfo);
     }
   }, [roomsInfo]);
-
+  //스팀으로 이동하기
+  const gotoSteam = () => {
+    // navigate();
+    window.open(`https://store.steampowered.com/app/${channelId}`, "_blank");
+  };
   return (
     <VoiceTalkDiv layoutMenu={layoutMenu}>
       <VoiceTalkWrap>
         <VoiceTalkTop>
           <VoiceTalkTopbar>
             <ChannelTitle>
-              <span>{channelName}</span>
-              <img src="/img/steam_link.png"></img>
+              <SteamGamesTitle>{channelName}</SteamGamesTitle>
+              {/* 스팀로고 클릭시 해당 게임의 스팀홈페이지로 이동 */}
+              <img src="/img/steam_link.png" onClick={gotoSteam}></img>
             </ChannelTitle>
             <CreateRoom
               onClick={() => {
@@ -798,6 +803,13 @@ function VoiceTalk({ myId, handleLoginModalOpen }) {
 }
 
 export default VoiceTalk;
+
+const SteamGamesTitle = styled.span`
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 250px;
+`;
 
 const VoiceTalkDiv = styled.div`
   overflow: hidden;

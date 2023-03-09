@@ -200,7 +200,7 @@ export const CommunityAddPost = () => {
           <p>내용</p>
           <ContentInput
             ref={ContentRef}
-            // maxLength={10000}
+            maxLength={10000}
             placeholder="내용을 입력하세요"
             value={content}
             onChange={handleContentsChange}
