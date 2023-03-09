@@ -6,6 +6,8 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { CommunityBox } from "../components/communitypage/CommunityBox";
 import { AiOutlineSearch } from "react-icons/ai";
+import { useRecoilState } from "recoil";
+import { loginModalOpenRecoil } from "../recoil/atom";
 
 interface PostDataProps {
   id: number;
@@ -18,6 +20,14 @@ interface PostDataProps {
 }
 
 export const Community = () => {
+  //로그인 모달
+  const [loginModalOpen, setLoginModalOpen] =
+    useRecoilState<boolean>(loginModalOpenRecoil);
+
+  const handleLoginModalOpen = () => {
+    setLoginModalOpen(true);
+  };
+
   const DATABASE_ID: any = process.env.REACT_APP_DATABASE_ID;
 
   //Ref존
@@ -78,7 +88,8 @@ export const Community = () => {
   };
   const addPost = () => {
     if (!steamID) {
-      alert("로그인이 필요합니다");
+      // alert("로그인이 필요합니다");
+      handleLoginModalOpen();
       return;
     } else navigate("/CommunityAddPost");
   };
