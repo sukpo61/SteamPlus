@@ -33,7 +33,7 @@ export const Top10 = () => {
       `${PROXY_ID}/https://api.steampowered.com/ISteamChartsService/GetTopReleasesPages/v1/`
     );
     const gameIds = response?.data.response.pages[0].item_ids
-      //gameIds를 랜덤으롤
+      //gameIds를 랜덤으롤 돌려줌
       .map((e: any) => e.appid)
       .sort(() => Math.random() - 0.5)
       .slice(0, 12);
