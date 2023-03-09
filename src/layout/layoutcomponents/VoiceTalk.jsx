@@ -617,8 +617,10 @@ function VoiceTalk({ myId, handleLoginModalOpen }) {
             <CreateRoom
               onClick={() => {
                 if (myuserid) {
-                  setPwSubmit(false);
-                  setCreateDisplay("roomcreate");
+                  if (channelId !== "") {
+                    setPwSubmit(false);
+                    setCreateDisplay("roomcreate");
+                  }
                 } else {
                   // setLoginModalOpen(true);
                   handleLoginModalOpen();
