@@ -288,7 +288,9 @@ function VoiceTalk({ myId, handleLoginModalOpen }) {
     }
   );
 
-  const FriendAdd = async (friendId, friendNickName) => {
+  const FriendAdd = async (event, friendId, friendNickName) => {
+    event.stopPropagation();
+
     let friendAdd = {
       id: uuidv4(),
       myId: myuserid,
@@ -313,41 +315,44 @@ function VoiceTalk({ myId, handleLoginModalOpen }) {
 
   const RoomList = roomsresult.map((room) => {
     return (
-      <RoomWrap key={room.name}>
-        <RoomTitleWrap
-          onClick={() => {
-            if (!myuserid) {
-              setLoginModalOpen(true);
-              return;
-            }
-            socket.emit("checkusers");
-            if (currentRoom === room.name) {
-              return;
-            }
-            if (room.userinfo.length >= room.usercount) {
-              window.alert("방 인원이 다찼어요.");
-              return;
-            }
-            if (!room.password) {
-              setCurrentRoom(room.name);
-              handleJoin({
-                roomtitle: room.name,
-                channelId,
-                usercount: room.usercount,
-                password: room.password,
-              });
-            } else {
-              setPwSubmit(true);
-              setCreateDisplay("pwsubmit");
-              setPwRoomInfo({
-                roomtitle: room.name,
-                channelId,
-                usercount: room.usercount,
-                password: room.password,
-              });
-            }
-          }}
-        >
+      <RoomWrap
+        key={room.name}
+        currentRoom={currentRoom}
+        name={room.name}
+        onClick={() => {
+          if (!myuserid) {
+            setLoginModalOpen(true);
+            return;
+          }
+          socket.emit("checkusers");
+          if (currentRoom === room.name) {
+            return;
+          }
+          if (room.userinfo.length >= room.usercount) {
+            window.alert("방 인원이 다찼어요.");
+            return;
+          }
+          if (!room.password) {
+            setCurrentRoom(room.name);
+            handleJoin({
+              roomtitle: room.name,
+              channelId,
+              usercount: room.usercount,
+              password: room.password,
+            });
+          } else {
+            setPwSubmit(true);
+            setCreateDisplay("pwsubmit");
+            setPwRoomInfo({
+              roomtitle: room.name,
+              channelId,
+              usercount: room.usercount,
+              password: room.password,
+            });
+          }
+        }}
+      >
+        <RoomTitleWrap>
           <RoomTitle>
             <span># {room.name}</span>
             {room.password && (
@@ -384,8 +389,8 @@ function VoiceTalk({ myId, handleLoginModalOpen }) {
                   ""
                 ) : (
                   <FriendAddButton
-                    onClick={() => {
-                      FriendAdd(user?.userid, info?.nickname);
+                    onClick={(event) => {
+                      FriendAdd(event, user?.userid, info?.nickname);
                     }}
                   >
                     +
@@ -622,8 +627,10 @@ function VoiceTalk({ myId, handleLoginModalOpen }) {
             <CreateRoom
               onClick={() => {
                 if (myuserid) {
-                  setPwSubmit(false);
-                  setCreateDisplay("roomcreate");
+                  if (channelId !== "") {
+                    setPwSubmit(false);
+                    setCreateDisplay("roomcreate");
+                  }
                 } else {
                   // setLoginModalOpen(true);
                   handleLoginModalOpen();
@@ -934,8 +941,11 @@ const RoomWrap = styled.div`
   background: #404b5e;
   border-radius: 10px;
   padding: 20px;
+  transition: 0.3s ease;
+  cursor: ${(props) => (props.name === props.currentRoom ? "" : "pointer")};
   &:hover {
-    background: #3c4657;
+    background: ${(props) =>
+      props.name === props.currentRoom ? "#404b5e" : "#3c4657"};
   }
 `;
 const RoomTitleWrap = styled.div`
@@ -946,14 +956,14 @@ const RoomTitleWrap = styled.div`
   align-items: center;
   color: white;
   border-radius: 10px;
-  &:hover {
+  /* &:hover {
   }
   div {
     cursor: pointer;
   }
   span {
     cursor: pointer;
-  }
+  } */
 `;
 const RoomTitle = styled.div`
   display: flex;
