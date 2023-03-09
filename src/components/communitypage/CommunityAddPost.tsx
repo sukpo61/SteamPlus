@@ -53,8 +53,7 @@ export const CommunityAddPost = () => {
     (newPost: PostData) => axios.post(`${DATABASE_ID}/post`, newPost),
     {
       onSuccess: () => {
-        setTitle("");
-        setContent("");
+        queryClient.invalidateQueries("CommunityPostData");
       },
     }
   );
@@ -90,9 +89,9 @@ export const CommunityAddPost = () => {
       //등록된 포스트로 이동후
       navigate(`/Community/${newPost.id}`);
       // 쿼리무효화 = 저장되어있는 쿼리를 초기화 하여 데이터를 다시불러옴
-      setTimeout(() => {
-        queryClient.invalidateQueries(["CommunityPostData"]);
-      }, 500);
+      // setTimeout(() => {
+      //   queryClient.invalidateQueries(["CommunityPostData"]);
+      // }, 500);
       return;
     } else {
       //취소버튼 클릭시 새로고침을 방지해서 작성한 타이틀과 컨텐츠를 유지시켜줌
@@ -104,18 +103,35 @@ export const CommunityAddPost = () => {
   const gotoCommunity = () => {
     navigate("/Community");
   };
-
+  //타이틀 온체인지 컨텐츠
   const handleTitleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setTitle(event.target.value);
+    // setTitle(event.target.value);
     const newTitle = event.target.value;
     if (newTitle.length <= 30) {
       setTitle(newTitle);
     } else {
       alert("제목은 30자 이하로 입력해주세요.");
+      const truncatedTitle = newTitle.slice(0, 10000);
+      setTitle(truncatedTitle);
       TitleRef.current!.focus();
       return;
     }
   };
+  //컨텐츠 온체인지 컨텐츠
+  const handleContentsChange = (
+    event: React.ChangeEvent<HTMLTextAreaElement>
+  ) => {
+    const newContents = event.target.value;
+    if (newContents.length <= 10000) {
+      setContent(newContents);
+    } else {
+      alert("내용은 10000자 이하로 입력해주세요.");
+      const truncatedContents = newContents.slice(0, 10000);
+      setContent(truncatedContents);
+      ContentRef.current!.focus();
+    }
+  };
+
   //카테고리 선택
   const handleOption1Change = (event: React.ChangeEvent<HTMLInputElement>) => {
     setCategory(event.target.value);
@@ -184,12 +200,10 @@ export const CommunityAddPost = () => {
             <p>내용</p>
             <ContentInput
               ref={ContentRef}
+              maxLength={10000}
               placeholder="내용을 입력하세요"
-              // type="text"
               value={content}
-              onChange={(e) => {
-                setContent(e.target.value);
-              }}
+              onChange={handleContentsChange}
             />
 
             <PostButtonWrap>
