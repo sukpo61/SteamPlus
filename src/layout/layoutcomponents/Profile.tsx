@@ -106,7 +106,7 @@ function Profile() {
       window.location.replace("/");
     } else {
       await axios.put(`${DATABASE_ID}/auth/${steamId}`, userinfo);
-      window.location.replace("/");
+      // window.location.replace("/");
     }
   };
 
