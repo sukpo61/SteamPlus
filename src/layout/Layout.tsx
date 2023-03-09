@@ -17,6 +17,10 @@ import {
   currentGameIdRecoil,
   userAllSocketId,
   loginModalOpenRecoil,
+  localStreamRecoil,
+  videoStateRecoil,
+  micStateRecoil,
+  isAllMutedRecoil,
 } from "../recoil/atom";
 import Profile from "./layoutcomponents/Profile";
 import GameSearch from "./layoutcomponents/GameSearch";
@@ -25,6 +29,7 @@ import FriendSearch from "./layoutcomponents/FriendSearch";
 import VoiceTalk from "./layoutcomponents/VoiceTalk";
 import EmptyVoiceTalk from "./layoutcomponents/EmptyVoiceTalk";
 import FriendAdd from "./layoutcomponents/FriendAdd";
+import UserVideo from "./layoutcomponents/UserVideo";
 import { useQuery } from "react-query";
 import axios from "axios";
 import { FriendProps } from "../layout/layoutcomponents/Friend";
@@ -36,8 +41,9 @@ import { MdDynamicFeed } from "react-icons/md";
 import { AiOutlineSearch } from "react-icons/ai";
 import { FaUserFriends } from "react-icons/fa";
 import { MdVoiceChat } from "react-icons/md";
-import { MdVideocamOff } from "react-icons/md";
-import { MdExitToApp } from "react-icons/md";
+import { MdVideocamOff, MdVideocam } from "react-icons/md";
+import { MdExitToApp, MdOutlineKeyboardArrowUp } from "react-icons/md";
+import { BsFillMicFill, BsFillMicMuteFill } from "react-icons/bs";
 
 import { useNavigate } from "react-router-dom";
 import { useLocation } from "react-router-dom";
@@ -92,6 +98,14 @@ function Layout() {
   //소켓id
   const [userId, setUserId] = useRecoilState<any>(userAllSocketId);
 
+  const [localStream, setLocalStream] = useRecoilState(localStreamRecoil);
+
+  const [videostate, setVideoState] = useRecoilState(videoStateRecoil);
+
+  const [micstate, setMicState] = useRecoilState(micStateRecoil);
+
+  const [isallmuted, setIsAllMuted] = useRecoilState(isAllMutedRecoil);
+
   //메뉴 탭눌렀을때 (친구제외)
   const LayoutButtonOnClick = (i: string) => {
     if (layoutMenu === i) {
@@ -136,14 +150,6 @@ function Layout() {
     getAllFriend
   );
 
-  if (isLoading) {
-    return <p>로딩중</p>;
-  }
-  if (isError) {
-    console.log("오류내용", error);
-    return <p>오류</p>;
-  }
-
   //양쪽 다 친구 내역
   const friend = getFriendAuth?.filter((i: FriendProps) => {
     for (let t = 0; t < friendAdd.length; t++) {
@@ -183,16 +189,37 @@ function Layout() {
     };
 
     return (
-      <VideoWrap key={data.userid}>
-        {data.userid === myId ? (
-          <Streamvideo ref={remotehandleVideoRef} autoPlay playsInline muted />
-        ) : (
-          <Streamvideo ref={remotehandleVideoRef} autoPlay playsInline />
-        )}
-        <Usernickname>
-          <span>{info?.nickname}</span>
-        </Usernickname>
-      </VideoWrap>
+      <UserVideo data={data} info={info} myId={myId}></UserVideo>
+      // <VideoWrap key={data.userid}>
+      //   {data.userid === myId ? (
+      //     !data.stream.getVideoTracks()[0].enabled ? (
+      //       <img src="/img/emptyvideo.png"></img>
+      //     ) : (
+      //       <Streamvideo
+      //         ref={remotehandleVideoRef}
+      //         autoPlay
+      //         playsInline
+      //         muted
+      //       />
+      //     )
+      //   ) : (
+      //     <Streamvideo
+      //       ref={remotehandleVideoRef}
+      //       autoPlay
+      //       playsInline
+      //       className="othervideo"
+      //       muted={isallmuted}
+      //     />
+      //   )}
+      //   <Usernickname>
+      //     <span>{info?.nickname}</span>
+      //   </Usernickname>
+      //   {!data.stream.getAudioTracks()[0].enabled && (
+      //     <Micoff>
+      //       <BsFillMicMuteFill size={20}></BsFillMicMuteFill>
+      //     </Micoff>
+      //   )}
+      // </VideoWrap>
     );
   });
 
@@ -200,6 +227,15 @@ function Layout() {
     setLoginModalOpen(true);
   };
 
+  // useEffect(() => {}, [micstate]);
+
+  if (isLoading) {
+    return <p>로딩중</p>;
+  }
+  if (isError) {
+    console.log("오류내용", error);
+    return <p>오류</p>;
+  }
   return (
     <>
       <LoginModalPosition>
@@ -347,21 +383,43 @@ function Layout() {
             <VideoControl>
               <ControlButtons>
                 <ControlButtonWrap
-                  iconcolor="#192030"
+                  videostate={videostate}
                   backcolor="#D4D4D4"
                   onClick={() => {
-                    setvideoDisplay(false);
+                    setVideoState((e: any) => !e);
+                    if (localStream) {
+                      localStream.getVideoTracks().forEach((track: any) => {
+                        track.enabled = !videostate;
+                      });
+                    }
                   }}
                 >
-                  <MdVideocamOff size={24}></MdVideocamOff>
+                  {videostate ? (
+                    <MdVideocam size={24} />
+                  ) : (
+                    <MdVideocamOff size={24} />
+                  )}
                 </ControlButtonWrap>
+
                 <ControlButtonWrap
+                  iconcolor="white"
                   backcolor="#F05656"
                   onClick={() => {
                     setVideoRoomExit((e: any) => !e);
                   }}
                 >
                   <MdExitToApp size={24}></MdExitToApp>
+                </ControlButtonWrap>
+                <ControlButtonWrap
+                  iconcolor="#192030"
+                  backcolor="#D4D4D4"
+                  onClick={() => {
+                    setvideoDisplay(false);
+                  }}
+                >
+                  <MdOutlineKeyboardArrowUp
+                    size={24}
+                  ></MdOutlineKeyboardArrowUp>
                 </ControlButtonWrap>
               </ControlButtons>
             </VideoControl>
@@ -415,13 +473,47 @@ const Streamvideo = styled.video<any>`
   width: 90%;
   height: 100%;
 `;
+const EmptyStreamvideo = styled.div`
+  background-color: #9fafc9;
+  width: 640px;
+  height: 480px;
+  @media screen and (max-width: 1900px) {
+    width: 90%;
+    min-width: 100px;
+  }
+`;
+const Emptyvideo = styled.div`
+  background-color: #9fafc9;
+  border-radius: 10px;
+  width: 576px;
+  height: 432px;
+  /* border-radius: 10px;
+  width: 100%;
+  max-width: 640px;
+  height: 100%;
+  max-height: 480px; */
+`;
 
+const EmptyVideoWrap = styled.div<any>`
+  width: 100%;
+  height: 100%;
+  background-color: #9fafc9;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+`;
 const VideoWrap = styled.div<any>`
   position: relative;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  img {
+    width: 90%;
+    height: 100%;
+  }
 `;
 
 const ControlButtons = styled.div`
@@ -439,7 +531,16 @@ const ControlButtonWrap = styled.div<any>`
   justify-content: center;
   align-items: center;
   background-color: ${(props) => props.backcolor};
-  color: ${(props) => props.iconcolor};
+  color: ${(props) => {
+    if (props.iconcolor) {
+      return props.iconcolor;
+    }
+    if (props.videostate) {
+      return "#192030";
+    } else {
+      return "#F05656";
+    }
+  }};
 `;
 const Usernickname = styled.div`
   position: absolute;
@@ -450,6 +551,18 @@ const Usernickname = styled.div`
   padding: 4px 8px;
   bottom: 8px;
   left: 8%;
+`;
+const Micoff = styled.div`
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: rgba(8, 12, 22, 0.6);
+  border-radius: 15px;
+  width: 30px;
+  height: 30px;
+  bottom: 8px;
+  right: 8%;
 `;
 const VideoPosition = styled.div`
   width: 100%;
@@ -483,8 +596,8 @@ const VideosList = styled.div<any>`
   width: 100%;
   height: 100%;
   display: flex;
-  flex-direction: row;
   color: white;
+  flex-direction: row;
   justify-content: center;
   align-items: center;
   padding: 24px;
