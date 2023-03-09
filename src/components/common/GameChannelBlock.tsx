@@ -38,9 +38,10 @@ function GameChannelBlock({ game, count }: any) {
             <GameChannelTitle>{`${game?.name}`}</GameChannelTitle>
           </TitleLinear>
           <GameChannelCategory>
-            {game?.genres.map((e: any) => {
+            {Genres}
+            {/* {game?.genres.map((e: any) => {
               return `${e.description} `;
-            })}
+            })} */}
           </GameChannelCategory>{" "}
         </div>
         <AdmitButton
