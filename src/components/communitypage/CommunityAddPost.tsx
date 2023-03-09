@@ -189,34 +189,34 @@ export const CommunityAddPost = () => {
           </FormControl>
 
           <p>제목</p>
-          <Form onSubmit={AddPostHandler}>
-            <TitleInput
-              ref={TitleRef}
-              placeholder="제목을 입력하세요"
-              maxLength={30}
-              value={title}
-              onChange={handleTitleChange}
-            />
-            <p>내용</p>
-            <ContentInput
-              ref={ContentRef}
-              maxLength={10000}
-              placeholder="내용을 입력하세요"
-              value={content}
-              onChange={handleContentsChange}
-            />
+          {/* <Form onSubmit={AddPostHandler}> */}
+          <TitleInput
+            ref={TitleRef}
+            placeholder="제목을 입력하세요"
+            maxLength={30}
+            value={title}
+            onChange={handleTitleChange}
+          />
+          <p>내용</p>
+          <ContentInput
+            ref={ContentRef}
+            // maxLength={10000}
+            placeholder="내용을 입력하세요"
+            value={content}
+            onChange={handleContentsChange}
+          />
 
-            <PostButtonWrap>
-              <AddBtn
-                onClick={() => {
-                  navigate("/Community");
-                }}
-              >
-                취소
-              </AddBtn>
-              <AddBtn>등록</AddBtn>
-            </PostButtonWrap>
-          </Form>
+          <PostButtonWrap>
+            <AddBtn
+              onClick={() => {
+                navigate("/Community");
+              }}
+            >
+              취소
+            </AddBtn>
+            <AddBtn onClick={AddPostHandler}>등록</AddBtn>
+          </PostButtonWrap>
+          {/* </Form> */}
         </AddWrap>
       </CommunityBody>
     </CommunityPostLayout>
