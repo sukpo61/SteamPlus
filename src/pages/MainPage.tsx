@@ -6,7 +6,11 @@ import { CurrentGame } from "../components/CurrentGame";
 import { useQuery } from "react-query";
 import { useEffect, useState } from "react";
 import socket from "../socket";
-import { activechannelsRecoil, activechannelsinfoRecoil } from "../recoil/atom";
+import {
+  activechannelsRecoil,
+  activechannelsinfoRecoil,
+  recommandGameRecoil,
+} from "../recoil/atom";
 import { useRecoilState } from "recoil";
 import { Top10 } from "../components/mainpage/Top10";
 import { useNavigate } from "react-router-dom";
@@ -57,9 +61,12 @@ const MainPage: any = () => {
     return aaa;
   };
   const { data }: any = useQuery("Gamedata", Gamedata);
+  //메인 인기게임 10개 동영상
+  const [recommandGame, setrecommandGame] = useRecoilState(recommandGameRecoil);
 
-  //top10 game 정보
+  const [randomGames, setRandomGame] = useState();
 
+  //인기채널 정보
   const getChannelInfo = async (channelid: any, count: any) => {
     const response = await axios.get(
       `${PROXY_ID}/http://store.steampowered.com/api/appdetails/`,
@@ -69,6 +76,7 @@ const MainPage: any = () => {
         },
       }
     );
+
     setActiveChannelsInfo((e: any) => [
       ...e,
       {
@@ -77,6 +85,13 @@ const MainPage: any = () => {
       },
     ]);
   };
+  //랜덤게임
+  useEffect(() => {
+    const randomIndex = Math.floor(Math.random() * recommandGame.length);
+    //랜덤 돌리는함수를 변수에담음
+    const randomGame = recommandGame[randomIndex];
+    setRandomGame(randomGame);
+  }, [recommandGame]);
 
   useEffect(() => {
     if (activechannels) {
@@ -98,7 +113,6 @@ const MainPage: any = () => {
   }, []);
 
   //랜딩 페이지
-
   useEffect(() => {
     const isFirstTime = sessionStorage.getItem("isFirstTime");
     if (!isFirstTime) {
@@ -116,12 +130,13 @@ const MainPage: any = () => {
       </Logo>
       <MainLayout>
         {/* 메인게임 이미지 */}
-        <CurrentGame game={data} />{" "}
+        <CurrentGame game={randomGames} />{" "}
         <MainWrap>
           {/* 인기채널 */}
           <PoularChannel />
           {/* 현재활성화된 채널 */}
           <ActivateChannel gamedata={activeChannelsInfo} />
+          {/* 추천채널 */}
           <Top10 />
         </MainWrap>
       </MainLayout>
