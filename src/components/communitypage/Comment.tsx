@@ -35,7 +35,6 @@ function Comment({ PostId }: CommentProps) {
   const [commentInput, setCommentInput] = useState<string>("");
   const [editOn, setEditOn] = useState<string>("");
   const [editInput, setEditInput] = useState<string>("");
-
   //날짜만들기
   const newDate = new Date();
   const year = newDate.getFullYear();
