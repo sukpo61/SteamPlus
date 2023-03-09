@@ -35,6 +35,7 @@ function Comment({ PostId }: CommentProps) {
   const [commentInput, setCommentInput] = useState<string>("");
   const [editOn, setEditOn] = useState<string>("");
   const [editInput, setEditInput] = useState<string>("");
+
   //날짜만들기
   const newDate = new Date();
   const year = newDate.getFullYear();
@@ -43,6 +44,7 @@ function Comment({ PostId }: CommentProps) {
   const Hour = newDate.getHours();
   const Minute = newDate.getMinutes();
   const date = `${year}/${month}/${day} ${Hour}:${Minute}`;
+
   //스팀아이디
   const steamID = sessionStorage.getItem("steamid");
   const getComment = async () => {
