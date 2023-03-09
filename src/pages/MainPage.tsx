@@ -10,9 +10,10 @@ import { activechannelsRecoil, activechannelsinfoRecoil } from "../recoil/atom";
 import { useRecoilState } from "recoil";
 import { Top10 } from "../components/mainpage/Top10";
 import { useNavigate } from "react-router-dom";
-function MainPage() {
-  const PROXY_ID: any = process.env.REACT_APP_PROXY_ID;
+const MainPage: any = () => {
   const navigate = useNavigate();
+
+  const PROXY_ID: any = process.env.REACT_APP_PROXY_ID;
   const [activechannels, setActiveChannels] =
     useRecoilState(activechannelsRecoil);
   const [activeChannelsInfo, setActiveChannelsInfo] = useRecoilState(
@@ -96,6 +97,17 @@ function MainPage() {
     };
   }, []);
 
+  //랜딩 페이지
+
+  useEffect(() => {
+    const isFirstTime = sessionStorage.getItem("isFirstTime");
+    if (!isFirstTime) {
+      sessionStorage.setItem("isFirstTime", "true");
+      navigate("/landing");
+      return;
+    }
+  }, []);
+
   return (
     <div style={{ position: "relative" }}>
       <Logo onClick={() => navigate(`/landing`)}>
@@ -115,7 +127,7 @@ function MainPage() {
       </MainLayout>
     </div>
   );
-}
+};
 
 const MainLayout = styled.div`
   width: 100%;
