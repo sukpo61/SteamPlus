@@ -207,29 +207,33 @@ function Friend() {
   }, []);
 
   const friendChatOnClick = (id: any, login: any, lastLogin: any) => {
-    if (login && isFriendOnline(lastLogin)) {
-      //선택한 아이디 불러오기
-      const clickId = userId.find((i: any) => {
-        return i.split("/")[0] === id;
-      });
-      //선택한 아이디와 내아이디 더하기 (방이름)
-      const roomName = parseInt(clickId?.split("/")[0]) + parseInt(myId);
-      console.log(roomName);
-      console.log("joined");
-      socket.emit("friendChat", clickId, roomName);
-      navigate(`/testchat/:${roomName}`, { state: clickId.split("/")[0] });
+    if (menuPosition.xPos === "-1000px") {
+      if (login && isFriendOnline(lastLogin)) {
+        //선택한 아이디 불러오기
+        const clickId = userId.find((i: any) => {
+          return i.split("/")[0] === id;
+        });
+        //선택한 아이디와 내아이디 더하기 (방이름)
+        const roomName = parseInt(clickId?.split("/")[0]) + parseInt(myId);
+        console.log(roomName);
+        console.log("joined");
+        socket.emit("friendChat", clickId, roomName);
+        navigate(`/testchat/:${roomName}`, { state: clickId.split("/")[0] });
 
-      const chatNoticeClear = chatTextNotice.filter((i: any) => {
-        if (i.id === id) {
-          return false;
-        } else {
-          return i;
-        }
-      });
-      setChatTextNotice(chatNoticeClear);
-      setLayoutMenu("close");
+        const chatNoticeClear = chatTextNotice.filter((i: any) => {
+          if (i.id === id) {
+            return false;
+          } else {
+            return i;
+          }
+        });
+        setChatTextNotice(chatNoticeClear);
+        setLayoutMenu("close");
+      } else {
+        alert("상대가 접속중이 아닙니다.");
+      }
     } else {
-      alert("상대가 접속중이 아닙니다.");
+      return;
     }
   };
   return (
