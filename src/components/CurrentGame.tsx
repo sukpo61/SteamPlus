@@ -8,35 +8,43 @@ export const CurrentGame = ({ game }: any) => {
     id: "",
     title: "",
     video: "",
+    img: "",
   });
 
   useEffect(() => {
-    console.log("뭔게임", game);
     setGameAll({
       id: game?.steam_appid,
       title: game?.name,
       video: game?.movies ? game?.movies[0]?.webm?.max : "",
+      img: game?.screenshots[0].path_full,
     });
   }, [game]);
+  //클릭시 해당게임채널로 이동하기
+  const gotoGameChannel = () => {
+    navigate(`/Teamchat/:${gameAll?.id}`, {
+      state: {
+        gameid: gameAll?.id.toString(),
+      },
+    });
+  };
 
   return (
     <CurrentGameLayout>
-      {/* 게임비디오 */}
-      <GameVideo src={gameAll.video} autoPlay muted loop />
+      {/* 게임비디오가 없으면 스크린샷을 보여주고 스크린샷없으면 "" 아무것도 안보여줌 */}
+      {gameAll.video ? (
+        <GameVideo src={gameAll?.video} autoPlay muted loop />
+      ) : gameAll?.img === undefined ? (
+        ""
+      ) : (
+        <GameImg src={gameAll?.img} />
+      )}
+
       <CurrentGameBlackImg />
       <CurrentGameBox>
         {/* 게임타이틀 */}
         <CurrentGameTitle>{gameAll?.title}</CurrentGameTitle>
         {/* 게임채널입장*/}
-        <CurrentChannelJoinBtn
-          onClick={() => {
-            navigate(`/Teamchat/:${gameAll?.id}`, {
-              state: {
-                gameid: gameAll?.id.toString(),
-              },
-            });
-          }}
-        >
+        <CurrentChannelJoinBtn onClick={gotoGameChannel}>
           게임채널 입장하기
         </CurrentChannelJoinBtn>
       </CurrentGameBox>
@@ -44,6 +52,13 @@ export const CurrentGame = ({ game }: any) => {
   );
 };
 const GameVideo = styled.video`
+  width: 100%;
+  height: 700px;
+  object-fit: cover;
+  position: fixed;
+  top: 0;
+`;
+const GameImg = styled.img`
   width: 100%;
   height: 700px;
   object-fit: cover;
@@ -59,11 +74,16 @@ const CurrentGameLayout = styled.div`
   z-index: 9;
 `;
 const CurrentGameBox = styled.div`
+  width: 100%;
   position: absolute;
   display: flex;
+  align-items: flex-end;
   flex-direction: column;
   top: 60px;
-  right: 100px;
+  left: 00px;
+  height: 55%;
+  right: 1000px;
+  padding-right: 70px;
 `;
 
 const CurrentGameBlackImg = styled.div`
@@ -85,6 +105,9 @@ const CurrentGameTitle = styled.span`
   font-size: 72px;
   text-shadow: 0px 0px 15px white;
   color: #ffffff;
+  width: 50%;
+  word-break: keep-all;
+  word-wrap: break-word;
 `;
 
 const CurrentChannelJoinBtn = styled.span`

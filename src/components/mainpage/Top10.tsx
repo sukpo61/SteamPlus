@@ -27,23 +27,24 @@ export const Top10 = () => {
     );
     return response?.data[gameid].data;
   };
+  //탑게임 열개
   const TopGameid = async () => {
     const response = await axios.get(
       `${PROXY_ID}/https://api.steampowered.com/ISteamChartsService/GetTopReleasesPages/v1/`
     );
     const gameIds = response?.data.response.pages[0].item_ids
+      //gameIds를 랜덤으롤
       .map((e: any) => e.appid)
-      .slice(0, 9);
+      .sort(() => Math.random() - 0.5)
+      .slice(0, 12);
 
     const gameDataPromises = gameIds.map((gameId: any) => TopGame(gameId));
     const gameData = await Promise.all(gameDataPromises);
-
     const filteredGameData = gameData.filter((data) => data.type === "game");
+
     const gameinfo = filteredGameData.map((data) => {
-      sessionStorage.setItem("type", data?.type);
       return data;
     });
-
     setrecommandGame(gameinfo);
   };
 

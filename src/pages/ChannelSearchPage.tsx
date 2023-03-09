@@ -5,28 +5,23 @@ import styled, { keyframes } from "styled-components";
 import { useInfiniteQuery } from "react-query";
 import Loader from "../components/common/Loader";
 import { useNavigate } from "react-router-dom";
-
 import { BiSearchAlt2 } from "react-icons/bi";
 import GameChannelBlock from "../components/common/GameChannelBlock";
-
-import Footer from "../components/common/Footer";
-
-// import ParticipationRequest from "../layout/ParticipationRequest";
 
 // 게시판 홈 검색
 
 const ChannelSearchPage: any = () => {
-  const [searchValue, setSearchValue] = useState("");
-  const [searchResult, setSearchResult] = useState<any>([null]); // 검색어 없을때 예외처리
+  const [searchValue, setSearchValue] = useState(""); // 검색어 없을때 예외처리
   const [termResult, setTermResult] = useState("");
   const [filteredCount, setFilteredCount] = useState<number>(0);
   const [isLoading, setIsLoading] = useState(true);
   const navigate = useNavigate();
 
+  //검색
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchValue(e.target.value);
   };
-
+  //검색이되서 입력된단어
   const handleTermResult = () => {
     if (searchValue.length < 2) {
       alert("두 글자 이상 입력해 주세요");
@@ -34,51 +29,30 @@ const ChannelSearchPage: any = () => {
       setTermResult(searchValue);
     }
   };
-
-  // const handleSearchClick = () => {
-  //   if (searchValue === "") {
-  //     return;
-  //   } else if (searchValue.length < 2) {
-  //     // searchValue : 새로고침 후 첫검색때 console에 출처 모를 리스트가 찍힘
-  //     // termResult : 새로고침 후 처음 검색한 검색어는 검색창에서 리셋되고, 두번째 검색어부터 console 찍힘
-  //     return;
-  //   }
-  //   getGameSummary();
-  // };
-
-  // searchValue: any, offset: number
-
-  // 초반 10개가 로드되고, 그 10개를 filterList에서 제외한 배열이 스크롤이 바닥에 닿을 때마다 추가로 10개씩 뱉어내게 하면..???
-  // 근데 가능하긴 한가 이거
-
+  //게임 검색 실행함수
   const getGameSummary = async () => {
     setIsLoading(true);
-
-    console.log("termResult", termResult);
-
     const gameSummary = await axios.get(
       `https://enable-cors.glitch.me/https://store.steampowered.com/api/storesearch/?cc=us&l=en&term="${termResult}"` // &pagesize=20
-    ); // 게임 Id만 가져오기!!!
-
-    const gameList = [];
-
-    for (let i = 0; i < gameSummary?.data.items.length; i++) {
-      const gameCategoryData2 = await axios.get(
-        `https://enable-cors.glitch.me/https://store.steampowered.com/api/appdetails/?appids=${gameSummary?.data.items[i].id}`
-      );
-      //썸네일, 제목, 장르
-      gameList.push(
-        gameCategoryData2?.data[gameSummary?.data.items[i].id].data
-      );
-
-      console.log("gameCategoryData2", gameCategoryData2);
-    }
-
-    const filterList = gameList.filter((game) => game.type === "game");
-    console.log("game", filterList);
-    setFilteredCount(filterList.length);
+    );
+    const appIds = gameSummary?.data.items.map((item: any) => item.id);
+    const appDetailsRequests = appIds.map((appId: any) =>
+      axios.get(
+        `https://enable-cors.glitch.me/https://store.steampowered.com/api/appdetails/?appids=${appId}`
+      )
+    );
+    const appDetailsResponses = await Promise.all(appDetailsRequests);
+    const gameList = appDetailsResponses.reduce((acc, response) => {
+      const appId = Object.keys(response?.data)[0];
+      const gameData = response?.data[appId]?.data;
+      if (gameData?.type === "game") {
+        acc.push(gameData);
+      }
+      return acc;
+    }, []);
+    setFilteredCount(gameList.length);
     setIsLoading(false);
-    return filterList;
+    return gameList;
   };
 
   const {
@@ -141,6 +115,7 @@ const ChannelSearchPage: any = () => {
             }}
           >
             <GameSearchInput
+              placeholder="검색어를 영어로 입력해주세요"
               type="text"
               value={searchValue}
               onChange={handleSearch}
