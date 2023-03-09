@@ -26,8 +26,8 @@ function LoginModal({ layoutMenu, setLoginModalOpen }: Props) {
         <IoCloseCircleSharp
           style={{
             color: "#777D87",
-            width: 17,
-            height: 17,
+            width: 20, //17
+            height: 20, //17
             position: "absolute",
             right: 8,
             top: 8,
@@ -72,8 +72,8 @@ const ModalArea = styled.div<{ layoutMenu: any }>`
 
 const ModalWindow = styled.div`
   position: relative;
-  width: 240px;
-  height: 120px;
+  width: 300px; //240px;;
+  height: 160px; //120px;
 
   background: rgba(38, 50, 69, 0.8);
   box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.25);
@@ -84,7 +84,7 @@ const ModalWindow = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  gap: 8px;
+  gap: 16px; // 8px;
 `;
 
 const ModalIntro = styled.p`
@@ -93,8 +93,8 @@ const ModalIntro = styled.p`
   top: 20px;
   font-weight: 500;
   font-style: normal;
-  font-size: 12px;
-  line-height: 16px;
+  font-size: 15px; // 12px;
+  line-height: 20px; // 16px;
   text-align: center;
   letter-spacing: -0.03em;
   color: #ffffff;
