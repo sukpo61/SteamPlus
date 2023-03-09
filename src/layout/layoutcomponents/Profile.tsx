@@ -80,7 +80,6 @@ function Profile() {
       "gameextrainfo",
       result?.data.response.players[0].gameextrainfo
     );
-    console.log("result", result?.data);
 
     //steam에서 변경된사항이 있을때 put을 통해 dbjson을 업데이트해줌
     const userinfo: UserInfo = {

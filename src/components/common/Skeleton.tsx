@@ -1,6 +1,6 @@
 import styled, { keyframes } from "styled-components";
-
-function Skeleton() {
+import { Skeleton } from "@mui/material";
+function Skeletons() {
   return (
     <GameListBlock className="skeleton-item">
       <GameChannelImgArea />
@@ -15,6 +15,7 @@ function Skeleton() {
   );
 }
 
+//
 const GameListBlock = styled.div`
   display: flex;
   flex-direction: row;
@@ -78,4 +79,4 @@ const AdmitButton = styled.div`
   color: #ffffff;
 `;
 
-export default Skeleton;
+export default Skeletons;

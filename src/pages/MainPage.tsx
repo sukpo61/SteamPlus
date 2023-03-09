@@ -98,12 +98,15 @@ const MainPage: any = () => {
   }, []);
 
   //랜딩 페이지
-  const isFirstTime = sessionStorage.getItem("isFirstTime");
-  sessionStorage.setItem("isFirstTime", "true");
-  if (!isFirstTime) {
-    navigate("/landing");
-    return;
-  }
+
+  useEffect(() => {
+    const isFirstTime = sessionStorage.getItem("isFirstTime");
+    if (!isFirstTime) {
+      sessionStorage.setItem("isFirstTime", "true");
+      navigate("/landing");
+      return;
+    }
+  }, []);
 
   return (
     <div style={{ position: "relative" }}>
