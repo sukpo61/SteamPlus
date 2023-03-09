@@ -254,7 +254,6 @@ function Layout() {
             <p>게임검색</p>
           </GameSearchbutton>
           {/* 커뮤니티 */}
-
           <Communitybutton
             locationName={locationName}
             onClick={() => {
@@ -266,7 +265,6 @@ function Layout() {
             <MdDynamicFeed className="communityIcon" />
             <p>커뮤니티</p>
           </Communitybutton>
-
           {/* 메뉴 구분선 */}
           <SideLine />
           {/* 친구 */}
@@ -323,7 +321,8 @@ function Layout() {
               </VoiceTalkbutton>
             </VoiceTalkbuttonWrap>
           )}
-          <AboutPagesDiv onClick={AboutPagesOnClick}>?</AboutPagesDiv>
+          {/* 나중에 부활 예정 */}
+          {/* <AboutPagesDiv onClick={AboutPagesOnClick}>?</AboutPagesDiv> */}
         </SideBarDiv>
 
         {/* 메뉴 컴포넌트 */}

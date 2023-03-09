@@ -153,6 +153,7 @@ function Comment({ PostId }: CommentProps) {
           placeholder="댓글을 입력하세요"
           value={commentInput}
           onChange={CommentInputOnChange}
+          maxLength={100}
         />
 
         <CommentFormButton>등록</CommentFormButton>
@@ -179,6 +180,7 @@ function Comment({ PostId }: CommentProps) {
                     defaultValue={i.contents}
                     onChange={EditInputOnChange}
                     ref={CommentsRef}
+                    maxLength={100}
                   />
                 ) : (
                   <CommentText>{i.contents}</CommentText>
