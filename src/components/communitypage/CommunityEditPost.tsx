@@ -26,25 +26,35 @@ export const CommunityEditPost = () => {
   const TitleRef = useRef<HTMLInputElement>(null);
   const ContentRef = useRef<HTMLTextAreaElement>(null);
 
-  //타이틀 체인지 타이틀을 35자로 제한
+  //타이틀 체인지 타이틀을 30자로 제한
   const handleTitleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setPostTitles(event.target.value);
+    // setTitle(event.target.value);
     const newTitle = event.target.value;
     if (newTitle.length <= 30) {
       setPostTitles(newTitle);
     } else {
       alert("제목은 30자 이하로 입력해주세요.");
+      const truncatedTitle = newTitle.slice(0, 10000);
+      setPostTitles(truncatedTitle);
       TitleRef.current!.focus();
       return;
     }
   };
-  //컨텐츠 체인지
+
+  //컨텐츠 온체인지 컨텐츠
   const handleContentChange = (
     event: React.ChangeEvent<HTMLTextAreaElement>
   ) => {
-    setPostContent(event.target.value);
+    const newContents = event.target.value;
+    if (newContents.length <= 10000) {
+      setPostContent(newContents);
+    } else {
+      alert("내용은 10000자 이하로 입력해주세요.");
+      const truncatedContents = newContents.slice(0, 10000);
+      setPostContent(truncatedContents);
+      ContentRef.current!.focus();
+    }
   };
-
   //댓글수정쿼리
   const EditMutation = useMutation(
     (editComment: any) =>
@@ -104,7 +114,7 @@ export const CommunityEditPost = () => {
                 placeholder="제목을 입력하세요"
                 value={postTitles}
                 onChange={handleTitleChange}
-                maxLength={35}
+                maxLength={30}
               />
               <p>내용</p>
               <ContentInput
@@ -112,6 +122,7 @@ export const CommunityEditPost = () => {
                 placeholder="내용을 입력하세요"
                 value={postContent}
                 onChange={handleContentChange}
+                maxLength={10000}
               />
               <PostButtonWrap>
                 <AddBtn
