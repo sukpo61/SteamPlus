@@ -43,6 +43,7 @@ function Comment({ PostId }: CommentProps) {
   const Hour = newDate.getHours();
   const Minute = newDate.getMinutes();
   const date = `${year}/${month}/${day} ${Hour}:${Minute}`;
+
   //스팀아이디
   const steamID = sessionStorage.getItem("steamid");
   const getComment = async () => {
@@ -153,6 +154,7 @@ function Comment({ PostId }: CommentProps) {
           placeholder="댓글을 입력하세요"
           value={commentInput}
           onChange={CommentInputOnChange}
+          maxLength={100}
         />
 
         <CommentFormButton>등록</CommentFormButton>
@@ -179,6 +181,7 @@ function Comment({ PostId }: CommentProps) {
                     defaultValue={i.contents}
                     onChange={EditInputOnChange}
                     ref={CommentsRef}
+                    maxLength={100}
                   />
                 ) : (
                   <CommentText>{i.contents}</CommentText>

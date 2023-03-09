@@ -19,7 +19,7 @@ import FriendContextMenu from "./FriendContextMenu";
 import { FriendSearchProps } from "./FriendSearch";
 import socket from "../../socket";
 import { resolve } from "path";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 // import { ContextMenu, MenuItem, ContextMenuTrigger } from "react-contextmenu";
 
 export interface FriendProps {
@@ -35,6 +35,7 @@ export interface FriendProps {
 function Friend() {
   const PROXY_ID: any = process.env.REACT_APP_PROXY_ID;
 
+  const navigate = useNavigate();
   const queryClient = useQueryClient();
   const location = useLocation();
 
@@ -63,7 +64,7 @@ function Friend() {
 
   const [friendChannel, setFriendChannel] = useState<any>(new Map());
 
-  const myId = sessionStorage.getItem("steamid");
+  const myId: any = sessionStorage.getItem("steamid");
   const myNickName = sessionStorage.getItem("nickName");
 
   const [layoutMenu, setLayoutMenu] = useRecoilState<String>(LayoutButton);
@@ -191,6 +192,7 @@ function Friend() {
     setCurrentLocation(location.pathname.split(":")[1]);
   }, [location]);
 
+  //지워도 될지도
   useEffect(() => {
     socket.on("friendNew_message", (newChat) => {
       console.log("accept");
@@ -204,6 +206,36 @@ function Friend() {
     });
   }, []);
 
+  const friendChatOnClick = (id: any, login: any, lastLogin: any) => {
+    if (menuPosition.xPos === "-1000px") {
+      if (login && isFriendOnline(lastLogin)) {
+        //선택한 아이디 불러오기
+        const clickId = userId.find((i: any) => {
+          return i.split("/")[0] === id;
+        });
+        //선택한 아이디와 내아이디 더하기 (방이름)
+        const roomName = parseInt(clickId?.split("/")[0]) + parseInt(myId);
+        console.log(roomName);
+        console.log("joined");
+        socket.emit("friendChat", clickId, roomName);
+        navigate(`/testchat/:${roomName}`, { state: clickId.split("/")[0] });
+
+        const chatNoticeClear = chatTextNotice.filter((i: any) => {
+          if (i.id === id) {
+            return false;
+          } else {
+            return i;
+          }
+        });
+        setChatTextNotice(chatNoticeClear);
+        setLayoutMenu("close");
+      } else {
+        alert("상대가 접속중이 아닙니다.");
+      }
+    } else {
+      return;
+    }
+  };
   return (
     <FriendDiv layoutMenu={layoutMenu}>
       {/* 위 제목과 input layoutstring이 바뀔때마다 바뀌게 */}
@@ -225,6 +257,7 @@ function Friend() {
         return (
           <FriendBoxDiv
             key={i.id}
+            onClick={() => friendChatOnClick(i.id, i.login, i.lastLogin)}
             onContextMenu={(event) => handleContextMenu(event, i.id)}
           >
             <FriendContextMenu
