@@ -8,6 +8,7 @@ import { Top10Card } from "./Top10Card";
 import { recommandGameRecoil } from "../../recoil/atom";
 import { useRecoilState } from "recoil";
 import Skeleton from "../common/Skeleton";
+import Skeletons from "../common/Skeleton";
 
 export const Top10 = () => {
   const PROXY_ID: any = process.env.REACT_APP_PROXY_ID;
@@ -66,6 +67,7 @@ export const Top10 = () => {
                 // console.log("game", game);
                 return (
                   <GameChannelBlockView key={index}>
+                    {/* <Skeleton /> */}
                     <GameChannelBlock game={game} />
                   </GameChannelBlockView>
                 );
@@ -75,7 +77,7 @@ export const Top10 = () => {
                 {array.map(() => {
                   return (
                     <>
-                      <Skeleton />
+                      <Skeletons />
                     </>
                   );
                 })}
