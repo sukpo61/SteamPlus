@@ -50,22 +50,22 @@ function LoginModal({ layoutMenu, setLoginModalOpen }: Props) {
     </ModalArea>
   );
 }
-
+// width: 400px
 const moveLoginModal = keyframes`
 0% {
     transform: translateX(0px);
     opacity:0%;
   }
   100% {
-    transform: translateX(120px);
+    transform: translateX(110px);
     opacity: 100%;
   }`;
 
 const ModalArea = styled.div<{ layoutMenu: any }>`
+  margin-left: ${(props) => (props.layoutMenu === "close" ? "0px" : "400px")};
   position: fixed;
   margin-top: 28px;
-  margin-left: ${(props) => (props.layoutMenu === "close" ? "0px" : "400px")};
-  transform: translate(110px, 0);
+  transform: translateX(110px);
   z-index: 9999;
   animation: ${moveLoginModal} 0.5s ease;
 `;
