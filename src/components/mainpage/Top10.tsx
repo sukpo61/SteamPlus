@@ -14,12 +14,7 @@ export const Top10 = () => {
   //스켈레톤배열
   const array = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
   const PROXY_ID: any = process.env.REACT_APP_PROXY_ID;
-  const APIKEY = "234E0113F33D5C7C4D4D5292C6774550";
-
   const [recommandGame, setrecommandGame] = useRecoilState(recommandGameRecoil);
-
-  const [IDS, setIDS] = useState();
-  const [response, setResponse] = useState();
 
   const TopGame = async (gameid: any) => {
     const response = await axios.get(
@@ -45,7 +40,6 @@ export const Top10 = () => {
 
     const filteredGameData = gameData.filter((data) => data.type === "game");
     const gameinfo = filteredGameData.map((data) => {
-      console.log("gamedata", data);
       sessionStorage.setItem("type", data?.type);
       return data;
     });
@@ -53,6 +47,7 @@ export const Top10 = () => {
     setrecommandGame(gameinfo);
   };
 
+  // //이거 현석님 직렬 코드임
   // const TopGameid = async () => {
   //   let gameinfo = [];
 
@@ -81,7 +76,6 @@ export const Top10 = () => {
       TopGameid();
     }
   }, []);
-  //캐시데이너
 
   return (
     <>
