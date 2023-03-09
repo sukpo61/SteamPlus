@@ -41,7 +41,11 @@ const PoularChannel = () => {
             </ChannelBox>
           </PopularChannel1st>
         ) : (
-          <PopularChannel1stempty>인기채널이 없습니다.</PopularChannel1stempty>
+          <PopularChannel1stempty>
+            {/* <img src="/img/logoWhite.png"></img> */}
+            <span>1</span>
+            <p>인기채널이 없습니다.</p>
+          </PopularChannel1stempty>
         )}
 
         <PoularChannelLayout2>
@@ -137,7 +141,11 @@ const PopularChannel1st = styled.div`
   transition: 0.5s ease;
 `;
 const PopularChannel1stempty = styled.div`
+  overflow: hidden;
+  position: relative;
   color: white;
+  justify-content: center;
+  align-items: center;
   width: 396px;
   height: 380px;
   display: flex;
@@ -147,6 +155,14 @@ const PopularChannel1stempty = styled.div`
   border-radius: 10px;
   box-shadow: 0px 0px 15px 0px #000;
   transition: 0.5s ease;
+  span {
+    font-family: "Noto Sans";
+    left: -20px;
+    top: 0px;
+    position: absolute;
+    opacity: 10%;
+    font-size: 500px;
+  }
 `;
 const PopularChannel1st2 = styled.div`
   width: 232px;
@@ -183,7 +199,7 @@ const PopularChannel1st2empty = styled.div`
     font-size: 300px;
     position: absolute;
     left: -40px;
-    opacity: 20%;
+    opacity: 10%;
   }
   transition: 0.5s ease;
 `;
