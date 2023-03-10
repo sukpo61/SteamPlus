@@ -185,7 +185,9 @@ export const Community = () => {
       <CommentsWrap>
         <CommunityAddArea>
           <Communitytitle2>게시판</Communitytitle2>
-          <AddPostBtn onClick={addPost}>글쓰기</AddPostBtn>
+          <AddPostBtn onClick={addPost}>
+            <p>글쓰기</p>
+          </AddPostBtn>
         </CommunityAddArea>
         <CommunityeHeader>
           <HeaderTh style={{ padding: "0px 16px" }}>번호</HeaderTh>
@@ -221,7 +223,7 @@ export const Community = () => {
                 onChange={handleSearchTextChange}
               />
               <AiOutlineSearch
-                style={{ cursor: "pointer" }}
+                style={{ cursor: "pointer", color: "#777D87" }}
                 className="searchIcon"
                 onClick={btn}
               />
@@ -250,7 +252,7 @@ const CommunityAddArea = styled.div`
   margin-bottom: 10px;
 `;
 const CommunityHeader = styled.div`
-  margin-top: 70px;
+  margin-top: 50px;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -265,7 +267,8 @@ const CommunityFooter = styled.div`
 const CommunitySpan = styled.span`
   cursor: pointer;
   font-weight: 500;
-  font-size: 18px;
+  font-size: 15px;
+  padding-bottom: 8px;
 `;
 
 const CommunitySerchinput = styled.input`
@@ -311,14 +314,15 @@ const Communitycategory = styled.div<{ categorySt: string }>`
   }
 `;
 const Communitytitle2 = styled.p`
-  color: white;
-  font-weight: 400;
+  color: #ffffff;
+  font-weight: 600;
   font-size: 20px;
 `;
 const CommunityComment = styled.div`
-  font-size: 13;
+  font-weight: 300;
+  font-size: 13px;
   color: #a7a9ac;
-  margin-top: 20px;
+  margin-top: 12px;
   margin-bottom: 60px;
   display: flex;
   justify-content: center;
@@ -336,12 +340,12 @@ const CommunityTitle = styled.div`
   cursor: pointer;
   width: 100%;
   position: relative;
-  margin: 0 auto;
-  font-family: "Noto Sans KR", sans-serif;
+  font-family: "Noto Sans";
   font-style: normal;
-  font-weight: 400;
+  font-weight: 700;
   font-size: 40px;
   line-height: 54px;
+  letter-spacing: -0.03em;
   display: flex;
   justify-content: center;
 `;
@@ -413,10 +417,10 @@ const AddPostBtn = styled.span`
   cursor: pointer;
   font-weight: 600;
   font-size: 13px;
-  line-height: 25px;
+  line-height: 30px;
   text-align: center;
-  width: 58px;
-  height: 25px;
+  width: 60px;
+  height: 30px;
   background: #00b8c8;
   border-radius: 8px;
 `;
