@@ -227,7 +227,7 @@ function Layout() {
             layoutMenu={layoutMenu}
           >
             <MdVoiceChat className="chatIcon" />
-            <p>음성채팅</p>
+            <p>화상채팅</p>
           </VoiceTalkbutton>
         ) : (
           <VoiceTalkbuttonWrap>
@@ -237,7 +237,7 @@ function Layout() {
               layoutMenu={layoutMenu}
             >
               <MdVoiceChat className="chatIcon" />
-              <p>음성채팅</p>
+              <p>화상채팅</p>
             </VoiceTalkbutton>
           </VoiceTalkbuttonWrap>
         )}
@@ -327,7 +327,7 @@ function Layout() {
           >
             {/* 로그인이 되어있지않다면과 로그인이 되어있다면의 정보*/}
             {ProfileImgUrl === null ? (
-              <div>profile</div>
+              <div>Login</div>
             ) : (
               <ProfileImg src={`${ProfileImgUrl}`} />
             )}
@@ -371,7 +371,7 @@ function Layout() {
           {/* 메뉴 구분선 */}
           <SideLine />
           {/* 친구 */}
-          {myId === null ? (
+          {/* {myId === null ? (
             <Friendbutton
               onClick={() => {
                 // FriendButtonOnClick("profile");
@@ -382,48 +382,45 @@ function Layout() {
               <FaUserFriends className="friendIcon" />
               <p>친구</p>
             </Friendbutton>
-          ) : (
-            <Friendbutton
-              onClick={() => {
-                //맨위로 스크롤이동
-                // window.scrollTo({ top: 0, behavior: "smooth" });
+          ) : ( */}
+          <Friendbutton
+            onClick={() => {
+              //맨위로 스크롤이동
+              // window.scrollTo({ top: 0, behavior: "smooth" });
+              if (myId === null) {
+                handleLoginModalOpen();
+              } else {
                 FriendButtonOnClick("friend");
-              }}
-              layoutMenu={layoutMenu}
-            >
-              <FaUserFriends className="friendIcon" />
-              <p>친구</p>
-              {friendAddCome.length === 0 && chatTextNotice.length === 0 ? (
-                ""
-              ) : (
-                <FriendNotice />
-              )}
-            </Friendbutton>
-          )}
+              }
+            }}
+            layoutMenu={layoutMenu}
+          >
+            <FaUserFriends className="friendIcon" />
+            <p>친구</p>
+            {friendAddCome.length === 0 && chatTextNotice.length === 0 ? (
+              ""
+            ) : (
+              <FriendNotice />
+            )}
+          </Friendbutton>
+          {/* )} */}
           {/* 음성채팅 */}
-          {myId === null ? (
+          <VoiceTalkbuttonWrap>
+            {currentRoom && <VoiceTalkON></VoiceTalkON>}
             <VoiceTalkbutton
               onClick={() => {
-                // LayoutButtonOnClick("profile");
-                handleLoginModalOpen(); // 로그인 모달
+                if (myId === null) {
+                  handleLoginModalOpen();
+                } else {
+                  LayoutButtonOnClick("voicetalk");
+                }
               }}
               layoutMenu={layoutMenu}
             >
               <MdVoiceChat className="chatIcon" />
-              <p>음성채팅</p>
+              <p>화상채팅</p>
             </VoiceTalkbutton>
-          ) : (
-            <VoiceTalkbuttonWrap>
-              {currentRoom && <VoiceTalkON></VoiceTalkON>}
-              <VoiceTalkbutton
-                onClick={() => LayoutButtonOnClick("voicetalk")}
-                layoutMenu={layoutMenu}
-              >
-                <MdVoiceChat className="chatIcon" />
-                <p>음성채팅</p>
-              </VoiceTalkbutton>
-            </VoiceTalkbuttonWrap>
-          )}
+          </VoiceTalkbuttonWrap>
           {/* 나중에 부활 예정 */}
           <AboutPagesDiv onClick={AboutPagesOnClick}>?</AboutPagesDiv>
         </SideBarDiv>
@@ -681,7 +678,6 @@ const VideosList = styled.div<any>`
 const ProfileImg = styled.img`
   width: 50px;
   height: 50px;
-  border-radius: 50%;
 `;
 const SideBarDiv = styled.div`
   display: flex;
@@ -720,10 +716,20 @@ const Profilebutton = styled.div`
   border-radius: 25px;
   font-size: 12px;
   width: 50px;
+  height: 50px;
+  overflow: hidden;
   line-height: 50px;
   text-align: center;
-  height: 50px;
-  background: #ccc;
+  color: #fff;
+  font-weight: 500;
+  background: linear-gradient(
+    65.45deg,
+    #002176 13.13%,
+    #002fa8 30.2%,
+    #0076b9 52.4%,
+    #00b4c7 74.45%,
+    #12f8d8 86.79%
+  );
   cursor: pointer;
 `;
 
