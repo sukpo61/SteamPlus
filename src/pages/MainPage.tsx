@@ -27,7 +27,7 @@ const MainPage: any = () => {
   const GameId: any = sessionStorage.getItem("gameid");
   const GameIds: any =
     GameId === "undefined" || GameId === null
-      ? 945360
+      ? null
       : sessionStorage.getItem("gameid");
 
   //게임이미지 불러오기
@@ -130,7 +130,7 @@ const MainPage: any = () => {
       </Logo>
       <MainLayout>
         {/* 메인게임 이미지 */}
-        <CurrentGame game={randomGames} />{" "}
+        <CurrentGame game={randomGames} data={data} />
         <MainWrap>
           {/* 인기채널 */}
           <PoularChannel />
