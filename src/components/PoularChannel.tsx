@@ -13,6 +13,7 @@ const PoularChannel = () => {
   return (
     <PoularChannelLayout>
       <PopularChannel>
+        <PopularChannelTitle>인기채널</PopularChannelTitle>
         {popularchannels[0] ? (
           <PopularChannel1st
             onClick={() =>
@@ -23,7 +24,7 @@ const PoularChannel = () => {
               })
             }
           >
-            <PopularChannelTitle>인기채널</PopularChannelTitle>
+            {/* <PopularChannelTitle>인기채널</PopularChannelTitle> */}
             <PopularChannelImg1st src={firstgame?.info.header_image} />
             <ChannelBox>
               <PoPularChannelTitle>{firstgame?.info.name}</PoPularChannelTitle>
@@ -100,7 +101,7 @@ const PopularChannelTitle = styled.div`
   position: absolute;
   width: 100%;
   top: -35px;
-  text-shadow: 0px 0px 15px white;
+  text-shadow: 0px 0px 5px white;
 `;
 const PoularChannelLayout2 = styled.div<any>`
   display: grid;
