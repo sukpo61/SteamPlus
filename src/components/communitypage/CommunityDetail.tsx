@@ -24,6 +24,7 @@ export const CommunityDetail = () => {
   const PostId = post?.id;
   const PostSteamid = post?.steamid;
   const PostCount = post?.count;
+  const PostCategory = post?.category;
   const Steamid = sessionStorage.getItem("steamid");
 
   //삭제 하기

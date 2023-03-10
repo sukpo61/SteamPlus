@@ -36,7 +36,7 @@ function Profile() {
     useRecoilState<any>(friendAllState);
 
   // 어스아이디
-  const STEAM_OPENID_ENDPOINT = `https://steamcommunity.com/openid/login?openid.ns=http://specs.openid.net/auth/2.0&openid.mode=checkid_setup&openid.return_to=https://steam-plus-theta.vercel.app/login/&openid.realm=https://steam-plus-theta.vercel.app/login&openid.identity=http://specs.openid.net/auth/2.0/identifier_select&openid.claimed_id=http://specs.openid.net/auth/2.0/identifier_select`;
+  const STEAM_OPENID_ENDPOINT = `https://steamcommunity.com/openid/login?openid.ns=http://specs.openid.net/auth/2.0&openid.mode=checkid_setup&openid.return_to=${FRONTEND_URL}/login/&openid.realm=${FRONTEND_URL}/login&openid.identity=http://specs.openid.net/auth/2.0/identifier_select&openid.claimed_id=http://specs.openid.net/auth/2.0/identifier_select`;
   const SteamLogin = () => {
     window.location.href = STEAM_OPENID_ENDPOINT;
   };
@@ -266,11 +266,19 @@ function Profile() {
             <>
               {/* 최근홢동한게임이 없다면 */}
               {GameData === undefined ? (
-                <>
-                  <RecentGame>
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+
+                    height: "500px",
+                  }}
+                >
+                  <RecentGames>
                     <div>최근 활동한 게임이 없습니다.</div>
-                  </RecentGame>
-                </>
+                  </RecentGames>
+                </div>
               ) : (
                 <>
                   <RecentGame> 최근 활동한 게임</RecentGame>
@@ -375,6 +383,14 @@ const ProfileBox = styled.div<{ ProfileNicName: String | null }>`
 `;
 
 const RecentGame = styled.p`
+  color: #d4d4d4;
+  font-size: 14px;
+  margin-bottom: 24px;
+  display: flex;
+  justify-content: center;
+  width: 100%;
+`;
+const RecentGames = styled.p`
   color: #d4d4d4;
   font-size: 14px;
   margin-bottom: 24px;
