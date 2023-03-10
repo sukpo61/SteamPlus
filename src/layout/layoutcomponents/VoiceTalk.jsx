@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { getFriend, LayoutButton } from "../../recoil/atom";
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
 import { useRecoilValue } from "recoil";
 import socket from "../../socket";
 import useInput from "../../hooks/useInput";
@@ -144,6 +144,20 @@ function VoiceTalk({ myId, handleLoginModalOpen }) {
     setinputValue: setSearchValue,
     reset: resetSearchValue,
   } = useInput("");
+
+  //*
+  // const [validA, setValidA] = useState(true);
+  // const handlePW = (e) => {
+  //   const inputPassword = e.target.value;
+  //   setSbPassword(inputPassword);
+  //   if (inputPassword.length === 0) {
+  //     setValidA(true);
+  //   } else if (inputPassword !== pwroominfo.password) {
+  //     setValidA(false);
+  //   } else {
+  //     setValidA(true);
+  //   }
+  // };
 
   const navigate = useNavigate();
 
@@ -302,7 +316,8 @@ function VoiceTalk({ myId, handleLoginModalOpen }) {
       setPwRoomInfo("");
       resetSbPassword();
     } else {
-      window.alert("틀림");
+      setFontColor("#F05656");
+      // window.alert("틀림");
     }
   };
   const SubmitCancle = () => {
@@ -350,48 +365,53 @@ function VoiceTalk({ myId, handleLoginModalOpen }) {
     return false;
   });
 
+  const Roomjoin = (room) => {
+    console.log("roomrecept");
+    if (!myuserid) {
+      setLoginModalOpen(true);
+      return;
+    }
+    socket.emit("checkusers");
+    if (currentRoom === room.roomtitle) {
+      return;
+    }
+    if (room.userinfo?.length >= room.usercount) {
+      window.alert("방 인원이 다찼어요.");
+      return;
+    }
+    if (!room.password) {
+      setCurrentRoom(room.roomtitle);
+      handleJoin({
+        roomtitle: room.roomtitle,
+        channelId: room.channelId,
+        usercount: room.usercount,
+        password: room.password,
+      });
+    } else {
+      setPwSubmit(true);
+      setCreateDisplay("pwsubmit");
+      setPwRoomInfo({
+        roomtitle: room.roomtitle,
+        channelId: room.channelId,
+        usercount: room.usercount,
+        password: room.password,
+      });
+    }
+  };
+
   const RoomList = roomsresult.map((room) => {
     return (
       <RoomWrap
-        key={room.name}
+        key={room.roomtitle}
         currentRoom={currentRoom}
-        name={room.name}
+        name={room.roomtitle}
         onClick={() => {
-          if (!myuserid) {
-            setLoginModalOpen(true);
-            return;
-          }
-          socket.emit("checkusers");
-          if (currentRoom === room.name) {
-            return;
-          }
-          if (room.userinfo.length >= room.usercount) {
-            window.alert("방 인원이 다찼어요.");
-            return;
-          }
-          if (!room.password) {
-            setCurrentRoom(room.name);
-            handleJoin({
-              roomtitle: room.name,
-              channelId,
-              usercount: room.usercount,
-              password: room.password,
-            });
-          } else {
-            setPwSubmit(true);
-            setCreateDisplay("pwsubmit");
-            setPwRoomInfo({
-              roomtitle: room.name,
-              channelId,
-              usercount: room.usercount,
-              password: room.password,
-            });
-          }
+          Roomjoin(room);
         }}
       >
         <RoomTitleWrap>
           <RoomTitle>
-            <span># {room.name}</span>
+            <span># {room.roomtitle}</span>
             {room.password && (
               <div>
                 <MdLockOutline></MdLockOutline>
@@ -467,6 +487,34 @@ function VoiceTalk({ myId, handleLoginModalOpen }) {
     NewUserPeerConnection.onaddstream = (event) => {
       handleAddStream(userid, event.stream);
     };
+
+    const senders = NewUserPeerConnection.getSenders();
+
+    // senders.forEach((sender) => {
+    //   if (sender.track.kind === "video") {
+    //     const parameters = sender.getParameters();
+    //     const originalEnabledState = parameters.encodings[0].active;
+
+    //     setInterval(() => {
+    //       const currentEnabledState =
+    //         sender.getParameters().encodings[0].active;
+    //       if (currentEnabledState !== originalEnabledState) {
+    //         console.log(
+    //           "상대방의 비디오 스트림 enabled 속성이 변경되었습니다."
+    //         );
+    //         originalEnabledState = currentEnabledState;
+
+    //         // 비디오 스트림 비활성화
+    //         sender.getParameters().encodings[0].active = false;
+    //         sender.setParameters(sender.getParameters());
+
+    //         // 비디오 스트림 활성화
+    //         sender.getParameters().encodings[0].active = true;
+    //         sender.setParameters(sender.getParameters());
+    //       }
+    //     }, 1000);
+    //   }
+    // });
 
     NewUserPeerConnection.onicecandidate = (event) => {
       socket.emit("ice", event.candidate, myuserid, {
@@ -661,7 +709,8 @@ function VoiceTalk({ myId, handleLoginModalOpen }) {
 
   useEffect(() => {
     if (friendroominfo) {
-      handleJoin(friendroominfo);
+      console.log("friendroominfo", friendroominfo);
+      Roomjoin(friendroominfo);
     }
   }, [friendroominfo]);
 
@@ -682,6 +731,13 @@ function VoiceTalk({ myId, handleLoginModalOpen }) {
       setRoomsResult(roomsInfo);
     }
   }, [roomsInfo]);
+
+  const [fontColor, setFontColor] = useState("white");
+
+  useEffect(() => {
+    setFontColor("white");
+  }, [sbpassword]);
+
   //스팀으로 이동하기
   const gotoSteam = () => {
     // navigate();
@@ -726,35 +782,47 @@ function VoiceTalk({ myId, handleLoginModalOpen }) {
             </SearchButtonWrap> */}
           </RoomTitleInputWrap>
         </VoiceTalkTop>
-        <RoomtoggleForm displaystate={createDisplay}>
+        <RoomtoggleForm displaystate={createDisplay} fontColor={fontColor}>
           {pwsubmit ? (
-            <SubbmitPasswordWrap>
+            <SubbmitPasswordWrap
+              style={{
+                boxShadow: `${
+                  fontColor === "white" ? "" : "0px 0px 10px 0px #F05656"
+                }`,
+              }}
+            >
+              {/* <div> */}
               <SubmitPwInput
                 className="title"
                 type="password"
                 placeholder="4자리 숫자 비밀번호"
                 value={sbpassword}
                 onChange={setSbPassword}
-              ></SubmitPwInput>
+                minLength={4}
+                maxLength={4}
+                style={{ color: fontColor }} // 비번 틀렸을 때 css //Color: validA ? "white" : "red"
+              />
               <TitleCancle onClick={SubmitCancle}>취소</TitleCancle>
               <TitleConfirm onClick={SubmitPassword}>제출</TitleConfirm>
+              {/* </div> */}
             </SubbmitPasswordWrap>
           ) : (
             <CreateRoomWrap>
               <CreateTitleInput
                 className="title"
                 type="text"
-                placeholder="제목을 입력하세요"
+                placeholder="채팅방 이름을 입력하세요"
                 value={roomtitle}
                 onChange={setRoomTitle}
               ></CreateTitleInput>
               <SetPasswordWrap>
-                <PasswordCheck>
+                <PasswordCheck checked={checked}>
                   <Checkbox
+                    style={{ color: checked ? "#00B8C8" : "#777d87" }}
                     checked={checked}
                     onChange={PasswordChange}
                   ></Checkbox>
-                  <span>비밀번호설정</span>
+                  <span>비밀번호 설정</span>
                 </PasswordCheck>
                 <SetPasswordInput
                   type="password"
@@ -773,7 +841,7 @@ function VoiceTalk({ myId, handleLoginModalOpen }) {
                   <option value={3}>3명</option>
                   <option value={4}>4명</option>
                 </SetCountSelect>
-                <UserCount>방인원수</UserCount>
+                <UserCount>방 인원수</UserCount>
               </SetCountWrap>
               <CreateRoomBottom>
                 <div>
@@ -1104,8 +1172,13 @@ const CreateRoomBottom = styled.div`
   align-items: center;
   justify-content: space-between;
   color: white;
+  margin-bottom: -6px;
 `;
 const TitleConfirm = styled.button`
+  font-style: normal;
+  font-weight: 500;
+  line-height: 20px;
+  letter-spacing: -0.03em;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -1113,11 +1186,22 @@ const TitleConfirm = styled.button`
   font-size: 15px;
 `;
 const TitleCancle = styled.button`
+  font-style: normal;
+  font-weight: 500;
+  line-height: 20px;
+  letter-spacing: -0.03em;
   display: flex;
   justify-content: center;
   align-items: center;
   color: white;
   font-size: 15px;
+`;
+
+const PasswordNotCorrect = styled.p`
+  position: absolute;
+  font-size: 8px;
+  color: red;
+  top: 65px;
 `;
 const CreateRoomWrap = styled.div`
   margin-bottom: 10px;
@@ -1131,7 +1215,8 @@ const CreateRoomWrap = styled.div`
   border-radius: 10px;
 `;
 const SubbmitPasswordWrap = styled.div`
-  margin-top: 136px;
+  position: relative;
+  margin-top: 144px; //136px;
   margin-bottom: 10px;
   display: flex;
   flex-direction: row;
@@ -1160,28 +1245,39 @@ const SetCountWrap = styled.div`
   color: white;
   align-items: center;
 `;
+
 const PasswordCheck = styled.div`
-  color: #777d87;
+  color: ${({ checked }) => (checked ? "white" : "#777d87")};
   display: flex;
   flex-direction: row;
   align-items: center;
-  color: white;
+
   align-items: center;
   span {
-    font-family: "Noto Sans";
-    font-size: 14px;
-    color: #777d87;
+    font-style: normal;
+    font-weight: 400;
+    font-size: 15px;
+    line-height: 20px;
+    letter-spacing: -0.03em;
   }
 `;
 const UserCount = styled.div`
   margin-right: 15px;
-  color: #d4d4d4;
+  /* color: #d4d4d4; */
   display: flex;
   flex-direction: row;
   align-items: center;
+
+  font-style: normal;
+  font-weight: 400;
+  font-size: 15px;
+  line-height: 20px;
+  letter-spacing: -0.03em;
+  color: #ffffff;
 `;
 
 const CreateTitleInput = styled.input`
+  width: 304px;
   height: 40px;
   border-radius: 10px;
   background: #263245;
@@ -1189,7 +1285,14 @@ const CreateTitleInput = styled.input`
   color: #fff;
   border: 0;
   text-indent: 10px;
+
+  font-style: normal;
+  font-weight: 500;
+  font-size: 15px;
+  line-height: 20px;
+  letter-spacing: -0.03em;
 `;
+
 const SubmitPwInput = styled.input`
   height: 40px;
   border-radius: 10px;
@@ -1222,6 +1325,14 @@ const SetCountSelect = styled.select`
   color: #fff;
   border: 0;
   text-indent: 10px;
+
+  font-style: normal;
+  font-weight: 400;
+  font-size: 15px;
+  line-height: 20px;
+  display: flex;
+  align-items: center;
+  letter-spacing: -0.03em;
 `;
 
 const Controlbox = styled.div`
