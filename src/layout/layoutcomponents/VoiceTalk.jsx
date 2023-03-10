@@ -23,19 +23,25 @@ import {
   friendroominfoRecoil,
   channelNameRecoil,
   loginModalOpenRecoil,
+  localStreamRecoil,
+  micStateRecoil,
+  videoStateRecoil,
+  isAllMutedRecoil,
+  isVolumePercent,
+  isMicVolumePercent,
 } from "../../recoil/atom";
 
 import TeamChat from "../../pages/TeamChat";
 import { useLocation } from "react-router";
 
 import { MdExitToApp } from "react-icons/md";
-import { MdVolumeUp } from "react-icons/md";
+import { MdVolumeUp, MdVolumeOff } from "react-icons/md";
 import { MdSettings } from "react-icons/md";
-import { BsFillMicFill } from "react-icons/bs";
+import { BsFillMicFill, BsFillMicMuteFill } from "react-icons/bs";
 import { MdVideocam } from "react-icons/md";
 import { AiOutlineBorder } from "react-icons/ai";
 import { AiOutlineCheckSquare } from "react-icons/ai";
-import { MdLockOutline } from "react-icons/md";
+import { MdLockOutline, MdOutlineKeyboardArrowUp } from "react-icons/md";
 import { BiSearchAlt2 } from "react-icons/bi";
 
 import Checkbox from "@mui/material/Checkbox";
@@ -61,8 +67,6 @@ function VoiceTalk({ myId, handleLoginModalOpen }) {
   const myuserid = sessionStorage.getItem("steamid");
   const myNickName = sessionStorage.getItem("nickName");
 
-  const [localStream, setLocalStream] = useState(null);
-
   const [usercount, setUserCount] = useState(2);
 
   const [checked, setChecked] = useState(false);
@@ -79,7 +83,14 @@ function VoiceTalk({ myId, handleLoginModalOpen }) {
 
   const [isValid, setIsValid] = useState(true);
 
-  const [volumepercent, setVolumePercent] = useState(50);
+  const [audioContext, setAudioContext] = useState(null);
+
+  const [gainNode, setGainNode] = useState(null);
+
+  const [volumepercent, setVolumePercent] = useRecoilState(isVolumePercent);
+
+  const [micvolumepercent, setMicVolumePercent] =
+    useRecoilState(isMicVolumePercent);
 
   const [DataChannelMap, setDataChannelMap] =
     useRecoilState(DataChannelMapRecoil);
@@ -107,6 +118,14 @@ function VoiceTalk({ myId, handleLoginModalOpen }) {
     useRecoilState(loginModalOpenRecoil);
 
   const [getFriendAuth, setGetFriendAuth] = useRecoilState(getFriend);
+
+  const [localStream, setLocalStream] = useRecoilState(localStreamRecoil);
+
+  const [micstate, setMicState] = useRecoilState(micStateRecoil);
+
+  const [videostate, setVideoState] = useRecoilState(videoStateRecoil);
+
+  const [isallmuted, setIsAllMuted] = useRecoilState(isAllMutedRecoil);
 
   const {
     value: roomtitle,
@@ -153,6 +172,23 @@ function VoiceTalk({ myId, handleLoginModalOpen }) {
         video: true,
         audio: true,
       });
+
+      // let audioContext = new AudioContext();
+      // let source = audioContext.createMediaStreamSource(myStream);
+      // let gainNode = audioContext.createGain();
+      // source.connect(gainNode);
+      // gainNode.connect(audioContext.destination);
+
+      // setAudioContext(audioContext);
+
+      // setGainNode(gainNode);
+
+      myStream.getAudioTracks().forEach((track) => {
+        track.enabled = micstate;
+      });
+      myStream.getVideoTracks().forEach((track) => {
+        track.enabled = false;
+      });
       setLocalStream(myStream);
       handleAddStream(myuserid, myStream);
     } catch (e) {
@@ -183,6 +219,7 @@ function VoiceTalk({ myId, handleLoginModalOpen }) {
     if (currentRoom) {
       handleLeave(currentRoom);
     }
+    setvideoDisplay(true);
     setCurrentRoom(NewData.roomtitle);
     await getMedia();
     socket.emit("join_room", NewData, myuserid);
@@ -423,6 +460,10 @@ function VoiceTalk({ myId, handleLoginModalOpen }) {
       .getTracks()
       .forEach((track) => NewUserPeerConnection.addTrack(track, localStream));
 
+    localStream.getTracks().forEach((track) => {
+      console.log(track);
+    });
+
     NewUserPeerConnection.onaddstream = (event) => {
       handleAddStream(userid, event.stream);
     };
@@ -482,6 +523,38 @@ function VoiceTalk({ myId, handleLoginModalOpen }) {
   const VolumeonChange = (e) => {
     setVolumePercent(e.target.value);
   };
+
+  const MicVolumeonChange = (event) => {};
+
+  // const MicVolumeonChange = (event) => {
+  //   const volumeValue = parseFloat(event.target.value) / 100;
+  //   gainNode.gain.setValueAtTime(volumeValue, audioContext.currentTime);
+  // };
+
+  // let stream, audioContext, source, gainNode;
+
+  // navigator.mediaDevices
+  //   .getUserMedia({ audio: true })
+  //   .then((stream) => {
+  //     audioContext = new AudioContext();
+  //     source = audioContext.createMediaStreamSource(stream);
+  //     gainNode = audioContext.createGain();
+  //     source.connect(gainNode);
+  //     gainNode.connect(audioContext.destination);
+  //   })
+  //   .catch((error) => {
+  //     // 오류 처리
+  //   });
+
+  //   const MicVolumeonChange = (event) => {
+  //     const volumeValue = parseFloat(event.target.value) / 100;
+  //     gainNode.gain.setValueAtTime(volumeValue, audioContext.currentTime);
+  //   };
+
+  // function handleVolumeChange(event) {
+  //   const volumeValue = parseFloat(event.target.value);
+  //   gainNode.gain.setValueAtTime(volumeValue, audioContext.currentTime);
+  // }
 
   useEffect(() => {
     if (localStream) {
@@ -724,17 +797,35 @@ function VoiceTalk({ myId, handleLoginModalOpen }) {
       <Controlbox settingon={settingon}>
         <ControlButtons>
           <div>
-            <BsFillMicFill></BsFillMicFill>
-            <MdVolumeUp></MdVolumeUp>
+            <div
+              onClick={() => {
+                setMicState((e) => !e);
+                if (localStream) {
+                  localStream.getAudioTracks().forEach((track) => {
+                    track.enabled = !micstate;
+                  });
+                }
+              }}
+            >
+              {micstate ? (
+                <BsFillMicFill></BsFillMicFill>
+              ) : (
+                <BsFillMicMuteFill></BsFillMicMuteFill>
+              )}
+            </div>
+            <div
+              onClick={() => {
+                setIsAllMuted((e) => !e);
+              }}
+            >
+              {isallmuted ? (
+                <MdVolumeOff></MdVolumeOff>
+              ) : (
+                <MdVolumeUp></MdVolumeUp>
+              )}
+            </div>
           </div>
           <div>
-            {location === "Teamchat" && currentRoom && (
-              <MdVideocam
-                onClick={() => {
-                  setvideoDisplay((e) => !e);
-                }}
-              ></MdVideocam>
-            )}
             <MdSettings
               onClick={() => {
                 setSettingOn((e) => !e);
@@ -752,17 +843,6 @@ function VoiceTalk({ myId, handleLoginModalOpen }) {
                 aria-label="Small"
                 valueLabelDisplay="auto"
                 onChange={VolumeonChange}
-              />
-            </Box>
-          </SliderWrap>
-          <SliderWrap>
-            <div>마이크</div>
-            <Box width={300}>
-              <Slider
-                size="small"
-                defaultValue={50}
-                aria-label="Small"
-                valueLabelDisplay="auto"
               />
             </Box>
           </SliderWrap>
