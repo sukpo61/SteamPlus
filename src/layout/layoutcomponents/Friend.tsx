@@ -335,7 +335,7 @@ const MenuTitleh2 = styled.h2`
   font-size: 14px;
   font-weight: 300;
   color: #fff;
-  margin-left: 24px;
+  margin-left: 26px;
   margin-top: 12px;
 `;
 const MenuTitleInput = styled.input`
