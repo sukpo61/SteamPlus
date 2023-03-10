@@ -173,6 +173,8 @@ const LandingImg1 = styled.img`
   left: 0;
   transform: translate(0, 0); // translateY(6%); // 24%
   object-fit: cover;
+  opacity: 0;
+
   width: 100%;
   /* min-width: 1200px; */
   height: 100%;

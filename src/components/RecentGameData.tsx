@@ -1,10 +1,20 @@
+import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 
 const RecentGameData = ({ gameData }: any) => {
+  const navigate = useNavigate();
   const totalMinutes = gameData.playtime_mac_forever;
   const hours = Math.floor(totalMinutes / 60);
   const minutes = totalMinutes % 60;
   const gameID = gameData.appid;
+  //클릭시 해당게임채널로 이동하기
+  const gotoGameChannel = () => {
+    navigate(`/Teamchat/:${gameID}`, {
+      state: {
+        gameid: gameID.toString(),
+      },
+    });
+  };
 
   const gameimg: any = `https://steamcdn-a.akamaihd.net/steam/apps/${gameID}/header.jpg`;
   return (
@@ -13,7 +23,7 @@ const RecentGameData = ({ gameData }: any) => {
         <RecentGameDataImg src={gameimg} />
         {/* 백그라운드 이미지 */}
         <CurrentGameBlackImg />
-        <GameBtn>게임 채널 참여</GameBtn>
+        <GameBtn onClick={gotoGameChannel}>게임 채널 참여</GameBtn>
         <RecentGameDataBox>
           <RecentGameDataTiTle>{gameData.name}</RecentGameDataTiTle>
           <RecentGameDataTime>

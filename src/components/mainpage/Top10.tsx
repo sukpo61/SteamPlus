@@ -14,12 +14,7 @@ export const Top10 = () => {
   //스켈레톤배열
   const array = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
   const PROXY_ID: any = process.env.REACT_APP_PROXY_ID;
-  const APIKEY = "234E0113F33D5C7C4D4D5292C6774550";
-
   const [recommandGame, setrecommandGame] = useRecoilState(recommandGameRecoil);
-
-  const [IDS, setIDS] = useState();
-  const [response, setResponse] = useState();
 
   const TopGame = async (gameid: any) => {
     const response = await axios.get(
@@ -32,56 +27,40 @@ export const Top10 = () => {
     );
     return response?.data[gameid].data;
   };
+  //탑게임 열개
   const TopGameid = async () => {
     const response = await axios.get(
       `${PROXY_ID}/https://api.steampowered.com/ISteamChartsService/GetTopReleasesPages/v1/`
     );
     const gameIds = response?.data.response.pages[0].item_ids
+      //gameIds를 랜덤으롤 돌려줌
       .map((e: any) => e.appid)
-      .slice(0, 9);
+      //아이디 랜덤돌림
+      .sort(() => Math.random() - 0.5)
+      //아이디 열개자름
+      .slice(0, 15);
 
     const gameDataPromises = gameIds.map((gameId: any) => TopGame(gameId));
-    const gameData = await Promise.all(gameDataPromises);
 
-    const filteredGameData = gameData.filter((data) => data.type === "game");
+    const gameData = await Promise.all(gameDataPromises);
+    const filteredGameData = gameData.filter((data) => {
+      //성인게임 필터 아마도?
+      if (data.content_descriptors.notes === null) {
+        return data.type === "game";
+      }
+    });
     const gameinfo = filteredGameData.map((data) => {
-      console.log("gamedata", data);
-      sessionStorage.setItem("type", data?.type);
       return data;
     });
-
-    setrecommandGame(gameinfo);
+    //타입이 게임이고 성인게임 제외한것중에서 10개를 걸러줌
+    setrecommandGame(gameinfo.slice(0, 10));
   };
-
-  // const TopGameid = async () => {
-  //   let gameinfo = [];
-
-  //   const response = await axios.get(
-  //     `${PROXY_ID}/https://api.steampowered.com/ISteamChartsService/GetTopReleasesPages/v1/`
-  //   );
-  //   let data = await response?.data.response.pages[0].item_ids
-  //     .map((e: any) => e.appid)
-  //     .slice(0, 9);
-  //   for (let gameid of data) {
-  //     const gamedata = await TopGame(gameid);
-  //     if (gamedata.type === "game") {
-  //       gameinfo.push(gamedata);
-  //       //여기서 gamedata를 가져오는게 느린거임 하나씩 맵을도니까 직렬처리
-  //       console.log("gamedata", gamedata);
-  //     }
-  //     sessionStorage.setItem("type", gamedata?.type);
-  //   }
-  //   // setrecommandGame((e: any) => [...e, gamedata]);
-  //   setrecommandGame(gameinfo);
-  //   // sessionStorage.setItem("1", sessionStorage[0]);
-  // };
 
   useEffect(() => {
     if (recommandGame.length === 0) {
       TopGameid();
     }
   }, []);
-  //캐시데이너
 
   return (
     <>

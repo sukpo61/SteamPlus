@@ -66,7 +66,7 @@ const ModalArea = styled.div<{ layoutMenu: any }>`
   position: fixed;
   margin-top: 28px;
   transform: translateX(110px);
-  z-index: 9999;
+  z-index: 999999;
   animation: ${moveLoginModal} 0.5s ease;
 `;
 
