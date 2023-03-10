@@ -227,7 +227,7 @@ function Layout() {
             layoutMenu={layoutMenu}
           >
             <MdVoiceChat className="chatIcon" />
-            <p>음성채팅</p>
+            <p>화상채팅</p>
           </VoiceTalkbutton>
         ) : (
           <VoiceTalkbuttonWrap>
@@ -237,7 +237,7 @@ function Layout() {
               layoutMenu={layoutMenu}
             >
               <MdVoiceChat className="chatIcon" />
-              <p>음성채팅</p>
+              <p>화상채팅</p>
             </VoiceTalkbutton>
           </VoiceTalkbuttonWrap>
         )}
@@ -450,7 +450,7 @@ function Layout() {
               layoutMenu={layoutMenu}
             >
               <MdVoiceChat className="chatIcon" />
-              <p>음성채팅</p>
+              <p>화상채팅</p>
             </VoiceTalkbutton>
           </VoiceTalkbuttonWrap>
           {/* 나중에 부활 예정 */}
@@ -710,7 +710,6 @@ const VideosList = styled.div<any>`
 const ProfileImg = styled.img`
   width: 50px;
   height: 50px;
-  border-radius: 50%;
 `;
 const SideBarDiv = styled.div`
   display: flex;
@@ -749,9 +748,10 @@ const Profilebutton = styled.div`
   border-radius: 25px;
   font-size: 12px;
   width: 50px;
+  height: 50px;
+  overflow: hidden;
   line-height: 50px;
   text-align: center;
-  height: 50px;
   color: #fff;
   font-weight: 500;
   background: linear-gradient(
