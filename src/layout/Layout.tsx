@@ -457,7 +457,7 @@ function Layout() {
             </VoiceTalkbuttonWrap>
           )}
           {/* 나중에 부활 예정 */}
-          {/* <AboutPagesDiv onClick={AboutPagesOnClick}>?</AboutPagesDiv> */}
+          <AboutPagesDiv onClick={AboutPagesOnClick}>?</AboutPagesDiv>
         </SideBarDiv>
 
         {/* 메뉴 컴포넌트 */}
@@ -740,7 +740,8 @@ const MenuOpenDiv = styled.div<{ layoutMenu: String }>`
   box-shadow: 2px 4px 15px 0 #000;
 
   /* border-top-right-radius: 30px; */
-  overflow: scroll;
+  overflow: ${(props) =>
+    props.layoutMenu === "voicetalk" ? "hidden" : "scroll"};
   &::-webkit-scrollbar {
     display: none;
   }
