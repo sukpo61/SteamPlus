@@ -43,10 +43,11 @@ export const CommunityAddPost = () => {
   const month = newDate.getMonth() + 1;
   const month2 = month < 10 ? `0${month}` : month;
   const day = newDate.getDate();
-  const day2 = day < 10 ? `0${day}` : month;
+  const day2 = day < 10 ? `0${day}` : day;
   const Hour = newDate.getHours();
   const Minute = newDate.getMinutes();
   const dates = `${year}.${month2}.${day2} ${Hour}:${Minute}`;
+  console.log("day2", dates);
 
   // useMutation 적용한 addPost
   const addPostMutation = useMutation(

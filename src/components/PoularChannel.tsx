@@ -214,6 +214,7 @@ const PoPularChannelBox = styled.div`
   display: flex;
   flex-direction: row;
   margin-top: auto;
+  align-items: center;
 `;
 const PopularChannelImg1st = styled.img`
   // img 태그로 교체 필요
@@ -239,15 +240,20 @@ const PoPularChannelTitle = styled.div`
   font-size: 20px;
   letter-spacing: -0.02em;
   color: #ffffff;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 500px;
 `;
 const ChannelTitle1st2 = styled.div`
   display: flex;
   font-weight: 500;
   font-size: 13px;
+  color: #ffffff;
+  white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  white-space: nowrap;
-  color: #ffffff;
+  max-width: 150px;
 `;
 const PoPularChannelCategory = styled.div`
   font-weight: 400;
