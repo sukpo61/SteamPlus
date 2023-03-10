@@ -328,20 +328,27 @@ function VoiceTalk({ myId, handleLoginModalOpen }) {
 
   //친구 추가
   const queryClient = useQueryClient();
+  const [isLoading, setIsLoading] = useState([]);
 
   const postMutation = useMutation(
     (friendAdd) => axios.post(`${DATABASE_ID}/friend`, friendAdd),
     {
-      onSuccess: () => {
+      onSuccess: (friendAdd) => {
         // 쿼리 무효화
         queryClient.invalidateQueries(["friend"]);
         queryClient.invalidateQueries(["friendsearch"]);
+        setTimeout(() => {
+          const newLoading = isLoading.filter((id) => {
+            return id !== friendAdd.friendId;
+          });
+          setIsLoading(newLoading);
+        }, 2000);
       },
     }
   );
-
   const FriendAdd = async (event, friendId, friendNickName) => {
     event.stopPropagation();
+    setIsLoading([...isLoading, friendId]);
 
     let friendAdd = {
       id: uuidv4(),
@@ -450,7 +457,15 @@ function VoiceTalk({ myId, handleLoginModalOpen }) {
                       FriendAdd(event, user?.userid, info?.nickname);
                     }}
                   >
-                    +
+                    {isLoading.find((id) => {
+                      if (user?.userid === id) {
+                        return true;
+                      } else {
+                        return false;
+                      }
+                    })
+                      ? ""
+                      : "+"}
                   </FriendAddButton>
                 )}
               </RoomUserWrap>
