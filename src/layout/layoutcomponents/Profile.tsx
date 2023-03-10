@@ -266,11 +266,19 @@ function Profile() {
             <>
               {/* 최근홢동한게임이 없다면 */}
               {GameData === undefined ? (
-                <>
-                  <RecentGame>
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+
+                    height: "500px",
+                  }}
+                >
+                  <RecentGames>
                     <div>최근 활동한 게임이 없습니다.</div>
-                  </RecentGame>
-                </>
+                  </RecentGames>
+                </div>
               ) : (
                 <>
                   <RecentGame> 최근 활동한 게임</RecentGame>
@@ -312,8 +320,8 @@ const ChannelOn = styled.div`
   margin-right: 5px;
 `;
 const ProfileLogout = styled.p`
-  color: #d4d4d4;
-  font-size: 16px;
+  color: #777d87;
+  font-size: 13px;
   cursor: pointer;
   position: absolute;
   top: 20px;
@@ -375,6 +383,14 @@ const ProfileBox = styled.div<{ ProfileNicName: String | null }>`
 `;
 
 const RecentGame = styled.p`
+  color: #d4d4d4;
+  font-size: 14px;
+  margin-bottom: 24px;
+  display: flex;
+  justify-content: center;
+  width: 100%;
+`;
+const RecentGames = styled.p`
   color: #d4d4d4;
   font-size: 14px;
   margin-bottom: 24px;

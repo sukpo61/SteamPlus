@@ -33,15 +33,9 @@ export const CommunityBox = ({ post, index }: CommunityBoxProps) => {
   const Category = post?.category;
   const PodstID = post?.id;
   const PostViewCount = post?.count;
+  const PostDate = post?.date.toString();
+  const NewDate = PostDate.slice(0, 10);
 
-  //포스트 작성한 날짜
-  const newDate = new Date();
-  const year = newDate.getFullYear();
-  const month = newDate.getMonth() + 1;
-  const month2 = month < 10 ? `0${month}` : month;
-  const day = newDate.getDate();
-  const day2 = day < 10 ? `0${day}` : month;
-  const dates = `${year}.${month2}.${day2} `;
   //작성시간 몇분전인지 확인 monents.js 사용함
   const getDayMinuteCounter = (Date: any) => {
     if (!Date) {
@@ -67,10 +61,11 @@ export const CommunityBox = ({ post, index }: CommunityBoxProps) => {
       const hour = Math.ceil(-hourDiff);
       return hour + "시간 전"; // '시간'으로 표시
     }
-    return dates; // '일'로 표시
+    return NewDate;
   };
+
   //만들어준 함수를 변수에 할당하여서 사용함
-  const dayMinuteCounter = getDayMinuteCounter(new Date("2023-03-02T12:00:00"));
+  const dayMinuteCounter: any = getDayMinuteCounter(PostDate);
 
   // new 태그 달아주기
   const newPosts = (Date: any) => {
@@ -132,7 +127,7 @@ export const CommunityBox = ({ post, index }: CommunityBoxProps) => {
         <span onClick={handleEditPost}>{Title}</span>
         {/* 누적댓글수 */}
         <PostCount>[{CommentCt}]</PostCount>
-        {/* 포스트 작성한지 10분이 지날때면 스타일을 주기 */}
+        {/* 포스트 작성한지 30분이 지날때면 스타일을 주기 */}
         {newPost ? <PostNew>N</PostNew> : ""}
       </TableTds>
       <TableTdName Width="130px" Color="#A7A9AC">
@@ -171,7 +166,7 @@ const CommentWrap = styled.div`
   display: flex;
   align-items: center;
   flex-direction: row;
-  border-bottom: 1px solid #eee;
+  border-bottom: 1px solid #777d87;
 `;
 
 const TableTd = styled.td<TableTdProps>`
