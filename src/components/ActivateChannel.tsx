@@ -9,7 +9,7 @@ export const ActivateChannel = ({ gamedata }: any) => {
         <ActivateChannelLayout>
           <div style={{ display: "flex", flexDirection: "column" }}>
             <ActivateChannel1st>
-              <ChannelTitle>현재활성화된 채널</ChannelTitle>
+              <ChannelTitle>현재 활성화된 채널</ChannelTitle>
               {gamedata?.map((game: any) => {
                 if (game === undefined) {
                   return <div></div>;
@@ -36,7 +36,7 @@ const ChannelTitle = styled.div`
   top: -5px;
   position: absolute;
   width: 100%;
-  text-shadow: 0px 0px 15px white;
+  text-shadow: 0px 0px 5px white;
 `;
 
 const ActivateChannelLayout = styled.div`

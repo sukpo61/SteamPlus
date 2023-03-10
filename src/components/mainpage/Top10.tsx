@@ -120,7 +120,7 @@ const ChannelTitle = styled.div`
   top: -5px;
   position: absolute;
   width: 100%;
-  text-shadow: 0px 0px 15px white;
+  text-shadow: 0px 0px 5px white;
 `;
 const GameListBlock = styled.div`
   display: flex;

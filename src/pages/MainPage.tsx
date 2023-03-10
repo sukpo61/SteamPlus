@@ -163,11 +163,11 @@ const Logo = styled.div`
 `;
 
 const LogoIcon = styled.img`
-  height: 46px;
+  height: 69px; // 46px;
 `;
 
 const LogoText = styled.img`
-  height: 43px;
+  height: 64px; // 43px;
 `;
 
 const MainWrap = styled.div`

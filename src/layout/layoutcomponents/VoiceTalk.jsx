@@ -784,7 +784,11 @@ function VoiceTalk({ myId, handleLoginModalOpen }) {
               <SetPasswordWrap>
                 <PasswordCheck checked={checked}>
                   <Checkbox
-                    style={{ color: checked ? "#00B8C8" : "#777d87" }}
+                    style={{
+                      color: checked ? "#00B8C8" : "#777d87",
+                      marginLeft: -3,
+                      padding: 0,
+                    }}
                     checked={checked}
                     onChange={PasswordChange}
                   ></Checkbox>
@@ -1142,7 +1146,7 @@ const CreateRoomBottom = styled.div`
 `;
 const TitleConfirm = styled.button`
   font-style: normal;
-  font-weight: 500;
+  font-weight: 400;
   line-height: 20px;
   letter-spacing: -0.03em;
   display: flex;
@@ -1153,7 +1157,7 @@ const TitleConfirm = styled.button`
 `;
 const TitleCancle = styled.button`
   font-style: normal;
-  font-weight: 500;
+  font-weight: 400;
   line-height: 20px;
   letter-spacing: -0.03em;
   display: flex;
@@ -1217,8 +1221,8 @@ const PasswordCheck = styled.div`
   display: flex;
   flex-direction: row;
   align-items: center;
+  gap: 7px;
 
-  align-items: center;
   span {
     font-style: normal;
     font-weight: 400;
@@ -1228,7 +1232,7 @@ const PasswordCheck = styled.div`
   }
 `;
 const UserCount = styled.div`
-  margin-right: 15px;
+  margin-right: 20px;
   /* color: #d4d4d4; */
   display: flex;
   flex-direction: row;
@@ -1270,7 +1274,7 @@ const SubmitPwInput = styled.input`
 `;
 const SetPasswordInput = styled.input`
   height: 40px;
-  width: 160px;
+  width: 172px;
   border-radius: 10px;
   background: #263245;
   box-shadow: inset 0px 4px 10px rgba(0, 0, 0, 0.25);
@@ -1283,7 +1287,7 @@ const SetPasswordInput = styled.input`
   }
 `;
 const SetCountSelect = styled.select`
-  width: 160px;
+  width: 172px;
   height: 40px;
   border-radius: 10px;
   background: #263245;
