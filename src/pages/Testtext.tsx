@@ -67,7 +67,8 @@ const ChatBoxTextDiv = styled.div<{ id: any; myId: any }>`
     props.id !== props.myId ? "row" : "row-reverse"};
 `;
 const ChatBoxTextP = styled.p<{ id: any; myId: any }>`
-  background-color: #ccc;
+  background-color: ${(props) =>
+    props.id !== props.myId ? "#ccc" : "#00B8C8"};
   max-width: 500px;
   padding: 10px 15px;
   border-radius: 10px;
