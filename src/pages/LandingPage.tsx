@@ -20,7 +20,7 @@ function LandingPage() {
       <LandingImg1Area>
         <LandingImg1Gradient />
         <LandingImg1
-          src="/img/LandingImg1-2.png"
+          src="/img/LandingImg1-2.webp"
           data-aos="fade-up"
           // data-aos-duration="2000"
         />
@@ -41,19 +41,12 @@ function LandingPage() {
       </LandingImg1Area>
       <IntroTextArea1>
         <SteamplusCollabo
-          src="/img/SteamplusColabo.png"
+          src="/img/SteamplusCollabo.png"
           data-aos="fade-in"
           data-aos-duration="3000"
           data-aos-easing="linear"
         />
-        {/* <CollaboWrap data-aos="zoom-in">
-          <CollaboSteam src="/img/CollaboSteam.png" data-aos="fade-right" />
-          <CollaboRing src="/img/CollaboRing.png" data-aos="zoom-out" />
-          <CollaboSteamPlus
-            src="/img/CollaboSteamPlus.png"
-            data-aos="fade-left"
-          />
-        </CollaboWrap> */}
+
         <IntroAboutChat data-aos="fade-in" data-aos-duration="1000">
           SteamPlus는 Steam 게임 기반의 웹서비스로, Steam 유저들이 실시간으로
           <br />
@@ -75,12 +68,12 @@ function LandingPage() {
 
       <LandingImgWrap>
         <LandingImg2
-          src="/img/LandingImg2.png"
+          src="/img/LandingImg2.webp"
           data-aos="fade-right"
           data-aos-duration="2000"
         />
         <LandingImg3
-          src="/img/LandingImg3.png"
+          src="/img/LandingImg3.webp"
           data-aos="fade-left"
           data-aos-duration="2000"
         />
