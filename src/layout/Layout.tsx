@@ -150,6 +150,105 @@ function Layout() {
     getAllFriend
   );
 
+  if (isLoading) {
+    return (
+      <SideBarDiv>
+        {/* 프로필 */}
+        <Profilebutton>
+          <div>profile</div>
+        </Profilebutton>
+        {/* 홈 */}
+        <Homebutton
+          locationName={locationName}
+          onClick={() => {
+            FriendButtonOnClick("close");
+            navigate("/");
+            window.scrollTo({ top: 0, behavior: "smooth" });
+          }}
+        >
+          <AiFillHome className="homeIcon" />
+          <p>홈</p>
+        </Homebutton>
+        {/* 게임검색 */}
+        <GameSearchbutton
+          locationName={locationName}
+          onClick={() => {
+            FriendButtonOnClick("close");
+            navigate("/Channelsearchpage");
+            window.scrollTo({ top: 0, behavior: "smooth" });
+          }}
+        >
+          <AiOutlineSearch className="searchIcon" />
+          <p>게임검색</p>
+        </GameSearchbutton>
+        {/* 커뮤니티 */}
+        <Communitybutton
+          locationName={locationName}
+          onClick={() => {
+            FriendButtonOnClick("close");
+            navigate("Community");
+            window.scrollTo({ top: 0, behavior: "smooth" });
+          }}
+        >
+          <MdDynamicFeed className="communityIcon" />
+          <p>커뮤니티</p>
+        </Communitybutton>
+        {/* 메뉴 구분선 */}
+        <SideLine />
+        {/* 친구 */}
+        {myId === null ? (
+          <Friendbutton
+            onClick={() => {
+              // FriendButtonOnClick("profile");
+              handleLoginModalOpen(); // 로그인 모달
+            }}
+            layoutMenu={layoutMenu}
+          >
+            <FaUserFriends className="friendIcon" />
+            <p>친구</p>
+          </Friendbutton>
+        ) : (
+          <Friendbutton
+            onClick={() => {
+              FriendButtonOnClick("friend");
+            }}
+            layoutMenu={layoutMenu}
+          >
+            <FaUserFriends className="friendIcon" />
+            <p>친구</p>
+          </Friendbutton>
+        )}
+        {/* 음성채팅 */}
+        {myId === null ? (
+          <VoiceTalkbutton
+            onClick={() => {
+              handleLoginModalOpen(); // 로그인 모달
+            }}
+            layoutMenu={layoutMenu}
+          >
+            <MdVoiceChat className="chatIcon" />
+            <p>음성채팅</p>
+          </VoiceTalkbutton>
+        ) : (
+          <VoiceTalkbuttonWrap>
+            {currentRoom && <VoiceTalkON></VoiceTalkON>}
+            <VoiceTalkbutton
+              onClick={() => LayoutButtonOnClick("voicetalk")}
+              layoutMenu={layoutMenu}
+            >
+              <MdVoiceChat className="chatIcon" />
+              <p>음성채팅</p>
+            </VoiceTalkbutton>
+          </VoiceTalkbuttonWrap>
+        )}
+      </SideBarDiv>
+    );
+  }
+  if (isError) {
+    console.log("오류내용", error);
+    return <p>오류</p>;
+  }
+
   //양쪽 다 친구 내역
   const friend = getFriendAuth?.filter((i: FriendProps) => {
     for (let t = 0; t < friendAdd.length; t++) {
@@ -358,7 +457,7 @@ function Layout() {
             </VoiceTalkbuttonWrap>
           )}
           {/* 나중에 부활 예정 */}
-          {/* <AboutPagesDiv onClick={AboutPagesOnClick}>?</AboutPagesDiv> */}
+          <AboutPagesDiv onClick={AboutPagesOnClick}>?</AboutPagesDiv>
         </SideBarDiv>
 
         {/* 메뉴 컴포넌트 */}
@@ -641,7 +740,8 @@ const MenuOpenDiv = styled.div<{ layoutMenu: String }>`
   box-shadow: 2px 4px 15px 0 #000;
 
   /* border-top-right-radius: 30px; */
-  overflow: scroll;
+  overflow: ${(props) =>
+    props.layoutMenu === "voicetalk" ? "hidden" : "scroll"};
   &::-webkit-scrollbar {
     display: none;
   }
