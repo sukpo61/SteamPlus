@@ -35,10 +35,11 @@ export const Top10 = () => {
     const gameIds = response?.data.response.pages[0].item_ids
       //gameIds를 랜덤으롤 돌려줌
       .map((e: any) => e.appid)
-      .sort(() => Math.random() - 0.5)
-      .slice(0, 12);
+      .sort(() => Math.random() - 0.5);
+    // .slice(0, 12);
 
     const gameDataPromises = gameIds.map((gameId: any) => TopGame(gameId));
+
     const gameData = await Promise.all(gameDataPromises);
     const filteredGameData = gameData.filter((data) => data.type === "game");
 
