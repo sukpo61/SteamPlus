@@ -4,7 +4,7 @@ import styled, { keyframes } from "styled-components";
 import { useRecoilValue } from "recoil";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import { useQuery, useQueryClient } from "react-query";
+import { useQuery } from "react-query";
 import RecentGameData from "../../components/RecentGameData";
 import { useRecoilState } from "recoil";
 interface UserInfo {
@@ -36,7 +36,7 @@ function Profile() {
     useRecoilState<any>(friendAllState);
 
   // 어스아이디
-  const STEAM_OPENID_ENDPOINT = `https://steamcommunity.com/openid/login?openid.ns=http://specs.openid.net/auth/2.0&openid.mode=checkid_setup&openid.return_to=https://steam-plus-theta.vercel.app/login/&openid.realm=https://steam-plus-theta.vercel.app/login&openid.identity=http://specs.openid.net/auth/2.0/identifier_select&openid.claimed_id=http://specs.openid.net/auth/2.0/identifier_select`;
+  const STEAM_OPENID_ENDPOINT = `https://steamcommunity.com/openid/login?openid.ns=http://specs.openid.net/auth/2.0&openid.mode=checkid_setup&openid.return_to=${FRONTEND_URL}/login/&openid.realm=${FRONTEND_URL}/login&openid.identity=http://specs.openid.net/auth/2.0/identifier_select&openid.claimed_id=http://specs.openid.net/auth/2.0/identifier_select`;
   const SteamLogin = () => {
     window.location.href = STEAM_OPENID_ENDPOINT;
   };
@@ -56,7 +56,7 @@ function Profile() {
       {
         params: {
           key: APIKEY,
-          //스팀로그인ㅇ
+          //스팀로그인
           steamids: steamId,
         },
       }
@@ -80,6 +80,7 @@ function Profile() {
       "gameextrainfo",
       result?.data.response.players[0].gameextrainfo
     );
+    console.log("result", result?.data);
 
     //steam에서 변경된사항이 있을때 put을 통해 dbjson을 업데이트해줌
     const userinfo: UserInfo = {
@@ -102,17 +103,14 @@ function Profile() {
         .includes(result.config.params.steamids)
     ) {
       await axios.post(serverUrl, userinfo);
+      window.location.replace("/");
     } else {
       await axios.put(`${DATABASE_ID}/auth/${steamId}`, userinfo);
+      window.location.replace("/");
     }
-    window.location.replace("/");
   };
 
-  useEffect(() => {
-    if (!sessionStorage.getItem("steamid")) {
-      userDataGet();
-    }
-  }, [friendAllRecoil]);
+  const { data } = useQuery("userData", userDataGet);
 
   //유저 db정보 가져오기
   const getLoginData = async () => {
@@ -127,12 +125,14 @@ function Profile() {
     const recentGame = await axios.get(
       `${PROXY_ID}/http://api.steampowered.com/IPlayerService/GetRecentlyPlayedGames/v0001/?key=${APIKEY}&steamid=${ProfleSteamId}&format=json`
     );
+    console.log("recentGame", recentGame);
 
     return recentGame;
   };
-  const { data: recentGame } = useQuery("getRecentGameData", getRecentGameData);
 
+  const { data: recentGame } = useQuery("getRecentGameData", getRecentGameData);
   const GameData = recentGame?.data.response.games;
+
   //유저 최신정보 & 타임스탬프
   const timeStamp = async () => {
     const result = await axios.get(
@@ -201,6 +201,7 @@ function Profile() {
   };
 
   useEffect(() => {
+    console.log("friendAllRecoil", friendAllRecoil);
     let polling = setInterval(() => {
       timeStamp();
     }, 30000);
@@ -270,6 +271,9 @@ function Profile() {
                   <RecentGame>
                     <div>최근 활동한 게임이 없습니다.</div>
                   </RecentGame>
+                  {GameData?.slice(0, 3).map((gameData: any) => {
+                    return <RecentGameData gameData={gameData} />;
+                  })}
                 </>
               ) : (
                 <>

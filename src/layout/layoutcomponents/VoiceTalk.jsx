@@ -350,48 +350,54 @@ function VoiceTalk({ myId, handleLoginModalOpen }) {
     return false;
   });
 
+  const Roomjoin = (room) => {
+    console.log("roomrecept");
+    if (!myuserid) {
+      setLoginModalOpen(true);
+      return;
+    }
+    socket.emit("checkusers");
+    if (currentRoom === room.roomtitle) {
+      return;
+    }
+    if (room.userinfo?.length >= room.usercount) {
+      window.alert("방 인원이 다찼어요.");
+      return;
+    }
+    if (!room.password) {
+      setCurrentRoom(room.roomtitle);
+      handleJoin({
+        roomtitle: room.roomtitle,
+        channelId: room.channelId,
+        usercount: room.usercount,
+        password: room.password,
+      });
+    } else {
+      setPwSubmit(true);
+      setCreateDisplay("pwsubmit");
+      setPwRoomInfo({
+        roomtitle: room.roomtitle,
+        channelId: room.channelId,
+        usercount: room.usercount,
+        password: room.password,
+      });
+    }
+  };
+
   const RoomList = roomsresult.map((room) => {
+    console.log("room", room);
     return (
       <RoomWrap
-        key={room.name}
+        key={room.roomtitle}
         currentRoom={currentRoom}
-        name={room.name}
+        name={room.roomtitle}
         onClick={() => {
-          if (!myuserid) {
-            setLoginModalOpen(true);
-            return;
-          }
-          socket.emit("checkusers");
-          if (currentRoom === room.name) {
-            return;
-          }
-          if (room.userinfo.length >= room.usercount) {
-            window.alert("방 인원이 다찼어요.");
-            return;
-          }
-          if (!room.password) {
-            setCurrentRoom(room.name);
-            handleJoin({
-              roomtitle: room.name,
-              channelId,
-              usercount: room.usercount,
-              password: room.password,
-            });
-          } else {
-            setPwSubmit(true);
-            setCreateDisplay("pwsubmit");
-            setPwRoomInfo({
-              roomtitle: room.name,
-              channelId,
-              usercount: room.usercount,
-              password: room.password,
-            });
-          }
+          Roomjoin(room);
         }}
       >
         <RoomTitleWrap>
           <RoomTitle>
-            <span># {room.name}</span>
+            <span># {room.roomtitle}</span>
             {room.password && (
               <div>
                 <MdLockOutline></MdLockOutline>
@@ -468,21 +474,33 @@ function VoiceTalk({ myId, handleLoginModalOpen }) {
       handleAddStream(userid, event.stream);
     };
 
-    NewUserPeerConnection.ontrack = function (event) {
-      if (event.track.kind === "video") {
-        const videoTrack = event.track;
-        const originalEnabledState = videoTrack.enabled;
+    const senders = NewUserPeerConnection.getSenders();
 
-        setInterval(() => {
-          if (videoTrack.enabled !== originalEnabledState) {
-            console.log(
-              "상대방의 비디오 스트림 enabled 속성이 변경되었습니다."
-            );
-            originalEnabledState = videoTrack.enabled;
-          }
-        }, 1000);
-      }
-    };
+    // senders.forEach((sender) => {
+    //   if (sender.track.kind === "video") {
+    //     const parameters = sender.getParameters();
+    //     const originalEnabledState = parameters.encodings[0].active;
+
+    //     setInterval(() => {
+    //       const currentEnabledState =
+    //         sender.getParameters().encodings[0].active;
+    //       if (currentEnabledState !== originalEnabledState) {
+    //         console.log(
+    //           "상대방의 비디오 스트림 enabled 속성이 변경되었습니다."
+    //         );
+    //         originalEnabledState = currentEnabledState;
+
+    //         // 비디오 스트림 비활성화
+    //         sender.getParameters().encodings[0].active = false;
+    //         sender.setParameters(sender.getParameters());
+
+    //         // 비디오 스트림 활성화
+    //         sender.getParameters().encodings[0].active = true;
+    //         sender.setParameters(sender.getParameters());
+    //       }
+    //     }, 1000);
+    //   }
+    // });
 
     NewUserPeerConnection.onicecandidate = (event) => {
       socket.emit("ice", event.candidate, myuserid, {
@@ -677,7 +695,8 @@ function VoiceTalk({ myId, handleLoginModalOpen }) {
 
   useEffect(() => {
     if (friendroominfo) {
-      handleJoin(friendroominfo);
+      console.log("friendroominfo", friendroominfo);
+      Roomjoin(friendroominfo);
     }
   }, [friendroominfo]);
 
