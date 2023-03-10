@@ -41,7 +41,7 @@ const UserVideo = ({ data, info, myId }: any) => {
     }
   }, [volumepercent]);
 
-  console.log(data.stream.getVideoTracks()[0]);
+  // console.log(data.stream.getVideoTracks()[0].kind);
 
   return (
     <VideoWrap key={data.userid}>

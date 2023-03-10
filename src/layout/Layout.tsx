@@ -188,39 +188,7 @@ function Layout() {
       }
     };
 
-    return (
-      <UserVideo data={data} info={info} myId={myId}></UserVideo>
-      // <VideoWrap key={data.userid}>
-      //   {data.userid === myId ? (
-      //     !data.stream.getVideoTracks()[0].enabled ? (
-      //       <img src="/img/emptyvideo.png"></img>
-      //     ) : (
-      //       <Streamvideo
-      //         ref={remotehandleVideoRef}
-      //         autoPlay
-      //         playsInline
-      //         muted
-      //       />
-      //     )
-      //   ) : (
-      //     <Streamvideo
-      //       ref={remotehandleVideoRef}
-      //       autoPlay
-      //       playsInline
-      //       className="othervideo"
-      //       muted={isallmuted}
-      //     />
-      //   )}
-      //   <Usernickname>
-      //     <span>{info?.nickname}</span>
-      //   </Usernickname>
-      //   {!data.stream.getAudioTracks()[0].enabled && (
-      //     <Micoff>
-      //       <BsFillMicMuteFill size={20}></BsFillMicMuteFill>
-      //     </Micoff>
-      //   )}
-      // </VideoWrap>
-    );
+    return <UserVideo data={data} info={info} myId={myId}></UserVideo>;
   });
 
   const handleLoginModalOpen = () => {
