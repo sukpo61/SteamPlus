@@ -468,6 +468,22 @@ function VoiceTalk({ myId, handleLoginModalOpen }) {
       handleAddStream(userid, event.stream);
     };
 
+    NewUserPeerConnection.ontrack = function (event) {
+      if (event.track.kind === "video") {
+        const videoTrack = event.track;
+        const originalEnabledState = videoTrack.enabled;
+
+        setInterval(() => {
+          if (videoTrack.enabled !== originalEnabledState) {
+            console.log(
+              "상대방의 비디오 스트림 enabled 속성이 변경되었습니다."
+            );
+            originalEnabledState = videoTrack.enabled;
+          }
+        }, 1000);
+      }
+    };
+
     NewUserPeerConnection.onicecandidate = (event) => {
       socket.emit("ice", event.candidate, myuserid, {
         roomtitle,
