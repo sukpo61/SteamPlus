@@ -95,11 +95,8 @@ const ChannelSearchPage: any = () => {
         flexDirection: "column",
         alignItems: "center",
         width: "100%",
-        // minHeight: "100vh",
-        // height: "100%",
       }}
     >
-      {/* <ParticipationRequest /> */}
       <SearchPageHeader>
         <SteamPlusLogo
           src="/img/SteamPlusLogo2.png"
@@ -162,7 +159,6 @@ const ChannelSearchPage: any = () => {
   );
 };
 // ?.filter((game: any) => game?.type === !"dlc")
-
 //data.pages.map(page=>page.results).flat()
 
 const SearchNone = styled.div`
@@ -215,18 +211,10 @@ const GameSearchInput = styled.input`
   background: none;
   color: #d4d4d4;
   border-style: none;
+  ::placeholder {
+    color: #777d87; // 검색창 placeholder 색상
+  }
 `;
-
-// const MainContainer = styled.div`
-//   display: flex;
-//   flex-direction: column;
-//   align-items: center;
-//   width: 100%;
-//   // height: "100vh",
-//   height: 100%;
-//   width: 100vw;
-//   height: 100vh;
-// `;
 
 const BeforeSearch = styled.p`
   display: flex;
@@ -263,7 +251,7 @@ const SearchCount = styled.p`
   margin-left: 114px;
 `;
 const GameSearchList = styled.div`
-  width: 890px; // MianPage SearchPage에서 사이즈 조절 필요
+  width: 890px;
   display: flex;
   flex-direction: column;
   gap: 10px;
