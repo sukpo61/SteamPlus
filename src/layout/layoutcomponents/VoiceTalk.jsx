@@ -400,7 +400,6 @@ function VoiceTalk({ myId, handleLoginModalOpen }) {
   };
 
   const RoomList = roomsresult.map((room) => {
-    console.log("room", room);
     return (
       <RoomWrap
         key={room.roomtitle}

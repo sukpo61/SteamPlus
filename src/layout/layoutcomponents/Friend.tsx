@@ -144,11 +144,11 @@ function Friend() {
   };
 
   const getFriendChannel: any = async (userid: any) => {
-    console.log("roomname", userid);
+    // console.log("roomname", userid);
 
     socket.emit("friendchannel", userid);
 
-    socket.once("friendchannel", (roomname, frienduserid) => {
+    socket.once("friendchannel", (roomname, _, frienduserid) => {
       if (frienduserid === userid && roomname) {
         console.log("roomname", roomname);
         Gamedata(frienduserid, roomname.split("/")[0]);
@@ -284,12 +284,15 @@ function Friend() {
               </FriendBoxNameImgDiv>
 
               <FriendBoxNameH2>{i.nickname}</FriendBoxNameH2>
-              <PlayingGame>
-                <FriendBoxNamePlayingP>
-                  {friendChannel.get(i.id)}
-                </FriendBoxNamePlayingP>
-                <p>참가중</p>
-              </PlayingGame>
+              {friendChannel.get(i.id) && (
+                <PlayingGame>
+                  <FriendBoxNamePlayingP>
+                    {friendChannel.get(i.id)}
+                  </FriendBoxNamePlayingP>
+                  <p>참가중</p>
+                </PlayingGame>
+              )}
+
               {chatTextNotice.filter((item: any) => {
                 return item.id === i.id;
               }).length === 0 ? (
