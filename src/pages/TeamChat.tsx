@@ -17,6 +17,7 @@ import { useLocation, useParams } from "react-router";
 import axios from "axios";
 import Aos from "aos";
 import "aos/dist/aos.css";
+import { IoGameController } from "react-icons/io5";
 
 const TeamChat = () => {
   const PROXY_ID: any = process.env.REACT_APP_PROXY_ID;
@@ -161,7 +162,10 @@ const TeamChat = () => {
   return (
     <ChatPageDiv>
       <Background src={background}></Background>
-      <ChatPageHeaderDiv>{currentRoom}</ChatPageHeaderDiv>
+      <ChatPageHeaderDiv>
+        <ChatPageHeaderImg src="/img/LogoWhite.png" />
+        <ChatPageTitle>{currentRoom}</ChatPageTitle>
+      </ChatPageHeaderDiv>
       <ChatContentsDiv ref={chatContainerRef}>
         <ChatContentsMarginDiv>
           {chatText.map((chat: any, index: number) => {
@@ -211,14 +215,26 @@ const Background = styled.img`
 const ChatPageHeaderDiv = styled.div`
   width: 100%;
   height: 70px;
-  line-height: 65px;
   background-color: #404b5e;
   position: absolute;
   top: 0;
   z-index: 9;
+  padding-left: 28px; //20px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 16px;
+`;
+
+const ChatPageHeaderImg = styled.img`
+  width: 36px;
+`;
+
+const ChatPageTitle = styled.p`
   color: #fff;
-  padding-left: 20px;
-  font-size: 18px;
+  font-size: 20px; //18px;
+  line-height: 65px;
+  font-weight: 550;
 `;
 const ChatContentsDiv = styled.div`
   position: absolute;
