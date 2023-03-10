@@ -101,6 +101,30 @@ export const loginModalOpenRecoil = atom<any>({
   key: "loginModalOpenRecoil",
   default: false,
 });
+export const localStreamRecoil = atom<any>({
+  key: "localStreamRecoil",
+  default: null,
+});
+export const micStateRecoil = atom<any>({
+  key: "micStateRecoil",
+  default: true,
+});
+export const videoStateRecoil = atom<any>({
+  key: "videoStateRecoil",
+  default: false,
+});
+export const isAllMutedRecoil = atom<any>({
+  key: "isAllMutedRecoil",
+  default: false,
+});
+export const isVolumePercent = atom<any>({
+  key: "isVolumePercent",
+  default: 50,
+});
+export const isMicVolumePercent = atom<any>({
+  key: "isMicVolumePercent",
+  default: 50,
+});
 
 // export const FriendNoticeAll = atom({
 //   key: "FriendNoticeAll",

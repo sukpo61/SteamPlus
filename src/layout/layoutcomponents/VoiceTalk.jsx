@@ -23,19 +23,25 @@ import {
   friendroominfoRecoil,
   channelNameRecoil,
   loginModalOpenRecoil,
+  localStreamRecoil,
+  micStateRecoil,
+  videoStateRecoil,
+  isAllMutedRecoil,
+  isVolumePercent,
+  isMicVolumePercent,
 } from "../../recoil/atom";
 
 import TeamChat from "../../pages/TeamChat";
 import { useLocation } from "react-router";
 
 import { MdExitToApp } from "react-icons/md";
-import { MdVolumeUp } from "react-icons/md";
+import { MdVolumeUp, MdVolumeOff } from "react-icons/md";
 import { MdSettings } from "react-icons/md";
-import { BsFillMicFill } from "react-icons/bs";
+import { BsFillMicFill, BsFillMicMuteFill } from "react-icons/bs";
 import { MdVideocam } from "react-icons/md";
 import { AiOutlineBorder } from "react-icons/ai";
 import { AiOutlineCheckSquare } from "react-icons/ai";
-import { MdLockOutline } from "react-icons/md";
+import { MdLockOutline, MdOutlineKeyboardArrowUp } from "react-icons/md";
 import { BiSearchAlt2 } from "react-icons/bi";
 
 import Checkbox from "@mui/material/Checkbox";
@@ -61,8 +67,6 @@ function VoiceTalk({ myId, handleLoginModalOpen }) {
   const myuserid = sessionStorage.getItem("steamid");
   const myNickName = sessionStorage.getItem("nickName");
 
-  const [localStream, setLocalStream] = useState(null);
-
   const [usercount, setUserCount] = useState(2);
 
   const [checked, setChecked] = useState(false);
@@ -79,7 +83,14 @@ function VoiceTalk({ myId, handleLoginModalOpen }) {
 
   const [isValid, setIsValid] = useState(true);
 
-  const [volumepercent, setVolumePercent] = useState(50);
+  const [audioContext, setAudioContext] = useState(null);
+
+  const [gainNode, setGainNode] = useState(null);
+
+  const [volumepercent, setVolumePercent] = useRecoilState(isVolumePercent);
+
+  const [micvolumepercent, setMicVolumePercent] =
+    useRecoilState(isMicVolumePercent);
 
   const [DataChannelMap, setDataChannelMap] =
     useRecoilState(DataChannelMapRecoil);
@@ -107,6 +118,14 @@ function VoiceTalk({ myId, handleLoginModalOpen }) {
     useRecoilState(loginModalOpenRecoil);
 
   const [getFriendAuth, setGetFriendAuth] = useRecoilState(getFriend);
+
+  const [localStream, setLocalStream] = useRecoilState(localStreamRecoil);
+
+  const [micstate, setMicState] = useRecoilState(micStateRecoil);
+
+  const [videostate, setVideoState] = useRecoilState(videoStateRecoil);
+
+  const [isallmuted, setIsAllMuted] = useRecoilState(isAllMutedRecoil);
 
   const {
     value: roomtitle,
@@ -167,6 +186,23 @@ function VoiceTalk({ myId, handleLoginModalOpen }) {
         video: true,
         audio: true,
       });
+
+      // let audioContext = new AudioContext();
+      // let source = audioContext.createMediaStreamSource(myStream);
+      // let gainNode = audioContext.createGain();
+      // source.connect(gainNode);
+      // gainNode.connect(audioContext.destination);
+
+      // setAudioContext(audioContext);
+
+      // setGainNode(gainNode);
+
+      myStream.getAudioTracks().forEach((track) => {
+        track.enabled = micstate;
+      });
+      myStream.getVideoTracks().forEach((track) => {
+        track.enabled = false;
+      });
       setLocalStream(myStream);
       handleAddStream(myuserid, myStream);
     } catch (e) {
@@ -197,6 +233,7 @@ function VoiceTalk({ myId, handleLoginModalOpen }) {
     if (currentRoom) {
       handleLeave(currentRoom);
     }
+    setvideoDisplay(true);
     setCurrentRoom(NewData.roomtitle);
     await getMedia();
     socket.emit("join_room", NewData, myuserid);
@@ -303,7 +340,9 @@ function VoiceTalk({ myId, handleLoginModalOpen }) {
     }
   );
 
-  const FriendAdd = async (friendId, friendNickName) => {
+  const FriendAdd = async (event, friendId, friendNickName) => {
+    event.stopPropagation();
+
     let friendAdd = {
       id: uuidv4(),
       myId: myuserid,
@@ -328,41 +367,44 @@ function VoiceTalk({ myId, handleLoginModalOpen }) {
 
   const RoomList = roomsresult.map((room) => {
     return (
-      <RoomWrap key={room.name}>
-        <RoomTitleWrap
-          onClick={() => {
-            if (!myuserid) {
-              setLoginModalOpen(true);
-              return;
-            }
-            socket.emit("checkusers");
-            if (currentRoom === room.name) {
-              return;
-            }
-            if (room.userinfo.length >= room.usercount) {
-              window.alert("방 인원이 다찼어요.");
-              return;
-            }
-            if (!room.password) {
-              setCurrentRoom(room.name);
-              handleJoin({
-                roomtitle: room.name,
-                channelId,
-                usercount: room.usercount,
-                password: room.password,
-              });
-            } else {
-              setPwSubmit(true);
-              setCreateDisplay("pwsubmit");
-              setPwRoomInfo({
-                roomtitle: room.name,
-                channelId,
-                usercount: room.usercount,
-                password: room.password,
-              });
-            }
-          }}
-        >
+      <RoomWrap
+        key={room.name}
+        currentRoom={currentRoom}
+        name={room.name}
+        onClick={() => {
+          if (!myuserid) {
+            setLoginModalOpen(true);
+            return;
+          }
+          socket.emit("checkusers");
+          if (currentRoom === room.name) {
+            return;
+          }
+          if (room.userinfo.length >= room.usercount) {
+            window.alert("방 인원이 다찼어요.");
+            return;
+          }
+          if (!room.password) {
+            setCurrentRoom(room.name);
+            handleJoin({
+              roomtitle: room.name,
+              channelId,
+              usercount: room.usercount,
+              password: room.password,
+            });
+          } else {
+            setPwSubmit(true);
+            setCreateDisplay("pwsubmit");
+            setPwRoomInfo({
+              roomtitle: room.name,
+              channelId,
+              usercount: room.usercount,
+              password: room.password,
+            });
+          }
+        }}
+      >
+        <RoomTitleWrap>
           <RoomTitle>
             <span># {room.name}</span>
             {room.password && (
@@ -399,8 +441,8 @@ function VoiceTalk({ myId, handleLoginModalOpen }) {
                   ""
                 ) : (
                   <FriendAddButton
-                    onClick={() => {
-                      FriendAdd(user?.userid, info?.nickname);
+                    onClick={(event) => {
+                      FriendAdd(event, user?.userid, info?.nickname);
                     }}
                   >
                     +
@@ -432,6 +474,10 @@ function VoiceTalk({ myId, handleLoginModalOpen }) {
     localStream
       .getTracks()
       .forEach((track) => NewUserPeerConnection.addTrack(track, localStream));
+
+    localStream.getTracks().forEach((track) => {
+      console.log(track);
+    });
 
     NewUserPeerConnection.onaddstream = (event) => {
       handleAddStream(userid, event.stream);
@@ -492,6 +538,38 @@ function VoiceTalk({ myId, handleLoginModalOpen }) {
   const VolumeonChange = (e) => {
     setVolumePercent(e.target.value);
   };
+
+  const MicVolumeonChange = (event) => {};
+
+  // const MicVolumeonChange = (event) => {
+  //   const volumeValue = parseFloat(event.target.value) / 100;
+  //   gainNode.gain.setValueAtTime(volumeValue, audioContext.currentTime);
+  // };
+
+  // let stream, audioContext, source, gainNode;
+
+  // navigator.mediaDevices
+  //   .getUserMedia({ audio: true })
+  //   .then((stream) => {
+  //     audioContext = new AudioContext();
+  //     source = audioContext.createMediaStreamSource(stream);
+  //     gainNode = audioContext.createGain();
+  //     source.connect(gainNode);
+  //     gainNode.connect(audioContext.destination);
+  //   })
+  //   .catch((error) => {
+  //     // 오류 처리
+  //   });
+
+  //   const MicVolumeonChange = (event) => {
+  //     const volumeValue = parseFloat(event.target.value) / 100;
+  //     gainNode.gain.setValueAtTime(volumeValue, audioContext.currentTime);
+  //   };
+
+  // function handleVolumeChange(event) {
+  //   const volumeValue = parseFloat(event.target.value);
+  //   gainNode.gain.setValueAtTime(volumeValue, audioContext.currentTime);
+  // }
 
   useEffect(() => {
     if (localStream) {
@@ -626,20 +704,28 @@ function VoiceTalk({ myId, handleLoginModalOpen }) {
     setFontColor("white");
   }, [sbpassword]);
 
+  //스팀으로 이동하기
+  const gotoSteam = () => {
+    // navigate();
+    window.open(`https://store.steampowered.com/app/${channelId}`, "_blank");
+  };
   return (
     <VoiceTalkDiv layoutMenu={layoutMenu}>
       <VoiceTalkWrap>
         <VoiceTalkTop>
           <VoiceTalkTopbar>
             <ChannelTitle>
-              <span>{channelName}</span>
-              <img src="/img/steam_link.png"></img>
+              <SteamGamesTitle>{channelName}</SteamGamesTitle>
+              {/* 스팀로고 클릭시 해당 게임의 스팀홈페이지로 이동 */}
+              <img src="/img/steam_link.png" onClick={gotoSteam}></img>
             </ChannelTitle>
             <CreateRoom
               onClick={() => {
                 if (myuserid) {
-                  setPwSubmit(false);
-                  setCreateDisplay("roomcreate");
+                  if (channelId !== "") {
+                    setPwSubmit(false);
+                    setCreateDisplay("roomcreate");
+                  }
                 } else {
                   // setLoginModalOpen(true);
                   handleLoginModalOpen();
@@ -745,17 +831,35 @@ function VoiceTalk({ myId, handleLoginModalOpen }) {
       <Controlbox settingon={settingon}>
         <ControlButtons>
           <div>
-            <BsFillMicFill></BsFillMicFill>
-            <MdVolumeUp></MdVolumeUp>
+            <div
+              onClick={() => {
+                setMicState((e) => !e);
+                if (localStream) {
+                  localStream.getAudioTracks().forEach((track) => {
+                    track.enabled = !micstate;
+                  });
+                }
+              }}
+            >
+              {micstate ? (
+                <BsFillMicFill></BsFillMicFill>
+              ) : (
+                <BsFillMicMuteFill></BsFillMicMuteFill>
+              )}
+            </div>
+            <div
+              onClick={() => {
+                setIsAllMuted((e) => !e);
+              }}
+            >
+              {isallmuted ? (
+                <MdVolumeOff></MdVolumeOff>
+              ) : (
+                <MdVolumeUp></MdVolumeUp>
+              )}
+            </div>
           </div>
           <div>
-            {location === "Teamchat" && currentRoom && (
-              <MdVideocam
-                onClick={() => {
-                  setvideoDisplay((e) => !e);
-                }}
-              ></MdVideocam>
-            )}
             <MdSettings
               onClick={() => {
                 setSettingOn((e) => !e);
@@ -773,17 +877,6 @@ function VoiceTalk({ myId, handleLoginModalOpen }) {
                 aria-label="Small"
                 valueLabelDisplay="auto"
                 onChange={VolumeonChange}
-              />
-            </Box>
-          </SliderWrap>
-          <SliderWrap>
-            <div>마이크</div>
-            <Box width={300}>
-              <Slider
-                size="small"
-                defaultValue={50}
-                aria-label="Small"
-                valueLabelDisplay="auto"
               />
             </Box>
           </SliderWrap>
@@ -824,6 +917,13 @@ function VoiceTalk({ myId, handleLoginModalOpen }) {
 }
 
 export default VoiceTalk;
+
+const SteamGamesTitle = styled.span`
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 250px;
+`;
 
 const VoiceTalkDiv = styled.div`
   overflow: hidden;
@@ -955,8 +1055,11 @@ const RoomWrap = styled.div`
   background: #404b5e;
   border-radius: 10px;
   padding: 20px;
+  transition: 0.3s ease;
+  cursor: ${(props) => (props.name === props.currentRoom ? "" : "pointer")};
   &:hover {
-    background: #3c4657;
+    background: ${(props) =>
+      props.name === props.currentRoom ? "#404b5e" : "#3c4657"};
   }
 `;
 const RoomTitleWrap = styled.div`
@@ -967,14 +1070,14 @@ const RoomTitleWrap = styled.div`
   align-items: center;
   color: white;
   border-radius: 10px;
-  &:hover {
+  /* &:hover {
   }
   div {
     cursor: pointer;
   }
   span {
     cursor: pointer;
-  }
+  } */
 `;
 const RoomTitle = styled.div`
   display: flex;
