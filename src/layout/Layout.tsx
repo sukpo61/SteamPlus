@@ -149,14 +149,20 @@ function Layout() {
     ["friend"],
     getAllFriend
   );
-
+  const ProfileImgUrls = sessionStorage.getItem("profileimg");
   if (isLoading) {
     return (
       <SideBarDiv>
         {/* 프로필 */}
         <Profilebutton>
-          <div>profile</div>
+          {ProfileImgUrls === null ? (
+            <div>Login</div>
+          ) : (
+            <ProfileImg src={`${ProfileImgUrls}`} />
+          )}
+          <ProfileImg src={`${ProfileImgUrls}`} />
         </Profilebutton>
+
         {/* 홈 */}
         <Homebutton
           locationName={locationName}
@@ -719,6 +725,7 @@ const Profilebutton = styled.div`
   margin: 20px auto 0;
   border-radius: 25px;
   font-size: 12px;
+  min-height: 50px;
   width: 50px;
   height: 50px;
   overflow: hidden;
