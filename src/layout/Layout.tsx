@@ -412,7 +412,11 @@ function Layout() {
                 if (myId === null) {
                   handleLoginModalOpen();
                 } else {
-                  LayoutButtonOnClick("voicetalk");
+                  if (channelId !== "") {
+                    LayoutButtonOnClick("voicetalk");
+                  } else {
+                    alert("채널에 참가중이 아닙니다.");
+                  }
                 }
               }}
               layoutMenu={layoutMenu}
