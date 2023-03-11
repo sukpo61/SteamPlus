@@ -147,6 +147,7 @@ function Comment({ PostId }: CommentProps) {
   };
   // 댓글카운트
   const postid = comment?.map((id: any) => id?.postId);
+
   const commentId = postid?.filter((id: any) => {
     return id === PostId;
   });
