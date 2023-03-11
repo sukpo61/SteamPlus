@@ -65,7 +65,7 @@ export const CommunityBox = ({ post, index }: CommunityBoxProps) => {
   };
 
   //만들어준 함수를 변수에 할당하여서 사용함
-  const dayMinuteCounter: any = getDayMinuteCounter(PostDate);
+  const dayMinuteCounter: any = getDayMinuteCounter(NewDate);
 
   // new 태그 달아주기
   const newPosts = (Date: any) => {

@@ -47,7 +47,6 @@ export const CommunityAddPost = () => {
   const Hour = newDate.getHours();
   const Minute = newDate.getMinutes();
   const dates = `${year}.${month2}.${day2} ${Hour}:${Minute}`;
-  console.log("day2", dates);
 
   // useMutation 적용한 addPost
   const addPostMutation = useMutation(
