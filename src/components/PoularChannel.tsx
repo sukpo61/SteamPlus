@@ -246,14 +246,15 @@ const PoPularChannelTitle = styled.div`
   max-width: 500px;
 `;
 const ChannelTitle1st2 = styled.div`
-  display: flex;
-  font-weight: 500;
+  margin-bottom: 4px;
+  font-weight: 600;
   font-size: 13px;
+  letter-spacing: -0.02em;
   color: #ffffff;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  max-width: 150px;
+  max-width: 165px;
 `;
 const PoPularChannelCategory = styled.div`
   font-weight: 400;
