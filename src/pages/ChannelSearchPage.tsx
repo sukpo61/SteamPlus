@@ -88,15 +88,7 @@ const ChannelSearchPage: any = () => {
   };
 
   return (
-    <div
-      style={{
-        backgroundColor: "#192030",
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        width: "100%",
-      }}
-    >
+    <SerachLayout>
       <SearchPageHeader>
         <SteamPlusLogo
           src="/img/SteamPlusLogo2.png"
@@ -127,11 +119,17 @@ const ChannelSearchPage: any = () => {
         </GameSearchInputArea>
       </SearchPageHeader>
 
-      {isLoading && <Loader />}
+      {isLoading && (
+        <SearchDiv>
+          <Loader />
+        </SearchDiv>
+      )}
       {isLoading ? (
         ""
       ) : termResult === "" ? (
-        <BeforeSearch>참여하고 싶은 게임 채널을 검색해보세요!</BeforeSearch>
+        <SearchDiv>
+          <BeforeSearch>참여하고 싶은 게임 채널을 검색해보세요!</BeforeSearch>
+        </SearchDiv>
       ) : (
         <AfterSearch>
           <SearchCount>
@@ -155,15 +153,22 @@ const ChannelSearchPage: any = () => {
           </GameSearchList>
         </AfterSearch>
       )}
-    </div>
+    </SerachLayout>
   );
 };
 // ?.filter((game: any) => game?.type === !"dlc")
 //data.pages.map(page=>page.results).flat()
-
-const SearchNone = styled.div`
-  color: white;
-  font-size: 2rem;
+const SerachLayout = styled.div`
+  background-color: #192030;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  height: 100vh;
+`;
+const SearchDiv = styled.div`
+  position: relative;
+  top: 45%;
 `;
 
 const SearchPageHeader = styled.div`
@@ -220,7 +225,7 @@ const BeforeSearch = styled.p`
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-top: 330px;
+  /* margin-top: 330px; */
 
   /* width: 100vw; */
   /* height: 100vh; */
