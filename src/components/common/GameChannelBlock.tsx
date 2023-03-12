@@ -97,7 +97,7 @@ const GameListBlock = styled.div`
   border-radius: 10px;
   overflow: hidden;
   &:hover {
-    box-shadow: 0px 0px 10px 0px #fff;
+    box-shadow: 0px 0px 15px 0px rgba(255, 255, 255, 0.5);
   }
   transition: 0.2s ease;
 `;

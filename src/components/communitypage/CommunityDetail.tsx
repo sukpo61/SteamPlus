@@ -60,7 +60,9 @@ export const CommunityDetail = () => {
         </CommuntyHeader>
         <CommunityArea>
           <Communitytitle2>게시글</Communitytitle2>
-          <div>
+
+          <div style={{ display: "flex" }}>
+            <AddPostBtn onClick={gotoCommunity}>목록</AddPostBtn>
             {PostSteamid === Steamid ? (
               <PostEditDelBox ref={PostBoxRef}>
                 <AddPostBtn
@@ -161,6 +163,9 @@ const CommunityTable = styled.table`
 `;
 
 const AddPostBtn = styled.span`
+  display: flex;
+  align-items: center;
+  justify-content: center;
   cursor: pointer;
   padding: 4px 8px;
   gap: 10px;
@@ -172,7 +177,7 @@ const AddPostBtn = styled.span`
   height: 26px;
   background: #404b5e;
   border-radius: 8px;
-  margin-right: 10px;
+  margin-left: 10px;
   &:hover {
     background: #00b8c8;
   }
@@ -205,6 +210,7 @@ const CommunityTitle = styled.div`
 
 const PostEditDelBox = styled.div`
   color: white;
+  display: flex;
 `;
 const Postslayout = styled.div`
   display: flex;

@@ -12,20 +12,15 @@ function Loading() {
 }
 
 const Background = styled.div`
-  position: absolute;
-  width: 100vw;
-  height: 100vh;
-  top: 0;
-  left: 0;
   z-index: 999;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  /* margin-bottom: 50px; */
 `;
 
 const LoadingText = styled.div`
-  margin-top: 20px;
   font: 1rem "Noto Sans KR";
   text-align: center;
   color: white;
