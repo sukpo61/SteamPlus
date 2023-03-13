@@ -721,6 +721,7 @@ const Profilebutton = styled.div`
   font-size: 12px;
   width: 50px;
   height: 50px;
+  min-height: 50px;
   overflow: hidden;
   line-height: 50px;
   text-align: center;
