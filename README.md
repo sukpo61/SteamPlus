@@ -1,10 +1,12 @@
-![Slide 16_9 - 2.png](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/8f584f0f-97be-4b69-be2d-009c615f992c/Slide_16_9_-_2.png)
+# steamPlus 링크 https://steam-plus-theta.vercel.app/
 
-![Slice 123423.png](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/e8acc294-e7c3-4b6a-826b-e24feeae5441/Slice_123423.png)
+![1234](https://user-images.githubusercontent.com/116047764/224586337-350a3cf1-abc1-464e-acbc-3fe5134789dc.png)
+
+![123](https://user-images.githubusercontent.com/116047764/224586342-3c373968-0385-42b4-b380-0cc4d9388ec4.png)
 
 ## 🏡 아키텍쳐
 
-![Frame 585.png](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/52ecf79f-d263-481e-8328-1dfd47324a0a/Frame_585.png)
+![12345](https://user-images.githubusercontent.com/116047764/224586419-ba9b63b4-f84f-4805-a45a-227aea379096.png)
 
 ## 🎲기술적 의사 결정
 
@@ -50,16 +52,17 @@
     
 
 ## 📘 주요 기능
+![steamPlusAbout1](https://user-images.githubusercontent.com/116047764/224586153-02c73544-f8ec-425a-bb61-de2a78c8d450.jpg)
 
-![Frame 550.jpg](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/24ff54fb-77b2-4615-af4d-1404d5f21799/Frame_550.jpg)
+![steamPlusAbout2](https://user-images.githubusercontent.com/116047764/224586191-a4559ac3-ee87-40d4-ace3-39bd41afcf86.jpg)
 
-![Frame 601.png](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/7a4564b5-8004-4c20-9f19-bc4d89cc5395/Frame_601.png)
+![steamPlusAbout3](https://user-images.githubusercontent.com/116047764/224586194-271b52b5-a200-422a-9d6f-68b3112d8d8e.jpg)
 
-![Frame 594.png](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/e0eb4327-57cf-4e36-acfe-86e1209cb01a/Frame_594.png)
+![steamPlusAbout4](https://user-images.githubusercontent.com/116047764/224586240-cbd09128-0af8-411a-9c78-969267fb984d.jpg)
 
-![Frame 600.png](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/85965482-20a8-4446-87b7-68342492ffc0/Frame_600.png)
+![steamPlusAbout5](https://user-images.githubusercontent.com/116047764/224586243-91d18e0d-a3cc-46fc-9f30-c58b15a53d4f.jpg)
 
-![Frame 598.png](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/8ae7b996-1d70-4028-9d88-a18e150d8253/Frame_598.png)
+![steamPlusAbout6](https://user-images.githubusercontent.com/116047764/224586246-1e1c37a5-c475-4474-854c-0ba3d7bbc37d.jpg)
 
 ## 😀 팀원 소개
 
@@ -69,7 +72,7 @@
 | 신정근 | 부팀장 | https://prdg.tistory.com/ | sjk990515@naver.com |
 | 손유진 | 부디자이너 | https://github.com/freedobby77 | y09urt77@gmail.com |
 | 차상현 | 미드필더 | https://github.com/mr-chacha | hoitchac@gmail.com |
-| 이채은  | 디자이너 |  |  |
+| 이채은  | 디자이너 |  | eun9077@gmail.com |
 
 | 이름 | 담당 |
 | --- | --- |
