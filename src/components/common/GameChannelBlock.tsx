@@ -1,6 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
+import { generateKeySync } from "crypto";
 
 interface Game {
   id: any;
@@ -34,10 +35,11 @@ function GameChannelBlock({ game, count }: any) {
             }}
           >
             <GameChannelCategory>
-              {/* {Genres} */}
-              {game?.genres.map((e: any) => {
-                return `${e.description} `;
-              })}
+              {game?.genres != null
+                ? game?.genres.map((e: any) => {
+                    return `${e.description}, `;
+                  })
+                : ""}
             </GameChannelCategory>{" "}
             <PoPularChannelActivate>
               {count ? (
@@ -97,7 +99,7 @@ const GameListBlock = styled.div`
   border-radius: 10px;
   overflow: hidden;
   &:hover {
-    box-shadow: 0px 0px 10px 0px #fff;
+    box-shadow: 0px 0px 15px 0px rgba(255, 255, 255, 0.5);
   }
   transition: 0.2s ease;
 `;

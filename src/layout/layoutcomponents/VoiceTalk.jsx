@@ -358,6 +358,7 @@ function VoiceTalk({ myId, handleLoginModalOpen }) {
       friendNickName: friendNickName,
     };
     postMutation.mutate(friendAdd);
+    socket.emit("friendMount", friendId);
   };
 
   const alreadyFriend = friendAllRecoil?.filter((i) => {

@@ -135,9 +135,9 @@ const PopularChannel1st = styled.div`
   background: #263245;
   border-radius: 10px;
   cursor: pointer;
-  box-shadow: 0px 0px 15px 0px #000;
+  box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.25);
   &:hover {
-    box-shadow: 0px 0px 15px 0px #fff;
+    box-shadow: 0px 0px 15px 0px rgba(255, 255, 255, 0.5);
   }
   transition: 0.5s ease;
 `;
@@ -175,9 +175,9 @@ const PopularChannel1st2 = styled.div`
   flex-direction: column;
   border-radius: 10px;
   cursor: pointer;
-  box-shadow: 0px 0px 15px 0px #000;
+  box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.25);
   &:hover {
-    box-shadow: 0px 0px 15px 0px #fff;
+    box-shadow: 0px 0px 15px 0px rgba(255, 255, 255, 0.5);
   }
   transition: 0.5s ease;
 `;
@@ -195,7 +195,7 @@ const PopularChannel1st2empty = styled.div`
   display: flex;
   align-items: center;
   border-radius: 10px;
-  box-shadow: 0px 0px 15px 0px #000;
+  box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.25);
   span {
     font-size: 300px;
     position: absolute;
@@ -246,14 +246,15 @@ const PoPularChannelTitle = styled.div`
   max-width: 500px;
 `;
 const ChannelTitle1st2 = styled.div`
-  display: flex;
-  font-weight: 500;
+  margin-bottom: 4px;
+  font-weight: 600;
   font-size: 13px;
+  letter-spacing: -0.02em;
   color: #ffffff;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  max-width: 150px;
+  max-width: 165px;
 `;
 const PoPularChannelCategory = styled.div`
   font-weight: 400;
