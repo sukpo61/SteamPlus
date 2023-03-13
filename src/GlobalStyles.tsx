@@ -9,6 +9,7 @@ const GlobalStyles = createGlobalStyle`
   body{
     background-color:#192030;
     font-family: 'Montserrat', 'Noto Sans KR', sans-serif;
+    cursor:default;
   }
     a{
         text-decoration: none;

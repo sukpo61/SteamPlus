@@ -1,6 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
+import { generateKeySync } from "crypto";
 
 interface Game {
   id: any;
@@ -15,16 +16,6 @@ interface Props {
 
 function GameChannelBlock({ game, count }: any) {
   const navigate = useNavigate();
-
-  // const aaa = () => {
-  //   if (game?.genres != null) {
-  //     game?.genres.map((e: any) => {
-  //       return `${e.description}`;
-  //     });
-  //   } else {
-  //     return;
-  //   }
-  // };
 
   return (
     <GameListBlock>
@@ -47,8 +38,10 @@ function GameChannelBlock({ game, count }: any) {
               {/* {Genres} */}
               {game?.genres != null
                 ? game?.genres.map((e: any) => {
-                    const aaa = game?.genres.length;
-                    if (e.description == game?.genres[aaa - 1].description) {
+                    if (
+                      e.description ==
+                      game?.genres[game?.genres.length - 1].description
+                    ) {
                       return `${e.description}`;
                     } else {
                       return `${e.description}, `;
