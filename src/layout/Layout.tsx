@@ -149,20 +149,14 @@ function Layout() {
     ["friend"],
     getAllFriend
   );
-  const ProfileImgUrls = sessionStorage.getItem("profileimg");
+
   if (isLoading) {
     return (
       <SideBarDiv>
         {/* 프로필 */}
         <Profilebutton>
-          {ProfileImgUrls === null ? (
-            <div>Login</div>
-          ) : (
-            <ProfileImg src={`${ProfileImgUrls}`} />
-          )}
-          <ProfileImg src={`${ProfileImgUrls}`} />
+          <div>profile</div>
         </Profilebutton>
-
         {/* 홈 */}
         <Homebutton
           locationName={locationName}
@@ -418,11 +412,7 @@ function Layout() {
                 if (myId === null) {
                   handleLoginModalOpen();
                 } else {
-                  if (channelId !== "") {
-                    LayoutButtonOnClick("voicetalk");
-                  } else {
-                    alert("채널에 참가중이 아닙니다.");
-                  }
+                  LayoutButtonOnClick("voicetalk");
                 }
               }}
               layoutMenu={layoutMenu}
@@ -725,7 +715,6 @@ const Profilebutton = styled.div`
   margin: 20px auto 0;
   border-radius: 25px;
   font-size: 12px;
-  min-height: 50px;
   width: 50px;
   height: 50px;
   overflow: hidden;
@@ -838,9 +827,9 @@ const VoiceTalkbuttonWrap = styled.div`
   position: relative;
 `;
 const VoiceTalkON = styled.div`
-  width: 8px;
-  height: 8px;
-  right: 10px;
+  width: 10px;
+  height: 10px;
+  right: 4px;
   bottom: 48px;
   border-radius: 4px;
   background: #f05656;
