@@ -35,12 +35,20 @@ function GameChannelBlock({ game, count }: any) {
             }}
           >
             <GameChannelCategory>
+              {/* {Genres} */}
               {game?.genres != null
                 ? game?.genres.map((e: any) => {
-                    return `${e.description}, `;
+                    if (
+                      e.description ==
+                      game?.genres[game?.genres.length - 1].description
+                    ) {
+                      return `${e.description}`;
+                    } else {
+                      return `${e.description}, `;
+                    }
                   })
                 : ""}
-            </GameChannelCategory>{" "}
+            </GameChannelCategory>
             <PoPularChannelActivate>
               {count ? (
                 <>
