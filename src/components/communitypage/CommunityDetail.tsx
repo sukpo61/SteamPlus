@@ -106,7 +106,6 @@ export const CommunityDetail = () => {
             </CommunityTr>
           </CommunityTable>
           <PostContents>{PostContent}</PostContents>
-
           {/* 댓글 */}
           <Comment PostId={PostId} />
         </PostpageWrap>
