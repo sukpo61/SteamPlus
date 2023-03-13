@@ -72,7 +72,7 @@
 | 신정근 | 부팀장 | https://prdg.tistory.com/ | sjk990515@naver.com |
 | 손유진 | 부디자이너 | https://github.com/freedobby77 | y09urt77@gmail.com |
 | 차상현 | 미드필더 | https://github.com/mr-chacha | hoitchac@gmail.com |
-| 이채은  | 디자이너 |  | eun9077@gmail.com |
+| 이채은  | 디자이너 | https://www.behance.net/ce9bc424 | eun9077@gmail.com |
 
 | 이름 | 담당 |
 | --- | --- |
