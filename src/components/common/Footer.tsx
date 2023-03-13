@@ -29,18 +29,48 @@ function Footer() {
             <Position style={{ width: 42 }}>개발자</Position>
             <DeveloperMember>
               <MemArray>
-                <Member>고현석</Member>
-                <Member>손유진</Member>
+                <Member
+                  onClick={() => {
+                    window.open("https://github.com/sukpo61");
+                  }}
+                >
+                  고현석
+                </Member>
+                <Member
+                  onClick={() => {
+                    window.open("https://github.com/freedobby77");
+                  }}
+                >
+                  손유진
+                </Member>
               </MemArray>
               <MemArray>
-                <Member>신정근</Member>
-                <Member>차상현</Member>
+                <Member
+                  onClick={() => {
+                    window.open("https://prdg.tistory.com/");
+                  }}
+                >
+                  신정근
+                </Member>
+                <Member
+                  onClick={() => {
+                    window.open("https://github.com/mr-chacha");
+                  }}
+                >
+                  차상현
+                </Member>
               </MemArray>
             </DeveloperMember>
           </PositionGroup>
           <PositionGroup>
             <Position style={{ width: 56 }}>디자이너</Position>
-            <Member>이채은</Member>
+            <Member
+              onClick={() => {
+                window.open("https://www.behance.net/ce9bc424");
+              }}
+            >
+              이채은
+            </Member>
           </PositionGroup>
         </MemberInfo>
       </FooterArea>
@@ -123,6 +153,7 @@ const Member = styled.p`
   line-height: 19px;
   letter-spacing: -0.03em;
   color: #a7a9ac;
+  cursor: pointer;
 `;
 
 export default Footer;
