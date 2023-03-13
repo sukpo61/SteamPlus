@@ -7,6 +7,8 @@ import Loader from "../components/common/Loader";
 import { useNavigate } from "react-router-dom";
 import { BiSearchAlt2 } from "react-icons/bi";
 import GameChannelBlock from "../components/common/GameChannelBlock";
+import { useRecoilState } from "recoil";
+import { LayoutButton } from "../recoil/atom";
 
 // 게시판 홈 검색
 
@@ -16,6 +18,8 @@ const ChannelSearchPage: any = () => {
   const [filteredCount, setFilteredCount] = useState<number>(0);
   const [isLoading, setIsLoading] = useState(true);
   const navigate = useNavigate();
+  //레이아웃 종류
+  const [layoutMenu, setLayoutMenu] = useRecoilState<String>(LayoutButton);
 
   //검색
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -120,14 +124,14 @@ const ChannelSearchPage: any = () => {
       </SearchPageHeader>
 
       {isLoading && (
-        <SearchDiv>
+        <SearchDiv layoutMenu={layoutMenu}>
           <Loader />
         </SearchDiv>
       )}
       {isLoading ? (
         ""
       ) : termResult === "" ? (
-        <SearchDiv>
+        <SearchDiv layoutMenu={layoutMenu}>
           <BeforeSearch>참여하고 싶은 게임 채널을 검색해보세요!</BeforeSearch>
         </SearchDiv>
       ) : (
@@ -164,11 +168,14 @@ const SerachLayout = styled.div`
   flex-direction: column;
   align-items: center;
   width: 100%;
-  height: 100vh;
 `;
-const SearchDiv = styled.div`
-  position: relative;
-  top: 45%;
+const SearchDiv = styled.div<{ layoutMenu: any }>`
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  transition: 0.5s ease-in-out;
+  margin-left: ${(props) => (props.layoutMenu === "close" ? "40px" : "240px")};
 `;
 
 const SearchPageHeader = styled.div`

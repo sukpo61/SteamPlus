@@ -1,6 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
+import { generateKeySync } from "crypto";
 
 interface Game {
   id: any;
@@ -35,10 +36,19 @@ function GameChannelBlock({ game, count }: any) {
           >
             <GameChannelCategory>
               {/* {Genres} */}
-              {game?.genres.map((e: any) => {
-                return `${e.description} `;
-              })}
-            </GameChannelCategory>{" "}
+              {game?.genres != null
+                ? game?.genres.map((e: any) => {
+                    if (
+                      e.description ==
+                      game?.genres[game?.genres.length - 1].description
+                    ) {
+                      return `${e.description}`;
+                    } else {
+                      return `${e.description}, `;
+                    }
+                  })
+                : ""}
+            </GameChannelCategory>
             <PoPularChannelActivate>
               {count ? (
                 <>
