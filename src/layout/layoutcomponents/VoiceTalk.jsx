@@ -862,6 +862,7 @@ function VoiceTalk({ myId, handleLoginModalOpen }) {
                 </SetCountSelect>
                 <UserCount>방 인원수</UserCount>
               </SetCountWrap>
+
               <CreateRoomBottom>
                 <div>
                   {checked && (
@@ -1352,6 +1353,7 @@ const SetCountSelect = styled.select`
   display: flex;
   align-items: center;
   letter-spacing: -0.03em;
+  outline: 0px none transparent;
 `;
 
 const Controlbox = styled.div`

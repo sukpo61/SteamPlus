@@ -5,9 +5,11 @@ import { useNavigate } from "react-router-dom";
 function Footer() {
   const navigate = useNavigate();
 
+  // const HSurl = https://prdg.tistory.com/
+
   return (
     <>
-      <div style={{ minHeight: "100vh", zIndex: "999" }}>
+      <div style={{ minHeight: "100vh", zIndex: "9999999999999" }}>
         <Outlet />
       </div>
       <FooterArea>
@@ -23,12 +25,18 @@ function Footer() {
             <Position style={{ width: 42 }}>개발자</Position>
             <DeveloperMember>
               <MemArray>
-                <Member>고현석</Member>
-                <Member>손유진</Member>
+                <Member onClick={() => {}}>고현석</Member>
+                <Member onClick={() => {}}>손유진</Member>
               </MemArray>
               <MemArray>
-                <Member>신정근</Member>
-                <Member>차상현</Member>
+                <Member
+                  onClick={() => {
+                    window.open("https://prdg.tistory.com/");
+                  }}
+                >
+                  신정근
+                </Member>
+                <Member onClick={() => {}}>차상현</Member>
               </MemArray>
             </DeveloperMember>
           </PositionGroup>
