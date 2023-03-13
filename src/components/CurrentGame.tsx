@@ -36,6 +36,7 @@ export const CurrentGame = ({ game, data }: any) => {
   return (
     <CurrentGameLayout>
       <>
+        {/* 현재 게임중이 아니면 */}
         {userGameId === "undefined" || userGameId === null ? (
           gameAll?.video ? (
             <GameVideo src={gameAll?.video} autoPlay muted loop />
@@ -49,7 +50,6 @@ export const CurrentGame = ({ game, data }: any) => {
         ) : (
           <GameVideo src={userVideo} autoPlay muted loop />
         )}
-        {/*  게임을 안해써 비디오가 없으면 해당게임의 이미지를 불러오고 비디오가 있으면 비디오를 불러오고  */}
 
         <CurrentGameBlackImg />
         <CurrentGameBox>

@@ -88,7 +88,7 @@ const TeamChat = () => {
   const chatInputOnSubmit = (e: any) => {
     e.preventDefault();
     //빈칸 예외 처리
-    if (textInput === "") {
+    if (textInput.trim() === "") {
       return;
     }
     //채팅으로 보낼 시간

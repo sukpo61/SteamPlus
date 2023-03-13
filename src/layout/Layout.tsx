@@ -827,9 +827,9 @@ const VoiceTalkbuttonWrap = styled.div`
   position: relative;
 `;
 const VoiceTalkON = styled.div`
-  width: 8px;
-  height: 8px;
-  right: 10px;
+  width: 10px;
+  height: 10px;
+  right: 4px;
   bottom: 48px;
   border-radius: 4px;
   background: #f05656;

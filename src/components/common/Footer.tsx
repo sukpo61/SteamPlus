@@ -5,14 +5,18 @@ import { useNavigate } from "react-router-dom";
 function Footer() {
   const navigate = useNavigate();
 
-  // const HSurl = https://prdg.tistory.com/
+  const location = window.location.href;
 
   return (
     <>
-      <div style={{ minHeight: "100vh", zIndex: "9999999999999" }}>
+      <div
+        style={{
+          minHeight: "100vh",
+        }}
+      >
         <Outlet />
       </div>
-      <FooterArea>
+      <FooterArea location={location}>
         <Copyright>
           <FooterLogo
             src="/img/SteamPlusLogo2.png"
@@ -25,8 +29,20 @@ function Footer() {
             <Position style={{ width: 42 }}>개발자</Position>
             <DeveloperMember>
               <MemArray>
-                <Member onClick={() => {}}>고현석</Member>
-                <Member onClick={() => {}}>손유진</Member>
+                <Member
+                  onClick={() => {
+                    window.open("https://github.com/sukpo61");
+                  }}
+                >
+                  고현석
+                </Member>
+                <Member
+                  onClick={() => {
+                    window.open("https://github.com/freedobby77");
+                  }}
+                >
+                  손유진
+                </Member>
               </MemArray>
               <MemArray>
                 <Member
@@ -36,13 +52,25 @@ function Footer() {
                 >
                   신정근
                 </Member>
-                <Member onClick={() => {}}>차상현</Member>
+                <Member
+                  onClick={() => {
+                    window.open("https://github.com/mr-chacha");
+                  }}
+                >
+                  차상현
+                </Member>
               </MemArray>
             </DeveloperMember>
           </PositionGroup>
           <PositionGroup>
             <Position style={{ width: 56 }}>디자이너</Position>
-            <Member>이채은</Member>
+            <Member
+              onClick={() => {
+                window.open("https://www.behance.net/ce9bc424");
+              }}
+            >
+              이채은
+            </Member>
           </PositionGroup>
         </MemberInfo>
       </FooterArea>
@@ -50,7 +78,9 @@ function Footer() {
   );
 }
 
-const FooterArea = styled.div`
+const FooterArea = styled.div<{ location: any }>`
+  /* position: static;
+  bottom: 100px; */
   background-color: #263245;
   width: 100%;
   height: 100px; //52px;
@@ -58,7 +88,8 @@ const FooterArea = styled.div`
   flex-direction: row;
   justify-content: center;
   align-items: center;
-  margin-top: -100px; // -52px; // footer
+  margin-top: ${(props) =>
+    props.location === "http://localhost:3000/" ? "0" : "-100px"};
   gap: 420px;
 `;
 
@@ -122,6 +153,7 @@ const Member = styled.p`
   line-height: 19px;
   letter-spacing: -0.03em;
   color: #a7a9ac;
+  cursor: pointer;
 `;
 
 export default Footer;
