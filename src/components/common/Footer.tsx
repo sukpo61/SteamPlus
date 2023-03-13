@@ -89,7 +89,7 @@ const FooterArea = styled.div<{ location: any }>`
   justify-content: center;
   align-items: center;
   margin-top: ${(props) =>
-    props.location === "http://localhost:3000/" ? "0" : "-100px"};
+    props.location === "https://steam-plus-theta.vercel.app/" ? "0" : "-100px"};
   gap: 420px;
 `;
 
