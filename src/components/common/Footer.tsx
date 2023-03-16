@@ -79,8 +79,6 @@ function Footer() {
 }
 
 const FooterArea = styled.div<{ location: any }>`
-  /* position: static;
-  bottom: 100px; */
   background-color: #263245;
   width: 100%;
   height: 100px; //52px;
