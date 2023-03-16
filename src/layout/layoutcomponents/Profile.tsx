@@ -131,6 +131,7 @@ function Profile() {
     return recentGame;
   };
   const { data: recentGame } = useQuery("getRecentGameData", getRecentGameData);
+  console.log("recentGame", recentGame);
 
   const GameData = recentGame?.data.response.games;
   //유저 최신정보 & 타임스탬프
