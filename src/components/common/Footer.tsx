@@ -16,7 +16,6 @@ function Footer() {
       >
         <Outlet />
       </div>
-
       <FooterArea location={location}>
         <Copyright>
           <FooterLogo
