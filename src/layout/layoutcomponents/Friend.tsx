@@ -150,7 +150,6 @@ function Friend() {
 
     socket.once("friendchannel", (roomname, _, frienduserid) => {
       if (frienduserid === userid && roomname) {
-        console.log("roomname", roomname);
         Gamedata(frienduserid, roomname.split("/")[0]);
       }
     });
@@ -219,8 +218,7 @@ function Friend() {
         });
         //선택한 아이디와 내아이디 더하기 (방이름)
         const roomName = parseInt(clickId?.split("/")[0]) + parseInt(myId);
-        console.log(roomName);
-        console.log("joined");
+
         socket.emit("friendChat", clickId, roomName);
         navigate(`/testchat/:${roomName}`, { state: clickId.split("/")[0] });
 

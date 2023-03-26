@@ -84,7 +84,6 @@ function FriendContextMenu({ xPos, yPos, id, onClose }: any) {
     socket.emit("friendchannel", userid);
     socket.once("friendchannel", (roomname, roomdata, frienduserid) => {
       if (frienduserid === userid && roomname) {
-        console.log("frjoin", roomdata);
         navigate(`/Teamchat/:${roomname.split("/")[0]}`, {
           replace: true,
           state: {
@@ -127,8 +126,6 @@ function FriendContextMenu({ xPos, yPos, id, onClose }: any) {
       });
       //선택한 아이디와 내아이디 더하기 (방이름)
       const roomName = parseInt(clickId?.split("/")[0]) + parseInt(myId);
-      console.log(roomName);
-      console.log("joined");
       socket.emit("friendChat", clickId, roomName);
       navigate(`/testchat/:${roomName}`, { state: clickId.split("/")[0] });
 

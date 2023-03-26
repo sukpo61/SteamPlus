@@ -496,10 +496,6 @@ function VoiceTalk({ myId, handleLoginModalOpen }) {
       .getTracks()
       .forEach((track) => NewUserPeerConnection.addTrack(track, localStream));
 
-    localStream.getTracks().forEach((track) => {
-      console.log(track);
-    });
-
     NewUserPeerConnection.onaddstream = (event) => {
       handleAddStream(userid, event.stream);
     };
@@ -725,7 +721,6 @@ function VoiceTalk({ myId, handleLoginModalOpen }) {
 
   useEffect(() => {
     if (friendroominfo) {
-      console.log("friendroominfo", friendroominfo);
       Roomjoin(friendroominfo);
     }
   }, [friendroominfo]);
