@@ -7,6 +7,8 @@ import Loader from "../components/common/Loader";
 import { useNavigate } from "react-router-dom";
 import { BiSearchAlt2 } from "react-icons/bi";
 import GameChannelBlock from "../components/common/GameChannelBlock";
+import { useRecoilState } from "recoil";
+import { LayoutButton } from "../recoil/atom";
 
 // 게시판 홈 검색
 
@@ -16,6 +18,8 @@ const ChannelSearchPage: any = () => {
   const [filteredCount, setFilteredCount] = useState<number>(0);
   const [isLoading, setIsLoading] = useState(true);
   const navigate = useNavigate();
+  //레이아웃 종류
+  const [layoutMenu, setLayoutMenu] = useRecoilState<String>(LayoutButton);
 
   //검색
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -88,15 +92,7 @@ const ChannelSearchPage: any = () => {
   };
 
   return (
-    <div
-      style={{
-        backgroundColor: "#192030",
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        width: "100%",
-      }}
-    >
+    <SerachLayout>
       <SearchPageHeader>
         <SteamPlusLogo
           src="/img/SteamPlusLogo2.png"
@@ -127,11 +123,17 @@ const ChannelSearchPage: any = () => {
         </GameSearchInputArea>
       </SearchPageHeader>
 
-      {isLoading && <Loader />}
+      {isLoading && (
+        <SearchDiv layoutMenu={layoutMenu}>
+          <Loader />
+        </SearchDiv>
+      )}
       {isLoading ? (
         ""
       ) : termResult === "" ? (
-        <BeforeSearch>참여하고 싶은 게임 채널을 검색해보세요!</BeforeSearch>
+        <SearchDiv layoutMenu={layoutMenu}>
+          <BeforeSearch>참여하고 싶은 게임 채널을 검색해보세요!</BeforeSearch>
+        </SearchDiv>
       ) : (
         <AfterSearch>
           <SearchCount>
@@ -155,15 +157,25 @@ const ChannelSearchPage: any = () => {
           </GameSearchList>
         </AfterSearch>
       )}
-    </div>
+    </SerachLayout>
   );
 };
 // ?.filter((game: any) => game?.type === !"dlc")
 //data.pages.map(page=>page.results).flat()
-
-const SearchNone = styled.div`
-  color: white;
-  font-size: 2rem;
+const SerachLayout = styled.div`
+  background-color: #192030;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+`;
+const SearchDiv = styled.div<{ layoutMenu: any }>`
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  transition: 0.5s ease-in-out;
+  margin-left: ${(props) => (props.layoutMenu === "close" ? "40px" : "240px")};
 `;
 
 const SearchPageHeader = styled.div`
@@ -220,7 +232,7 @@ const BeforeSearch = styled.p`
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-top: 330px;
+  /* margin-top: 330px; */
 
   /* width: 100vw; */
   /* height: 100vh; */

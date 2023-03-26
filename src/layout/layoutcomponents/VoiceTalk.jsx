@@ -358,6 +358,7 @@ function VoiceTalk({ myId, handleLoginModalOpen }) {
       friendNickName: friendNickName,
     };
     postMutation.mutate(friendAdd);
+    socket.emit("friendMount", friendId);
   };
 
   const alreadyFriend = friendAllRecoil?.filter((i) => {
@@ -676,9 +677,9 @@ function VoiceTalk({ myId, handleLoginModalOpen }) {
       });
 
       socket.on("ice", (ice, targetid) => {
-        setTimeout(() => {
-          RtcPeerConnectionMap.get(targetid).addIceCandidate(ice);
-        }, 100);
+        RtcPeerConnectionMap.get(targetid).addIceCandidate(ice);
+        // setTimeout(() => {
+        // }, 100);
       });
       //sdfsdfd
       socket.on("leave", (targetid) => {
@@ -862,6 +863,7 @@ function VoiceTalk({ myId, handleLoginModalOpen }) {
                 </SetCountSelect>
                 <UserCount>방 인원수</UserCount>
               </SetCountWrap>
+
               <CreateRoomBottom>
                 <div>
                   {checked && (
@@ -1352,6 +1354,7 @@ const SetCountSelect = styled.select`
   display: flex;
   align-items: center;
   letter-spacing: -0.03em;
+  outline: 0px none transparent;
 `;
 
 const Controlbox = styled.div`
