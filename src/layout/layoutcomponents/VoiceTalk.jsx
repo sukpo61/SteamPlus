@@ -677,9 +677,9 @@ function VoiceTalk({ myId, handleLoginModalOpen }) {
       });
 
       socket.on("ice", (ice, targetid) => {
-        setTimeout(() => {
-          RtcPeerConnectionMap.get(targetid).addIceCandidate(ice);
-        }, 100);
+        RtcPeerConnectionMap.get(targetid).addIceCandidate(ice);
+        // setTimeout(() => {
+        // }, 100);
       });
       //sdfsdfd
       socket.on("leave", (targetid) => {
