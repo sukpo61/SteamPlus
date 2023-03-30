@@ -125,6 +125,10 @@ export const isMicVolumePercent = atom<any>({
   key: "isMicVolumePercent",
   default: 50,
 });
+export const hasDeviceRecoil = atom<any>({
+  key: "hasDevice",
+  default: true,
+});
 
 // export const FriendNoticeAll = atom({
 //   key: "FriendNoticeAll",

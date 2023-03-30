@@ -6,6 +6,7 @@ import {
   isAllMutedRecoil,
   videoStateRecoil,
   isVolumePercent,
+  hasDeviceRecoil,
 } from "../../recoil/atom";
 import { useEffect } from "react";
 import { BsFillMicFill, BsFillMicMuteFill } from "react-icons/bs";
@@ -13,6 +14,8 @@ import { BsFillMicFill, BsFillMicMuteFill } from "react-icons/bs";
 const UserVideo = ({ data, info, myId }: any) => {
   const [isallmuted, setIsAllMuted] = useRecoilState(isAllMutedRecoil);
   const [videostate, setVideoState] = useRecoilState(videoStateRecoil);
+  const [hasDevice, sethasDevice] = useRecoilState(hasDeviceRecoil);
+
   const [volumepercent, setVolumePercent] = useRecoilState(isVolumePercent);
 
   const [muted, setMuted] = useState(false);
@@ -21,7 +24,12 @@ const UserVideo = ({ data, info, myId }: any) => {
 
   const videoComponent = useMemo(() => {
     if (data.userid === myId) {
-      return <Streamvideo ref={videoRef} autoPlay playsInline muted={true} />;
+      console.log("stream", data.stream.getVideoTracks()[0]);
+      if (hasDevice && data.stream.getVideoTracks()[0]?.enabled) {
+        return <Streamvideo ref={videoRef} autoPlay playsInline muted={true} />;
+      } else {
+        return <img src="/img/emptyvideo.png"></img>;
+      }
     } else {
       return (
         <Streamvideo ref={videoRef} autoPlay playsInline muted={isallmuted} />
@@ -42,18 +50,16 @@ const UserVideo = ({ data, info, myId }: any) => {
   }, [volumepercent]);
 
   // console.log(data.stream.getVideoTracks()[0].kind);
+  // !data.stream.getVideoTracks()[0]?.enabled
+  // !data.stream.getAudioTracks()[0].enabled
 
   return (
     <VideoWrap key={data.userid}>
-      {!data.stream.getVideoTracks()[0].enabled ? (
-        <img src="/img/emptyvideo.png"></img>
-      ) : (
-        videoComponent
-      )}
+      {videoComponent}
       <Usernickname>
         <span>{info?.nickname}</span>
       </Usernickname>
-      {!data.stream.getAudioTracks()[0].enabled && (
+      {true && (
         <Micoff>
           <BsFillMicMuteFill size={20}></BsFillMicMuteFill>
         </Micoff>

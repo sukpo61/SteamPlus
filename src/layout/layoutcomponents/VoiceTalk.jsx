@@ -29,6 +29,7 @@ import {
   isAllMutedRecoil,
   isVolumePercent,
   isMicVolumePercent,
+  hasDeviceRecoil,
 } from "../../recoil/atom";
 
 import TeamChat from "../../pages/TeamChat";
@@ -127,6 +128,8 @@ function VoiceTalk({ myId, handleLoginModalOpen }) {
 
   const [isallmuted, setIsAllMuted] = useRecoilState(isAllMutedRecoil);
 
+  const [hasDevice, sethasDevice] = useRecoilState(hasDeviceRecoil);
+
   const {
     value: roomtitle,
     setinputValue: setRoomTitle,
@@ -144,20 +147,6 @@ function VoiceTalk({ myId, handleLoginModalOpen }) {
     setinputValue: setSearchValue,
     reset: resetSearchValue,
   } = useInput("");
-
-  //*
-  // const [validA, setValidA] = useState(true);
-  // const handlePW = (e) => {
-  //   const inputPassword = e.target.value;
-  //   setSbPassword(inputPassword);
-  //   if (inputPassword.length === 0) {
-  //     setValidA(true);
-  //   } else if (inputPassword !== pwroominfo.password) {
-  //     setValidA(false);
-  //   } else {
-  //     setValidA(true);
-  //   }
-  // };
 
   const navigate = useNavigate();
 
@@ -180,23 +169,64 @@ function VoiceTalk({ myId, handleLoginModalOpen }) {
     }
   };
 
+  async function checkMedia() {
+    let videoStream;
+    let audioStream;
+
+    const devices = await navigator.mediaDevices.enumerateDevices();
+
+    const hasCam = devices.some((device) => {
+      return device.kind === "videoinput";
+    });
+    const hasMic = devices.some((device) => {
+      return device.kind === "audioinput";
+    });
+    if (hasMic) {
+      audioStream = await navigator.mediaDevices.getUserMedia({
+        audio: true,
+      });
+    } else {
+      audioStream = new MediaStream([new MediaStreamTrack({ kind: "audio" })]);
+    }
+    if (hasCam) {
+      videoStream = await navigator.mediaDevices.getUserMedia({
+        video: true,
+      });
+    } else {
+      const track = new MediaStreamTrackGenerator("video");
+      videoStream = new MediaStream([track]);
+    }
+
+    const myStream = new MediaStream([
+      ...audioStream.getAudioTracks(),
+      ...videoStream.getVideoTracks(),
+    ]);
+    myStream.getAudioTracks().forEach((track) => {
+      track.enabled = micstate;
+    });
+    myStream.getVideoTracks().forEach((track) => {
+      track.enabled = false;
+    });
+    setLocalStream(myStream);
+    handleAddStream(myuserid, myStream);
+  }
+
+  // const getFakeStream = async () => {
+  //   try {
+  //     const fakeStream = new MediaStream([track]);
+  //     setLocalStream(fakeStream);
+  //     handleAddStream(myuserid, fakeStream);
+  //   } catch (e) {
+  //     console.log(e);
+  //   }
+  // };
+
   async function getMedia() {
     try {
       const myStream = await navigator.mediaDevices.getUserMedia({
         video: true,
         audio: true,
       });
-
-      // let audioContext = new AudioContext();
-      // let source = audioContext.createMediaStreamSource(myStream);
-      // let gainNode = audioContext.createGain();
-      // source.connect(gainNode);
-      // gainNode.connect(audioContext.destination);
-
-      // setAudioContext(audioContext);
-
-      // setGainNode(gainNode);
-
       myStream.getAudioTracks().forEach((track) => {
         track.enabled = micstate;
       });
@@ -235,7 +265,7 @@ function VoiceTalk({ myId, handleLoginModalOpen }) {
     }
     setvideoDisplay(true);
     setCurrentRoom(NewData.roomtitle);
-    await getMedia();
+    await checkMedia();
     socket.emit("join_room", NewData, myuserid);
     setChatText((e) => [...e, enterAlarm(NewData.roomtitle)]);
   };
@@ -496,41 +526,9 @@ function VoiceTalk({ myId, handleLoginModalOpen }) {
       .getTracks()
       .forEach((track) => NewUserPeerConnection.addTrack(track, localStream));
 
-    localStream.getTracks().forEach((track) => {
-      console.log(track);
-    });
-
     NewUserPeerConnection.onaddstream = (event) => {
       handleAddStream(userid, event.stream);
     };
-
-    const senders = NewUserPeerConnection.getSenders();
-
-    // senders.forEach((sender) => {
-    //   if (sender.track.kind === "video") {
-    //     const parameters = sender.getParameters();
-    //     const originalEnabledState = parameters.encodings[0].active;
-
-    //     setInterval(() => {
-    //       const currentEnabledState =
-    //         sender.getParameters().encodings[0].active;
-    //       if (currentEnabledState !== originalEnabledState) {
-    //         console.log(
-    //           "상대방의 비디오 스트림 enabled 속성이 변경되었습니다."
-    //         );
-    //         originalEnabledState = currentEnabledState;
-
-    //         // 비디오 스트림 비활성화
-    //         sender.getParameters().encodings[0].active = false;
-    //         sender.setParameters(sender.getParameters());
-
-    //         // 비디오 스트림 활성화
-    //         sender.getParameters().encodings[0].active = true;
-    //         sender.setParameters(sender.getParameters());
-    //       }
-    //     }, 1000);
-    //   }
-    // });
 
     NewUserPeerConnection.onicecandidate = (event) => {
       socket.emit("ice", event.candidate, myuserid, {
@@ -590,36 +588,6 @@ function VoiceTalk({ myId, handleLoginModalOpen }) {
 
   const MicVolumeonChange = (event) => {};
 
-  // const MicVolumeonChange = (event) => {
-  //   const volumeValue = parseFloat(event.target.value) / 100;
-  //   gainNode.gain.setValueAtTime(volumeValue, audioContext.currentTime);
-  // };
-
-  // let stream, audioContext, source, gainNode;
-
-  // navigator.mediaDevices
-  //   .getUserMedia({ audio: true })
-  //   .then((stream) => {
-  //     audioContext = new AudioContext();
-  //     source = audioContext.createMediaStreamSource(stream);
-  //     gainNode = audioContext.createGain();
-  //     source.connect(gainNode);
-  //     gainNode.connect(audioContext.destination);
-  //   })
-  //   .catch((error) => {
-  //     // 오류 처리
-  //   });
-
-  //   const MicVolumeonChange = (event) => {
-  //     const volumeValue = parseFloat(event.target.value) / 100;
-  //     gainNode.gain.setValueAtTime(volumeValue, audioContext.currentTime);
-  //   };
-
-  // function handleVolumeChange(event) {
-  //   const volumeValue = parseFloat(event.target.value);
-  //   gainNode.gain.setValueAtTime(volumeValue, audioContext.currentTime);
-  // }
-
   useEffect(() => {
     if (localStream) {
       socket.off("welcome");
@@ -645,6 +613,8 @@ function VoiceTalk({ myId, handleLoginModalOpen }) {
         };
 
         const offer = await MyPeerConnection.createOffer();
+
+        console.log("offer", offer);
 
         MyPeerConnection.setLocalDescription(offer);
 
@@ -673,13 +643,15 @@ function VoiceTalk({ myId, handleLoginModalOpen }) {
       });
 
       socket.on("answer", (answer, answerid) => {
+        console.log("answered");
         RtcPeerConnectionMap.get(answerid).setRemoteDescription(answer);
+        console.log("answer", RtcPeerConnectionMap.get(answerid));
       });
 
       socket.on("ice", (ice, targetid) => {
-        RtcPeerConnectionMap.get(targetid).addIceCandidate(ice);
-        // setTimeout(() => {
-        // }, 100);
+        setTimeout(() => {
+          RtcPeerConnectionMap.get(targetid).addIceCandidate(ice);
+        }, 100);
       });
       //sdfsdfd
       socket.on("leave", (targetid) => {
@@ -725,7 +697,6 @@ function VoiceTalk({ myId, handleLoginModalOpen }) {
 
   useEffect(() => {
     if (friendroominfo) {
-      console.log("friendroominfo", friendroominfo);
       Roomjoin(friendroominfo);
     }
   }, [friendroominfo]);
