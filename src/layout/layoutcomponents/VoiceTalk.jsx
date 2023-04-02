@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { getFriend, LayoutButton } from "../../recoil/atom";
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
 import { useRecoilValue } from "recoil";
 import socket from "../../socket";
 import useInput from "../../hooks/useInput";
@@ -29,6 +29,7 @@ import {
   isAllMutedRecoil,
   isVolumePercent,
   isMicVolumePercent,
+  hasDeviceRecoil,
 } from "../../recoil/atom";
 
 import TeamChat from "../../pages/TeamChat";
@@ -127,6 +128,8 @@ function VoiceTalk({ myId, handleLoginModalOpen }) {
 
   const [isallmuted, setIsAllMuted] = useRecoilState(isAllMutedRecoil);
 
+  const [hasDevice, sethasDevice] = useRecoilState(hasDeviceRecoil);
+
   const {
     value: roomtitle,
     setinputValue: setRoomTitle,
@@ -166,23 +169,71 @@ function VoiceTalk({ myId, handleLoginModalOpen }) {
     }
   };
 
+  async function checkMedia() {
+    let videoStream;
+    let audioStream;
+
+    const devices = await navigator.mediaDevices.enumerateDevices();
+    console.log("devices", devices);
+
+    const hasCam = devices.some((device) => {
+      return device.kind === "videoinput";
+    });
+    const hasMic = devices.some((device) => {
+      return device.kind === "audioinput";
+    });
+    if (hasMic) {
+      audioStream = await navigator.mediaDevices.getUserMedia({
+        audio: true,
+      });
+    } else {
+      audioStream = new MediaStream([new MediaStreamTrack({ kind: "audio" })]);
+    }
+    if (true) {
+      videoStream = await navigator.mediaDevices.getUserMedia({
+        video: true,
+      });
+    } else {
+      const img = new Image();
+      img.src = "/img/emptyvideo.png";
+      await new Promise((resolve) => (img.onload = resolve));
+
+      const canvas = document.createElement("canvas");
+      canvas.width = 640;
+      canvas.height = 480;
+      const ctx = canvas.getContext("2d");
+
+      ctx.drawImage(img, 0, 0, 640, 480);
+
+      // canvas 요소를 사용하여 비디오 스트림 생성하기
+      const stream = canvas.captureStream();
+      const videoTrack = stream.getVideoTracks()[0];
+
+      // 가상 비디오 스트림을 추가한 MediaStream 생성하기
+      videoStream = new MediaStream();
+      videoStream.addTrack(videoTrack);
+    }
+
+    const myStream = new MediaStream([
+      ...audioStream.getAudioTracks(),
+      ...videoStream.getVideoTracks(),
+    ]);
+    myStream.getAudioTracks().forEach((track) => {
+      track.enabled = micstate;
+    });
+    myStream.getVideoTracks().forEach((track) => {
+      track.enabled = true;
+    });
+    setLocalStream(myStream);
+    handleAddStream(myuserid, myStream);
+  }
+
   async function getMedia() {
     try {
       const myStream = await navigator.mediaDevices.getUserMedia({
         video: true,
         audio: true,
       });
-
-      // let audioContext = new AudioContext();
-      // let source = audioContext.createMediaStreamSource(myStream);
-      // let gainNode = audioContext.createGain();
-      // source.connect(gainNode);
-      // gainNode.connect(audioContext.destination);
-
-      // setAudioContext(audioContext);
-
-      // setGainNode(gainNode);
-
       myStream.getAudioTracks().forEach((track) => {
         track.enabled = micstate;
       });
@@ -221,7 +272,7 @@ function VoiceTalk({ myId, handleLoginModalOpen }) {
     }
     setvideoDisplay(true);
     setCurrentRoom(NewData.roomtitle);
-    await getMedia();
+    await checkMedia();
     socket.emit("join_room", NewData, myuserid);
     setChatText((e) => [...e, enterAlarm(NewData.roomtitle)]);
   };
@@ -302,7 +353,8 @@ function VoiceTalk({ myId, handleLoginModalOpen }) {
       setPwRoomInfo("");
       resetSbPassword();
     } else {
-      window.alert("틀림");
+      setFontColor("#F05656");
+      // window.alert("틀림");
     }
   };
   const SubmitCancle = () => {
@@ -313,20 +365,27 @@ function VoiceTalk({ myId, handleLoginModalOpen }) {
 
   //친구 추가
   const queryClient = useQueryClient();
+  const [isLoading, setIsLoading] = useState([]);
 
   const postMutation = useMutation(
     (friendAdd) => axios.post(`${DATABASE_ID}/friend`, friendAdd),
     {
-      onSuccess: () => {
+      onSuccess: (friendAdd) => {
         // 쿼리 무효화
         queryClient.invalidateQueries(["friend"]);
         queryClient.invalidateQueries(["friendsearch"]);
+        setTimeout(() => {
+          const newLoading = isLoading.filter((id) => {
+            return id !== friendAdd.friendId;
+          });
+          setIsLoading(newLoading);
+        }, 2000);
       },
     }
   );
-
   const FriendAdd = async (event, friendId, friendNickName) => {
     event.stopPropagation();
+    setIsLoading([...isLoading, friendId]);
 
     let friendAdd = {
       id: uuidv4(),
@@ -336,6 +395,7 @@ function VoiceTalk({ myId, handleLoginModalOpen }) {
       friendNickName: friendNickName,
     };
     postMutation.mutate(friendAdd);
+    socket.emit("friendMount", friendId);
   };
 
   const alreadyFriend = friendAllRecoil?.filter((i) => {
@@ -350,48 +410,53 @@ function VoiceTalk({ myId, handleLoginModalOpen }) {
     return false;
   });
 
+  const Roomjoin = (room) => {
+    console.log("roomrecept");
+    if (!myuserid) {
+      setLoginModalOpen(true);
+      return;
+    }
+    socket.emit("checkusers");
+    if (currentRoom === room.roomtitle) {
+      return;
+    }
+    if (room.userinfo?.length >= room.usercount) {
+      window.alert("방 인원이 다찼어요.");
+      return;
+    }
+    if (!room.password) {
+      setCurrentRoom(room.roomtitle);
+      handleJoin({
+        roomtitle: room.roomtitle,
+        channelId: room.channelId,
+        usercount: room.usercount,
+        password: room.password,
+      });
+    } else {
+      setPwSubmit(true);
+      setCreateDisplay("pwsubmit");
+      setPwRoomInfo({
+        roomtitle: room.roomtitle,
+        channelId: room.channelId,
+        usercount: room.usercount,
+        password: room.password,
+      });
+    }
+  };
+
   const RoomList = roomsresult.map((room) => {
     return (
       <RoomWrap
-        key={room.name}
+        key={room.roomtitle}
         currentRoom={currentRoom}
-        name={room.name}
+        name={room.roomtitle}
         onClick={() => {
-          if (!myuserid) {
-            setLoginModalOpen(true);
-            return;
-          }
-          socket.emit("checkusers");
-          if (currentRoom === room.name) {
-            return;
-          }
-          if (room.userinfo.length >= room.usercount) {
-            window.alert("방 인원이 다찼어요.");
-            return;
-          }
-          if (!room.password) {
-            setCurrentRoom(room.name);
-            handleJoin({
-              roomtitle: room.name,
-              channelId,
-              usercount: room.usercount,
-              password: room.password,
-            });
-          } else {
-            setPwSubmit(true);
-            setCreateDisplay("pwsubmit");
-            setPwRoomInfo({
-              roomtitle: room.name,
-              channelId,
-              usercount: room.usercount,
-              password: room.password,
-            });
-          }
+          Roomjoin(room);
         }}
       >
         <RoomTitleWrap>
           <RoomTitle>
-            <span># {room.name}</span>
+            <span># {room.roomtitle}</span>
             {room.password && (
               <div>
                 <MdLockOutline></MdLockOutline>
@@ -430,7 +495,15 @@ function VoiceTalk({ myId, handleLoginModalOpen }) {
                       FriendAdd(event, user?.userid, info?.nickname);
                     }}
                   >
-                    +
+                    {isLoading.find((id) => {
+                      if (user?.userid === id) {
+                        return true;
+                      } else {
+                        return false;
+                      }
+                    })
+                      ? ""
+                      : "+"}
                   </FriendAddButton>
                 )}
               </RoomUserWrap>
@@ -460,28 +533,9 @@ function VoiceTalk({ myId, handleLoginModalOpen }) {
       .getTracks()
       .forEach((track) => NewUserPeerConnection.addTrack(track, localStream));
 
-    localStream.getTracks().forEach((track) => {
-      console.log(track);
-    });
-
     NewUserPeerConnection.onaddstream = (event) => {
+      console.log("event", event);
       handleAddStream(userid, event.stream);
-    };
-
-    NewUserPeerConnection.ontrack = function (event) {
-      if (event.track.kind === "video") {
-        const videoTrack = event.track;
-        const originalEnabledState = videoTrack.enabled;
-
-        setInterval(() => {
-          if (videoTrack.enabled !== originalEnabledState) {
-            console.log(
-              "상대방의 비디오 스트림 enabled 속성이 변경되었습니다."
-            );
-            originalEnabledState = videoTrack.enabled;
-          }
-        }, 1000);
-      }
     };
 
     NewUserPeerConnection.onicecandidate = (event) => {
@@ -542,36 +596,6 @@ function VoiceTalk({ myId, handleLoginModalOpen }) {
 
   const MicVolumeonChange = (event) => {};
 
-  // const MicVolumeonChange = (event) => {
-  //   const volumeValue = parseFloat(event.target.value) / 100;
-  //   gainNode.gain.setValueAtTime(volumeValue, audioContext.currentTime);
-  // };
-
-  // let stream, audioContext, source, gainNode;
-
-  // navigator.mediaDevices
-  //   .getUserMedia({ audio: true })
-  //   .then((stream) => {
-  //     audioContext = new AudioContext();
-  //     source = audioContext.createMediaStreamSource(stream);
-  //     gainNode = audioContext.createGain();
-  //     source.connect(gainNode);
-  //     gainNode.connect(audioContext.destination);
-  //   })
-  //   .catch((error) => {
-  //     // 오류 처리
-  //   });
-
-  //   const MicVolumeonChange = (event) => {
-  //     const volumeValue = parseFloat(event.target.value) / 100;
-  //     gainNode.gain.setValueAtTime(volumeValue, audioContext.currentTime);
-  //   };
-
-  // function handleVolumeChange(event) {
-  //   const volumeValue = parseFloat(event.target.value);
-  //   gainNode.gain.setValueAtTime(volumeValue, audioContext.currentTime);
-  // }
-
   useEffect(() => {
     if (localStream) {
       socket.off("welcome");
@@ -597,6 +621,8 @@ function VoiceTalk({ myId, handleLoginModalOpen }) {
         };
 
         const offer = await MyPeerConnection.createOffer();
+
+        console.log("offer", offer);
 
         MyPeerConnection.setLocalDescription(offer);
 
@@ -625,7 +651,9 @@ function VoiceTalk({ myId, handleLoginModalOpen }) {
       });
 
       socket.on("answer", (answer, answerid) => {
+        console.log("answered");
         RtcPeerConnectionMap.get(answerid).setRemoteDescription(answer);
+        console.log("answer", RtcPeerConnectionMap.get(answerid));
       });
 
       socket.on("ice", (ice, targetid) => {
@@ -677,7 +705,7 @@ function VoiceTalk({ myId, handleLoginModalOpen }) {
 
   useEffect(() => {
     if (friendroominfo) {
-      handleJoin(friendroominfo);
+      Roomjoin(friendroominfo);
     }
   }, [friendroominfo]);
 
@@ -698,6 +726,13 @@ function VoiceTalk({ myId, handleLoginModalOpen }) {
       setRoomsResult(roomsInfo);
     }
   }, [roomsInfo]);
+
+  const [fontColor, setFontColor] = useState("white");
+
+  useEffect(() => {
+    setFontColor("white");
+  }, [sbpassword]);
+
   //스팀으로 이동하기
   const gotoSteam = () => {
     // navigate();
@@ -742,35 +777,51 @@ function VoiceTalk({ myId, handleLoginModalOpen }) {
             </SearchButtonWrap> */}
           </RoomTitleInputWrap>
         </VoiceTalkTop>
-        <RoomtoggleForm displaystate={createDisplay}>
+        <RoomtoggleForm displaystate={createDisplay} fontColor={fontColor}>
           {pwsubmit ? (
-            <SubbmitPasswordWrap>
+            <SubbmitPasswordWrap
+              style={{
+                boxShadow: `${
+                  fontColor === "white" ? "" : "0px 0px 10px 0px #F05656"
+                }`,
+              }}
+            >
+              {/* <div> */}
               <SubmitPwInput
                 className="title"
                 type="password"
                 placeholder="4자리 숫자 비밀번호"
                 value={sbpassword}
                 onChange={setSbPassword}
-              ></SubmitPwInput>
+                minLength={4}
+                maxLength={4}
+                style={{ color: fontColor }} // 비번 틀렸을 때 css //Color: validA ? "white" : "red"
+              />
               <TitleCancle onClick={SubmitCancle}>취소</TitleCancle>
               <TitleConfirm onClick={SubmitPassword}>제출</TitleConfirm>
+              {/* </div> */}
             </SubbmitPasswordWrap>
           ) : (
             <CreateRoomWrap>
               <CreateTitleInput
                 className="title"
                 type="text"
-                placeholder="제목을 입력하세요"
+                placeholder="채팅방 이름을 입력하세요"
                 value={roomtitle}
                 onChange={setRoomTitle}
               ></CreateTitleInput>
               <SetPasswordWrap>
-                <PasswordCheck>
+                <PasswordCheck checked={checked}>
                   <Checkbox
+                    style={{
+                      color: checked ? "#00B8C8" : "#777d87",
+                      marginLeft: -3,
+                      padding: 0,
+                    }}
                     checked={checked}
                     onChange={PasswordChange}
                   ></Checkbox>
-                  <span>비밀번호설정</span>
+                  <span>비밀번호 설정</span>
                 </PasswordCheck>
                 <SetPasswordInput
                   type="password"
@@ -789,8 +840,9 @@ function VoiceTalk({ myId, handleLoginModalOpen }) {
                   <option value={3}>3명</option>
                   <option value={4}>4명</option>
                 </SetCountSelect>
-                <UserCount>방인원수</UserCount>
+                <UserCount>방 인원수</UserCount>
               </SetCountWrap>
+
               <CreateRoomBottom>
                 <div>
                   {checked && (
@@ -1120,8 +1172,13 @@ const CreateRoomBottom = styled.div`
   align-items: center;
   justify-content: space-between;
   color: white;
+  margin-bottom: -6px;
 `;
 const TitleConfirm = styled.button`
+  font-style: normal;
+  font-weight: 400;
+  line-height: 20px;
+  letter-spacing: -0.03em;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -1129,11 +1186,22 @@ const TitleConfirm = styled.button`
   font-size: 15px;
 `;
 const TitleCancle = styled.button`
+  font-style: normal;
+  font-weight: 400;
+  line-height: 20px;
+  letter-spacing: -0.03em;
   display: flex;
   justify-content: center;
   align-items: center;
   color: white;
   font-size: 15px;
+`;
+
+const PasswordNotCorrect = styled.p`
+  position: absolute;
+  font-size: 8px;
+  color: red;
+  top: 65px;
 `;
 const CreateRoomWrap = styled.div`
   margin-bottom: 10px;
@@ -1147,7 +1215,8 @@ const CreateRoomWrap = styled.div`
   border-radius: 10px;
 `;
 const SubbmitPasswordWrap = styled.div`
-  margin-top: 136px;
+  position: relative;
+  margin-top: 144px; //136px;
   margin-bottom: 10px;
   display: flex;
   flex-direction: row;
@@ -1176,28 +1245,39 @@ const SetCountWrap = styled.div`
   color: white;
   align-items: center;
 `;
+
 const PasswordCheck = styled.div`
-  color: #777d87;
+  color: ${({ checked }) => (checked ? "white" : "#777d87")};
   display: flex;
   flex-direction: row;
   align-items: center;
-  color: white;
-  align-items: center;
+  gap: 7px;
+
   span {
-    font-family: "Noto Sans";
-    font-size: 14px;
-    color: #777d87;
+    font-style: normal;
+    font-weight: 400;
+    font-size: 15px;
+    line-height: 20px;
+    letter-spacing: -0.03em;
   }
 `;
 const UserCount = styled.div`
-  margin-right: 15px;
-  color: #d4d4d4;
+  margin-right: 20px;
+  /* color: #d4d4d4; */
   display: flex;
   flex-direction: row;
   align-items: center;
+
+  font-style: normal;
+  font-weight: 400;
+  font-size: 15px;
+  line-height: 20px;
+  letter-spacing: -0.03em;
+  color: #ffffff;
 `;
 
 const CreateTitleInput = styled.input`
+  width: 304px;
   height: 40px;
   border-radius: 10px;
   background: #263245;
@@ -1205,7 +1285,14 @@ const CreateTitleInput = styled.input`
   color: #fff;
   border: 0;
   text-indent: 10px;
+
+  font-style: normal;
+  font-weight: 500;
+  font-size: 15px;
+  line-height: 20px;
+  letter-spacing: -0.03em;
 `;
+
 const SubmitPwInput = styled.input`
   height: 40px;
   border-radius: 10px;
@@ -1217,7 +1304,7 @@ const SubmitPwInput = styled.input`
 `;
 const SetPasswordInput = styled.input`
   height: 40px;
-  width: 160px;
+  width: 172px;
   border-radius: 10px;
   background: #263245;
   box-shadow: inset 0px 4px 10px rgba(0, 0, 0, 0.25);
@@ -1230,7 +1317,7 @@ const SetPasswordInput = styled.input`
   }
 `;
 const SetCountSelect = styled.select`
-  width: 160px;
+  width: 172px;
   height: 40px;
   border-radius: 10px;
   background: #263245;
@@ -1238,6 +1325,15 @@ const SetCountSelect = styled.select`
   color: #fff;
   border: 0;
   text-indent: 10px;
+
+  font-style: normal;
+  font-weight: 400;
+  font-size: 15px;
+  line-height: 20px;
+  display: flex;
+  align-items: center;
+  letter-spacing: -0.03em;
+  outline: 0px none transparent;
 `;
 
 const Controlbox = styled.div`

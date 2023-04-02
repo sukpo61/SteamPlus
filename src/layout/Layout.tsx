@@ -149,6 +149,109 @@ function Layout() {
     ["friend"],
     getAllFriend
   );
+  const ProfileImgUrls = sessionStorage.getItem("profileimg");
+  if (isLoading) {
+    return (
+      <SideBarDiv>
+        {/* 프로필 */}
+        <Profilebutton>
+          {ProfileImgUrls === null ? (
+            <div>Login</div>
+          ) : (
+            <ProfileImg src={`${ProfileImgUrls}`} />
+          )}
+        </Profilebutton>
+        {/* 홈 */}
+        <Homebutton
+          locationName={locationName}
+          onClick={() => {
+            FriendButtonOnClick("close");
+            navigate("/");
+            window.scrollTo({ top: 0, behavior: "smooth" });
+          }}
+        >
+          <AiFillHome className="homeIcon" />
+          <p>홈</p>
+        </Homebutton>
+        {/* 게임검색 */}
+        <GameSearchbutton
+          locationName={locationName}
+          onClick={() => {
+            FriendButtonOnClick("close");
+            navigate("/Channelsearchpage");
+            window.scrollTo({ top: 0, behavior: "smooth" });
+          }}
+        >
+          <AiOutlineSearch className="searchIcon" />
+          <p>게임검색</p>
+        </GameSearchbutton>
+        {/* 커뮤니티 */}
+        <Communitybutton
+          locationName={locationName}
+          onClick={() => {
+            FriendButtonOnClick("close");
+            navigate("Community");
+            window.scrollTo({ top: 0, behavior: "smooth" });
+          }}
+        >
+          <MdDynamicFeed className="communityIcon" />
+          <p>커뮤니티</p>
+        </Communitybutton>
+        {/* 메뉴 구분선 */}
+        <SideLine />
+        {/* 친구 */}
+        {myId === null ? (
+          <Friendbutton
+            onClick={() => {
+              // FriendButtonOnClick("profile");
+              handleLoginModalOpen(); // 로그인 모달
+            }}
+            layoutMenu={layoutMenu}
+          >
+            <FaUserFriends className="friendIcon" />
+            <p>친구</p>
+          </Friendbutton>
+        ) : (
+          <Friendbutton
+            onClick={() => {
+              FriendButtonOnClick("friend");
+            }}
+            layoutMenu={layoutMenu}
+          >
+            <FaUserFriends className="friendIcon" />
+            <p>친구</p>
+          </Friendbutton>
+        )}
+        {/* 음성채팅 */}
+        {myId === null ? (
+          <VoiceTalkbutton
+            onClick={() => {
+              handleLoginModalOpen(); // 로그인 모달
+            }}
+            layoutMenu={layoutMenu}
+          >
+            <MdVoiceChat className="chatIcon" />
+            <p>화상채팅</p>
+          </VoiceTalkbutton>
+        ) : (
+          <VoiceTalkbuttonWrap>
+            {currentRoom && <VoiceTalkON></VoiceTalkON>}
+            <VoiceTalkbutton
+              onClick={() => LayoutButtonOnClick("voicetalk")}
+              layoutMenu={layoutMenu}
+            >
+              <MdVoiceChat className="chatIcon" />
+              <p>화상채팅</p>
+            </VoiceTalkbutton>
+          </VoiceTalkbuttonWrap>
+        )}
+      </SideBarDiv>
+    );
+  }
+  if (isError) {
+    console.log("오류내용", error);
+    return <p>오류</p>;
+  }
 
   //양쪽 다 친구 내역
   const friend = getFriendAuth?.filter((i: FriendProps) => {
@@ -188,39 +291,7 @@ function Layout() {
       }
     };
 
-    return (
-      <UserVideo data={data} info={info} myId={myId}></UserVideo>
-      // <VideoWrap key={data.userid}>
-      //   {data.userid === myId ? (
-      //     !data.stream.getVideoTracks()[0].enabled ? (
-      //       <img src="/img/emptyvideo.png"></img>
-      //     ) : (
-      //       <Streamvideo
-      //         ref={remotehandleVideoRef}
-      //         autoPlay
-      //         playsInline
-      //         muted
-      //       />
-      //     )
-      //   ) : (
-      //     <Streamvideo
-      //       ref={remotehandleVideoRef}
-      //       autoPlay
-      //       playsInline
-      //       className="othervideo"
-      //       muted={isallmuted}
-      //     />
-      //   )}
-      //   <Usernickname>
-      //     <span>{info?.nickname}</span>
-      //   </Usernickname>
-      //   {!data.stream.getAudioTracks()[0].enabled && (
-      //     <Micoff>
-      //       <BsFillMicMuteFill size={20}></BsFillMicMuteFill>
-      //     </Micoff>
-      //   )}
-      // </VideoWrap>
-    );
+    return <UserVideo data={data} info={info} myId={myId}></UserVideo>;
   });
 
   const handleLoginModalOpen = () => {
@@ -260,7 +331,7 @@ function Layout() {
           >
             {/* 로그인이 되어있지않다면과 로그인이 되어있다면의 정보*/}
             {ProfileImgUrl === null ? (
-              <div>profile</div>
+              <div>Login</div>
             ) : (
               <ProfileImg src={`${ProfileImgUrl}`} />
             )}
@@ -304,7 +375,7 @@ function Layout() {
           {/* 메뉴 구분선 */}
           <SideLine />
           {/* 친구 */}
-          {myId === null ? (
+          {/* {myId === null ? (
             <Friendbutton
               onClick={() => {
                 // FriendButtonOnClick("profile");
@@ -315,50 +386,47 @@ function Layout() {
               <FaUserFriends className="friendIcon" />
               <p>친구</p>
             </Friendbutton>
-          ) : (
-            <Friendbutton
-              onClick={() => {
-                //맨위로 스크롤이동
-                // window.scrollTo({ top: 0, behavior: "smooth" });
+          ) : ( */}
+          <Friendbutton
+            onClick={() => {
+              //맨위로 스크롤이동
+              // window.scrollTo({ top: 0, behavior: "smooth" });
+              if (myId === null) {
+                handleLoginModalOpen();
+              } else {
                 FriendButtonOnClick("friend");
-              }}
-              layoutMenu={layoutMenu}
-            >
-              <FaUserFriends className="friendIcon" />
-              <p>친구</p>
-              {friendAddCome.length === 0 && chatTextNotice.length === 0 ? (
-                ""
-              ) : (
-                <FriendNotice />
-              )}
-            </Friendbutton>
-          )}
+              }
+            }}
+            layoutMenu={layoutMenu}
+          >
+            <FaUserFriends className="friendIcon" />
+            <p>친구</p>
+            {friendAddCome.length === 0 && chatTextNotice.length === 0 ? (
+              ""
+            ) : (
+              <FriendNotice />
+            )}
+          </Friendbutton>
+          {/* )} */}
           {/* 음성채팅 */}
-          {myId === null ? (
+          <VoiceTalkbuttonWrap>
+            {currentRoom && <VoiceTalkON></VoiceTalkON>}
             <VoiceTalkbutton
               onClick={() => {
-                // LayoutButtonOnClick("profile");
-                handleLoginModalOpen(); // 로그인 모달
+                if (myId === null) {
+                  handleLoginModalOpen();
+                } else {
+                  LayoutButtonOnClick("voicetalk");
+                }
               }}
               layoutMenu={layoutMenu}
             >
               <MdVoiceChat className="chatIcon" />
-              <p>음성채팅</p>
+              <p>화상채팅</p>
             </VoiceTalkbutton>
-          ) : (
-            <VoiceTalkbuttonWrap>
-              {currentRoom && <VoiceTalkON></VoiceTalkON>}
-              <VoiceTalkbutton
-                onClick={() => LayoutButtonOnClick("voicetalk")}
-                layoutMenu={layoutMenu}
-              >
-                <MdVoiceChat className="chatIcon" />
-                <p>음성채팅</p>
-              </VoiceTalkbutton>
-            </VoiceTalkbuttonWrap>
-          )}
+          </VoiceTalkbuttonWrap>
           {/* 나중에 부활 예정 */}
-          {/* <AboutPagesDiv onClick={AboutPagesOnClick}>?</AboutPagesDiv> */}
+          <AboutPagesDiv onClick={AboutPagesOnClick}>?</AboutPagesDiv>
         </SideBarDiv>
 
         {/* 메뉴 컴포넌트 */}
@@ -387,11 +455,11 @@ function Layout() {
                   backcolor="#D4D4D4"
                   onClick={() => {
                     setVideoState((e: any) => !e);
-                    if (localStream) {
-                      localStream.getVideoTracks().forEach((track: any) => {
-                        track.enabled = !videostate;
-                      });
-                    }
+                    // if (localStream) {
+                    //   localStream.getVideoTracks().forEach((track: any) => {
+                    //     track.enabled = !videostate;
+                    //   });
+                    // }
                   }}
                 >
                   {videostate ? (
@@ -614,7 +682,6 @@ const VideosList = styled.div<any>`
 const ProfileImg = styled.img`
   width: 50px;
   height: 50px;
-  border-radius: 50%;
 `;
 const SideBarDiv = styled.div`
   display: flex;
@@ -641,7 +708,8 @@ const MenuOpenDiv = styled.div<{ layoutMenu: String }>`
   box-shadow: 2px 4px 15px 0 #000;
 
   /* border-top-right-radius: 30px; */
-  overflow: scroll;
+  overflow: ${(props) =>
+    props.layoutMenu === "voicetalk" ? "hidden" : "scroll"};
   &::-webkit-scrollbar {
     display: none;
   }
@@ -652,10 +720,21 @@ const Profilebutton = styled.div`
   border-radius: 25px;
   font-size: 12px;
   width: 50px;
+  height: 50px;
+  min-height: 50px;
+  overflow: hidden;
   line-height: 50px;
   text-align: center;
-  height: 50px;
-  background: #ccc;
+  color: #fff;
+  font-weight: 500;
+  background: linear-gradient(
+    65.45deg,
+    #002176 13.13%,
+    #002fa8 30.2%,
+    #0076b9 52.4%,
+    #00b4c7 74.45%,
+    #12f8d8 86.79%
+  );
   cursor: pointer;
 `;
 
@@ -753,9 +832,9 @@ const VoiceTalkbuttonWrap = styled.div`
   position: relative;
 `;
 const VoiceTalkON = styled.div`
-  width: 8px;
-  height: 8px;
-  right: 10px;
+  width: 10px;
+  height: 10px;
+  right: 4px;
   bottom: 48px;
   border-radius: 4px;
   background: #f05656;

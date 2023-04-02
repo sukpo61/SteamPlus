@@ -13,6 +13,7 @@ const PoularChannel = () => {
   return (
     <PoularChannelLayout>
       <PopularChannel>
+        <PopularChannelTitle>인기채널</PopularChannelTitle>
         {popularchannels[0] ? (
           <PopularChannel1st
             onClick={() =>
@@ -23,7 +24,7 @@ const PoularChannel = () => {
               })
             }
           >
-            <PopularChannelTitle>인기채널</PopularChannelTitle>
+            {/* <PopularChannelTitle>인기채널</PopularChannelTitle> */}
             <PopularChannelImg1st src={firstgame?.info.header_image} />
             <ChannelBox>
               <PoPularChannelTitle>{firstgame?.info.name}</PoPularChannelTitle>
@@ -100,7 +101,7 @@ const PopularChannelTitle = styled.div`
   position: absolute;
   width: 100%;
   top: -35px;
-  text-shadow: 0px 0px 15px white;
+  text-shadow: 0px 0px 5px white;
 `;
 const PoularChannelLayout2 = styled.div<any>`
   display: grid;
@@ -134,9 +135,9 @@ const PopularChannel1st = styled.div`
   background: #263245;
   border-radius: 10px;
   cursor: pointer;
-  box-shadow: 0px 0px 15px 0px #000;
+  box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.25);
   &:hover {
-    box-shadow: 0px 0px 15px 0px #fff;
+    box-shadow: 0px 0px 15px 0px rgba(255, 255, 255, 0.5);
   }
   transition: 0.5s ease;
 `;
@@ -174,9 +175,9 @@ const PopularChannel1st2 = styled.div`
   flex-direction: column;
   border-radius: 10px;
   cursor: pointer;
-  box-shadow: 0px 0px 15px 0px #000;
+  box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.25);
   &:hover {
-    box-shadow: 0px 0px 15px 0px #fff;
+    box-shadow: 0px 0px 15px 0px rgba(255, 255, 255, 0.5);
   }
   transition: 0.5s ease;
 `;
@@ -194,7 +195,7 @@ const PopularChannel1st2empty = styled.div`
   display: flex;
   align-items: center;
   border-radius: 10px;
-  box-shadow: 0px 0px 15px 0px #000;
+  box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.25);
   span {
     font-size: 300px;
     position: absolute;
@@ -213,6 +214,7 @@ const PoPularChannelBox = styled.div`
   display: flex;
   flex-direction: row;
   margin-top: auto;
+  align-items: center;
 `;
 const PopularChannelImg1st = styled.img`
   // img 태그로 교체 필요
@@ -238,15 +240,21 @@ const PoPularChannelTitle = styled.div`
   font-size: 20px;
   letter-spacing: -0.02em;
   color: #ffffff;
-`;
-const ChannelTitle1st2 = styled.div`
-  display: flex;
-  font-weight: 500;
-  font-size: 13px;
+  white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  white-space: nowrap;
+  max-width: 500px;
+`;
+const ChannelTitle1st2 = styled.div`
+  margin-bottom: 4px;
+  font-weight: 600;
+  font-size: 13px;
+  letter-spacing: -0.02em;
   color: #ffffff;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 165px;
 `;
 const PoPularChannelCategory = styled.div`
   font-weight: 400;

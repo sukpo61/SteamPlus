@@ -61,13 +61,22 @@ function AboutPages() {
       </p>
       <Slider {...sliderSettings}>
         <InnerSlider>
-          <AboutPagesSlider src="./img/about1.jpg"></AboutPagesSlider>
+          <AboutPagesSlider src="./img/steamPlusAbout1.webp"></AboutPagesSlider>
         </InnerSlider>
         <InnerSlider>
-          <AboutPagesSlider src="./img/about2.jpg"></AboutPagesSlider>
+          <AboutPagesSlider src="./img/steamPlusAbout2.webp"></AboutPagesSlider>
         </InnerSlider>
         <InnerSlider>
-          <AboutPagesSlider src="./img/about3.jpg"></AboutPagesSlider>
+          <AboutPagesSlider src="./img/steamPlusAbout3.webp"></AboutPagesSlider>
+        </InnerSlider>
+        <InnerSlider>
+          <AboutPagesSlider src="./img/steamPlusAbout4.webp"></AboutPagesSlider>
+        </InnerSlider>
+        <InnerSlider>
+          <AboutPagesSlider src="./img/steamPlusAbout5.webp"></AboutPagesSlider>
+        </InnerSlider>
+        <InnerSlider>
+          <AboutPagesSlider src="./img/steamPlusAbout6.webp"></AboutPagesSlider>
         </InnerSlider>
       </Slider>
     </AboutPagesDiv>
@@ -80,7 +89,6 @@ const AboutPagesDiv = styled.div<{ aboutPagesOnOff: any }>`
   display: ${(props) =>
     props.aboutPagesOnOff === "aboutPages" ? "block" : "none"};
   position: fixed;
-  height: 100%;
   top: 0;
   left: 0;
   width: 100%;
@@ -99,7 +107,7 @@ const AboutPagesDiv = styled.div<{ aboutPagesOnOff: any }>`
     z-index: 99999999999999999999999999;
   }
   .slick-dots {
-    bottom: 10%;
+    bottom: 5%;
   }
   .slick-dots li button:before {
     color: #fff;
@@ -114,7 +122,7 @@ const InnerSlider = styled.div`
 `;
 const AboutPagesSlider = styled.img`
   width: 80%;
-  max-height: 70vh;
+  max-height: 80vh;
   object-fit: contain;
   margin: auto;
 `;

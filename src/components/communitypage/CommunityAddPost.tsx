@@ -43,7 +43,7 @@ export const CommunityAddPost = () => {
   const month = newDate.getMonth() + 1;
   const month2 = month < 10 ? `0${month}` : month;
   const day = newDate.getDate();
-  const day2 = day < 10 ? `0${day}` : month;
+  const day2 = day < 10 ? `0${day}` : day;
   const Hour = newDate.getHours();
   const Minute = newDate.getMinutes();
   const dates = `${year}.${month2}.${day2} ${Hour}:${Minute}`;
@@ -88,10 +88,7 @@ export const CommunityAddPost = () => {
       addPostMutation.mutate(newPost);
       //등록된 포스트로 이동후
       navigate(`/Community/${newPost.id}`);
-      // 쿼리무효화 = 저장되어있는 쿼리를 초기화 하여 데이터를 다시불러옴
-      // setTimeout(() => {
-      //   queryClient.invalidateQueries(["CommunityPostData"]);
-      // }, 500);
+
       return;
     } else {
       //취소버튼 클릭시 새로고침을 방지해서 작성한 타이틀과 컨텐츠를 유지시켜줌

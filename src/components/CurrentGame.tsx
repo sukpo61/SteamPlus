@@ -2,7 +2,12 @@ import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 
-export const CurrentGame = ({ game }: any) => {
+export const CurrentGame = ({ game, data }: any) => {
+  const userVideo = data?.gamevideo;
+  const userImg = data?.gameMainImg;
+  const userGameTitle = sessionStorage.getItem("gameextrainfo");
+  const userGameId = sessionStorage.getItem("gameid");
+
   const navigate = useNavigate();
   const [gameAll, setGameAll] = useState({
     id: "",
@@ -30,24 +35,36 @@ export const CurrentGame = ({ game }: any) => {
 
   return (
     <CurrentGameLayout>
-      {/* 게임비디오가 없으면 스크린샷을 보여주고 스크린샷없으면 "" 아무것도 안보여줌 */}
-      {gameAll.video ? (
-        <GameVideo src={gameAll?.video} autoPlay muted loop />
-      ) : gameAll?.img === undefined ? (
-        ""
-      ) : (
-        <GameImg src={gameAll?.img} />
-      )}
+      <>
+        {/* 현재 게임중이 아니면 */}
+        {userGameId === "undefined" || userGameId === null ? (
+          gameAll?.video ? (
+            <GameVideo src={gameAll?.video} autoPlay muted loop />
+          ) : gameAll?.img === undefined ? (
+            ""
+          ) : (
+            <GameImg src={gameAll?.img} />
+          )
+        ) : userVideo === undefined || userVideo === null ? (
+          <GameImg src={userImg} />
+        ) : (
+          <GameVideo src={userVideo} autoPlay muted loop />
+        )}
 
-      <CurrentGameBlackImg />
-      <CurrentGameBox>
-        {/* 게임타이틀 */}
-        <CurrentGameTitle>{gameAll?.title}</CurrentGameTitle>
-        {/* 게임채널입장*/}
-        <CurrentChannelJoinBtn onClick={gotoGameChannel}>
-          게임채널 입장하기
-        </CurrentChannelJoinBtn>
-      </CurrentGameBox>
+        <CurrentGameBlackImg />
+        <CurrentGameBox>
+          {/* 게임타이틀 */}
+          <CurrentGameTitle>
+            {userGameTitle === "undefined" || userGameTitle === null
+              ? gameAll?.title
+              : userGameTitle}
+          </CurrentGameTitle>
+          {/* 게임채널입장*/}
+          <CurrentChannelJoinBtn onClick={gotoGameChannel}>
+            게임채널 입장하기
+          </CurrentChannelJoinBtn>
+        </CurrentGameBox>
+      </>
     </CurrentGameLayout>
   );
 };

@@ -35,42 +35,26 @@ export const Top10 = () => {
     const gameIds = response?.data.response.pages[0].item_ids
       //gameIds를 랜덤으롤 돌려줌
       .map((e: any) => e.appid)
+      //아이디 랜덤돌림
       .sort(() => Math.random() - 0.5)
-      .slice(0, 12);
+      //아이디 열개자름
+      .slice(0, 15);
 
     const gameDataPromises = gameIds.map((gameId: any) => TopGame(gameId));
-    const gameData = await Promise.all(gameDataPromises);
-    const filteredGameData = gameData.filter((data) => data.type === "game");
 
+    const gameData = await Promise.all(gameDataPromises);
+    const filteredGameData = gameData.filter((data) => {
+      //성인게임 필터 아마도?
+      if (data.content_descriptors.notes === null) {
+        return data.type === "game";
+      }
+    });
     const gameinfo = filteredGameData.map((data) => {
       return data;
     });
-    setrecommandGame(gameinfo);
+    //타입이 게임이고 성인게임 제외한것중에서 10개를 걸러줌
+    setrecommandGame(gameinfo.slice(0, 10));
   };
-
-  // //이거 현석님 직렬 코드임
-  // const TopGameid = async () => {
-  //   let gameinfo = [];
-
-  //   const response = await axios.get(
-  //     `${PROXY_ID}/https://api.steampowered.com/ISteamChartsService/GetTopReleasesPages/v1/`
-  //   );
-  //   let data = await response?.data.response.pages[0].item_ids
-  //     .map((e: any) => e.appid)
-  //     .slice(0, 9);
-  //   for (let gameid of data) {
-  //     const gamedata = await TopGame(gameid);
-  //     if (gamedata.type === "game") {
-  //       gameinfo.push(gamedata);
-  //       //여기서 gamedata를 가져오는게 느린거임 하나씩 맵을도니까 직렬처리
-  //       console.log("gamedata", gamedata);
-  //     }
-  //     sessionStorage.setItem("type", gamedata?.type);
-  //   }
-  //   // setrecommandGame((e: any) => [...e, gamedata]);
-  //   setrecommandGame(gameinfo);
-  //   // sessionStorage.setItem("1", sessionStorage[0]);
-  // };
 
   useEffect(() => {
     if (recommandGame.length === 0) {
@@ -136,7 +120,7 @@ const ChannelTitle = styled.div`
   top: -5px;
   position: absolute;
   width: 100%;
-  text-shadow: 0px 0px 15px white;
+  text-shadow: 0px 0px 5px white;
 `;
 const GameListBlock = styled.div`
   display: flex;

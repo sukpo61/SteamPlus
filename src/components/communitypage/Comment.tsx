@@ -39,10 +39,12 @@ function Comment({ PostId }: CommentProps) {
   const newDate = new Date();
   const year = newDate.getFullYear();
   const month = newDate.getMonth() + 1;
+  const month2 = month < 10 ? `0${month}` : month;
   const day = newDate.getDate();
+  const day2 = day < 10 ? `0${day}` : day;
   const Hour = newDate.getHours();
   const Minute = newDate.getMinutes();
-  const date = `${year}/${month}/${day} ${Hour}:${Minute}`;
+  const date = `${year}.${month2}.${day2} ${Hour}:${Minute}`;
 
   //스팀아이디
   const steamID = sessionStorage.getItem("steamid");
@@ -143,10 +145,26 @@ function Comment({ PostId }: CommentProps) {
       setEditOn("");
     }
   };
+  // 댓글카운트
+  const postid = comment?.map((id: any) => id?.postId);
+
+  const commentId = postid?.filter((id: any) => {
+    return id === PostId;
+  });
+  const CommentCount = commentId?.length;
 
   return (
     <CommentWrap>
-      <h1 style={{ padding: "15px 10px" }}>댓글</h1>
+      <div
+        style={{
+          display: "flex",
+
+          alignItems: "center",
+        }}
+      >
+        <h1 style={{ padding: "15px 3px 15px 10px" }}>댓글</h1>
+        <p style={{ fontSize: "13px" }}>[{CommentCount}]</p>
+      </div>
       {/* 댓글 입력칸 */}
       <CommentForm onSubmit={CommentFormonSubmit}>
         <CommentInput
@@ -301,7 +319,7 @@ const EditInput = styled.textarea`
   outline: 0px none transparent;
 `;
 const CommentText = styled.p`
-  font-size: 14px;
+  font-size: 13px;
   margin: 10px 0px;
   word-break: break-all;
   font-weight: 400;
