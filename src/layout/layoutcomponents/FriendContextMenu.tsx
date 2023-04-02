@@ -82,9 +82,9 @@ function FriendContextMenu({ xPos, yPos, id, onClose }: any) {
 
   const joinFriendRoom = (userid: any) => {
     socket.emit("friendchannel", userid);
-    socket.once("friendchannel", (roomname, roomdata, frienduserid) => {
+    socket.once("friendchannel", (roomname, frienduserid) => {
       if (frienduserid === userid && roomname) {
-        console.log("frjoin", roomdata);
+        console.log("frjoin", roomname);
         navigate(`/Teamchat/:${roomname.split("/")[0]}`, {
           replace: true,
           state: {
@@ -94,8 +94,6 @@ function FriendContextMenu({ xPos, yPos, id, onClose }: any) {
         setFriendRoomInfo({
           roomtitle: roomname.split("/")[1],
           channelId: roomname.split("/")[0],
-          usercount: roomdata.usercount,
-          password: roomdata.password,
         });
         setLayoutMenu("voicetalk");
       }

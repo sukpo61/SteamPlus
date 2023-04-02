@@ -135,7 +135,7 @@ function Friend() {
       }
     );
     setFriendChannel((e: any) =>
-      e.set(frienduserid, `${response?.data[gameid].data.name}`)
+      e.set(frienduserid, `${response?.data[gameid].data.name} 참가중`)
     );
   };
 
@@ -144,13 +144,9 @@ function Friend() {
   };
 
   const getFriendChannel: any = async (userid: any) => {
-    console.log("roomname", userid);
-
     socket.emit("friendchannel", userid);
-
     socket.once("friendchannel", (roomname, frienduserid) => {
       if (frienduserid === userid && roomname) {
-        console.log("roomname", roomname);
         Gamedata(frienduserid, roomname.split("/")[0]);
       }
     });
@@ -284,12 +280,10 @@ function Friend() {
               </FriendBoxNameImgDiv>
 
               <FriendBoxNameH2>{i.nickname}</FriendBoxNameH2>
-              <PlayingGame>
-                <FriendBoxNamePlayingP>
-                  {friendChannel.get(i.id)}
-                </FriendBoxNamePlayingP>
-                <p>참가중</p>
-              </PlayingGame>
+
+              <FriendBoxNamePlayingP>
+                {friendChannel.get(i.id)}
+              </FriendBoxNamePlayingP>
               {chatTextNotice.filter((item: any) => {
                 return item.id === i.id;
               }).length === 0 ? (
@@ -400,24 +394,14 @@ const FriendBoxNameOffline = styled.div`
   border-radius: 50%;
   border: 1px solid #777d87;
 `;
-const PlayingGame = styled.div`
-  font-size: 10px;
-  color: #a7a9ac;
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
-`;
 const FriendBoxNameH2 = styled.h2`
   color: #fff;
   font-size: 14px;
   margin-right: 10px;
 `;
-const FriendBoxNamePlayingP = styled.span`
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  max-width: 120px;
+const FriendBoxNamePlayingP = styled.p`
+  font-size: 10px;
+  color: #a7a9ac;
 `;
 const FriendBoxNotice = styled.div`
   width: 18px;
