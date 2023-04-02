@@ -174,6 +174,7 @@ function VoiceTalk({ myId, handleLoginModalOpen }) {
     let audioStream;
 
     const devices = await navigator.mediaDevices.enumerateDevices();
+    console.log("devices", devices);
 
     const hasCam = devices.some((device) => {
       return device.kind === "videoinput";
@@ -188,13 +189,29 @@ function VoiceTalk({ myId, handleLoginModalOpen }) {
     } else {
       audioStream = new MediaStream([new MediaStreamTrack({ kind: "audio" })]);
     }
-    if (hasCam) {
+    if (true) {
       videoStream = await navigator.mediaDevices.getUserMedia({
         video: true,
       });
     } else {
-      const track = new MediaStreamTrackGenerator("video");
-      videoStream = new MediaStream([track]);
+      const img = new Image();
+      img.src = "/img/emptyvideo.png";
+      await new Promise((resolve) => (img.onload = resolve));
+
+      const canvas = document.createElement("canvas");
+      canvas.width = 640;
+      canvas.height = 480;
+      const ctx = canvas.getContext("2d");
+
+      ctx.drawImage(img, 0, 0, 640, 480);
+
+      // canvas 요소를 사용하여 비디오 스트림 생성하기
+      const stream = canvas.captureStream();
+      const videoTrack = stream.getVideoTracks()[0];
+
+      // 가상 비디오 스트림을 추가한 MediaStream 생성하기
+      videoStream = new MediaStream();
+      videoStream.addTrack(videoTrack);
     }
 
     const myStream = new MediaStream([
@@ -205,21 +222,11 @@ function VoiceTalk({ myId, handleLoginModalOpen }) {
       track.enabled = micstate;
     });
     myStream.getVideoTracks().forEach((track) => {
-      track.enabled = false;
+      track.enabled = true;
     });
     setLocalStream(myStream);
     handleAddStream(myuserid, myStream);
   }
-
-  // const getFakeStream = async () => {
-  //   try {
-  //     const fakeStream = new MediaStream([track]);
-  //     setLocalStream(fakeStream);
-  //     handleAddStream(myuserid, fakeStream);
-  //   } catch (e) {
-  //     console.log(e);
-  //   }
-  // };
 
   async function getMedia() {
     try {
@@ -527,6 +534,7 @@ function VoiceTalk({ myId, handleLoginModalOpen }) {
       .forEach((track) => NewUserPeerConnection.addTrack(track, localStream));
 
     NewUserPeerConnection.onaddstream = (event) => {
+      console.log("event", event);
       handleAddStream(userid, event.stream);
     };
 

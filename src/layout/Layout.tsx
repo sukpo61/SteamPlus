@@ -455,11 +455,11 @@ function Layout() {
                   backcolor="#D4D4D4"
                   onClick={() => {
                     setVideoState((e: any) => !e);
-                    if (localStream) {
-                      localStream.getVideoTracks().forEach((track: any) => {
-                        track.enabled = !videostate;
-                      });
-                    }
+                    // if (localStream) {
+                    //   localStream.getVideoTracks().forEach((track: any) => {
+                    //     track.enabled = !videostate;
+                    //   });
+                    // }
                   }}
                 >
                   {videostate ? (

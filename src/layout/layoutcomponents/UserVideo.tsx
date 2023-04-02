@@ -24,24 +24,21 @@ const UserVideo = ({ data, info, myId }: any) => {
 
   const videoComponent = useMemo(() => {
     if (data.userid === myId) {
-      console.log("stream", data.stream.getVideoTracks()[0]);
       if (hasDevice && data.stream.getVideoTracks()[0]?.enabled) {
         return <Streamvideo ref={videoRef} autoPlay playsInline muted={true} />;
       } else {
-        return <img src="/img/emptyvideo.png"></img>;
+        return <Streamvideo ref={videoRef} autoPlay playsInline muted={true} />; // return <img src="/img/emptyvideo.png"></img>;
       }
     } else {
-      return (
-        <Streamvideo ref={videoRef} autoPlay playsInline muted={isallmuted} />
-      );
+      return <Streamvideo ref={videoRef} autoPlay playsInline muted={false} />;
     }
-  }, [isallmuted]);
+  }, [isallmuted, videoRef]);
 
   useEffect(() => {
     if (videoRef.current) {
       videoRef.current.srcObject = data.stream;
     }
-  }, [data.stream, videostate]);
+  }, [data.stream]);
 
   useEffect(() => {
     if (videoRef.current) {
