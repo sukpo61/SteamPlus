@@ -129,6 +129,10 @@ export const hasDeviceRecoil = atom<any>({
   key: "hasDevice",
   default: true,
 });
+export const RoomUserDataRecoil = atom<any>({
+  key: "RoomUserDataRecoil",
+  default: new Map(),
+});
 
 // export const FriendNoticeAll = atom({
 //   key: "FriendNoticeAll",

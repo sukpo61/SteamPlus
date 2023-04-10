@@ -30,6 +30,7 @@ import {
   isVolumePercent,
   isMicVolumePercent,
   hasDeviceRecoil,
+  RoomUserDataRecoil,
 } from "../../recoil/atom";
 
 import TeamChat from "../../pages/TeamChat";
@@ -130,6 +131,8 @@ function VoiceTalk({ myId, handleLoginModalOpen }) {
 
   const [hasDevice, sethasDevice] = useRecoilState(hasDeviceRecoil);
 
+  const [roomUserData, setRoomUserData] = useRecoilState(RoomUserDataRecoil);
+
   const {
     value: roomtitle,
     setinputValue: setRoomTitle,
@@ -169,7 +172,7 @@ function VoiceTalk({ myId, handleLoginModalOpen }) {
     }
   };
 
-  async function checkMedia() {
+  async function checkMedia(roomtitle) {
     let videoStream;
     let audioStream;
 
@@ -186,10 +189,8 @@ function VoiceTalk({ myId, handleLoginModalOpen }) {
       audioStream = await navigator.mediaDevices.getUserMedia({
         audio: true,
       });
-    } else {
-      audioStream = new MediaStream([new MediaStreamTrack({ kind: "audio" })]);
     }
-    if (true) {
+    if (false) {
       videoStream = await navigator.mediaDevices.getUserMedia({
         video: true,
       });
@@ -214,6 +215,22 @@ function VoiceTalk({ myId, handleLoginModalOpen }) {
       videoStream.addTrack(videoTrack);
     }
 
+    setRoomUserData((e) =>
+      e.set(myId, {
+        cam: hasCam,
+        mic: micstate,
+      })
+    );
+
+    socket.emit(
+      "updateroomuserdata",
+      roomtitle,
+      roomUserData.set(myId, {
+        cam: hasCam,
+        mic: micstate,
+      })
+    );
+
     const myStream = new MediaStream([
       ...audioStream.getAudioTracks(),
       ...videoStream.getVideoTracks(),
@@ -224,9 +241,15 @@ function VoiceTalk({ myId, handleLoginModalOpen }) {
     myStream.getVideoTracks().forEach((track) => {
       track.enabled = true;
     });
+
     setLocalStream(myStream);
     handleAddStream(myuserid, myStream);
   }
+
+  useEffect(() => {
+    if (roomUserData.size !== 0) {
+    }
+  }, [roomUserData]);
 
   async function getMedia() {
     try {
@@ -272,7 +295,7 @@ function VoiceTalk({ myId, handleLoginModalOpen }) {
     }
     setvideoDisplay(true);
     setCurrentRoom(NewData.roomtitle);
-    await checkMedia();
+    await checkMedia(NewData);
     socket.emit("join_room", NewData, myuserid);
     setChatText((e) => [...e, enterAlarm(NewData.roomtitle)]);
   };
